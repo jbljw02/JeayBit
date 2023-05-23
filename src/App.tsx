@@ -1,24 +1,34 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <div className='container'>
+
+        <header className='header'>
+          머리
+        </header>
+
+        <div className='center'>
+          <section className='left'>
+            <article className='left-top'>
+              왼쪽 중간
+            </article>
+            <article className='left-bottom'>
+              왼쪽 하단
+            </article>
+          </section>
+
+          <aside className='right'>
+            오른쪽 전체
+          </aside>
+        </div>
+
+        <footer className='footer'>
+          발
+        </footer>
+      </div>
     </div>
   );
 }

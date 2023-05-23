@@ -1,7 +1,3 @@
-.App {
-  text-align: center;
-}
-
 .App-logo {
   height: 40vmin;
   pointer-events: none;
@@ -35,4 +31,57 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+body {
+  background-color: rgb(249, 249, 249);
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.header {
+  background-color: rgb(249, 249, 249);
+  height: 50px;
+  border-bottom: 1px solid rgb(228, 229, 230);
+  margin: 0 10px;
+}
+
+.center {
+  display: flex;
+  flex-grow: 1;
+}
+
+.left {
+  background-color: white;
+  width: 70%;
+  float: left;
+}
+
+.left-top {
+  background-color: white;
+  height: 65%;
+}
+
+.left-bottom {
+  background-color: white;
+  height: 35%;
+  border-top: 1px solid rgb(228, 229, 230);
+}
+
+.right {
+  background-color: white;
+  float: left;
+  width: 30%;
+  border-left: 1px solid black;
+}
+
+.footer {
+  background-color: rgb(249, 249, 249);
+  height: 50px;
+  border-top: 1px solid rgb(228, 229, 230);
+  margin: 0 10px;
 }
