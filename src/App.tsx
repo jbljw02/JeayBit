@@ -28,6 +28,7 @@ function App() {
         <footer className='footer'>
           발
         </footer>
+        
       </div>
     </div>
   );
