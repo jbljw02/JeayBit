@@ -1,7 +1,25 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import './App.css';
+import axios from 'axios';
 
 function App() {
+
+  const [data, setData] = useState<string>('');
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
+    try {
+      const response = await fetch('http://127.0.0.1:5000/data');
+      const jsonData = await response.json();
+      setData(jsonData);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <div className="App">
       <div className='container'>
@@ -22,6 +40,7 @@ function App() {
 
           <aside className='right'>
             오른쪽 전체
+            {data}
           </aside>
         </div>
 
@@ -30,6 +49,7 @@ function App() {
         </footer>
         
       </div>
+
     </div>
   );
 }
