@@ -1,6 +1,7 @@
-from django.urls import path
-from app.views import get_data
+from django.contrib import admin
+from django.urls import path, include
 
 urlpatterns = [
-    path('', get_data, name='get_data'),
+    path('admin/', admin.site.urls),
+    path('', include('app.urls')),
 ]

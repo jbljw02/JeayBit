@@ -13,7 +13,7 @@ function App() {
   const fetchData = async () => {
     try {
       const response = await axios.get('http://127.0.0.1:8000')
-      setData(response.data.price );
+      setData(response.data.price);
       console.log(response.data)
     } catch (error) {
       console.error(error);
