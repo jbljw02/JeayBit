@@ -4,7 +4,7 @@ import axios from 'axios';
 
 function App() {
 
-  const [data, setData] = useState<string>('');
+  const [data, setData] = useState([]);
 
   useEffect(() => {
     fetchData();
@@ -12,9 +12,9 @@ function App() {
 
   const fetchData = async () => {
     try {
-      const response = await fetch('http://127.0.0.1:5000/data');
-      const jsonData = await response.json();
-      setData(jsonData);
+      const response = await axios.get('http://127.0.0.1:8000')
+      setData(response.data.price );
+      console.log(response.data)
     } catch (error) {
       console.error(error);
     }
@@ -40,12 +40,12 @@ function App() {
 
           <aside className='right'>
             오른쪽 전체
-            {data}
           </aside>
         </div>
 
         <footer className='footer'>
           발
+          <p>{data.map((item) => item).join(', ')}</p>
         </footer>
         
       </div>
