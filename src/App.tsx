@@ -1,7 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import './App.css';
 import axios from 'axios';
-import img_search from './img/search.png';
+import search from './img/search.png';
+import starOff from './img/star-off.png'
+import starOng from './img/star-on.png'
+
+function star_change(){
+  
+  
+}
 
 function App() {
 
@@ -43,7 +50,7 @@ function App() {
               <div className='list-search'>
                 <input type="text" placeholder='검색'></input>
                 <button className='btn-search'>
-                  <img className='img-search' src={img_search}></img>
+                  <img className='img-search' src={search}></img>
                 </button>
               </div>
 
@@ -62,7 +69,7 @@ function App() {
                   관심
                 </span>
               </div>
-              
+
               {/* 화폐 정보 테이블 */}
               <table className='list-table'>
                 <thead className='table-thead'>
@@ -85,7 +92,15 @@ function App() {
                   {/* map 반복문을 이용해 <tr><td>생성, 화폐 정보 출력 */}
                   {
                     cr_names.map((item, i) => 
-                    <tr><td>{item}</td><td>{cr_price[i]}</td></tr>)
+                    <tr key={i}>
+                      <span>
+                      <img onClick={()=>{
+                        star_change();
+                      }}src={starOff}></img>
+                      </span>
+                      <td>{item}</td>
+                      <td>{cr_price[i]}</td>
+                    </tr>)
                   }               
                 </tbody>
               </table>
@@ -104,12 +119,3 @@ function App() {
 }
 
 export default App;
-
-<div>
-  <span>
-
-  </span>
-  <span>
-
-  </span>
-</div>

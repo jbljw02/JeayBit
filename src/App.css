@@ -57,7 +57,7 @@ body {
 
 .left {
   background-color: rgb(249, 249, 249);
-  width: 65%;
+  width: 70%;
   float: left;
 }
 
@@ -75,7 +75,7 @@ body {
 .right {
   background-color: rgb(249, 249, 249);
   float: left;
-  width: 35%;
+  width: 30%;
   border-left: 1px solid black;
 }
 
@@ -88,13 +88,14 @@ body {
 
 .div-list {
   background-color: white;
-  height: 98.5%;
-  margin: 8px;
+  width: 55%;
+  height: 99%;
+  margin: 15px 0px 15px 15px;
 }
 
 .list-search {
   height: 36px;
-  border-bottom: 1px solid rgb(228, 229, 230);
+  border-bottom: 1px solid silver;
 }
 
 input {
@@ -115,25 +116,36 @@ input {
 }
 
 .list-category {
-  border-bottom: 1px solid rgb(228, 229, 230);
+  border-bottom: 1px solid silver;
   padding: 12px 0px 12px;
   display: flex;
   justify-content: space-between;
 }
 
 .krw, .btc, .usdt, .favorite {
-  padding: 0 18px;
   font-size: 13px;
   font-weight: bold;
+  padding: 0 18px;
+}
+
+.list-table {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
 }
 
 .list-table th {
-  padding: 0 18px;
-  padding-top: 8px;
-  font-size: 10px;
+  font-size: 11px;
   color: #666;
+  padding: 5px 25px;
 }
 
-.list-table tbody {
+.list-table tbody tr td {
   font-size: 12px;
+  padding-right: 20px;
+  width: 150px;
 }
+
+/* .list-table tbody tr img {
+  padding-right: 5px;
+} */

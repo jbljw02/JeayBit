@@ -27,7 +27,7 @@ def price():
             trade_price = format(int(data[i]['trade_price']), ",")
             cur_price.append(trade_price)
         else:
-            trade_price = format(data[i]['trade_price'], ",.4f")
+            trade_price = format(data[i]['trade_price'], ",.3f")
             cur_price.append(trade_price)
         result.append(f"{names[i]}: {trade_price}")
 
