@@ -56,26 +56,26 @@ body {
 }
 
 .left {
-  background-color: white;
-  width: 70%;
+  background-color: rgb(249, 249, 249);
+  width: 65%;
   float: left;
 }
 
 .left-top {
-  background-color: white;
+  background-color: rgb(249, 249, 249);
   height: 65%;
 }
 
 .left-bottom {
-  background-color: white;
+  background-color: rgb(249, 249, 249);
   height: 35%;
   border-top: 1px solid rgb(228, 229, 230);
 }
 
 .right {
-  background-color: white;
+  background-color: rgb(249, 249, 249);
   float: left;
-  width: 30%;
+  width: 35%;
   border-left: 1px solid black;
 }
 
@@ -84,4 +84,56 @@ body {
   height: 50px;
   border-top: 1px solid rgb(228, 229, 230);
   margin: 0 10px;
+}
+
+.div-list {
+  background-color: white;
+  height: 98.5%;
+  margin: 8px;
+}
+
+.list-search {
+  height: 36px;
+  border-bottom: 1px solid rgb(228, 229, 230);
+}
+
+input {
+  margin: 10px 10px;
+  border: none;
+  width: 77%;
+}
+
+.btn-search {
+  border: none;
+  background-color: white;
+}
+
+.img-search {
+  height: 18px;
+  position: relative;
+  top: 6px;
+}
+
+.list-category {
+  border-bottom: 1px solid rgb(228, 229, 230);
+  padding: 12px 0px 12px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.krw, .btc, .usdt, .favorite {
+  padding: 0 18px;
+  font-size: 13px;
+  font-weight: bold;
+}
+
+.list-table th {
+  padding: 0 18px;
+  padding-top: 8px;
+  font-size: 10px;
+  color: #666;
+}
+
+.list-table tbody {
+  font-size: 12px;
 }

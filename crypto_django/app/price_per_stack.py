@@ -19,10 +19,18 @@ def price():
 
     data = eval(response.text)
 
+    cur_price = []
     result = []
-    for i in range(len(data)):
-        result.append(f"{names[i]}: {data[i]['trade_price']}")
-        
-    return result
-
     
+    for i in range(len(data)):
+        if data[i]['trade_price'] % 1 == 0:
+            trade_price = format(int(data[i]['trade_price']), ",")
+            cur_price.append(trade_price)
+        else:
+            trade_price = format(data[i]['trade_price'], ",.4f")
+            cur_price.append(trade_price)
+        result.append(f"{names[i]}: {trade_price}")
+
+    return names, cur_price
+
+price()
