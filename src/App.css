@@ -88,7 +88,7 @@ body {
 
 .div-list {
   background-color: white;
-  width: 55%;
+  width: 52%;
   height: 99%;
   margin: 15px 0px 15px 15px;
 }
@@ -110,8 +110,8 @@ input {
 }
 
 .img-search {
-  height: 18px;
   position: relative;
+  height: 18px;
   top: 6px;
 }
 
@@ -125,27 +125,47 @@ input {
 .krw, .btc, .usdt, .favorite {
   font-size: 13px;
   font-weight: bold;
-  padding: 0 18px;
+  padding: 0 35px;
 }
 
 .list-table {
   display: flex;
   justify-content: space-between;
   flex-direction: column;
-}
-
-.list-table th {
-  font-size: 11px;
-  color: #666;
-  padding: 5px 25px;
+  border-bottom: 1px solid rgb(228, 229, 230);
+  border-collapse: collapse;
 }
 
 .list-table tbody tr td {
   font-size: 12px;
-  padding-right: 20px;
-  width: 150px;
+  border-bottom: 1px solid rgb(228, 229, 230);
 }
 
-/* .list-table tbody tr img {
-  padding-right: 5px;
-} */
+.list-table th {
+  padding-top: 11px;
+  padding-bottom: 11px;
+  font-size: 12px;
+  border-bottom: 1px solid rgb(228, 229, 230);
+}
+
+.list-table td {
+  padding: 9.5px;
+  text-align: left;
+}
+
+.price, .compare, .transaction {
+  padding-right: 14px;
+}
+
+.name {
+  padding-left: 42px;
+  padding-right: 108px;
+}
+
+.list-table tbody tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.list-table tbody tr:hover {
+  background-color: #e6e6e6;
+}

@@ -4,6 +4,7 @@ import axios from 'axios';
 import search from './img/search.png';
 import starOff from './img/star-off.png'
 import starOng from './img/star-on.png'
+import sort from './img/sort.png'
 
 function star_change(){
   
@@ -70,21 +71,33 @@ function App() {
                 </span>
               </div>
 
+              <div className='list-head'>
+
+              </div>
+
               {/* 화폐 정보 테이블 */}
               <table className='list-table'>
-                <thead className='table-thead'>
+                <thead>
                   <tr>
                     <th className='name'>
-                      화폐명
+                      화폐명&nbsp;
+                      <img src={sort}>
+                      </img>
                     </th>
                     <th className='price'>
-                      현재가
+                      현재가&nbsp;
+                      <img src={sort}>
+                      </img>
                     </th>
-                    <th className='previous'>
-                      전일대비
+                    <th className='compare'>
+                      전일대비&nbsp;
+                      <img src={sort}>
+                      </img>
                     </th>
                     <th className='transaction'>
-                      거래대금
+                      거래대금&nbsp;
+                      <img src={sort}>
+                      </img>
                     </th>
                   </tr>
                 </thead>
@@ -93,13 +106,16 @@ function App() {
                   {
                     cr_names.map((item, i) => 
                     <tr key={i}>
-                      <span>
-                      <img onClick={()=>{
-                        star_change();
-                      }}src={starOff}></img>
-                      </span>
-                      <td>{item}</td>
-                      <td>{cr_price[i]}</td>
+                        <td className='td-star'>
+                          <img onClick={() => {
+                            star_change();
+                          }} src={starOff}>
+                          </img>
+                        </td>
+                        <td className='td-name'>{item} <br /> KRW-BTC</td>
+                        <td className='td-price'>{cr_price[i]}</td>
+                        <td className='td-compare'>+0.68% <br />526,000</td>
+                        <td className='td-transaction'>96,555백만</td>
                     </tr>)
                   }               
                 </tbody>
