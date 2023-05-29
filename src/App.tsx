@@ -7,8 +7,11 @@ import starOff from './img/star-off.png'
 import sort from './img/sort.png'
 import title from './img/title.png'
 import { useSelector } from 'react-redux';
+import { RootState } from './store';
 
 function App() {
+
+  const crNames = useSelector((state: RootState) => state.cr_names);
 
   const [cr_names, setCr_names] = useState<string[]>([]);
   const [cr_price, setCr_price] = useState<string[]>([]);
@@ -20,6 +23,7 @@ function App() {
     fetchData();
   }, []);
 
+  // = async function () {}
   const fetchData = async () => {
     try {
       const response = await axios.get('http://127.0.0.1:8000')

@@ -1,14 +1,14 @@
 import { configureStore, createSlice } from '@reduxjs/toolkit'
 
-interface RootState {
+export type RootState = {
   cr_names : string[],
-  cr_prcie : string[],
+  cr_price: string[], 
   cr_markets : string[]
 }
 
 const cr_names = createSlice({
   name: 'cr_names',
-  initialState: [],
+  initialState: [] as string[],
   reducers: {
     setCr_names: (state, action) => {
       return action.payload;
