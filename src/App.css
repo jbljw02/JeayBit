@@ -12,9 +12,19 @@ body {
 
 .header {
   background-color: rgb(249, 249, 249);
-  height: 80px;
+  height: 70px;
   border-bottom: 1px solid rgb(228, 229, 230);
   margin: 0 10px;
+}
+
+.img-title {
+  padding: 15px;
+  width: 40px;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: bold;
 }
 
 .center {
