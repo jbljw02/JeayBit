@@ -2,22 +2,26 @@ import React, { useEffect, useState } from 'react';
 import './App.css';
 import axios from 'axios';
 import search from './img/search.png';
-import starOn from './img/star-on.png'
-import starOff from './img/star-off.png'
+// import starOn from './img/star-on.png'
+// import starOff from './img/star-off.png'
 import sort from './img/sort.png'
 import title from './img/title.png'
-import { useSelector } from 'react-redux';
-import { RootState } from './store';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState, setCr_price, setCr_markets, setStar } from './store';
+import { setCr_names } from './store';
 
 function App() {
 
-  const crNames = useSelector((state: RootState) => state.cr_names);
+  // const cr_names = useSelector((state: RootState) => { return state.cr_names });
+  // const cr_price = useSelector((state: RootState) => { return state.cr_price });
+  // const cr_markets = useSelector((state: RootState) => { return state.cr_markets });
+  const dispatch = useDispatch();
 
-  const [cr_names, setCr_names] = useState<string[]>([]);
-  const [cr_price, setCr_price] = useState<string[]>([]);
-  const [cr_markets, setCr_markets] = useState<string[]>([]);
-  const [bookmark_on, setBookmark_on] = useState<string>(starOn);
-  const [bookmark_off, setBookmark_off] = useState<string>(starOff);
+  // const [cr_names, setCr_names] = useState<string[]>([]);
+  // const [cr_price, setCr_price] = useState<string[]>([]);
+  // const [cr_markets, setCr_markets] = useState<string[]>([]);
+  // const [bookmark_on, setBookmark_on] = useState<string>(starOn);
+  // const [bookmark_off, setBookmark_off] = useState<string>(starOff);
   
   useEffect(() => {
     fetchData();
@@ -27,14 +31,13 @@ function App() {
   const fetchData = async () => {
     try {
       const response = await axios.get('http://127.0.0.1:8000')
-      setCr_names(response.data.names);
-      setCr_price(response.data.cur_price);
-      setCr_markets(response.data.markets)
+      dispatch(setCr_names(response.data.names));
+      dispatch(setCr_price(response.data.cur_price));
+      dispatch(setCr_markets(response.data.markets));
     } catch (error) {
       console.error(error);
     }
   };
-
 
   return (
     <div className="App">
@@ -46,7 +49,7 @@ function App() {
             <Left_Bottom></Left_Bottom>
           </section>
           <aside className='right'>
-            <List cr_names={cr_names} cr_price={cr_price} cr_markets={cr_markets} bookmark_on={bookmark_on} bookmark_off={bookmark_off}></List>
+            <List></List>
           </aside>
         </div>
         <Footer></Footer>
@@ -80,10 +83,19 @@ function Left_Bottom() {
   )
 }
 
-function List(props: { cr_names: string[], cr_price: string[], cr_markets: string[], bookmark_on: string, bookmark_off: string }) {
+function List() {
 
-  function bookmark_change() {
-    console.log("변경")
+
+  const cr_names = useSelector((state: RootState) => { return state.cr_names });
+  const cr_price = useSelector((state: RootState) => { return state.cr_price });
+  const cr_markets = useSelector((state: RootState) => { return state.cr_markets });
+  const star = useSelector((state: RootState) => { return state.star });
+  // const star_off = useSelector((state: RootState) => { return state.star_off });
+
+  const dispatch = useDispatch();
+
+  function star_change() {
+    dispatch(setStar());
   }
 
   return (
@@ -145,16 +157,16 @@ function List(props: { cr_names: string[], cr_price: string[], cr_markets: strin
 
           {/* map 반복문을 이용해 <tr><td>생성, 화폐 정보 출력 */}
           {
-            props.cr_names.map((item, i) =>
+            cr_names.map((item, i) =>
               <tr key={i}>
                 <td className='td-star'>
                   <img onClick={() => {
-                    bookmark_change();
-                  }} src={props.bookmark_off}>
+                    star_change();
+                  }} src={star}>
                   </img>
                 </td>
-                <td className='td-name'>{item} <br /> {props.cr_markets[i]}</td>
-                <td className='td-price'>{props.cr_price[i]}</td>
+                <td className='td-name'>{item} <br /> {cr_markets[i]}</td>
+                <td className='td-price'>{cr_price[i]}</td>
                 <td className='td-compare'>+0.68% <br />526,000</td>
                 <td className='td-transaction'>96,555백만</td>
               </tr>)
