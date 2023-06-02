@@ -13,7 +13,7 @@ def price():
             names.append(crypto['korean_name']) 
             markets.append(crypto['market'])  
 
-    unJoin_Markets = markets
+    unJoin_markets = markets
 
     markets = "%2C%20".join(markets)
     url = f"https://api.upbit.com/v1/ticker?markets={markets}"
@@ -21,11 +21,14 @@ def price():
 
     data = eval(response.text)
 
-    print(names)
-    print(unJoin_Markets)
+    print(data)
 
     cur_price = []
     result = []
+    change = []
+    change_rate = []
+    change_price = []
+    # trade_price = []
     
     for i in range(len(data)):
         if data[i]['trade_price'] % 1 == 0:
@@ -36,6 +39,10 @@ def price():
             cur_price.append(trade_price)
         result.append(f"{names[i]}: {trade_price}")
 
-    return names, cur_price, unJoin_Markets
+        change.append(data[i]['change'])
+        change_rate.append(data[i]['change_rate'])
+        change_price.append(data[i]['change_price'])
+
+    return names, cur_price, unJoin_markets, change, change_rate, change_price
 
 price()

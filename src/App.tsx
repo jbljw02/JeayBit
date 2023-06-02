@@ -2,13 +2,12 @@ import React, { useEffect, useState } from 'react';
 import './App.css';
 import axios from 'axios';
 import search from './img/search.png';
-// import starOn from './img/star-on.png'
-// import starOff from './img/star-off.png'
+import starOn from './img/star-on.png'
+import starOff from './img/star-off.png'
 import sort from './img/sort.png'
 import title from './img/title.png'
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState, setCr_price, setCr_markets, setStar } from './store';
-import { setCr_names } from './store';
+import { RootState, setCr_names, setCr_price, setCr_markets, setStar, setCr_change, setCr_change_rate, setCr_change_price } from './store';
 
 function App() {
 
@@ -34,6 +33,10 @@ function App() {
       dispatch(setCr_names(response.data.names));
       dispatch(setCr_price(response.data.cur_price));
       dispatch(setCr_markets(response.data.markets));
+      dispatch(setCr_change(response.data.change))
+      dispatch(setCr_change_rate(response.data.change_rate))
+      dispatch(setCr_change_price(response.data.change_price))
+
     } catch (error) {
       console.error(error);
     }
@@ -89,14 +92,16 @@ function List() {
   const cr_names = useSelector((state: RootState) => { return state.cr_names });
   const cr_price = useSelector((state: RootState) => { return state.cr_price });
   const cr_markets = useSelector((state: RootState) => { return state.cr_markets });
+  const cr_change = useSelector((state : RootState) => {return state.cr_change});
+  const cr_change_rate = useSelector((state : RootState) => {return state.cr_change_rate});
+  const cr_change_price = useSelector((state : RootState) => {return state.cr_change_price});
   const star = useSelector((state: RootState) => { return state.star });
-  // const star_off = useSelector((state: RootState) => { return state.star_off });
 
   const dispatch = useDispatch();
 
-  function star_change() {
-    dispatch(setStar());
-  }
+  const handleStarClick = (index: number) => {
+    dispatch(setStar(index));
+  };
 
   return (
     <div className='div-list'>
@@ -160,14 +165,14 @@ function List() {
             cr_names.map((item, i) =>
               <tr key={i}>
                 <td className='td-star'>
-                  <img onClick={() => {
-                    star_change();
-                  }} src={star}>
-                  </img>
+                  <img
+                    onClick={() => handleStarClick(i)}
+                    src={star[i] === 'starOn' ? starOn : starOff}
+                  />
                 </td>
                 <td className='td-name'>{item} <br /> {cr_markets[i]}</td>
                 <td className='td-price'>{cr_price[i]}</td>
-                <td className='td-compare'>+0.68% <br />526,000</td>
+                <td className='td-compare'>{cr_change_rate[i]}% <br />{cr_change_price[i]}</td>
                 <td className='td-transaction'>96,555백만</td>
               </tr>)
           }
