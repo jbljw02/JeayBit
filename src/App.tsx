@@ -7,13 +7,10 @@ import starOff from './img/star-off.png'
 import sort from './img/sort.png'
 import title from './img/title.png'
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState, setCr_names, setCr_price, setCr_markets, setStar, setCr_change, setCr_change_rate, setCr_change_price } from './store';
+import { RootState, setCr_names, setCr_price, setCr_markets, setStar, setCr_change, setCr_change_rate, setCr_change_price, setCr_trade_volume } from './store';
 
 function App() {
 
-  // const cr_names = useSelector((state: RootState) => { return state.cr_names });
-  // const cr_price = useSelector((state: RootState) => { return state.cr_price });
-  // const cr_markets = useSelector((state: RootState) => { return state.cr_markets });
   const dispatch = useDispatch();
 
   // const [cr_names, setCr_names] = useState<string[]>([]);
@@ -36,6 +33,7 @@ function App() {
       dispatch(setCr_change(response.data.change))
       dispatch(setCr_change_rate(response.data.change_rate))
       dispatch(setCr_change_price(response.data.change_price))
+      dispatch(setCr_trade_volume(response.data.trade_volume))
 
     } catch (error) {
       console.error(error);
@@ -67,7 +65,6 @@ function Header() {
       <div className='title'>
         <img src={title} className='img-title'></img>
       </div>
-
     </header>
   )
 }
@@ -88,17 +85,19 @@ function Left_Bottom() {
 
 function List() {
 
+  const dispatch = useDispatch();
 
+  // useSelector훅을 이용해 store에서 state를 가져옴
   const cr_names = useSelector((state: RootState) => { return state.cr_names });
   const cr_price = useSelector((state: RootState) => { return state.cr_price });
   const cr_markets = useSelector((state: RootState) => { return state.cr_markets });
   const cr_change = useSelector((state : RootState) => {return state.cr_change});
   const cr_change_rate = useSelector((state : RootState) => {return state.cr_change_rate});
   const cr_change_price = useSelector((state : RootState) => {return state.cr_change_price});
+  const cr_trade_volume = useSelector((state: RootState) => { return state.cr_trade_volume });
   const star = useSelector((state: RootState) => { return state.star });
 
-  const dispatch = useDispatch();
-
+  // 별 이미지를 클릭하면 on off
   const handleStarClick = (index: number) => {
     dispatch(setStar(index));
   };
@@ -167,13 +166,15 @@ function List() {
                 <td className='td-star'>
                   <img
                     onClick={() => handleStarClick(i)}
+
+                    // 최초 star[i]의 상태는 'starOn'일 수가 없으므로 반드시 starOff 출력
                     src={star[i] === 'starOn' ? starOn : starOff}
                   />
                 </td>
                 <td className='td-name'>{item} <br /> {cr_markets[i]}</td>
                 <td className='td-price'>{cr_price[i]}</td>
-                <td className='td-compare'>{cr_change_rate[i]}% <br />{cr_change_price[i]}</td>
-                <td className='td-transaction'>96,555백만</td>
+                <td className='td-compare'>{cr_change_rate[i]}% <br /> {cr_change_price[i]}</td>
+                <td className='td-transaction'>{cr_trade_volume[i]}백만</td>
               </tr>)
           }
         </tbody>

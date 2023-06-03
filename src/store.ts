@@ -2,12 +2,13 @@ import { configureStore, createSlice } from '@reduxjs/toolkit'
 
 export type RootState = {
   cr_names: string[],
-  cr_price: string[],
+  cr_price: number[],
   cr_markets: string[],
   cr_change: string[],
-  cr_change_rate: string[],
-  cr_change_price: string[]
-  star: string[],
+  cr_change_rate: number[],
+  cr_change_price: number[],
+  cr_trade_volume: number[],
+  star: string[]
 }
 
 const cr_names = createSlice({
@@ -69,17 +70,28 @@ const cr_change_price = createSlice({
   }
 })
 
+const cr_trade_volume = createSlice({
+  name: 'trade_volume',
+  initialState: [],
+  reducers: {
+    setCr_trade_volume: (state, action) => {
+      return action.payload;
+    }
+  }
+})
+
 const star = createSlice({
   name: 'star',
   initialState: [] as string[],
   reducers: {
     setStar: (state, action) => {
-      const index = action.payload;
+      const index = action.payload;     
+      
+      // 별의 on일 때 클릭하면 off로, off일 때 클릭하면 on으로 변경
       state[index] = state[index] === 'starOn' ? 'starOff' : 'starOn';
     }
   }
 });
-
 
 export default configureStore({
   reducer: {
@@ -89,6 +101,7 @@ export default configureStore({
     cr_cr_change: cr_change.reducer,
     cr_change_rate: cr_change_rate.reducer,
     cr_change_price: cr_change_price.reducer,
+    cr_trade_volume: cr_trade_volume.reducer,
     star: star.reducer
   }
 })
@@ -99,4 +112,5 @@ export const { setCr_markets } = cr_markets.actions;
 export const { setCr_change } = cr_change.actions;
 export const { setCr_change_rate } = cr_change_rate.actions;
 export const { setCr_change_price } = cr_change_price.actions;
+export const { setCr_trade_volume } = cr_trade_volume.actions;
 export const { setStar } = star.actions;
