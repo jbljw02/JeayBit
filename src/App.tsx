@@ -96,6 +96,8 @@ function List() {
   const cr_trade_volume = useSelector((state: RootState) => { return state.cr_trade_volume });
   const star = useSelector((state: RootState) => { return state.star });
 
+  const [search_cr, setSearch_cr] = useState<string>('');
+
   // 별 이미지를 클릭하면 on off
   const handleStarClick = (index: number) => {
     dispatch(setStar(index));
@@ -106,10 +108,8 @@ function List() {
 
       {/* 검색 공간 */}
       <div className='list-search'>
-        <input type="text" placeholder='검색'></input>
-        <button className='btn-search'>
           <img className='img-search' src={search}></img>
-        </button>
+        <input type="text" placeholder='검색' value={search_cr} onChange={(e) => setSearch_cr(e.target.value)}></input>
       </div>
 
       {/* 화폐 구분 목록 */}
@@ -136,22 +136,22 @@ function List() {
           <tr>
             <th className='name'>
               화폐명&nbsp;
-              <img src={sort}>
+              <img className='sort' src={sort}>
               </img>
             </th>
             <th className='price'>
               현재가&nbsp;
-              <img src={sort}>
+              <img className='sort' src={sort}>
               </img>
             </th>
             <th className='compare'>
               전일대비&nbsp;
-              <img src={sort}>
+              <img className='sort' src={sort}>
               </img>
             </th>
             <th className='transaction'>
               거래대금&nbsp;
-              <img src={sort}>
+              <img className='sort' src={sort}>
               </img>
             </th>
           </tr>
@@ -160,7 +160,11 @@ function List() {
 
           {/* map 반복문을 이용해 <tr><td>생성, 화폐 정보 출력 */}
           {
-            cr_names.map((item, i) =>
+            cr_names
+              .filter((item) =>
+                item.toLowerCase().includes(search_cr.toLowerCase())
+              )
+              .map((item, i) =>
               <tr key={i}>
                 <td className='td-star'>
                   <img

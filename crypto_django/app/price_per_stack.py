@@ -45,7 +45,7 @@ def price():
         atp = format(atp, ",")
         acc_trade_price_24h.append(atp)
 
-    print(change)
+    print(change_rate)
     return names, cur_price, unJoin_markets, change, change_rate, change_price, acc_trade_price_24h
 
 price()
