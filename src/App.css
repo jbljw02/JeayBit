@@ -149,3 +149,15 @@ input {
 .list-table tbody tr:hover {
   background-color: #e6e6e6;
 }
+
+.td-rise {
+  color: #22ab94;
+}
+
+.td-fall {
+  color: #f23645
+}
+
+.td-even {
+  color: black;
+}

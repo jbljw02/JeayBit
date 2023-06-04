@@ -98,7 +98,7 @@ export default configureStore({
     cr_names: cr_names.reducer,
     cr_price: cr_price.reducer,
     cr_markets: cr_markets.reducer,
-    cr_cr_change: cr_change.reducer,
+    cr_change: cr_change.reducer,
     cr_change_rate: cr_change_rate.reducer,
     cr_change_price: cr_change_price.reducer,
     cr_trade_volume: cr_trade_volume.reducer,

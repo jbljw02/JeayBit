@@ -34,7 +34,6 @@ function App() {
       dispatch(setCr_change_rate(response.data.change_rate))
       dispatch(setCr_change_price(response.data.change_price))
       dispatch(setCr_trade_volume(response.data.trade_volume))
-
     } catch (error) {
       console.error(error);
     }
@@ -172,8 +171,22 @@ function List() {
                   />
                 </td>
                 <td className='td-name'>{item} <br /> {cr_markets[i]}</td>
-                <td className='td-price'>{cr_price[i]}</td>
-                <td className='td-compare'>{cr_change_rate[i]}% <br /> {cr_change_price[i]}</td>
+
+                {/* 삼항연산자 중첩 - 전일 대비 가격이 상승했다면 청색, 하락했다면 적색, 동일하다면 검정색 */}
+                {
+                  cr_change[i] === 'RISE'
+                    ? <td className='td-rise'>{cr_price[i]}</td>
+                    : (cr_change[i] === 'FALL'
+                      ? <td className='td-fall'>{cr_price[i]}</td>
+                      : <td className='td-even'>{cr_price[i]}</td>)
+                }
+                {
+                  cr_change[i] === 'RISE'
+                    ? <td className='td-rise'>+{cr_change_rate[i]}% <br /> {cr_change_price[i]}</td>
+                    : (cr_change[i] === 'FALL'
+                      ? <td className='td-fall'>-{cr_change_rate[i]}% <br /> {cr_change_price[i]}</td>
+                      : <td className='td-even'>{cr_change_rate[i]}% <br /> {cr_change_price[i]}</td>)
+                }
                 <td className='td-transaction'>{cr_trade_volume[i]}백만</td>
               </tr>)
           }
