@@ -1,5 +1,5 @@
 from django.http import JsonResponse
-from .price_per_stack import price
+from .crpyto_api import price
 
 def get_data(request):
     names, cur_price, unJoin_markets, change, change_rate, change_price, acc_trade_price_24h = price()

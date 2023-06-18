@@ -44,7 +44,6 @@ def price():
         else:
             change_price.append(format(data[i]['change_price']))
 
-
         atp = int(data[i]['acc_trade_price_24h'])
         str_atp = str(atp)
         str_atp = str_atp[:5]
