@@ -21,6 +21,8 @@ def price():
 
     data = eval(response.text)
 
+    print(data)
+
     cur_price = []
     change = []
     change_rate = []
@@ -36,7 +38,12 @@ def price():
 
         change.append(data[i]['change'])
         change_rate.append(round(float(data[i]['change_rate'])*100, 2))
-        change_price.append(format(int(data[i]['change_price']), ","))
+
+        if data[i]['change_price'] % 1 == 0:
+            change_price.append(format(int(data[i]['change_price']), ","))
+        else:
+            change_price.append(format(data[i]['change_price']))
+
 
         atp = int(data[i]['acc_trade_price_24h'])
         str_atp = str(atp)
@@ -45,7 +52,6 @@ def price():
         atp = format(atp, ",")
         acc_trade_price_24h.append(atp)
 
-    print(change_rate)
     return names, cur_price, unJoin_markets, change, change_rate, change_price, acc_trade_price_24h
 
 price()

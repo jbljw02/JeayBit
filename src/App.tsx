@@ -103,6 +103,20 @@ function List() {
     dispatch(setStar(index));
   };
 
+  // 화폐정보를 가져온 뒤 검색값을 반환하는 filteredData 변수 선언(검색값이 없다면 기본값 반환)
+  const filteredData = cr_names.map((name, i) => ({
+    name,
+    price: cr_price[i],
+    markets: cr_markets[i],
+    change: cr_change[i],
+    changeRate: cr_change_rate[i],
+    changePrice: cr_change_price[i],
+    tradeVolume: cr_trade_volume[i],
+    star: star[i],
+  })).filter(item =>
+    item.name.toLowerCase().includes(search_cr.toLowerCase())
+  );
+
   return (
     <div className='div-list'>
 
@@ -158,13 +172,10 @@ function List() {
         </thead>
         <tbody>
 
-          {/* map 반복문을 이용해 <tr><td>생성, 화폐 정보 출력 */}
+          {/* 검색값을 반환한 filteredData 함수를 다시 반복문을 이용하여 출력 */}
           {
-            cr_names
-              .filter((item) =>
-                item.toLowerCase().includes(search_cr.toLowerCase())
-              )
-              .map((item, i) =>
+            filteredData
+              .map((item, i) => 
               <tr key={i}>
                 <td className='td-star'>
                   <img
@@ -174,24 +185,24 @@ function List() {
                     src={star[i] === 'starOn' ? starOn : starOff}
                   />
                 </td>
-                <td className='td-name'>{item} <br /> {cr_markets[i]}</td>
+                  <td className='td-name'>{item.name} <br /> {item.markets}</td>
 
                 {/* 삼항연산자 중첩 - 전일 대비 가격이 상승했다면 청색, 하락했다면 적색, 동일하다면 검정색 */}
                 {
-                  cr_change[i] === 'RISE'
-                    ? <td className='td-rise'>{cr_price[i]}</td>
-                    : (cr_change[i] === 'FALL'
-                      ? <td className='td-fall'>{cr_price[i]}</td>
-                      : <td className='td-even'>{cr_price[i]}</td>)
+                    item.change === 'RISE'
+                      ? <td className='td-rise'>{item.price}</td>
+                      : (item.change === 'FALL'
+                        ? <td className='td-fall'>{item.price}</td>
+                        : <td className='td-even'>{item.price}</td>)
                 }
                 {
-                  cr_change[i] === 'RISE'
-                    ? <td className='td-rise'>+{cr_change_rate[i]}% <br /> {cr_change_price[i]}</td>
-                    : (cr_change[i] === 'FALL'
-                      ? <td className='td-fall'>-{cr_change_rate[i]}% <br /> {cr_change_price[i]}</td>
-                      : <td className='td-even'>{cr_change_rate[i]}% <br /> {cr_change_price[i]}</td>)
+                    item.change === 'RISE'
+                      ? <td className='td-rise'>+{item.changeRate}% <br /> {item.changePrice}</td>
+                      : (item.change === 'FALL'
+                        ? <td className='td-fall'>-{item.changeRate}% <br /> {item.changePrice}</td>
+                        : <td className='td-even'>{item.changeRate}% <br /> {item.changePrice}</td>)
                 }
-                <td className='td-transaction'>{cr_trade_volume[i]}백만</td>
+                  <td className='td-volume'>{item.tradeVolume}백만</td>
               </tr>)
           }
         </tbody>

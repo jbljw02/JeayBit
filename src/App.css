@@ -111,11 +111,7 @@ input {
   justify-content: space-between;
   flex-direction: column;
   border-collapse: collapse;
-}
-
-.list-table tbody tr td {
-  font-size: 12px;
-  border-bottom: 1px solid rgb(228, 229, 230);
+  table-layout: fixed;
 }
 
 .list-table th {
@@ -127,17 +123,20 @@ input {
 }
 
 .list-table td {
+  font-size: 12px;
+  border-bottom: 1px solid rgb(228, 229, 230);
   padding: 9.5px;
   white-space: nowrap;
-}
-
-.price, .compare, .transaction {
-  padding-right: 14px;
 }
 
 .name {
   padding-left: 42px;
   padding-right: 108px;
+  width: 100%;
+}
+
+.price, .compare, .transaction {
+  padding-right: 14px;
 }
 
 .list-table tbody tr:nth-child(even) {
@@ -146,6 +145,10 @@ input {
 
 .list-table tbody tr:hover {
   background-color: #e6e6e6;
+}
+
+.td-name {
+  width: 100%;
 }
 
 .td-rise {
