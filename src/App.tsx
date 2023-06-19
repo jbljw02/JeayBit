@@ -4,7 +4,9 @@ import axios from 'axios';
 import search from './img/search.png';
 import starOn from './img/star-on.png'
 import starOff from './img/star-off.png'
-import sort from './img/sort.png'
+import img_sort from './img/sort.png'
+import img_sort_up from './img/sort-up.png'
+import img_sort_down from './img/sort-down.png'
 import title from './img/title.png'
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState, setCr_names, setCr_price, setCr_markets, setStar, setCr_change, setCr_change_rate, setCr_change_price, setCr_trade_volume } from './store';
@@ -97,11 +99,26 @@ function List() {
   const star = useSelector((state: RootState) => { return state.star });
 
   const [search_cr, setSearch_cr] = useState<string>('');
+  const [sort, setSort] = useState(img_sort);
+  const [sort_up, setSort_up] = useState(img_sort_up);
+  const [sort_down, setSort_down] = useState(img_sort_down);
 
   // 별 이미지를 클릭하면 on off
-  const handleStarClick = (index: number) => {
+  const starClick = (index: number) => {
     dispatch(setStar(index));
-  };
+  }
+
+  const sortClick = (src: string) => {
+    if(src === sort) {
+      setSort(sort_up)
+    }
+    else if(src === sort_up) {
+      setSort(sort_down)
+    }
+    else if(src === sort_down) {
+      setSort(sort)
+    }
+  }
 
   // 화폐정보를 가져온 뒤 검색값을 반환하는 filteredData 변수 선언(검색값이 없다면 기본값 반환)
   const filteredData = cr_names.map((name, i) => ({
@@ -150,23 +167,19 @@ function List() {
           <tr>
             <th className='name'>
               화폐명&nbsp;
-              <img className='sort' src={sort}>
-              </img>
+              <img className='sort' src={sort} onClick={(e) => sortClick(e.currentTarget.src)}></img>
             </th>
             <th className='price'>
               현재가&nbsp;
-              <img className='sort' src={sort}>
-              </img>
+              <img className='sort' src={sort}></img>
             </th>
             <th className='compare'>
               전일대비&nbsp;
-              <img className='sort' src={sort}>
-              </img>
+              <img className='sort' src={sort}></img>
             </th>
             <th className='transaction'>
               거래대금&nbsp;
-              <img className='sort' src={sort}>
-              </img>
+              <img className='sort' src={sort}></img>
             </th>
           </tr>
         </thead>
@@ -179,7 +192,7 @@ function List() {
               <tr key={i}>
                 <td className='td-star'>
                   <img
-                    onClick={() => handleStarClick(i)}
+                      onClick={() => starClick(i)}
 
                     // 최초 star[i]의 상태는 'starOn'일 수가 없으므로 반드시 starOff 출력
                     src={star[i] === 'starOn' ? starOn : starOff}
