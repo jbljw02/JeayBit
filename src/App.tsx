@@ -114,8 +114,8 @@ function List() {
 
   // 정렬 이미지 순환
   const sortClick = (index: number) => {
-    setSort_states((cur_states) => {
-      const states_copy = [...cur_states];
+    setSort_states((prevStates) => {
+      const states_copy = [...prevStates];
       states_copy[index] = (states_copy[index] + 1) % sort_images.length;
       return states_copy;
     })
