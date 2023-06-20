@@ -99,25 +99,26 @@ function List() {
   const star = useSelector((state: RootState) => { return state.star });
 
   const [search_cr, setSearch_cr] = useState<string>('');
-  const [sort, setSort] = useState(img_sort);
-  const [sort_up, setSort_up] = useState(img_sort_up);
-  const [sort_down, setSort_down] = useState(img_sort_down);
+  const [sort_states, setSort_states] = useState<number[]>([0, 0, 0, 0]);
+
+  const sort_images = [
+    img_sort,
+    img_sort_up,
+    img_sort_down
+  ]
 
   // 별 이미지를 클릭하면 on off
   const starClick = (index: number) => {
     dispatch(setStar(index));
   }
 
-  const sortClick = (src: string) => {
-    if(src === sort) {
-      setSort(sort_up)
-    }
-    else if(src === sort_up) {
-      setSort(sort_down)
-    }
-    else if(src === sort_down) {
-      setSort(sort)
-    }
+  // 정렬 이미지 순환
+  const sortClick = (index: number) => {
+    setSort_states((cur_states) => {
+      const states_copy = [...cur_states];
+      states_copy[index] = (states_copy[index] + 1) % sort_images.length;
+      return states_copy;
+    })
   }
 
   // 화폐정보를 가져온 뒤 검색값을 반환하는 filteredData 변수 선언(검색값이 없다면 기본값 반환)
@@ -167,19 +168,19 @@ function List() {
           <tr>
             <th className='name'>
               화폐명&nbsp;
-              <img className='sort' src={sort} onClick={(e) => sortClick(e.currentTarget.src)}></img>
+              <img className='sort' src={sort_images[sort_states[0]]} onClick={() => sortClick(0)}></img>
             </th>
             <th className='price'>
               현재가&nbsp;
-              <img className='sort' src={sort}></img>
+              <img className='sort' src={sort_images[sort_states[1]]} onClick={() => sortClick(1)}></img>
             </th>
             <th className='compare'>
               전일대비&nbsp;
-              <img className='sort' src={sort}></img>
+              <img className='sort' src={sort_images[sort_states[2]]} onClick={() => sortClick(2)}></img>
             </th>
-            <th className='transaction'>
+            <th className='volume'>
               거래대금&nbsp;
-              <img className='sort' src={sort}></img>
+              <img className='sort' src={sort_images[sort_states[3]]} onClick={() => sortClick(3)}></img>
             </th>
           </tr>
         </thead>

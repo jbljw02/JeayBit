@@ -135,7 +135,7 @@ input {
   width: 100%;
 }
 
-.price, .compare, .transaction {
+.price, .compare, .volume {
   padding-right: 14px;
 }
 
