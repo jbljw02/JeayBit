@@ -131,8 +131,9 @@ function List() {
       changePrice: cr_change_price[i],
       tradeVolume: cr_trade_volume[i],
       star: star[i],
-    })).filter(item =>
+    })).filter((item) => (
       item.name.toLowerCase().includes(search_cr.toLowerCase())
+    )
     );
 
     setFilteredData(updatedData);
@@ -146,6 +147,7 @@ function List() {
   }
 
   const sortClick = (index: number) => {
+
     // 정렬 이미지 순환
     setSort_states((prevStates) => {
       const states_copy = [...prevStates];
