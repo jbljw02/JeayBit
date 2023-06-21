@@ -11,6 +11,17 @@ import title from './img/title.png'
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState, setCr_names, setCr_price, setCr_markets, setStar, setCr_change, setCr_change_rate, setCr_change_price, setCr_trade_volume } from './store';
 
+interface crypto {
+  name: string,
+  price: number,
+  markets: string,
+  change: string,
+  changeRate: number,
+  changePrice: number,
+  tradeVolume: number,
+  star: string;
+}
+
 function App() {
 
   const dispatch = useDispatch();
@@ -86,6 +97,7 @@ function Left_Bottom() {
 
 function List() {
 
+  // dispatch 함수를 사용하기 위한 선언
   const dispatch = useDispatch();
 
   // useSelector훅을 이용해 store에서 state를 가져옴
@@ -99,41 +111,91 @@ function List() {
   const star = useSelector((state: RootState) => { return state.star });
 
   const [search_cr, setSearch_cr] = useState<string>('');
+  const [filteredData, setFilteredData] = useState<crypto[]>([]);
   const [sort_states, setSort_states] = useState<number[]>([0, 0, 0, 0]);
-
   const sort_images = [
     img_sort,
     img_sort_up,
     img_sort_down
   ]
 
+  useEffect(() => {
+    // 검색어 또는 정렬 상태가 변경되었을 때 실행
+    // 필터링 및 정렬된 데이터를 새로운 배열로 생성 -> setFilteredData로 상태를 업데이트
+    const updatedData = cr_names.map((name, i) => ({
+      name,
+      price: cr_price[i],
+      markets: cr_markets[i],
+      change: cr_change[i],
+      changeRate: cr_change_rate[i],
+      changePrice: cr_change_price[i],
+      tradeVolume: cr_trade_volume[i],
+      star: star[i],
+    })).filter(item =>
+      item.name.toLowerCase().includes(search_cr.toLowerCase())
+    );
+
+    setFilteredData(updatedData);
+    // 의존성 배열 추가(배열에 포함된 값들 중 하나라도 변경되면 useEffect 함수가 실행되며 재렌더링 발생)
+  }, [cr_names, cr_price, cr_markets, cr_change, cr_change_rate, cr_change_price, cr_trade_volume, star, search_cr]
+  );
+
   // 별 이미지를 클릭하면 on off
   const starClick = (index: number) => {
     dispatch(setStar(index));
   }
 
-  // 정렬 이미지 순환
   const sortClick = (index: number) => {
+    // 정렬 이미지 순환
     setSort_states((prevStates) => {
       const states_copy = [...prevStates];
       states_copy[index] = (states_copy[index] + 1) % sort_images.length;
+
+      // switch (index) {
+      //   case 0:
+      //     if (states_copy[index] === 1) {
+      //     }
+      //     if (states_copy[index] === 2) {
+      //     }
+      //     break;
+      //   case 1:
+      //     if (states_copy[index] === 1)
+      //       console.log("up")
+      //     if (states_copy[index] === 2)
+      //       console.log("down")
+      //     break;
+      //   case 2:
+      //     if (states_copy[index] === 1)
+      //       console.log("up")
+      //     if (states_copy[index] === 2)
+      //       console.log("down")
+      //     break;
+      //   case 3:
+      //     if (states_copy[index] === 1)
+      //       console.log("up")
+      //     if (states_copy[index] === 2)
+      //       console.log("down")
+      //     break;
+      // }
+
       return states_copy;
     })
+
   }
 
   // 화폐정보를 가져온 뒤 검색값을 반환하는 filteredData 변수 선언(검색값이 없다면 기본값 반환)
-  const filteredData = cr_names.map((name, i) => ({
-    name,
-    price: cr_price[i],
-    markets: cr_markets[i],
-    change: cr_change[i],
-    changeRate: cr_change_rate[i],
-    changePrice: cr_change_price[i],
-    tradeVolume: cr_trade_volume[i],
-    star: star[i],
-  })).filter(item =>
-    item.name.toLowerCase().includes(search_cr.toLowerCase())
-  );
+  // let filteredData = cr_names.map((name, i) => ({
+  //   name,
+  //   price: cr_price[i],
+  //   markets: cr_markets[i],
+  //   change: cr_change[i],
+  //   changeRate: cr_change_rate[i],
+  //   changePrice: cr_change_price[i],
+  //   tradeVolume: cr_trade_volume[i],
+  //   star: star[i],
+  // })).filter(item =>
+  //   item.name.toLowerCase().includes(search_cr.toLowerCase())
+  // );
 
   return (
     <div className='div-list'>
