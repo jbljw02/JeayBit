@@ -135,7 +135,6 @@ function List() {
       item.name.toLowerCase().includes(search_cr.toLowerCase())
     )
     );
-
     setFilteredData(updatedData);
     // 의존성 배열 추가(배열에 포함된 값들 중 하나라도 변경되면 useEffect 함수가 실행되며 재렌더링 발생)
   }, [cr_names, cr_price, cr_markets, cr_change, cr_change_rate, cr_change_price, cr_trade_volume, star, search_cr]
@@ -153,32 +152,56 @@ function List() {
       const states_copy = [...prevStates];
       states_copy[index] = (states_copy[index] + 1) % sort_images.length;
 
-      // switch (index) {
-      //   case 0:
-      //     if (states_copy[index] === 1) {
-      //     }
-      //     if (states_copy[index] === 2) {
-      //     }
-      //     break;
-      //   case 1:
-      //     if (states_copy[index] === 1)
-      //       console.log("up")
-      //     if (states_copy[index] === 2)
-      //       console.log("down")
-      //     break;
-      //   case 2:
-      //     if (states_copy[index] === 1)
-      //       console.log("up")
-      //     if (states_copy[index] === 2)
-      //       console.log("down")
-      //     break;
-      //   case 3:
-      //     if (states_copy[index] === 1)
-      //       console.log("up")
-      //     if (states_copy[index] === 2)
-      //       console.log("down")
-      //     break;
-      // }
+      switch (index) {
+        case 0:
+          if (states_copy[index] === 1) {
+            const sortedData = [...filteredData]
+            sortedData.sort((a, b) => a.name.localeCompare(b.name));
+            setFilteredData(sortedData)
+          }
+          if (states_copy[index] === 2) {
+            const sortedData = [...filteredData]
+            sortedData.sort((a, b) => b.name.localeCompare(a.name));
+            setFilteredData(sortedData)
+          }
+          break;
+        case 1:
+          if (states_copy[index] === 1) {
+            const sortedData = [...filteredData]
+            sortedData.sort((a, b) => a.price - b.price)
+            setFilteredData(sortedData)
+          }
+          if (states_copy[index] === 2) {
+            const sortedData = [...filteredData]
+            sortedData.sort((a, b) => b.price - a.price)
+            setFilteredData(sortedData)
+          }
+          break;
+        case 2:
+          if (states_copy[index] === 1) {
+            const sortedData = [...filteredData].sort((a, b) => a.changePrice - b.changePrice)
+            sortedData.sort((a, b) => a.changePrice - b.changePrice)
+            setFilteredData(sortedData)
+          }
+          if (states_copy[index] === 2) {
+            const sortedData = [...filteredData]
+            sortedData.sort((a, b) => b.changePrice - a.changePrice)
+            setFilteredData(sortedData)
+          }
+          break;
+        case 3:
+          if (states_copy[index] === 1) {
+            const sortedData = [...filteredData]
+            sortedData.sort((a, b) => a.tradeVolume - b.tradeVolume)
+            setFilteredData(sortedData)
+          }
+          if (states_copy[index] === 2) {
+            const sortedData = [...filteredData]
+            sortedData.sort((a, b) => b.tradeVolume - a.tradeVolume)
+            setFilteredData(sortedData)
+          }
+          break;
+      }
 
       return states_copy;
     })
