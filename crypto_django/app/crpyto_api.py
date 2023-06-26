@@ -21,8 +21,6 @@ def price():
 
     data = eval(response.text)
 
-    print(data)
-
     cur_price = []
     change = []
     change_rate = []

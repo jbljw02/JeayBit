@@ -153,17 +153,16 @@ function List() {
       const states_copy = [...prevStates];
       states_copy[index] = (states_copy[index] + 1) % sort_images.length;
 
+      const sortedData = [...filteredData]
       switch (index) {
 
         // 화폐 이름순 정렬
         case 0:
           if (states_copy[index] === 1) {
-            const sortedData = [...filteredData]
             sortedData.sort((a, b) => a.name.localeCompare(b.name));
             setFilteredData(sortedData)
           }
           if (states_copy[index] === 2) {
-            const sortedData = [...filteredData]
             sortedData.sort((a, b) => b.name.localeCompare(a.name));
             setFilteredData(sortedData)
           }
@@ -172,12 +171,10 @@ function List() {
         // 화폐 가격순 정렬
         case 1:
           if (states_copy[index] === 1) {
-            const sortedData = [...filteredData]
             sortedData.sort((a, b) => a.price - b.price)
             setFilteredData(sortedData)
           }
           if (states_copy[index] === 2) {
-            const sortedData = [...filteredData]
             sortedData.sort((a, b) => b.price - a.price)
             setFilteredData(sortedData)
           }
@@ -186,13 +183,11 @@ function List() {
         // 화폐 전일대비 변화순 정률
         case 2:
           if (states_copy[index] === 1) {
-            const sortedData = [...filteredData].sort((a, b) => a.changePrice - b.changePrice)
-            sortedData.sort((a, b) => a.changePrice - b.changePrice)
+            sortedData.sort((a, b) => a.changeRate - b.changeRate)
             setFilteredData(sortedData)
           }
           if (states_copy[index] === 2) {
-            const sortedData = [...filteredData]
-            sortedData.sort((a, b) => b.changePrice - a.changePrice)
+            sortedData.sort((a, b) => b.changeRate - a.changeRate)
             setFilteredData(sortedData)
           }
           break;
@@ -200,14 +195,14 @@ function List() {
         // 거래대금순 정렬
         case 3:
           if (states_copy[index] === 1) {
-            const sortedData = [...filteredData]
             sortedData.sort((a, b) => a.tradeVolume - b.tradeVolume)
             setFilteredData(sortedData)
+            console.log(sortedData)
           }
           if (states_copy[index] === 2) {
-            const sortedData = [...filteredData]
             sortedData.sort((a, b) => b.tradeVolume - a.tradeVolume)
             setFilteredData(sortedData)
+            console.log(typeof sortedData[1].tradeVolume)
           }
           break;
       }
