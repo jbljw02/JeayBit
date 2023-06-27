@@ -30,24 +30,29 @@ def price():
     for i in range(len(data)):
 
         if data[i]['trade_price'] % 1 == 0:
-            cur_price.append(format(int(data[i]['trade_price']), ","))
+            cur_price.append(int(data[i]['trade_price']))    # int
         else:
-            cur_price.append(format(data[i]['trade_price'], ",.3f"))
+            cur_price.append(data[i]['trade_price'])    # float
 
-        change.append(data[i]['change'])
-        change_rate.append(round(float(data[i]['change_rate'])*100, 2))
+        change.append(data[i]['change'])    # str
+        change_rate.append(float(data[i]['change_rate'])) # str -> float
+
 
         if data[i]['change_price'] % 1 == 0:
-            change_price.append(format(int(data[i]['change_price']), ","))
+            change_price.append(int(data[i]['change_price']))    # int
         else:
-            change_price.append(format(data[i]['change_price']))
+            change_price.append(data[i]['change_price'])    # float
 
-        atp = int(data[i]['acc_trade_price_24h'])
-        str_atp = str(atp)
-        str_atp = str_atp[:5]
-        atp = int(str_atp)
-        atp = format(atp, ",")
-        acc_trade_price_24h.append(atp)
+        acc_trade_price_24h.append(data[i]['acc_trade_price_24h'])
+        # atp = int(data[i]['acc_trade_price_24h'])
+        # str_atp = str(atp)
+        # str_atp = str_atp[:5]
+        # atp = int(str_atp)
+        # atp = format(atp, ",")
+        # acc_trade_price_24h.append(atp)
+
+        # print(type(acc_trade_price_24h[i]))
+        print(acc_trade_price_24h[i])
 
     return names, cur_price, unJoin_markets, change, change_rate, change_price, acc_trade_price_24h
 

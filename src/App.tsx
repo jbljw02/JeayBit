@@ -11,17 +11,6 @@ import title from './img/title.png'
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState, setCr_names, setCr_price, setCr_markets, setStar, setCr_change, setCr_change_rate, setCr_change_price, setCr_trade_volume } from './store';
 
-interface crypto {
-  name: string,
-  price: number,
-  markets: string,
-  change: string,
-  changeRate: number,
-  changePrice: number,
-  tradeVolume: number,
-  star: string;
-}
-
 function App() {
 
   const dispatch = useDispatch();
@@ -97,6 +86,17 @@ function Left_Bottom() {
 
 function List() {
 
+  interface crypto {
+    name: string,
+    price: number,
+    markets: string,
+    change: string,
+    changeRate: number,
+    changePrice: number,
+    tradeVolume: number,
+    star: string;
+  }
+
   // dispatch 함수를 사용하기 위한 선언
   const dispatch = useDispatch();
 
@@ -133,8 +133,7 @@ function List() {
       star: star[i],
     })).filter((item) => (
       item.name.toLowerCase().includes(search_cr.toLowerCase())
-    )
-    );
+    ));
     setFilteredData(updatedData);
 
     // 의존성 배열 추가(배열에 포함된 값들 중 하나라도 변경되면 useEffect 함수가 실행되며 재렌더링 발생)
@@ -180,7 +179,7 @@ function List() {
           }
           break;
 
-        // 화폐 전일대비 변화순 정률
+        // 화폐 전일대비 변화순 정렬
         case 2:
           if (states_copy[index] === 1) {
             sortedData.sort((a, b) => a.changeRate - b.changeRate)
@@ -197,12 +196,10 @@ function List() {
           if (states_copy[index] === 1) {
             sortedData.sort((a, b) => a.tradeVolume - b.tradeVolume)
             setFilteredData(sortedData)
-            console.log(sortedData)
           }
           if (states_copy[index] === 2) {
             sortedData.sort((a, b) => b.tradeVolume - a.tradeVolume)
             setFilteredData(sortedData)
-            console.log(typeof sortedData[1].tradeVolume)
           }
           break;
       }
