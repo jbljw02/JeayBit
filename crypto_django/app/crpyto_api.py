@@ -43,16 +43,7 @@ def price():
         else:
             change_price.append(data[i]['change_price'])    # float
 
-        acc_trade_price_24h.append(data[i]['acc_trade_price_24h'])
-        # atp = int(data[i]['acc_trade_price_24h'])
-        # str_atp = str(atp)
-        # str_atp = str_atp[:5]
-        # atp = int(str_atp)
-        # atp = format(atp, ",")
-        # acc_trade_price_24h.append(atp)
-
-        # print(type(acc_trade_price_24h[i]))
-        print(acc_trade_price_24h[i])
+        acc_trade_price_24h.append(data[i]['acc_trade_price_24h'])  # float
 
     return names, cur_price, unJoin_markets, change, change_rate, change_price, acc_trade_price_24h
 

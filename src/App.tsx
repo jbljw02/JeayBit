@@ -36,6 +36,8 @@ function App() {
       dispatch(setCr_change_rate(response.data.change_rate))
       dispatch(setCr_change_price(response.data.change_price))
       dispatch(setCr_trade_volume(response.data.trade_volume))
+
+      console.log(response.data.trade_volume)
     } catch (error) {
       console.error(error);
     }
@@ -89,11 +91,15 @@ function List() {
   interface crypto {
     name: string,
     price: number,
+    f_price: string,
     markets: string,
     change: string,
     changeRate: number,
+    f_changeRate: string,
     changePrice: number,
+    f_changePrice: string,
     tradeVolume: number,
+    f_tradeVolume: string,
     star: string;
   }
 
@@ -115,21 +121,26 @@ function List() {
   const [sort_states, setSort_states] = useState<number[]>([0, 0, 0, 0]);
   const sort_images = [
     img_sort,
-    img_sort_up,
-    img_sort_down
+    img_sort_down,
+    img_sort_up
   ]
 
   useEffect(() => {
-    // 검색어 또는 정렬 상태가 변경되었을 때 실행
+    // 검색어 또는 정렬 상태가 변경되었을 때 재렌더링
     // 필터링 및 정렬된 데이터를 새로운 배열로 생성 -> setFilteredData로 상태를 업데이트
+    // price = 숫자형, f_price = 문자형 / 숫자형으로 정렬, 문자형으로 출력
     const updatedData = cr_names.map((name, i) => ({
       name,
       price: cr_price[i],
+      f_price: cr_price[i].toLocaleString(),
       markets: cr_markets[i],
       change: cr_change[i],
       changeRate: cr_change_rate[i],
+      f_changeRate: (cr_change_rate[i] * 100).toFixed(2),
       changePrice: cr_change_price[i],
+      f_changePrice: cr_change_price[i].toLocaleString(),
       tradeVolume: cr_trade_volume[i],
+      f_tradeVolume: Number(String(Math.floor(cr_trade_volume[i])).slice(0, -6)).toLocaleString(),
       star: star[i],
     })).filter((item) => (
       item.name.toLowerCase().includes(search_cr.toLowerCase())
@@ -145,6 +156,7 @@ function List() {
     dispatch(setStar(index));
   }
 
+  // 정렬 이미지 클릭 이벤트
   const sortClick = (index: number) => {
 
     // 정렬 이미지 순환
@@ -157,49 +169,93 @@ function List() {
 
         // 화폐 이름순 정렬
         case 0:
+          if (states_copy[index] === 0) {
+            states_copy[index] = 1
+          }
           if (states_copy[index] === 1) {
             sortedData.sort((a, b) => a.name.localeCompare(b.name));
             setFilteredData(sortedData)
+            
+            sort_states[1] = 0
+            sort_states[2] = 0
+            sort_states[3] = 0
           }
           if (states_copy[index] === 2) {
             sortedData.sort((a, b) => b.name.localeCompare(a.name));
             setFilteredData(sortedData)
+            
+            sort_states[1] = 0
+            sort_states[2] = 0
+            sort_states[3] = 0
           }
           break;
 
         // 화폐 가격순 정렬
         case 1:
-          if (states_copy[index] === 1) {
-            sortedData.sort((a, b) => a.price - b.price)
-            setFilteredData(sortedData)
+          if (states_copy[index] === 0) {
+            states_copy[index] = 1
           }
-          if (states_copy[index] === 2) {
+          if (states_copy[index] === 1) {
             sortedData.sort((a, b) => b.price - a.price)
             setFilteredData(sortedData)
-          }
-          break;
-
-        // 화폐 전일대비 변화순 정렬
-        case 2:
-          if (states_copy[index] === 1) {
-            sortedData.sort((a, b) => a.changeRate - b.changeRate)
-            setFilteredData(sortedData)
+            
+            sort_states[0] = 0
+            sort_states[2] = 0
+            sort_states[3] = 0
           }
           if (states_copy[index] === 2) {
+            sortedData.sort((a, b) => a.price - b.price)
+            setFilteredData(sortedData)
+            
+            sort_states[0] = 0
+            sort_states[2] = 0
+            sort_states[3] = 0
+          }
+          break;
+          
+          // 화폐 전일대비 변화순 정렬
+          case 2:
+            if (states_copy[index] === 0) {
+              states_copy[index] = 1
+            }
+            if (states_copy[index] === 1) {
             sortedData.sort((a, b) => b.changeRate - a.changeRate)
             setFilteredData(sortedData)
+            
+            sort_states[0] = 0
+            sort_states[1] = 0
+            sort_states[3] = 0
+          }
+          if (states_copy[index] === 2) {
+            sortedData.sort((a, b) => a.changeRate - b.changeRate)
+            setFilteredData(sortedData)
+            
+            sort_states[0] = 0
+            sort_states[1] = 0
+            sort_states[3] = 0
           }
           break;
 
         // 거래대금순 정렬
         case 3:
-          if (states_copy[index] === 1) {
-            sortedData.sort((a, b) => a.tradeVolume - b.tradeVolume)
-            setFilteredData(sortedData)
+          if (states_copy[index] === 0) {
+            states_copy[index] = 1
           }
-          if (states_copy[index] === 2) {
+          if (states_copy[index] === 1) {
             sortedData.sort((a, b) => b.tradeVolume - a.tradeVolume)
             setFilteredData(sortedData)
+            
+            sort_states[0] = 0
+            sort_states[1] = 0
+            sort_states[2] = 0
+          }
+          if (states_copy[index] === 2) {
+            sortedData.sort((a, b) => a.tradeVolume - b.tradeVolume)
+            setFilteredData(sortedData)
+
+            sort_states[0] = 0
+            sort_states[1] = 0
+            sort_states[2] = 0
           }
           break;
       }
@@ -208,20 +264,6 @@ function List() {
     })
 
   }
-
-  // 화폐정보를 가져온 뒤 검색값을 반환하는 filteredData 변수 선언(검색값이 없다면 기본값 반환)
-  // let filteredData = cr_names.map((name, i) => ({
-  //   name,
-  //   price: cr_price[i],
-  //   markets: cr_markets[i],
-  //   change: cr_change[i],
-  //   changeRate: cr_change_rate[i],
-  //   changePrice: cr_change_price[i],
-  //   tradeVolume: cr_trade_volume[i],
-  //   star: star[i],
-  // })).filter(item =>
-  //   item.name.toLowerCase().includes(search_cr.toLowerCase())
-  // );
 
   return (
     <div className='div-list'>
@@ -292,19 +334,19 @@ function List() {
                 {/* 삼항연산자 중첩 - 전일 대비 가격이 상승했다면 청색, 하락했다면 적색, 동일하다면 검정색 */}
                 {
                     item.change === 'RISE'
-                      ? <td className='td-rise'>{item.price}</td>
+                      ? <td className='td-rise'>{item.f_price}</td>
                       : (item.change === 'FALL'
-                        ? <td className='td-fall'>{item.price}</td>
-                        : <td className='td-even'>{item.price}</td>)
+                        ? <td className='td-fall'>{item.f_price}</td>
+                        : <td className='td-even'>{item.f_price}</td>)
                 }
                 {
                     item.change === 'RISE'
-                      ? <td className='td-rise'>+{item.changeRate}% <br /> {item.changePrice}</td>
+                      ? <td className='td-rise'>+{item.f_changeRate}% <br /> {item.f_changePrice}</td>
                       : (item.change === 'FALL'
-                        ? <td className='td-fall'>-{item.changeRate}% <br /> {item.changePrice}</td>
-                        : <td className='td-even'>{item.changeRate}% <br /> {item.changePrice}</td>)
+                        ? <td className='td-fall'>-{item.f_changeRate}% <br /> {item.f_changePrice}</td>
+                        : <td className='td-even'>{item.f_changeRate}% <br /> {item.f_changePrice}</td>)
                 }
-                  <td className='td-volume'>{item.tradeVolume}백만</td>
+                  <td className='td-volume'>{item.f_tradeVolume}백만</td>
               </tr>)
           }
         </tbody>
