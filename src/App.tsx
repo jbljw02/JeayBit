@@ -15,16 +15,11 @@ function App() {
 
   const dispatch = useDispatch();
 
-  // const [cr_names, setCr_names] = useState<string[]>([]);
-  // const [cr_price, setCr_price] = useState<string[]>([]);
-  // const [cr_markets, setCr_markets] = useState<string[]>([]);
-  // const [bookmark_on, setBookmark_on] = useState<string>(starOn);
-  // const [bookmark_off, setBookmark_off] = useState<string>(starOff);
-  
   useEffect(() => {
     fetchData();
   }, []);
 
+  // 비동기 함수 async를 이용하여 데이터를 받아오는 동안에도 다른 작업을 가능하게 함
   // = async function () {}
   const fetchData = async () => {
     try {
@@ -36,8 +31,6 @@ function App() {
       dispatch(setCr_change_rate(response.data.change_rate))
       dispatch(setCr_change_price(response.data.change_price))
       dispatch(setCr_trade_volume(response.data.trade_volume))
-
-      console.log(response.data.trade_volume)
     } catch (error) {
       console.error(error);
     }
@@ -88,6 +81,7 @@ function Left_Bottom() {
 
 function List() {
 
+  // 데이터의 타입 선언
   interface crypto {
     name: string,
     price: number,
@@ -116,17 +110,25 @@ function List() {
   const cr_trade_volume = useSelector((state: RootState) => { return state.cr_trade_volume });
   const star = useSelector((state: RootState) => { return state.star });
 
+  // 검색값을 관리하기 위한 state
   const [search_cr, setSearch_cr] = useState<string>('');
+
+  // 화폐정보를 관리하기 위한 state
   const [filteredData, setFilteredData] = useState<crypto[]>([]);
+
+  // 차례로 화폐명, 현재가, 전일대비, 거래대금의 정렬 상태를 관리
   const [sort_states, setSort_states] = useState<number[]>([0, 0, 0, 0]);
+
+  // 정렬하려는 목적에 따라 이미지를 변경하기 위해 배열로 생성
   const sort_images = [
     img_sort,
     img_sort_down,
     img_sort_up
   ]
 
+  // 검색어 또는 정렬 상태가 변경되었을 때 재렌더링(변경이 없다면 초기 상태를 출력)
   useEffect(() => {
-    // 검색어 또는 정렬 상태가 변경되었을 때 재렌더링
+    
     // 필터링 및 정렬된 데이터를 새로운 배열로 생성 -> setFilteredData로 상태를 업데이트
     // price = 숫자형, f_price = 문자형 / 숫자형으로 정렬, 문자형으로 출력
     const updatedData = cr_names.map((name, i) => ({
@@ -164,7 +166,21 @@ function List() {
       const states_copy = [...prevStates];
       states_copy[index] = (states_copy[index] + 1) % sort_images.length;
 
-      const sortedData = [...filteredData]
+      let sortedData: crypto[] = [...filteredData]
+
+      // 화폐를 전일대비 상승/동결/하락한 것에 따라 구분
+      // 값 자체에 양수, 음수 구분이 되어있는 것이 아니기 때문에 정렬하기 전에 구분을 지어줘야 함
+      let rise_crypto: crypto[] = []
+      let even_crypto: crypto[] = []
+      let fall_crypto: crypto[] = []
+
+      // 상승/동결/하락 여부에 따라 구분하여 새 배열 생성
+      sortedData.map((item) => {
+        rise_crypto = sortedData.filter((item) => item.change === 'RISE')
+        even_crypto = sortedData.filter((item) => item.change === 'EVEN')
+        fall_crypto = sortedData.filter((item) => item.change === 'FALL')
+      })
+
       switch (index) {
 
         // 화폐 이름순 정렬
@@ -219,15 +235,27 @@ function List() {
               states_copy[index] = 1
             }
             if (states_copy[index] === 1) {
-            sortedData.sort((a, b) => b.changeRate - a.changeRate)
-            setFilteredData(sortedData)
+              rise_crypto.sort((a, b) => b.changeRate - a.changeRate)
+              even_crypto.sort((a, b) => b.changeRate - a.changeRate)
+              fall_crypto.sort((a, b) => a.changeRate - b.changeRate)
+
+              // 새 배열을 원본 배열의 카피본에 병합 - 내림차순이기 때문에 상승, 동결, 하락순으로 병합
+              sortedData = [...rise_crypto, ...even_crypto, ...fall_crypto]
+
+              setFilteredData(sortedData)
             
-            sort_states[0] = 0
-            sort_states[1] = 0
-            sort_states[3] = 0
+              sort_states[0] = 0
+              sort_states[1] = 0
+              sort_states[3] = 0
           }
           if (states_copy[index] === 2) {
-            sortedData.sort((a, b) => a.changeRate - b.changeRate)
+            fall_crypto.sort((a, b) => b.changeRate - a.changeRate)
+            even_crypto.sort((a, b) => b.changeRate - a.changeRate)
+            rise_crypto.sort((a, b) => a.changeRate - b.changeRate)
+
+            // 새 배열을 원본 배열의 카피본에 병합 - 오름차순이기 때문에 하락, 동결, 상승순으로 병합
+            sortedData = [...fall_crypto, ...even_crypto, ...rise_crypto]
+
             setFilteredData(sortedData)
             
             sort_states[0] = 0
@@ -259,7 +287,6 @@ function List() {
           }
           break;
       }
-
       return states_copy;
     })
 
@@ -315,11 +342,9 @@ function List() {
           </tr>
         </thead>
         <tbody>
-
           {/* 검색값을 반환한 filteredData 함수를 다시 반복문을 이용하여 출력 */}
           {
-            filteredData
-              .map((item, i) => 
+            filteredData.map((item, i) => 
               <tr key={i}>
                 <td className='td-star'>
                   <img
@@ -358,7 +383,6 @@ function List() {
 function Footer() {
   return (
     <footer className='footer'>
-      {/* <p>{data.map((item) => item).join(', ')}</p> */}
     </footer>
   )
 }
