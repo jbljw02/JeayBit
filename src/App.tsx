@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import './App.css';
 import axios from 'axios';
 import search from './img/search.png';
@@ -57,9 +57,15 @@ function App() {
 
 function Header() {
   return (
+
     <header className='header'>
+      {/* 제목 폰트를 사용하기 위한 구글 폰트 api */}
+      <style>
+        @import url('https://fonts.googleapis.com/css2?family=Asap+Condensed:wght@300&family=Barlow:ital@1&family=Fira+Sans:ital,wght@1,300&family=Gowun+Batang&family=Hind&display=swap');
+      </style>
       <div className='title'>
-        <img src={title} className='img-title'></img>
+        <img src={title} className='title-img'></img>
+        <span className='title-name'>J TradingView </span>
       </div>
     </header>
   )
@@ -144,11 +150,11 @@ function List() {
       tradeVolume: cr_trade_volume[i],
       f_tradeVolume: Number(String(Math.floor(cr_trade_volume[i])).slice(0, -6)).toLocaleString(),
       star: star[i],
+      // 검색어에 해당하는 데이터를 비교하여 배열을 재생성 후 재렌더링
     })).filter((item) => (
       item.name.toLowerCase().includes(search_cr.toLowerCase())
     ));
     setFilteredData(updatedData);
-
     // 의존성 배열 추가(배열에 포함된 값들 중 하나라도 변경되면 useEffect 함수가 실행되며 재렌더링 발생)
   }, [cr_names, cr_price, cr_markets, cr_change, cr_change_rate, cr_change_price, cr_trade_volume, star, search_cr]
   );
@@ -302,7 +308,7 @@ function List() {
       </div>
 
       {/* 화폐 구분 목록 */}
-      <div className='list-category'>
+      {/* <div className='list-category'>
         <span className='krw'>
           원화
         </span>
@@ -315,9 +321,9 @@ function List() {
         <span className='favorite'>
           관심
         </span>
-      </div>
-      <div className='list-head'>
-      </div>
+      </div> */}
+      {/* <div className='list-head'>
+      </div> */}
 
       {/* 화폐 정보 테이블 */}
       <table className='list-table'>
