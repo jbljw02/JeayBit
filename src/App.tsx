@@ -63,6 +63,9 @@ function Header() {
       <style>
         @import url('https://fonts.googleapis.com/css2?family=Asap+Condensed:wght@300&family=Barlow:ital@1&family=Fira+Sans:ital,wght@1,300&family=Gowun+Batang&family=Hind&display=swap');
       </style>
+      <style>
+        @import url('https://fonts.googleapis.com/css2?family=Asap+Condensed:wght@300&family=Barlow:ital@1&family=Fira+Sans:ital,wght@1,300&family=Gowun+Batang&family=Roboto+Flex&display=swap');
+      </style>
       <div className='title'>
         <img src={title} className='title-img'></img>
         <span className='title-name'>J TradingView </span>
@@ -347,7 +350,8 @@ function List() {
             </th>
           </tr>
         </thead>
-        <tbody>
+
+        <tbody className='scroll-tbody'>
           {/* 검색값을 반환한 filteredData 함수를 다시 반복문을 이용하여 출력 */}
           {
             filteredData.map((item, i) => 
