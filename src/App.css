@@ -57,7 +57,7 @@ body {
 
 .left {
   background-color: rgb(249, 249, 249);
-  width: 70%;
+  width: 85%;
   float: left;
 }
 
@@ -75,8 +75,8 @@ body {
 .right {
   background-color: rgb(249, 249, 249);
   float: left;
-  width: 30%;
-  border-left: 1px solid black;
+  width: 18%;
+  border-left: 1px solid rgb(228, 229, 230);
 }
 
 .footer {
@@ -190,7 +190,6 @@ input {
 .list-table tbody tr:nth-child(even) {
   background-color: #f9f9f9;
 }
-
 
 .list-table tbody tr:hover {
   background-color: #e6e6e6;
