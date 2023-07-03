@@ -9,7 +9,7 @@ import img_sort_up from './img/sort-up.png'
 import img_sort_down from './img/sort-down.png'
 import title from './img/title.png'
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState, setCr_names, setCr_price, setCr_markets, setStar, setCr_change, setCr_change_rate, setCr_change_price, setCr_trade_volume } from './store';
+import { RootState, crypto, setCr_names, setCr_price, setCr_markets, setStar, setCr_change, setCr_change_rate, setCr_change_price, setCr_trade_volume, setFilteredData } from './store';
 
 function App() {
 
@@ -91,20 +91,20 @@ function Left_Bottom() {
 function List() {
 
   // 데이터의 타입 선언
-  interface crypto {
-    name: string,
-    price: number,
-    f_price: string,
-    markets: string,
-    change: string,
-    changeRate: number,
-    f_changeRate: string,
-    changePrice: number,
-    f_changePrice: string,
-    tradeVolume: number,
-    f_tradeVolume: string,
-    star: string;
-  }
+  // interface crypto {
+  //   name: string,
+  //   price: number,
+  //   f_price: string,
+  //   markets: string,
+  //   change: string,
+  //   changeRate: number,
+  //   f_changeRate: string,
+  //   changePrice: number,
+  //   f_changePrice: string,
+  //   tradeVolume: number,
+  //   f_tradeVolume: string,
+  //   star: string;
+  // }
 
   // dispatch 함수를 사용하기 위한 선언
   const dispatch = useDispatch();
@@ -118,12 +118,13 @@ function List() {
   const cr_change_price = useSelector((state : RootState) => {return state.cr_change_price});
   const cr_trade_volume = useSelector((state: RootState) => { return state.cr_trade_volume });
   const star = useSelector((state: RootState) => { return state.star });
+  const filteredData = useSelector((state: RootState) => state.filteredData);
 
   // 검색값을 관리하기 위한 state
   const [search_cr, setSearch_cr] = useState<string>('');
 
   // 화폐정보를 관리하기 위한 state
-  const [filteredData, setFilteredData] = useState<crypto[]>([]);
+  // const [filteredData, setFilteredData] = useState<crypto[]>([]);
 
   // 차례로 화폐명, 현재가, 전일대비, 거래대금의 정렬 상태를 관리
   const [sort_states, setSort_states] = useState<number[]>([0, 0, 0, 0]);
@@ -157,6 +158,8 @@ function List() {
     })).filter((item) => (
       item.name.toLowerCase().includes(search_cr.toLowerCase())
     ));
+    console.log(filteredData)
+    console.log(updatedData)
     setFilteredData(updatedData);
     // 의존성 배열 추가(배열에 포함된 값들 중 하나라도 변경되면 useEffect 함수가 실행되며 재렌더링 발생)
   }, [cr_names, cr_price, cr_markets, cr_change, cr_change_rate, cr_change_price, cr_trade_volume, star, search_cr]

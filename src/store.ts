@@ -1,5 +1,20 @@
 import { configureStore, createSlice } from '@reduxjs/toolkit'
 
+export type crypto = {
+  name: string,
+  price: number,
+  f_price: string,
+  markets: string,
+  change: string,
+  changeRate: number,
+  f_changeRate: string,
+  changePrice: number,
+  f_changePrice: string,
+  tradeVolume: number,
+  f_tradeVolume: string,
+  star: string;
+}
+
 export type RootState = {
   cr_names: string[],
   cr_price: number[],
@@ -8,8 +23,10 @@ export type RootState = {
   cr_change_rate: number[],
   cr_change_price: number[],
   cr_trade_volume: number[],
-  star: string[]
+  star: string[],
+  filteredData: crypto[], // 이 부분을 추가해야 합니다.
 }
+
 
 const cr_names = createSlice({
   name: 'cr_names',
@@ -93,6 +110,17 @@ const star = createSlice({
   }
 });
 
+const filteredData = createSlice({
+  name: 'filteredData',
+  initialState: [] as crypto[],
+  reducers: {
+    setFilteredData: (state, action) => {
+      return action.payload;
+    },
+
+  }
+})
+
 export default configureStore({
   reducer: {
     cr_names: cr_names.reducer,
@@ -102,7 +130,8 @@ export default configureStore({
     cr_change_rate: cr_change_rate.reducer,
     cr_change_price: cr_change_price.reducer,
     cr_trade_volume: cr_trade_volume.reducer,
-    star: star.reducer
+    star: star.reducer,
+    filteredData: filteredData.reducer
   }
 })
 
@@ -114,3 +143,4 @@ export const { setCr_change_rate } = cr_change_rate.actions;
 export const { setCr_change_price } = cr_change_price.actions;
 export const { setCr_trade_volume } = cr_trade_volume.actions;
 export const { setStar } = star.actions;
+export const { setFilteredData } = filteredData.actions;

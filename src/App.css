@@ -39,14 +39,13 @@ body {
 }
 
 .title-name {
-  font-size: 26px;
-  margin-top: 6px;
+  font-size: 25px;
   margin-left: -5px;
   font-family: 'Asap Condensed', sans-serif;
   font-family: 'Barlow', sans-serif;
   font-family: 'Fira Sans', sans-serif;
   font-family: 'Gowun Batang', serif;
-  font-family: 'Hind', sans-serif;
+  font-family: 'Roboto Flex', sans-serif;
 }
 
 .center {
