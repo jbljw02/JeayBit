@@ -24,7 +24,7 @@ export type RootState = {
   cr_change_price: number[],
   cr_trade_volume: number[],
   star: string[],
-  filteredData: crypto[], // 이 부분을 추가해야 합니다.
+  filteredData: crypto[];
 }
 
 
