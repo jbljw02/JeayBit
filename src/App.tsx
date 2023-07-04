@@ -21,6 +21,8 @@ function App() {
 
   // 비동기 함수 async를 이용하여 데이터를 받아오는 동안에도 다른 작업을 가능하게 함
   // = async function () {}
+
+  // function App()의 내용 일부, 서버로부터 데이터(암호화폐의 이름,가격,마켓,상승 및 하락여부,변화율,변화가격,거래대금)을 받아옵니다.
   const fetchData = async () => {
     try {
       const response = await axios.get('http://127.0.0.1:8000')
@@ -90,22 +92,6 @@ function Left_Bottom() {
 
 function List() {
 
-  // 데이터의 타입 선언
-  // interface crypto {
-  //   name: string,
-  //   price: number,
-  //   f_price: string,
-  //   markets: string,
-  //   change: string,
-  //   changeRate: number,
-  //   f_changeRate: string,
-  //   changePrice: number,
-  //   f_changePrice: string,
-  //   tradeVolume: number,
-  //   f_tradeVolume: string,
-  //   star: string;
-  // }
-
   // dispatch 함수를 사용하기 위한 선언
   const dispatch = useDispatch();
 
@@ -118,7 +104,7 @@ function List() {
   const cr_change_price = useSelector((state : RootState) => {return state.cr_change_price});
   const cr_trade_volume = useSelector((state: RootState) => { return state.cr_trade_volume });
   const star = useSelector((state: RootState) => { return state.star });
-  const filteredData = useSelector((state: RootState) => state.filteredData);
+  const filteredData = useSelector((state: RootState) => { return state.filteredData });
 
   // 검색값을 관리하기 위한 state
   const [search_cr, setSearch_cr] = useState<string>('');
@@ -158,11 +144,9 @@ function List() {
     })).filter((item) => (
       item.name.toLowerCase().includes(search_cr.toLowerCase())
     ));
-    console.log(filteredData)
-    console.log(updatedData)
-    setFilteredData(updatedData);
+
     // 의존성 배열 추가(배열에 포함된 값들 중 하나라도 변경되면 useEffect 함수가 실행되며 재렌더링 발생)
-  }, [cr_names, cr_price, cr_markets, cr_change, cr_change_rate, cr_change_price, cr_trade_volume, star, search_cr]
+  }, [cr_names, cr_price, cr_markets, cr_change, cr_change_rate, cr_change_price, cr_trade_volume, star, search_cr, filteredData]
   );
 
   // 별 이미지를 클릭하면 on off
@@ -357,7 +341,9 @@ function List() {
         <tbody className='scroll-tbody'>
           {/* 검색값을 반환한 filteredData 함수를 다시 반복문을 이용하여 출력 */}
           {
-            filteredData.map((item, i) => 
+            filteredData.map((item, i) => {
+              return (
+
               <tr key={i}>
                 <td className='td-star'>
                   <img
@@ -385,7 +371,9 @@ function List() {
                         : <td className='td-even'>{item.f_changeRate}% <br /> {item.f_changePrice}</td>)
                 }
                   <td className='td-volume'>{item.f_tradeVolume}백만</td>
-              </tr>)
+                </tr>
+              )
+            })
           }
         </tbody>
       </table>
