@@ -10,8 +10,10 @@ import img_sort_down from './img/sort-down.png'
 import title from './img/title.png'
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState, crypto, setCr_names, setCr_price, setCr_markets, setStar, setCr_change, setCr_change_rate, setCr_change_price, setCr_trade_volume, setFilteredData } from './store';
-
+import Select from 'react-select'
 function App() {
+
+  // const [filteredData, setFilteredData] = useState<crypto[]>([]);
 
   const dispatch = useDispatch();
 
@@ -44,8 +46,8 @@ function App() {
         <Header></Header>
         <div className='center'>
           <section className='left'>
-            <Left_top></Left_top>
-            <Left_Bottom></Left_Bottom>
+            <Left_left></Left_left>
+            <Left_right></Left_right>
           </section>
           <aside className='right'>
             <List></List>
@@ -76,16 +78,32 @@ function Header() {
   )
 }
 
-function Left_top() {
+function Left_left() {
   return (
-    <article className='left-top'>
+    <article className='left-left'>
+      <div className='tradingView'>
+        <div className='crypto-name'>
+        </div>
+        <div className='div-tradingView'>
+          <div className='trading-header'>
+          </div>
+          <div className='trading-chart'>
+
+          </div>
+        </div>
+      </div>
     </article>
   )
 }
 
-function Left_Bottom() {
+function Left_right() {
   return (
-    <article className='left-bottom'>
+    <article className='left-right'>
+      <div className='detailView'>
+        <div className='crypto-price'>
+        </div>
+
+      </div>
     </article>
   )
 }
@@ -104,13 +122,13 @@ function List() {
   const cr_change_price = useSelector((state : RootState) => {return state.cr_change_price});
   const cr_trade_volume = useSelector((state: RootState) => { return state.cr_trade_volume });
   const star = useSelector((state: RootState) => { return state.star });
-  const filteredData = useSelector((state: RootState) => { return state.filteredData });
+  // const filteredData = useSelector((state: RootState) => { return state.filteredData });
 
   // 검색값을 관리하기 위한 state
   const [search_cr, setSearch_cr] = useState<string>('');
 
   // 화폐정보를 관리하기 위한 state
-  // const [filteredData, setFilteredData] = useState<crypto[]>([]);
+  const [filteredData, setFilteredData] = useState<crypto[]>([]);
 
   // 차례로 화폐명, 현재가, 전일대비, 거래대금의 정렬 상태를 관리
   const [sort_states, setSort_states] = useState<number[]>([0, 0, 0, 0]);
@@ -145,8 +163,9 @@ function List() {
       item.name.toLowerCase().includes(search_cr.toLowerCase())
     ));
 
+    setFilteredData(updatedData)
     // 의존성 배열 추가(배열에 포함된 값들 중 하나라도 변경되면 useEffect 함수가 실행되며 재렌더링 발생)
-  }, [cr_names, cr_price, cr_markets, cr_change, cr_change_rate, cr_change_price, cr_trade_volume, star, search_cr, filteredData]
+  }, [cr_names, cr_price, cr_markets, cr_change, cr_change_rate, cr_change_price, cr_trade_volume, star, search_cr]
   );
 
   // 별 이미지를 클릭하면 on off

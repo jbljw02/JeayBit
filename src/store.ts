@@ -115,9 +115,8 @@ const filteredData = createSlice({
   initialState: [] as crypto[],
   reducers: {
     setFilteredData: (state, action) => {
-      return action.payload;
-    },
-
+      state = action.payload;
+    }
   }
 })
 

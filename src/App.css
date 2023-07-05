@@ -58,38 +58,76 @@ body {
   background-color: rgb(249, 249, 249);
   width: 85%;
   float: left;
+  display: flex;
+  font-family: 'Asap Condensed', sans-serif;
+  font-family: 'Barlow', sans-serif;
+  font-family: 'Fira Sans', sans-serif;
+  font-family: 'Gowun Batang', serif;
+  font-family: 'Roboto Flex', sans-serif;
 }
 
-.left-top {
-  background-color: rgb(249, 249, 249);
-  height: 65%;
+.left-left {
+  height: 100%;
+  width: 71%;
 }
 
-.left-bottom {
-  background-color: rgb(249, 249, 249);
-  height: 35%;
-  border-top: 1px solid rgb(228, 229, 230);
+.tradingView {
+  background-color: white; 
+  margin: 30px 0px 30px 30px;
+  height: 95.5%;
+}
+
+.crypto-name {
+  padding: 24px;
+  font-weight: bold;
+  font-size: 23px;
+  border-bottom: 1px solid rgb(228, 229, 230);
+}
+
+.div-tradingView {
+  height: 100%;
+}
+
+.trading-header {
+  padding: 20px;
+  border-bottom: 1px solid rgb(228, 229, 230);
+}
+
+.left-right {
+  height: 100%;
+  width: 29%;
+}
+
+.detailView {
+  background-color: white; 
+  margin: 30px;
+  height: 95.5%;  
+}
+
+.crypto-price {
+  padding: 15px;
+  font-size: 20px;
 }
 
 .right {
   background-color: rgb(249, 249, 249);
   float: left;
-  width: 18%;
+  width: 19.5%;
   border-left: 1px solid rgb(228, 229, 230);
 }
 
 .footer {
   background-color: rgb(249, 249, 249);
-  height: 80px;
+  height: 60px;
   border-top: 1px solid rgb(228, 229, 230);
   margin: 0 10px;
 }
 
 .div-list {
-  background-color: white;
+  background-color: white; 
+  margin: 30px 30px 30px 30px;
   width: 415px;
-  max-height: calc(100vh - 135px);
-  margin: 15px 0px 15px 15px;
+  max-height: calc(100vh - 160px);
   }
 
 .list-search {
@@ -178,12 +216,12 @@ input {
 
 .name {
   padding-left: 42px;
-  padding-right: 120px;
+  padding-right: 115px;
   width: 100%;
 }
 
 .price, .compare, .volume {
-  padding-right: 15px;
+  padding-right: 18px;
 }
 
 .list-table tbody tr:nth-child(even) {
