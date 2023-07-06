@@ -115,24 +115,26 @@ const filteredData = createSlice({
   initialState: [] as crypto[],
   reducers: {
     setFilteredData: (state, action) => {
-      state = action.payload;
+      return action.payload;
     }
   }
 })
 
-export default configureStore({
-  reducer: {
-    cr_names: cr_names.reducer,
-    cr_price: cr_price.reducer,
-    cr_markets: cr_markets.reducer,
-    cr_change: cr_change.reducer,
-    cr_change_rate: cr_change_rate.reducer,
-    cr_change_price: cr_change_price.reducer,
-    cr_trade_volume: cr_trade_volume.reducer,
-    star: star.reducer,
-    filteredData: filteredData.reducer
-  }
-})
+const rootReducer = {
+  cr_names: cr_names.reducer,
+  cr_price: cr_price.reducer,
+  cr_markets: cr_markets.reducer,
+  cr_change: cr_change.reducer,
+  cr_change_rate: cr_change_rate.reducer,
+  cr_change_price: cr_change_price.reducer,
+  cr_trade_volume: cr_trade_volume.reducer,
+  star: star.reducer,
+  filteredData: filteredData.reducer,
+};
+
+const store = configureStore({
+  reducer: rootReducer,
+});
 
 export const { setCr_names } = cr_names.actions;
 export const { setCr_price } = cr_price.actions;
@@ -143,3 +145,5 @@ export const { setCr_change_price } = cr_change_price.actions;
 export const { setCr_trade_volume } = cr_trade_volume.actions;
 export const { setStar } = star.actions;
 export const { setFilteredData } = filteredData.actions;
+
+export default store;

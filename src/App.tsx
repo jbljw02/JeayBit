@@ -9,10 +9,23 @@ import img_sort_up from './img/sort-up.png'
 import img_sort_down from './img/sort-down.png'
 import title from './img/title.png'
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState, crypto, setCr_names, setCr_price, setCr_markets, setStar, setCr_change, setCr_change_rate, setCr_change_price, setCr_trade_volume, setFilteredData } from './store';
-import Select from 'react-select'
-function App() {
+import store, {
+  RootState,
+  crypto,
+  setCr_names,
+  setCr_price,
+  setCr_markets,
+  setStar,
+  setCr_change,
+  setCr_change_rate,
+  setCr_change_price,
+  setCr_trade_volume,
+  setFilteredData,
+} from "./store";
 
+import { Provider } from "react-redux";
+import Select from "react-select";
+function App() {
   // const [filteredData, setFilteredData] = useState<crypto[]>([]);
 
   const dispatch = useDispatch();
@@ -23,8 +36,6 @@ function App() {
 
   // 비동기 함수 async를 이용하여 데이터를 받아오는 동안에도 다른 작업을 가능하게 함
   // = async function () {}
-
-  // function App()의 내용 일부, 서버로부터 데이터(암호화폐의 이름,가격,마켓,상승 및 하락여부,변화율,변화가격,거래대금)을 받아옵니다.
   const fetchData = async () => {
     try {
       const response = await axios.get('http://127.0.0.1:8000')
@@ -41,279 +52,308 @@ function App() {
   };
 
   return (
-    <div className="App">
-      <div className='container'>
-        <Header></Header>
-        <div className='center'>
-          <section className='left'>
-            <Left_left></Left_left>
-            <Left_right></Left_right>
-          </section>
-          <aside className='right'>
-            <List></List>
-          </aside>
+    <Provider store={store}>
+      <div className="App">
+        <div className="container">
+          <Header></Header>
+          <div className="center">
+            <section className="left">
+              <Left_left></Left_left>
+              <Left_right></Left_right>
+            </section>
+            <aside className="right">
+              <List></List>
+            </aside>
+          </div>
+          <Footer></Footer>
         </div>
-        <Footer></Footer>
       </div>
-    </div>
+    </Provider>
   );
 }
 
 function Header() {
   return (
-
-    <header className='header'>
+    <header className="header">
       {/* 제목 폰트를 사용하기 위한 구글 폰트 api */}
       <style>
-        @import url('https://fonts.googleapis.com/css2?family=Asap+Condensed:wght@300&family=Barlow:ital@1&family=Fira+Sans:ital,wght@1,300&family=Gowun+Batang&family=Hind&display=swap');
+        @import
+        url('https://fonts.googleapis.com/css2?family=Asap+Condensed:wght@300&family=Barlow:ital@1&family=Fira+Sans:ital,wght@1,300&family=Gowun+Batang&family=Hind&display=swap');
       </style>
       <style>
-        @import url('https://fonts.googleapis.com/css2?family=Asap+Condensed:wght@300&family=Barlow:ital@1&family=Fira+Sans:ital,wght@1,300&family=Gowun+Batang&family=Roboto+Flex&display=swap');
+        @import
+        url('https://fonts.googleapis.com/css2?family=Asap+Condensed:wght@300&family=Barlow:ital@1&family=Fira+Sans:ital,wght@1,300&family=Gowun+Batang&family=Roboto+Flex&display=swap');
       </style>
-      <div className='title'>
-        <img src={title} className='title-img'></img>
-        <span className='title-name'>J TradingView </span>
+      <div className="title">
+        <img src={title} className="title-img"></img>
+        <span className="title-name">J TradingView </span>
       </div>
     </header>
-  )
+  );
 }
 
 function Left_left() {
   return (
-    <article className='left-left'>
-      <div className='tradingView'>
-        <div className='crypto-name'>
-        </div>
-        <div className='div-tradingView'>
-          <div className='trading-header'>
-          </div>
-          <div className='trading-chart'>
-
-          </div>
+    <article className="left-left">
+      <div className="tradingView">
+        <div className="crypto-name"></div>
+        <div className="div-tradingView">
+          <div className="trading-header"></div>
+          <div className="trading-chart"></div>
         </div>
       </div>
     </article>
-  )
+  );
 }
 
 function Left_right() {
   return (
-    <article className='left-right'>
-      <div className='detailView'>
-        <div className='crypto-price'>
-        </div>
-
+    <article className="left-right">
+      <div className="detailView">
+        <div className="crypto-price"></div>
       </div>
     </article>
-  )
+  );
 }
 
 function List() {
-
   // dispatch 함수를 사용하기 위한 선언
   const dispatch = useDispatch();
 
   // useSelector훅을 이용해 store에서 state를 가져옴
-  const cr_names = useSelector((state: RootState) => { return state.cr_names });
-  const cr_price = useSelector((state: RootState) => { return state.cr_price });
-  const cr_markets = useSelector((state: RootState) => { return state.cr_markets });
-  const cr_change = useSelector((state : RootState) => {return state.cr_change});
-  const cr_change_rate = useSelector((state : RootState) => {return state.cr_change_rate});
-  const cr_change_price = useSelector((state : RootState) => {return state.cr_change_price});
-  const cr_trade_volume = useSelector((state: RootState) => { return state.cr_trade_volume });
-  const star = useSelector((state: RootState) => { return state.star });
+  const cr_names = useSelector((state: RootState) => {
+    return state.cr_names;
+  });
+  const cr_price = useSelector((state: RootState) => {
+    return state.cr_price;
+  });
+  const cr_markets = useSelector((state: RootState) => {
+    return state.cr_markets;
+  });
+  const cr_change = useSelector((state: RootState) => {
+    return state.cr_change;
+  });
+  const cr_change_rate = useSelector((state: RootState) => {
+    return state.cr_change_rate;
+  });
+  const cr_change_price = useSelector((state: RootState) => {
+    return state.cr_change_price;
+  });
+  const cr_trade_volume = useSelector((state: RootState) => {
+    return state.cr_trade_volume;
+  });
+  const star = useSelector((state: RootState) => {
+    return state.star;
+  });
   // const filteredData = useSelector((state: RootState) => { return state.filteredData });
 
   // 검색값을 관리하기 위한 state
-  const [search_cr, setSearch_cr] = useState<string>('');
+  const [search_cr, setSearch_cr] = useState<string>("");
 
   // 화폐정보를 관리하기 위한 state
-  const [filteredData, setFilteredData] = useState<crypto[]>([]);
+  // const [filteredData, setFilteredData] = useState<crypto[]>([]);
 
   // 차례로 화폐명, 현재가, 전일대비, 거래대금의 정렬 상태를 관리
   const [sort_states, setSort_states] = useState<number[]>([0, 0, 0, 0]);
 
   // 정렬하려는 목적에 따라 이미지를 변경하기 위해 배열로 생성
-  const sort_images = [
-    img_sort,
-    img_sort_down,
-    img_sort_up
-  ]
+  const sort_images = [img_sort, img_sort_down, img_sort_up];
 
   // 검색어 또는 정렬 상태가 변경되었을 때 재렌더링(변경이 없다면 초기 상태를 출력)
+  const filteredData = useSelector((state: RootState) => {
+    return state.filteredData;
+  });
+
+  // 필터링 및 정렬된 데이터를 새로운 배열로 생성 -> setFilteredData로 상태를 업데이트
+  // price = 숫자형, f_price = 문자형 / 숫자형으로 정렬, 문자형으로 출력
+  // const updateData = [...cr_names, ...cr_price, ...cr_markets, ...cr_change, ...cr_change_rate, ...cr_change_price, ...cr_trade_volume];
+
+
+
+  const updatedData = cr_names.map((name, i) => ({
+    name,
+    price: cr_price[i],
+    f_price: cr_price[i].toLocaleString(),
+    markets: cr_markets[i],
+    change: cr_change[i],
+    changeRate: cr_change_rate[i],
+    f_changeRate: (cr_change_rate[i] * 100).toFixed(2),
+    changePrice: cr_change_price[i],
+    f_changePrice: cr_change_price[i].toLocaleString(),
+    tradeVolume: cr_trade_volume[i],
+    f_tradeVolume: Number(String(Math.floor(cr_trade_volume[i])).slice(0, -6)).toLocaleString(),
+    star: star[i],
+    // 검색어에 해당하는 데이터를 비교하여 배열을 재생성 후 재렌더링
+  })).filter((item) => (
+    item.name.toLowerCase().includes(search_cr.toLowerCase())
+  ));
+
   useEffect(() => {
     
     // 필터링 및 정렬된 데이터를 새로운 배열로 생성 -> setFilteredData로 상태를 업데이트
     // price = 숫자형, f_price = 문자형 / 숫자형으로 정렬, 문자형으로 출력
-    const updatedData = cr_names.map((name, i) => ({
-      name,
-      price: cr_price[i],
-      f_price: cr_price[i].toLocaleString(),
-      markets: cr_markets[i],
-      change: cr_change[i],
-      changeRate: cr_change_rate[i],
-      f_changeRate: (cr_change_rate[i] * 100).toFixed(2),
-      changePrice: cr_change_price[i],
-      f_changePrice: cr_change_price[i].toLocaleString(),
-      tradeVolume: cr_trade_volume[i],
-      f_tradeVolume: Number(String(Math.floor(cr_trade_volume[i])).slice(0, -6)).toLocaleString(),
-      star: star[i],
-      // 검색어에 해당하는 데이터를 비교하여 배열을 재생성 후 재렌더링
-    })).filter((item) => (
-      item.name.toLowerCase().includes(search_cr.toLowerCase())
-    ));
 
-    setFilteredData(updatedData)
+
+    dispatch(setFilteredData(updatedData))
     // 의존성 배열 추가(배열에 포함된 값들 중 하나라도 변경되면 useEffect 함수가 실행되며 재렌더링 발생)
   }, [cr_names, cr_price, cr_markets, cr_change, cr_change_rate, cr_change_price, cr_trade_volume, star, search_cr]
   );
+  console.log("updatedData" + updatedData)
+
+  
+  // if (filteredData.length === 0 && updatedData.length > 0) {
+  //   dispatch(setFilteredData(updatedData));
+  // }
 
   // 별 이미지를 클릭하면 on off
   const starClick = (index: number) => {
     dispatch(setStar(index));
-  }
+  };
 
   // 정렬 이미지 클릭 이벤트
   const sortClick = (index: number) => {
-
     // 정렬 이미지 순환
     setSort_states((prevStates) => {
       const states_copy = [...prevStates];
       states_copy[index] = (states_copy[index] + 1) % sort_images.length;
 
-      let sortedData: crypto[] = [...filteredData]
+      let sortedData: crypto[] = [];
 
       // 화폐를 전일대비 상승/동결/하락한 것에 따라 구분
       // 값 자체에 양수, 음수 구분이 되어있는 것이 아니기 때문에 정렬하기 전에 구분을 지어줘야 함
-      let rise_crypto: crypto[] = []
-      let even_crypto: crypto[] = []
-      let fall_crypto: crypto[] = []
+      let rise_crypto: crypto[] = [];
+      let even_crypto: crypto[] = [];
+      let fall_crypto: crypto[] = [];
 
       // 상승/동결/하락 여부에 따라 구분하여 새 배열 생성
       sortedData.map((item) => {
-        rise_crypto = sortedData.filter((item) => item.change === 'RISE')
-        even_crypto = sortedData.filter((item) => item.change === 'EVEN')
-        fall_crypto = sortedData.filter((item) => item.change === 'FALL')
-      })
+        rise_crypto = sortedData.filter((item) => item.change === "RISE");
+        even_crypto = sortedData.filter((item) => item.change === "EVEN");
+        fall_crypto = sortedData.filter((item) => item.change === "FALL");
+      });
 
       switch (index) {
-
         // 화폐 이름순 정렬
         case 0:
           if (states_copy[index] === 0) {
-            states_copy[index] = 1
+            states_copy[index] = 1;
           }
           if (states_copy[index] === 1) {
             sortedData.sort((a, b) => a.name.localeCompare(b.name));
-            setFilteredData(sortedData)
-            
-            sort_states[1] = 0
-            sort_states[2] = 0
-            sort_states[3] = 0
+            setFilteredData(sortedData);
+
+            sort_states[1] = 0;
+            sort_states[2] = 0;
+            sort_states[3] = 0;
           }
           if (states_copy[index] === 2) {
             sortedData.sort((a, b) => b.name.localeCompare(a.name));
-            setFilteredData(sortedData)
-            
-            sort_states[1] = 0
-            sort_states[2] = 0
-            sort_states[3] = 0
+            setFilteredData(sortedData);
+
+            sort_states[1] = 0;
+            sort_states[2] = 0;
+            sort_states[3] = 0;
           }
           break;
 
         // 화폐 가격순 정렬
         case 1:
           if (states_copy[index] === 0) {
-            states_copy[index] = 1
+            states_copy[index] = 1;
           }
           if (states_copy[index] === 1) {
-            sortedData.sort((a, b) => b.price - a.price)
-            setFilteredData(sortedData)
-            
-            sort_states[0] = 0
-            sort_states[2] = 0
-            sort_states[3] = 0
+            sortedData.sort((a, b) => b.price - a.price);
+            setFilteredData(sortedData);
+
+            sort_states[0] = 0;
+            sort_states[2] = 0;
+            sort_states[3] = 0;
           }
           if (states_copy[index] === 2) {
-            sortedData.sort((a, b) => a.price - b.price)
-            setFilteredData(sortedData)
-            
-            sort_states[0] = 0
-            sort_states[2] = 0
-            sort_states[3] = 0
+            sortedData.sort((a, b) => a.price - b.price);
+            setFilteredData(sortedData);
+
+            sort_states[0] = 0;
+            sort_states[2] = 0;
+            sort_states[3] = 0;
           }
           break;
-          
-          // 화폐 전일대비 변화순 정렬
-          case 2:
-            if (states_copy[index] === 0) {
-              states_copy[index] = 1
-            }
-            if (states_copy[index] === 1) {
-              rise_crypto.sort((a, b) => b.changeRate - a.changeRate)
-              even_crypto.sort((a, b) => b.changeRate - a.changeRate)
-              fall_crypto.sort((a, b) => a.changeRate - b.changeRate)
 
-              // 새 배열을 원본 배열의 카피본에 병합 - 내림차순이기 때문에 상승, 동결, 하락순으로 병합
-              sortedData = [...rise_crypto, ...even_crypto, ...fall_crypto]
+        // 화폐 전일대비 변화순 정렬
+        case 2:
+          if (states_copy[index] === 0) {
+            states_copy[index] = 1;
+          }
+          if (states_copy[index] === 1) {
+            rise_crypto.sort((a, b) => b.changeRate - a.changeRate);
+            even_crypto.sort((a, b) => b.changeRate - a.changeRate);
+            fall_crypto.sort((a, b) => a.changeRate - b.changeRate);
 
-              setFilteredData(sortedData)
-            
-              sort_states[0] = 0
-              sort_states[1] = 0
-              sort_states[3] = 0
+            // 새 배열을 원본 배열의 카피본에 병합 - 내림차순이기 때문에 상승, 동결, 하락순으로 병합
+            sortedData = [...rise_crypto, ...even_crypto, ...fall_crypto];
+
+            setFilteredData(sortedData);
+
+            sort_states[0] = 0;
+            sort_states[1] = 0;
+            sort_states[3] = 0;
           }
           if (states_copy[index] === 2) {
-            fall_crypto.sort((a, b) => b.changeRate - a.changeRate)
-            even_crypto.sort((a, b) => b.changeRate - a.changeRate)
-            rise_crypto.sort((a, b) => a.changeRate - b.changeRate)
+            fall_crypto.sort((a, b) => b.changeRate - a.changeRate);
+            even_crypto.sort((a, b) => b.changeRate - a.changeRate);
+            rise_crypto.sort((a, b) => a.changeRate - b.changeRate);
 
             // 새 배열을 원본 배열의 카피본에 병합 - 오름차순이기 때문에 하락, 동결, 상승순으로 병합
-            sortedData = [...fall_crypto, ...even_crypto, ...rise_crypto]
+            sortedData = [...fall_crypto, ...even_crypto, ...rise_crypto];
 
-            setFilteredData(sortedData)
-            
-            sort_states[0] = 0
-            sort_states[1] = 0
-            sort_states[3] = 0
+            setFilteredData(sortedData);
+
+            sort_states[0] = 0;
+            sort_states[1] = 0;
+            sort_states[3] = 0;
           }
           break;
 
         // 거래대금순 정렬
         case 3:
           if (states_copy[index] === 0) {
-            states_copy[index] = 1
+            states_copy[index] = 1;
           }
           if (states_copy[index] === 1) {
-            sortedData.sort((a, b) => b.tradeVolume - a.tradeVolume)
-            setFilteredData(sortedData)
-            
-            sort_states[0] = 0
-            sort_states[1] = 0
-            sort_states[2] = 0
+            sortedData.sort((a, b) => b.tradeVolume - a.tradeVolume);
+            setFilteredData(sortedData);
+
+            sort_states[0] = 0;
+            sort_states[1] = 0;
+            sort_states[2] = 0;
           }
           if (states_copy[index] === 2) {
-            sortedData.sort((a, b) => a.tradeVolume - b.tradeVolume)
-            setFilteredData(sortedData)
+            sortedData.sort((a, b) => a.tradeVolume - b.tradeVolume);
+            setFilteredData(sortedData);
 
-            sort_states[0] = 0
-            sort_states[1] = 0
-            sort_states[2] = 0
+            sort_states[0] = 0;
+            sort_states[1] = 0;
+            sort_states[2] = 0;
           }
           break;
       }
       return states_copy;
-    })
+    });
+  };
 
-  }
-
+  console.log("filteredData", filteredData);
+  console.log("cr_names", cr_names);
   return (
-    <div className='div-list'>
-
+    <div className="div-list">
       {/* 검색 공간 */}
-      <div className='list-search'>
-          <img className='img-search' src={search}></img>
-        <input type="text" placeholder='검색' value={search_cr} onChange={(e) => setSearch_cr(e.target.value)}></input>
+      <div className="list-search">
+        <img className="img-search" src={search}></img>
+        <input
+          type="text"
+          placeholder="검색"
+          value={search_cr}
+          onChange={(e) => setSearch_cr(e.target.value)}
+        ></input>
       </div>
 
       {/* 화폐 구분 목록 */}
@@ -397,7 +437,7 @@ function List() {
         </tbody>
       </table>
     </div>
-  )
+  );
 }
 
 function Footer() {
