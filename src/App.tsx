@@ -121,31 +121,15 @@ function List() {
   const dispatch = useDispatch();
 
   // useSelector훅을 이용해 store에서 state를 가져옴
-  const cr_names = useSelector((state: RootState) => {
-    return state.cr_names;
-  });
-  const cr_price = useSelector((state: RootState) => {
-    return state.cr_price;
-  });
-  const cr_markets = useSelector((state: RootState) => {
-    return state.cr_markets;
-  });
-  const cr_change = useSelector((state: RootState) => {
-    return state.cr_change;
-  });
-  const cr_change_rate = useSelector((state: RootState) => {
-    return state.cr_change_rate;
-  });
-  const cr_change_price = useSelector((state: RootState) => {
-    return state.cr_change_price;
-  });
-  const cr_trade_volume = useSelector((state: RootState) => {
-    return state.cr_trade_volume;
-  });
-  const star = useSelector((state: RootState) => {
-    return state.star;
-  });
-  // const filteredData = useSelector((state: RootState) => { return state.filteredData });
+  const cr_names = useSelector((state: RootState) => { return state.cr_names; });
+  const cr_price = useSelector((state: RootState) => { return state.cr_price; });
+  const cr_markets = useSelector((state: RootState) => { return state.cr_markets; });
+  const cr_change = useSelector((state: RootState) => { return state.cr_change; });
+  const cr_change_rate = useSelector((state: RootState) => { return state.cr_change_rate; });
+  const cr_change_price = useSelector((state: RootState) => { return state.cr_change_price; });
+  const cr_trade_volume = useSelector((state: RootState) => { return state.cr_trade_volume; });
+  const star = useSelector((state: RootState) => { return state.star; });
+  const filteredData = useSelector((state: RootState) => { return state.filteredData; });
 
   // 검색값을 관리하기 위한 state
   const [search_cr, setSearch_cr] = useState<string>("");
@@ -160,47 +144,38 @@ function List() {
   const sort_images = [img_sort, img_sort_down, img_sort_up];
 
   // 검색어 또는 정렬 상태가 변경되었을 때 재렌더링(변경이 없다면 초기 상태를 출력)
-  const filteredData = useSelector((state: RootState) => {
-    return state.filteredData;
-  });
-
-  // 필터링 및 정렬된 데이터를 새로운 배열로 생성 -> setFilteredData로 상태를 업데이트
-  // price = 숫자형, f_price = 문자형 / 숫자형으로 정렬, 문자형으로 출력
-  // const updateData = [...cr_names, ...cr_price, ...cr_markets, ...cr_change, ...cr_change_rate, ...cr_change_price, ...cr_trade_volume];
-
-
-
-  const updatedData = cr_names.map((name, i) => ({
-    name,
-    price: cr_price[i],
-    f_price: cr_price[i].toLocaleString(),
-    markets: cr_markets[i],
-    change: cr_change[i],
-    changeRate: cr_change_rate[i],
-    f_changeRate: (cr_change_rate[i] * 100).toFixed(2),
-    changePrice: cr_change_price[i],
-    f_changePrice: cr_change_price[i].toLocaleString(),
-    tradeVolume: cr_trade_volume[i],
-    f_tradeVolume: Number(String(Math.floor(cr_trade_volume[i])).slice(0, -6)).toLocaleString(),
-    star: star[i],
-    // 검색어에 해당하는 데이터를 비교하여 배열을 재생성 후 재렌더링
-  })).filter((item) => (
-    item.name.toLowerCase().includes(search_cr.toLowerCase())
-  ));
-
   useEffect(() => {
-    
+
     // 필터링 및 정렬된 데이터를 새로운 배열로 생성 -> setFilteredData로 상태를 업데이트
     // price = 숫자형, f_price = 문자형 / 숫자형으로 정렬, 문자형으로 출력
+    const updatedData = cr_names.map((name, i) => ({
+      name,
+      price: cr_price[i],
+      f_price: cr_price[i].toLocaleString(),
+      markets: cr_markets[i],
+      change: cr_change[i],
+      changeRate: cr_change_rate[i],
+      f_changeRate: (cr_change_rate[i] * 100).toFixed(2),
+      changePrice: cr_change_price[i],
+      f_changePrice: cr_change_price[i].toLocaleString(),
+      tradeVolume: cr_trade_volume[i],
+      f_tradeVolume: Number(String(Math.floor(cr_trade_volume[i])).slice(0, -6)).toLocaleString(),
+      star: star[i],
 
+    // 검색어에 해당하는 데이터를 비교하여 배열을 재생성 후 재렌더링
+    })).filter((item) => (
+      item.name.toLowerCase().includes(search_cr.toLowerCase())
+    ));
 
-    dispatch(setFilteredData(updatedData))
+    // dispatch(setFilteredData(updatedData))
+    if (filteredData.length === 0 && updatedData.length > 0) {
+      dispatch(setFilteredData(updatedData));
+      console.log("A")
+    }
     // 의존성 배열 추가(배열에 포함된 값들 중 하나라도 변경되면 useEffect 함수가 실행되며 재렌더링 발생)
   }, [cr_names, cr_price, cr_markets, cr_change, cr_change_rate, cr_change_price, cr_trade_volume, star, search_cr]
   );
-  console.log("updatedData" + updatedData)
 
-  
   // if (filteredData.length === 0 && updatedData.length > 0) {
   //   dispatch(setFilteredData(updatedData));
   // }
@@ -341,8 +316,6 @@ function List() {
     });
   };
 
-  console.log("filteredData", filteredData);
-  console.log("cr_names", cr_names);
   return (
     <div className="div-list">
       {/* 검색 공간 */}
@@ -402,18 +375,15 @@ function List() {
           {
             filteredData.map((item, i) => {
               return (
-
               <tr key={i}>
                 <td className='td-star'>
                   <img
                       onClick={() => starClick(i)}
-
                     // 최초 star[i]의 상태는 'starOn'일 수가 없으므로 반드시 starOff 출력
                     src={star[i] === 'starOn' ? starOn : starOff}
                   />
                 </td>
                   <td className='td-name'>{item.name} <br /> {item.markets}</td>
-
                 {/* 삼항연산자 중첩 - 전일 대비 가격이 상승했다면 청색, 하락했다면 적색, 동일하다면 검정색 */}
                 {
                     item.change === 'RISE'
