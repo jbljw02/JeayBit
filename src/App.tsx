@@ -167,18 +167,16 @@ function List() {
       item.name.toLowerCase().includes(search_cr.toLowerCase())
     ));
 
-    // dispatch(setFilteredData(updatedData))
-    if (filteredData.length === 0 && updatedData.length > 0) {
-      dispatch(setFilteredData(updatedData));
-      console.log("A")
-    }
-    // 의존성 배열 추가(배열에 포함된 값들 중 하나라도 변경되면 useEffect 함수가 실행되며 재렌더링 발생)
+    dispatch(setFilteredData(updatedData))
+
+    // 재렌더링 발생X(filter 기능 작동X)
+    // if (filteredData.length === 0 && updatedData.length > 0) {
+    //   dispatch(setFilteredData(updatedData));
+    // }
+
+    // 의존성 배열 추가(배열에 포함된 값들 중 하나라도 변경되면 useEffect 함수가 실행되며 재렌더링 발생 / filteredData가 포함될시 조건문이 없다면 무한 dispatch로 인한 런타임에러 발생)
   }, [cr_names, cr_price, cr_markets, cr_change, cr_change_rate, cr_change_price, cr_trade_volume, star, search_cr]
   );
-
-  // if (filteredData.length === 0 && updatedData.length > 0) {
-  //   dispatch(setFilteredData(updatedData));
-  // }
 
   // 별 이미지를 클릭하면 on off
   const starClick = (index: number) => {
@@ -187,14 +185,15 @@ function List() {
 
   // 정렬 이미지 클릭 이벤트
   const sortClick = (index: number) => {
+
     // 정렬 이미지 순환
     setSort_states((prevStates) => {
       const states_copy = [...prevStates];
       states_copy[index] = (states_copy[index] + 1) % sort_images.length;
 
-      let sortedData: crypto[] = [];
+      let sortedData: crypto[] = [...filteredData];
 
-      // 화폐를 전일대비 상승/동결/하락한 것에 따라 구분
+      // 화폐를 전일대비 상승/동결/하락 여부에 따라 구분
       // 값 자체에 양수, 음수 구분이 되어있는 것이 아니기 때문에 정렬하기 전에 구분을 지어줘야 함
       let rise_crypto: crypto[] = [];
       let even_crypto: crypto[] = [];
@@ -208,6 +207,7 @@ function List() {
       });
 
       switch (index) {
+
         // 화폐 이름순 정렬
         case 0:
           if (states_copy[index] === 0) {
@@ -215,7 +215,7 @@ function List() {
           }
           if (states_copy[index] === 1) {
             sortedData.sort((a, b) => a.name.localeCompare(b.name));
-            setFilteredData(sortedData);
+            // dispatch(setFilteredData(sortedData));
 
             sort_states[1] = 0;
             sort_states[2] = 0;
@@ -223,7 +223,7 @@ function List() {
           }
           if (states_copy[index] === 2) {
             sortedData.sort((a, b) => b.name.localeCompare(a.name));
-            setFilteredData(sortedData);
+            // dispatch(setFilteredData(sortedData));
 
             sort_states[1] = 0;
             sort_states[2] = 0;
@@ -238,7 +238,7 @@ function List() {
           }
           if (states_copy[index] === 1) {
             sortedData.sort((a, b) => b.price - a.price);
-            setFilteredData(sortedData);
+            // dispatch(setFilteredData(sortedData));
 
             sort_states[0] = 0;
             sort_states[2] = 0;
@@ -246,7 +246,7 @@ function List() {
           }
           if (states_copy[index] === 2) {
             sortedData.sort((a, b) => a.price - b.price);
-            setFilteredData(sortedData);
+            // dispatch(setFilteredData(sortedData));
 
             sort_states[0] = 0;
             sort_states[2] = 0;
@@ -267,7 +267,7 @@ function List() {
             // 새 배열을 원본 배열의 카피본에 병합 - 내림차순이기 때문에 상승, 동결, 하락순으로 병합
             sortedData = [...rise_crypto, ...even_crypto, ...fall_crypto];
 
-            setFilteredData(sortedData);
+            // dispatch(setFilteredData(sortedData));
 
             sort_states[0] = 0;
             sort_states[1] = 0;
@@ -281,7 +281,7 @@ function List() {
             // 새 배열을 원본 배열의 카피본에 병합 - 오름차순이기 때문에 하락, 동결, 상승순으로 병합
             sortedData = [...fall_crypto, ...even_crypto, ...rise_crypto];
 
-            setFilteredData(sortedData);
+            // dispatch(setFilteredData(sortedData));
 
             sort_states[0] = 0;
             sort_states[1] = 0;
@@ -296,7 +296,7 @@ function List() {
           }
           if (states_copy[index] === 1) {
             sortedData.sort((a, b) => b.tradeVolume - a.tradeVolume);
-            setFilteredData(sortedData);
+            // dispatch(setFilteredData(sortedData));
 
             sort_states[0] = 0;
             sort_states[1] = 0;
@@ -304,7 +304,7 @@ function List() {
           }
           if (states_copy[index] === 2) {
             sortedData.sort((a, b) => a.tradeVolume - b.tradeVolume);
-            setFilteredData(sortedData);
+            // dispatch(setFilteredData(sortedData));
 
             sort_states[0] = 0;
             sort_states[1] = 0;
@@ -312,7 +312,9 @@ function List() {
           }
           break;
       }
+      dispatch(setFilteredData(sortedData));
       return states_copy;
+
     });
   };
 
