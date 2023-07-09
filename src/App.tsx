@@ -8,25 +8,10 @@ import img_sort from './img/sort.png'
 import img_sort_up from './img/sort-up.png'
 import img_sort_down from './img/sort-down.png'
 import title from './img/title.png'
-import { useDispatch, useSelector } from 'react-redux';
-import store, {
-  RootState,
-  crypto,
-  setCr_names,
-  setCr_price,
-  setCr_markets,
-  setStar,
-  setCr_change,
-  setCr_change_rate,
-  setCr_change_price,
-  setCr_trade_volume,
-  setFilteredData,
-} from "./store";
+import { useDispatch, useSelector, Provider } from 'react-redux';
+import store, { RootState, crypto, setCr_names, setCr_price, setCr_markets, setStar, setCr_change, setCr_change_rate, setCr_change_price, setCr_trade_volume, setFilteredData } from "./store";
 
-import { Provider } from "react-redux";
-import Select from "react-select";
 function App() {
-  // const [filteredData, setFilteredData] = useState<crypto[]>([]);
 
   const dispatch = useDispatch();
 
@@ -58,8 +43,8 @@ function App() {
           <Header></Header>
           <div className="center">
             <section className="left">
-              <Left_left></Left_left>
-              <Left_right></Left_right>
+              <TradingView></TradingView>
+              <TradingDetail></TradingDetail>
             </section>
             <aside className="right">
               <List></List>
@@ -84,7 +69,7 @@ function Header() {
         @import
         url('https://fonts.googleapis.com/css2?family=Asap+Condensed:wght@300&family=Barlow:ital@1&family=Fira+Sans:ital,wght@1,300&family=Gowun+Batang&family=Roboto+Flex&display=swap');
       </style>
-      <div className="title">
+      <div className="div-title">
         <img src={title} className="title-img"></img>
         <span className="title-name">J TradingView </span>
       </div>
@@ -92,13 +77,42 @@ function Header() {
   );
 }
 
-function Left_left() {
+function TradingView() {
+
+  const [checkedValue, setCheckedValue] = useState<string>("1일")
+
+  const checkClick = (value: string) => {
+    setCheckedValue(value)
+  }
+
   return (
-    <article className="left-left">
-      <div className="tradingView">
+    <article className="TradingView">
+      <div className="trading-view">
         <div className="crypto-name"></div>
         <div className="div-tradingView">
-          <div className="trading-header"></div>
+          <div className="trading-header">
+
+            {/* 드롭다운 라벨 */}
+            <label className="dropdown">
+              <div className="dd-button">
+                {checkedValue}
+                <svg className="img-dd" xmlns='http://www.w3.org/2000/svg' viewBox="0 0 16 8">
+                  <path fill="currentColor" d="M0 1.475l7.396 6.04.596.485.593-.49L16 1.39 14.807 0 7.393 6.122 8.58 6.12 1.186.08z"></path>
+                </svg>
+              </div>
+              <input type="checkbox" className="dd-input" />
+              <ul className="dd-menu">
+                <li onClick={(e) => checkClick('1분')}>1분</li>
+                <li onClick={(e) => checkClick('3분')}>3분</li>
+                <li onClick={(e) => checkClick('5분')}>5분</li>
+                <li onClick={(e) => checkClick('10분')}>10분</li>
+                <li onClick={(e) => checkClick('15분')}>15분</li>
+                <li onClick={(e) => checkClick('30분')}>30분</li>
+                <li onClick={(e) => checkClick('1시간')}>1시간</li>
+                <li onClick={(e) => checkClick('4시간')}>4시간</li>
+              </ul>
+            </label>
+          </div>
           <div className="trading-chart"></div>
         </div>
       </div>
@@ -106,17 +120,15 @@ function Left_left() {
   );
 }
 
-function Left_right() {
+function TradingDetail() {
   return (
-    <article className="left-right">
-      <div className="detailView">
-        <div className="crypto-price"></div>
-      </div>
+    <article className="TradingDetail">
     </article>
   );
 }
 
 function List() {
+
   // dispatch 함수를 사용하기 위한 선언
   const dispatch = useDispatch();
 
@@ -266,7 +278,6 @@ function List() {
 
             // 새 배열을 원본 배열의 카피본에 병합 - 내림차순이기 때문에 상승, 동결, 하락순으로 병합
             sortedData = [...rise_crypto, ...even_crypto, ...fall_crypto];
-
             // dispatch(setFilteredData(sortedData));
 
             sort_states[0] = 0;
@@ -280,7 +291,6 @@ function List() {
 
             // 새 배열을 원본 배열의 카피본에 병합 - 오름차순이기 때문에 하락, 동결, 상승순으로 병합
             sortedData = [...fall_crypto, ...even_crypto, ...rise_crypto];
-
             // dispatch(setFilteredData(sortedData));
 
             sort_states[0] = 0;
@@ -322,13 +332,11 @@ function List() {
     <div className="div-list">
       {/* 검색 공간 */}
       <div className="list-search">
-        <img className="img-search" src={search}></img>
-        <input
-          type="text"
-          placeholder="검색"
-          value={search_cr}
-          onChange={(e) => setSearch_cr(e.target.value)}
-        ></input>
+        {/* <img className="img-search" src={search}></img> */}
+        <svg className="img-search" xmlns='http://www.w3.org/2000/svg' viewBox="0 0 18 18" width="30" height="30">
+          <path fill="currentColor" d="M3.5 8a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM8 2a6 6 0 1 0 3.65 10.76l3.58 3.58 1.06-1.06-3.57-3.57A6 6 0 0 0 8 2Z"></path>
+        </svg>
+        <input type="text" className='crypto-search' placeholder="검색" value={search_cr} onChange={(e) => setSearch_cr(e.target.value)}></input>
       </div>
 
       {/* 화폐 구분 목록 */}
@@ -353,21 +361,21 @@ function List() {
       <table className='list-table'>
         <thead>
           <tr>
-            <th className='name'>
+            <th className='name' onClick={() => sortClick(0)}>
               화폐명&nbsp;
-              <img className='sort' src={sort_images[sort_states[0]]} onClick={() => sortClick(0)}></img>
+              <img className='sort' src={sort_images[sort_states[0]]} ></img>
             </th>
-            <th className='price'>
+            <th className='price' onClick={() => sortClick(1)}>
               현재가&nbsp;
-              <img className='sort' src={sort_images[sort_states[1]]} onClick={() => sortClick(1)}></img>
+              <img className='sort' src={sort_images[sort_states[1]]}></img>
             </th>
-            <th className='compare'>
+            <th className='compare' onClick={() => sortClick(2)}>
               전일대비&nbsp;
-              <img className='sort' src={sort_images[sort_states[2]]} onClick={() => sortClick(2)}></img>
+              <img className='sort' src={sort_images[sort_states[2]]}></img>
             </th>
-            <th className='volume'>
+            <th className='volume' onClick={() => sortClick(3)}>
               거래대금&nbsp;
-              <img className='sort' src={sort_images[sort_states[3]]} onClick={() => sortClick(3)}></img>
+              <img className='sort' src={sort_images[sort_states[3]]}></img>
             </th>
           </tr>
         </thead>

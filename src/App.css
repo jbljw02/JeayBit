@@ -2,14 +2,6 @@ body {
   background-color: rgb(249, 249, 249);
 }
   
-.list-table {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  outline: none;
-  word-break: break-all;
-}
-
 .container {
   display: flex;
   flex-direction: column;
@@ -25,12 +17,13 @@ body {
   margin: 0 10px;
 }
 
-.title {
+.div-title {
   display: flex;
   align-items: center;
   font-weight: bold;
   margin-left: 5px;
-  margin-top: 2px;
+  margin-top: 3px;
+    cursor: pointer;
 }
 
 .title-img {
@@ -66,12 +59,12 @@ body {
   font-family: 'Roboto Flex', sans-serif;
 }
 
-.left-left {
+.TradingView {
   height: 100%;
   width: 71%;
 }
 
-.tradingView {
+.trading-view {
   background-color: white; 
   margin: 30px 0px 30px 30px;
   height: 95.5%;
@@ -93,20 +86,89 @@ body {
   border-bottom: 1px solid rgb(228, 229, 230);
 }
 
-.left-right {
+.TradingDetail {
   height: 100%;
   width: 29%;
 }
 
-.detailView {
-  background-color: white; 
-  margin: 30px;
-  height: 95.5%;  
+/* 드롭다운 css */
+.dropdown {
+  display: inline-block;
+  position: relative;
+  font-size: 14px;
 }
 
-.crypto-price {
-  padding: 15px;
-  font-size: 20px;
+.dd-button {
+  display: inline-block;
+  border: none;
+  padding: 10px 30px 10px 20px;
+  background-color: #ffffff;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+/* .dd-button:after {
+  content: '';
+  position: absolute;
+  top: 55%;
+  right: 15px;
+  transform: translateY(-50%);
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 5px solid black;
+} */
+
+.img-dd {
+  width: 10px;
+  margin-bottom: 1.5px;
+  margin-left: 4px;
+}
+
+/* .dd-button:hover {
+  background-color: #eeeeee;
+} */
+
+.dd-input {
+  display: none;
+}
+
+.dd-menu {
+  position: absolute;
+  top: 100%;
+  left: 12px;
+  border: 1px solid rgb(228, 229, 230);
+  border-radius: 2px;
+  padding: 0;
+  margin: 2px 0 0 0;
+  box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.1);
+  background-color: #ffffff;
+  list-style-type: none;
+}
+
+.dd-input+.dd-menu {
+  display: none;
+}
+
+.dd-input:checked+.dd-menu {
+  display: block;
+}
+
+.dd-menu li {
+  padding: 10px 20px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.dd-menu button {
+  padding: 10px 20px;
+  cursor: pointer;
+  white-space: nowrap;
+  background-color: white;
+  border: none;
+}
+
+.dd-menu li:hover {
+  background-color: #f6f6f6;
 }
 
 .right {
@@ -135,19 +197,19 @@ body {
   border-bottom: 1px solid silver;
 }
 
-input {
-  margin: 10px 10px;
+.img-search {
+  position: relative;
+  color: gray;
+  height: 16.5px;
+  left: 7px;
+  top: 3px;
+}
+
+.crypto-search {
+  margin: 10px 6px;
   border: none;
   width: 80%;
   outline: none;
-}
-
-.img-search {
-  position: relative;
-  height: 16px;
-  left: 10px;
-  top: 2.5px;
-  margin-right: 7px;
 }
 
 .list-category {
@@ -205,6 +267,7 @@ input {
   font-size: 12px;
   border-bottom: 1px solid rgb(228, 229, 230);
   white-space: nowrap;
+  cursor: pointer;
 }
 
 .list-table td {
