@@ -1,133 +1,13 @@
-import { useEffect, useState } from 'react';
-import './App.css';
-import axios from 'axios';
-import search from './img/search.png';
-import starOn from './img/star-on.png'
-import starOff from './img/star-off.png'
-import img_sort from './img/sort.png'
-import img_sort_up from './img/sort-up.png'
-import img_sort_down from './img/sort-down.png'
-import title from './img/title.png'
-import { useDispatch, useSelector, Provider } from 'react-redux';
-import store, { RootState, crypto, setCr_names, setCr_price, setCr_markets, setStar, setCr_change, setCr_change_rate, setCr_change_price, setCr_trade_volume, setFilteredData } from "./store";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState, setFilteredData, setStar, crypto, setCr_selected } from "../store";
+import { useEffect, useState } from "react";
+import img_sort from '../assets/images/sort.png';
+import img_sort_up from '../assets/images/sort-up.png';
+import img_sort_down from '../assets/images/sort-down.png';
+import starOn from '../assets/images/star-on.png';
+import starOff from '../assets/images/star-off.png';
 
-function App() {
-
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    fetchData();
-  }, []);
-
-  // 비동기 함수 async를 이용하여 데이터를 받아오는 동안에도 다른 작업을 가능하게 함
-  // = async function () {}
-  const fetchData = async () => {
-    try {
-      const response = await axios.get('http://127.0.0.1:8000')
-      dispatch(setCr_names(response.data.names));
-      dispatch(setCr_price(response.data.cur_price));
-      dispatch(setCr_markets(response.data.markets));
-      dispatch(setCr_change(response.data.change))
-      dispatch(setCr_change_rate(response.data.change_rate))
-      dispatch(setCr_change_price(response.data.change_price))
-      dispatch(setCr_trade_volume(response.data.trade_volume))
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  return (
-    <Provider store={store}>
-      <div className="App">
-        <div className="container">
-          <Header></Header>
-          <div className="center">
-            <section className="left">
-              <TradingView></TradingView>
-              <TradingDetail></TradingDetail>
-            </section>
-            <aside className="right">
-              <List></List>
-            </aside>
-          </div>
-          <Footer></Footer>
-        </div>
-      </div>
-    </Provider>
-  );
-}
-
-function Header() {
-  return (
-    <header className="header">
-      {/* 제목 폰트를 사용하기 위한 구글 폰트 api */}
-      <style>
-        @import
-        url('https://fonts.googleapis.com/css2?family=Asap+Condensed:wght@300&family=Barlow:ital@1&family=Fira+Sans:ital,wght@1,300&family=Gowun+Batang&family=Hind&display=swap');
-      </style>
-      <style>
-        @import
-        url('https://fonts.googleapis.com/css2?family=Asap+Condensed:wght@300&family=Barlow:ital@1&family=Fira+Sans:ital,wght@1,300&family=Gowun+Batang&family=Roboto+Flex&display=swap');
-      </style>
-      <div className="div-title">
-        <img src={title} className="title-img"></img>
-        <span className="title-name">J TradingView </span>
-      </div>
-    </header>
-  );
-}
-
-function TradingView() {
-
-  const [checkedValue, setCheckedValue] = useState<string>("1일")
-
-  const checkClick = (value: string) => {
-    setCheckedValue(value)
-  }
-
-  return (
-    <article className="TradingView">
-      <div className="trading-view">
-        <div className="crypto-name"></div>
-        <div className="div-tradingView">
-          <div className="trading-header">
-
-            {/* 드롭다운 라벨 */}
-            <label className="dropdown">
-              <div className="dd-button">
-                {checkedValue}
-                <svg className="img-dd" xmlns='http://www.w3.org/2000/svg' viewBox="0 0 16 8">
-                  <path fill="currentColor" d="M0 1.475l7.396 6.04.596.485.593-.49L16 1.39 14.807 0 7.393 6.122 8.58 6.12 1.186.08z"></path>
-                </svg>
-              </div>
-              <input type="checkbox" className="dd-input" />
-              <ul className="dd-menu">
-                <li onClick={(e) => checkClick('1분')}>1분</li>
-                <li onClick={(e) => checkClick('3분')}>3분</li>
-                <li onClick={(e) => checkClick('5분')}>5분</li>
-                <li onClick={(e) => checkClick('10분')}>10분</li>
-                <li onClick={(e) => checkClick('15분')}>15분</li>
-                <li onClick={(e) => checkClick('30분')}>30분</li>
-                <li onClick={(e) => checkClick('1시간')}>1시간</li>
-                <li onClick={(e) => checkClick('4시간')}>4시간</li>
-              </ul>
-            </label>
-          </div>
-          <div className="trading-chart"></div>
-        </div>
-      </div>
-    </article>
-  );
-}
-
-function TradingDetail() {
-  return (
-    <article className="TradingDetail">
-    </article>
-  );
-}
-
-function List() {
+function CryptoList() {
 
   // dispatch 함수를 사용하기 위한 선언
   const dispatch = useDispatch();
@@ -174,7 +54,7 @@ function List() {
       f_tradeVolume: Number(String(Math.floor(cr_trade_volume[i])).slice(0, -6)).toLocaleString(),
       star: star[i],
 
-    // 검색어에 해당하는 데이터를 비교하여 배열을 재생성 후 재렌더링
+      // 검색어에 해당하는 데이터를 비교하여 배열을 재생성 후 재렌더링
     })).filter((item) => (
       item.name.toLowerCase().includes(search_cr.toLowerCase())
     ));
@@ -328,6 +208,11 @@ function List() {
     });
   };
 
+  // cr_selected를 테이블에서 클릭한 화폐의 이름으로 변경
+  const listClick = (value : string) => {
+    dispatch(setCr_selected(value))
+  }
+
   return (
     <div className="div-list">
       {/* 검색 공간 */}
@@ -385,30 +270,30 @@ function List() {
           {
             filteredData.map((item, i) => {
               return (
-              <tr key={i}>
-                <td className='td-star'>
-                  <img
+                <tr key={i} onClick={ () => listClick(filteredData[i].name) }>
+                  <td className='td-star'>
+                    <img
                       onClick={() => starClick(i)}
-                    // 최초 star[i]의 상태는 'starOn'일 수가 없으므로 반드시 starOff 출력
-                    src={star[i] === 'starOn' ? starOn : starOff}
-                  />
-                </td>
+                      // 최초 star[i]의 상태는 'starOn'일 수가 없으므로 반드시 starOff 출력
+                      src={star[i] === 'starOn' ? starOn : starOff}
+                    />
+                  </td>
                   <td className='td-name'>{item.name} <br /> {item.markets}</td>
-                {/* 삼항연산자 중첩 - 전일 대비 가격이 상승했다면 청색, 하락했다면 적색, 동일하다면 검정색 */}
-                {
+                  {/* 삼항연산자 중첩 - 전일 대비 가격이 상승했다면 청색, 하락했다면 적색, 동일하다면 검정색 */}
+                  {
                     item.change === 'RISE'
                       ? <td className='td-rise'>{item.f_price}</td>
                       : (item.change === 'FALL'
                         ? <td className='td-fall'>{item.f_price}</td>
                         : <td className='td-even'>{item.f_price}</td>)
-                }
-                {
+                  }
+                  {
                     item.change === 'RISE'
                       ? <td className='td-rise'>+{item.f_changeRate}% <br /> {item.f_changePrice}</td>
                       : (item.change === 'FALL'
                         ? <td className='td-fall'>-{item.f_changeRate}% <br /> {item.f_changePrice}</td>
                         : <td className='td-even'>{item.f_changeRate}% <br /> {item.f_changePrice}</td>)
-                }
+                  }
                   <td className='td-volume'>{item.f_tradeVolume}백만</td>
                 </tr>
               )
@@ -420,11 +305,4 @@ function List() {
   );
 }
 
-function Footer() {
-  return (
-    <footer className='footer'>
-    </footer>
-  )
-}
-
-export default App;
+export { CryptoList };
