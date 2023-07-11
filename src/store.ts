@@ -25,7 +25,11 @@ export type RootState = {
   cr_trade_volume: number[],
   star: string[],
   filteredData: crypto[],
-  cr_selected: string
+  cr_names_selected: string,
+  cr_markets_selected: string,
+  cr_price_selected: string,
+  cr_change_selected: string,
+  cr_change_rate_selected: string
 }
 
 
@@ -121,11 +125,51 @@ const filteredData = createSlice({
   }
 })
 
-const cr_selected = createSlice({
+const cr_names_selected = createSlice({
   name: 'cr_selected',
   initialState: '',
   reducers: {
-    setCr_selected: (state, action) => {
+    setCr_names_selected: (state, action) => {
+      return action.payload;
+    }
+  }
+})
+
+const cr_markets_selected = createSlice({
+  name: 'cr_markets_selected',
+  initialState: '',
+  reducers: {
+    setCr_markets_selected: (state, action) => {
+      return action.payload;
+    }
+  }
+})
+
+const cr_price_selected = createSlice({
+  name: 'cr_price_selected',
+  initialState: '',
+  reducers: {
+    setCr_price_selected: (state, action) => {
+      return action.payload;
+    }
+  }
+})
+
+const cr_change_selected = createSlice({
+  name: 'cr_change_selected',
+  initialState: '',
+  reducers: {
+    setCr_change_selected: (state, action) => {
+      return action.payload;
+    }
+  }
+})
+
+const cr_change_rate_selected = createSlice({
+  name: 'cr_change_rate_selected',
+  initialState: '',
+  reducers: {
+    setCr_change_rate_selected: (state, action) => {
       return action.payload;
     }
   }
@@ -142,7 +186,11 @@ export default configureStore({
     cr_trade_volume: cr_trade_volume.reducer,
     star: star.reducer,
     filteredData: filteredData.reducer,
-    cr_selected: cr_selected.reducer
+    cr_names_selected: cr_names_selected.reducer,
+    cr_markets_selected: cr_markets_selected.reducer,
+    cr_price_selected: cr_price_selected.reducer,
+    cr_change_selected: cr_change_selected.reducer,
+    cr_change_rate_selected: cr_change_rate_selected.reducer
   }
 })
 
@@ -171,6 +219,10 @@ export const { setCr_change_price } = cr_change_price.actions;
 export const { setCr_trade_volume } = cr_trade_volume.actions;
 export const { setStar } = star.actions;
 export const { setFilteredData } = filteredData.actions;
-export const { setCr_selected } = cr_selected.actions;
+export const { setCr_names_selected } = cr_names_selected.actions;
+export const { setCr_markets_selected } = cr_markets_selected.actions;
+export const { setCr_price_selected } = cr_price_selected.actions;
+export const { setCr_change_selected } = cr_change_selected.actions;
+export const { setCr_change_rate_selected } = cr_change_rate_selected.actions;
 
 // export default store;

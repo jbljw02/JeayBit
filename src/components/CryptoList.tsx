@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { RootState, setFilteredData, setStar, crypto, setCr_selected } from "../store";
+import { RootState, setFilteredData, setStar, crypto, setCr_names_selected, setCr_markets_selected, setCr_price_selected, setCr_change_selected, setCr_change_rate_selected } from "../store";
 import { useEffect, useState } from "react";
 import img_sort from '../assets/images/sort.png';
 import img_sort_up from '../assets/images/sort-up.png';
@@ -25,9 +25,6 @@ function CryptoList() {
 
   // 검색값을 관리하기 위한 state
   const [search_cr, setSearch_cr] = useState<string>("");
-
-  // 화폐정보를 관리하기 위한 state
-  // const [filteredData, setFilteredData] = useState<crypto[]>([]);
 
   // 차례로 화폐명, 현재가, 전일대비, 거래대금의 정렬 상태를 관리
   const [sort_states, setSort_states] = useState<number[]>([0, 0, 0, 0]);
@@ -208,9 +205,25 @@ function CryptoList() {
     });
   };
 
-  // cr_selected를 테이블에서 클릭한 화폐의 이름으로 변경
-  const listClick = (value : string) => {
-    dispatch(setCr_selected(value))
+  // 각 값들을 테이블에서 클릭한 화폐의 정보로 변경 -> TradingView, TradingDetail
+  const nameSelect = (value: string) => {
+    dispatch(setCr_names_selected(value));
+  }
+
+  const marketSelect = (value: string) => {
+    dispatch(setCr_markets_selected(value));
+  }
+
+  const priceSelect = (value: string) => {
+    dispatch(setCr_price_selected(value));
+  }
+
+  const changeSelect = (value: string) => {
+    dispatch(setCr_change_selected(value));
+  }
+
+  const change_rateSelect = (value: string) => {
+    dispatch(setCr_change_rate_selected(value))
   }
 
   return (
@@ -270,7 +283,13 @@ function CryptoList() {
           {
             filteredData.map((item, i) => {
               return (
-                <tr key={i} onClick={ () => listClick(filteredData[i].name) }>
+                <tr key={i} onClick={() => {
+                  nameSelect(filteredData[i].name);
+                  marketSelect(filteredData[i].markets);
+                  priceSelect(filteredData[i].f_price);
+                  changeSelect(filteredData[i].change);
+                  change_rateSelect(filteredData[i].f_changeRate);
+                }}>
                   <td className='td-star'>
                     <img
                       onClick={() => starClick(i)}
@@ -279,20 +298,25 @@ function CryptoList() {
                     />
                   </td>
                   <td className='td-name'>{item.name} <br /> {item.markets}</td>
+
                   {/* 삼항연산자 중첩 - 전일 대비 가격이 상승했다면 청색, 하락했다면 적색, 동일하다면 검정색 */}
                   {
-                    item.change === 'RISE'
-                      ? <td className='td-rise'>{item.f_price}</td>
-                      : (item.change === 'FALL'
-                        ? <td className='td-fall'>{item.f_price}</td>
-                        : <td className='td-even'>{item.f_price}</td>)
+                    item.change === 'RISE' ?
+                      <td className='td-rise'>{item.f_price}</td> :
+                      (
+                        item.change === 'FALL' ?
+                          <td className='td-fall'>{item.f_price}</td> :
+                          <td className='td-even'>{item.f_price}</td>
+                      )
                   }
                   {
-                    item.change === 'RISE'
-                      ? <td className='td-rise'>+{item.f_changeRate}% <br /> {item.f_changePrice}</td>
-                      : (item.change === 'FALL'
-                        ? <td className='td-fall'>-{item.f_changeRate}% <br /> {item.f_changePrice}</td>
-                        : <td className='td-even'>{item.f_changeRate}% <br /> {item.f_changePrice}</td>)
+                    item.change === 'RISE' ?
+                      <td className='td-rise'>+{item.f_changeRate}% <br /> {item.f_changePrice}</td> :
+                      (
+                        item.change === 'FALL' ?
+                          <td className='td-fall'>-{item.f_changeRate}% <br /> {item.f_changePrice}</td> :
+                          <td className='td-even'>{item.f_changeRate}% <br /> {item.f_changePrice}</td>
+                      )
                   }
                   <td className='td-volume'>{item.f_tradeVolume}백만</td>
                 </tr>

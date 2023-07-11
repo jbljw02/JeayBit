@@ -71,18 +71,24 @@ body {
 }
 
 .crypto-name {
-  padding: 24px;
+  padding: 25px 30px;
   font-weight: bold;
   font-size: 23px;
   border-bottom: 1px solid rgb(228, 229, 230);
 }
 
+.crypto-market {
+  margin-left: 4px;
+  font-size: 17px;
+  font-weight: bold;
+  color: rgba(0, 0, 0, 0.4);
+}
 .div-tradingView {
   height: 100%;
 }
 
 .trading-header {
-  padding: 20px;
+  padding: 5px;
   border-bottom: 1px solid rgb(228, 229, 230);
 }
 
@@ -91,6 +97,53 @@ body {
   width: 29%;
 }
 
+.trading-detail {
+  background-color: white;
+  margin: 30px;
+  height: 95.5%;
+}
+
+.crypto-price-even {
+  padding: 25px 30px;
+  font-weight: bold;
+  font-size: 33px;
+  color: black;
+  /* border-bottom: 1px solid rgb(228, 229, 230);  */
+}
+
+.crypto-price-rise {
+  padding: 25px 30px;
+  font-weight: bold;
+  font-size: 33px;
+  color: #22ab94;
+  /* border-bottom: 1px solid rgb(228, 229, 230);  */
+}
+
+.crypto-price-fall {
+  padding: 25px 30px;
+  font-weight: bold;
+  font-size: 33px;
+  color: #f23645;
+  /* border-bottom: 1px solid rgb(228, 229, 230);  */
+}
+
+.crypto-change_rate-even {
+  margin-left: 4px;
+  font-size: 17px;
+  font-weight: lighter;
+}
+
+.crypto-change_rate-rise {
+  margin-left: 4px;
+  font-size: 17px;
+  font-weight: lighter;
+}
+
+.crypto-change_rate-fall {
+  margin-left: 4px;
+  font-size: 17px;
+  font-weight: lighter;
+}
 /* 드롭다운 css */
 .dropdown {
   display: inline-block;
@@ -254,6 +307,7 @@ body {
 .scroll-tbody::-webkit-scrollbar-thumb {
   background-color: rgba(0, 0, 0, 0.21);
   border-radius: 5px;
+  display: none;  /* 스크롤바를 숨김 */
 }
 
 /* 스크롤바 hover시 색상 변경 */

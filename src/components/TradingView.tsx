@@ -6,7 +6,11 @@ import { RootState } from "../store";
 function TradingView() {
 
   const [checkedValue, setCheckedValue] = useState<string>("1일")
-  const cr_selected = useSelector((state: RootState) => { return state.cr_selected });  // 테이블에서 선택된 화폐의 이름을 가져옴
+
+  // 테이블에서 선택된 화폐의 이름, 마켓, 가격을 가져옴
+  const cr_names_selected = useSelector((state: RootState) => { return state.cr_names_selected });  
+  const cr_markets_selected = useSelector((state: RootState) => { return state.cr_markets_selected });
+  const cr_price_selected = useSelector((state: RootState) => { return state.cr_price_selected });
 
   const checkClick = (value: string) => {
     setCheckedValue(value)
@@ -15,9 +19,15 @@ function TradingView() {
   return (
     <article className="TradingView">
       <div className="trading-view">
-        <div className="crypto-name">{ cr_selected }</div>
+        <div className="crypto-name">
+          {cr_names_selected}
+          <span className="crypto-market">
+            {cr_markets_selected}
+          </span>
+        </div>
         <div className="div-tradingView">
           <div className="trading-header">
+            
             {/* 드롭다운 라벨 */}
             <label className="dropdown">
               <div className="dd-button">
