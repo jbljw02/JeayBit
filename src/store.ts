@@ -29,9 +29,10 @@ export type RootState = {
   cr_markets_selected: string,
   cr_price_selected: string,
   cr_change_selected: string,
-  cr_change_rate_selected: string
+  cr_change_rate_selected: string,
+  cr_change_price_selected: string,
+  sortedData: crypto[]
 }
-
 
 const cr_names = createSlice({
   name: 'cr_names',
@@ -175,6 +176,26 @@ const cr_change_rate_selected = createSlice({
   }
 })
 
+const cr_change_price_selected = createSlice({
+  name: 'cr_change_price_selected',
+  initialState: '',
+  reducers: {
+    setCr_change_price_selected: (state, action) => {
+      return action.payload;
+    }
+  }
+})
+
+const sortedData = createSlice({
+  name: 'sortedData',
+  initialState: [] as crypto[],
+  reducers: {
+    setSortedData: (state, action) => {
+      return action.payload;
+    }
+  }
+})
+
 export default configureStore({
   reducer: {
     cr_names: cr_names.reducer,
@@ -190,7 +211,9 @@ export default configureStore({
     cr_markets_selected: cr_markets_selected.reducer,
     cr_price_selected: cr_price_selected.reducer,
     cr_change_selected: cr_change_selected.reducer,
-    cr_change_rate_selected: cr_change_rate_selected.reducer
+    cr_change_rate_selected: cr_change_rate_selected.reducer,
+    cr_change_price_selected: cr_change_price_selected.reducer,
+    sortedData: sortedData.reducer
   }
 })
 
@@ -224,5 +247,7 @@ export const { setCr_markets_selected } = cr_markets_selected.actions;
 export const { setCr_price_selected } = cr_price_selected.actions;
 export const { setCr_change_selected } = cr_change_selected.actions;
 export const { setCr_change_rate_selected } = cr_change_rate_selected.actions;
+export const { setCr_change_price_selected } = cr_change_price_selected.actions;
+export const { setSortedData } = sortedData.actions;
 
 // export default store;

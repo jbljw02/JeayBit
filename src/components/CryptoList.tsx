@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { RootState, setFilteredData, setStar, crypto, setCr_names_selected, setCr_markets_selected, setCr_price_selected, setCr_change_selected, setCr_change_rate_selected } from "../store";
+import { RootState, setFilteredData, setStar, crypto, setCr_names_selected, setCr_markets_selected, setCr_price_selected, setCr_change_selected, setCr_change_rate_selected, setCr_change_price_selected, setSortedData } from "../store";
 import { useEffect, useState } from "react";
 import img_sort from '../assets/images/sort.png';
 import img_sort_up from '../assets/images/sort-up.png';
@@ -11,7 +11,7 @@ function CryptoList() {
 
   // dispatch 함수를 사용하기 위한 선언
   const dispatch = useDispatch();
-
+  
   // useSelector훅을 이용해 store에서 state를 가져옴
   const cr_names = useSelector((state: RootState) => { return state.cr_names; });
   const cr_price = useSelector((state: RootState) => { return state.cr_price; });
@@ -22,6 +22,7 @@ function CryptoList() {
   const cr_trade_volume = useSelector((state: RootState) => { return state.cr_trade_volume; });
   const star = useSelector((state: RootState) => { return state.star; });
   const filteredData = useSelector((state: RootState) => { return state.filteredData; });
+  let sortedData = useSelector((state:RootState) => { return state.sortedData });
 
   // 검색값을 관리하기 위한 state
   const [search_cr, setSearch_cr] = useState<string>("");
@@ -49,9 +50,8 @@ function CryptoList() {
       f_changePrice: cr_change_price[i].toLocaleString(),
       tradeVolume: cr_trade_volume[i],
       f_tradeVolume: Number(String(Math.floor(cr_trade_volume[i])).slice(0, -6)).toLocaleString(),
-      star: star[i],
-
-      // 검색어에 해당하는 데이터를 비교하여 배열을 재생성 후 재렌더링
+      star: star[i]
+      // 검색어에 해당하는 데이터를 비교하여 배열을 재생성
     })).filter((item) => (
       item.name.toLowerCase().includes(search_cr.toLowerCase())
     ));
@@ -63,7 +63,8 @@ function CryptoList() {
     //   dispatch(setFilteredData(updatedData));
     // }
 
-    // 의존성 배열 추가(배열에 포함된 값들 중 하나라도 변경되면 useEffect 함수가 실행되며 재렌더링 발생 / filteredData가 포함될시 조건문이 없다면 무한 dispatch로 인한 런타임에러 발생)
+    // 의존성 배열 추가(배열에 포함된 값들 중 하나라도 변경되면 useEffect 함수가 실행되며 재렌더링 발생 
+    // filteredData가 포함될시 조건문이 없다면 무한 dispatch로 인한 런타임에러 발생)
   }, [cr_names, cr_price, cr_markets, cr_change, cr_change_rate, cr_change_price, cr_trade_volume, star, search_cr]
   );
 
@@ -71,7 +72,7 @@ function CryptoList() {
   const starClick = (index: number) => {
     dispatch(setStar(index));
   };
-
+  
   // 정렬 이미지 클릭 이벤트
   const sortClick = (index: number) => {
 
@@ -80,8 +81,8 @@ function CryptoList() {
       const states_copy = [...prevStates];
       states_copy[index] = (states_copy[index] + 1) % sort_images.length;
 
-      let sortedData: crypto[] = [...filteredData];
-
+      let sortedData = [...filteredData];
+      console.log(sortedData)
       // 화폐를 전일대비 상승/동결/하락 여부에 따라 구분
       // 값 자체에 양수, 음수 구분이 되어있는 것이 아니기 때문에 정렬하기 전에 구분을 지어줘야 함
       let rise_crypto: crypto[] = [];
@@ -205,25 +206,24 @@ function CryptoList() {
     });
   };
 
-  // 각 값들을 테이블에서 클릭한 화폐의 정보로 변경 -> TradingView, TradingDetail
+  // 각 값들을 테이블에서 클릭한 화폐의 정보로 변경 -> TradingView, TradingDetail로 전달
   const nameSelect = (value: string) => {
     dispatch(setCr_names_selected(value));
   }
-
   const marketSelect = (value: string) => {
     dispatch(setCr_markets_selected(value));
   }
-
   const priceSelect = (value: string) => {
     dispatch(setCr_price_selected(value));
   }
-
   const changeSelect = (value: string) => {
     dispatch(setCr_change_selected(value));
   }
-
   const change_rateSelect = (value: string) => {
     dispatch(setCr_change_rate_selected(value))
+  }
+  const change_priceSelect = (value: string) => {
+    dispatch(setCr_change_price_selected(value));
   }
 
   return (
@@ -279,6 +279,7 @@ function CryptoList() {
         </thead>
 
         <tbody className='scroll-tbody'>
+
           {/* 검색값을 반환한 filteredData 함수를 다시 반복문을 이용하여 출력 */}
           {
             filteredData.map((item, i) => {
@@ -289,6 +290,7 @@ function CryptoList() {
                   priceSelect(filteredData[i].f_price);
                   changeSelect(filteredData[i].change);
                   change_rateSelect(filteredData[i].f_changeRate);
+                  change_priceSelect(filteredData[i].f_changePrice);
                 }}>
                   <td className='td-star'>
                     <img

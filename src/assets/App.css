@@ -104,7 +104,7 @@ body {
 }
 
 .crypto-price-even {
-  padding: 25px 30px;
+  padding: 25px 30px 0px;
   font-weight: bold;
   font-size: 33px;
   color: black;
@@ -112,7 +112,7 @@ body {
 }
 
 .crypto-price-rise {
-  padding: 25px 30px;
+  padding: 25px 30px 0px;
   font-weight: bold;
   font-size: 33px;
   color: #22ab94;
@@ -120,7 +120,7 @@ body {
 }
 
 .crypto-price-fall {
-  padding: 25px 30px;
+  padding: 25px 30px 0px;
   font-weight: bold;
   font-size: 33px;
   color: #f23645;
@@ -144,6 +144,44 @@ body {
   font-size: 17px;
   font-weight: lighter;
 }
+
+.crypto-change_price-even {
+  padding: 10px 30px 0px;
+  font-size: 20px;
+  color: black;
+}
+
+.crypto-change_price-rise {
+  padding: 10px 30px 0px;
+  font-size: 20px;
+  color: #22ab94;
+}
+
+.crypto-change_price-fall {
+  padding: 10px 30px 0px;
+  font-size: 20px;
+  color: #f23645;
+}
+
+.img-price_rise {
+  filter: invert(48%) sepia(100%) saturate(349%) hue-rotate(120deg) brightness(95%) contrast(84%);
+  width: 10px;
+  padding-right: 3px;
+  padding-left: 1px;
+}
+
+.img-price_fall {
+  filter: invert(56%) sepia(93%) saturate(4750%) hue-rotate(329deg) brightness(88%) contrast(118%);
+  width: 10px;
+  padding-right: 3px;
+  padding-left: 3px;
+}
+
+.img-price_even {
+  width: 10px;
+  padding-right: 3px;
+}
+
 /* 드롭다운 css */
 .dropdown {
   display: inline-block;
@@ -294,7 +332,8 @@ body {
   
 .scroll-tbody {
   overflow-y: auto;
-  max-height: calc(100vh - 180px); /* 스크롤바가 보일 최대 높이 지정 */
+  max-height: calc(100vh - 250px);
+    /* 스크롤바가 보일 최대 높이 지정 */
 }
 
 /* 스크롤바가 지나는 영역의 색상 */
