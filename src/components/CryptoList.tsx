@@ -19,7 +19,7 @@ function CryptoList() {
   const cr_change = useSelector((state: RootState) => { return state.cr_change; });
   const cr_change_rate = useSelector((state: RootState) => { return state.cr_change_rate; });
   const cr_change_price = useSelector((state: RootState) => { return state.cr_change_price; });
-  const cr_trade_volume = useSelector((state: RootState) => { return state.cr_trade_volume; });
+  const cr_trade_price = useSelector((state: RootState) => { return state.cr_trade_price; });
   const star = useSelector((state: RootState) => { return state.star; });
   const filteredData = useSelector((state: RootState) => { return state.filteredData; });
   let sortedData = useSelector((state:RootState) => { return state.sortedData });
@@ -48,8 +48,8 @@ function CryptoList() {
       f_changeRate: (cr_change_rate[i] * 100).toFixed(2),
       changePrice: cr_change_price[i],
       f_changePrice: cr_change_price[i].toLocaleString(),
-      tradeVolume: cr_trade_volume[i],
-      f_tradeVolume: Number(String(Math.floor(cr_trade_volume[i])).slice(0, -6)).toLocaleString(),
+      tradePrice: cr_trade_price[i],
+      f_tradePrice: Number(String(Math.floor(cr_trade_price[i])).slice(0, -6)).toLocaleString(),
       star: star[i]
       // 검색어에 해당하는 데이터를 비교하여 배열을 재생성
     })).filter((item) => (
@@ -65,7 +65,7 @@ function CryptoList() {
 
     // 의존성 배열 추가(배열에 포함된 값들 중 하나라도 변경되면 useEffect 함수가 실행되며 재렌더링 발생 
     // filteredData가 포함될시 조건문이 없다면 무한 dispatch로 인한 런타임에러 발생)
-  }, [cr_names, cr_price, cr_markets, cr_change, cr_change_rate, cr_change_price, cr_trade_volume, star, search_cr]
+  }, [cr_names, cr_price, cr_markets, cr_change, cr_change_rate, cr_change_price, cr_trade_price, star, search_cr]
   );
 
   // 별 이미지를 클릭하면 on off
@@ -82,7 +82,7 @@ function CryptoList() {
       states_copy[index] = (states_copy[index] + 1) % sort_images.length;
 
       let sortedData = [...filteredData];
-      console.log(sortedData)
+      
       // 화폐를 전일대비 상승/동결/하락 여부에 따라 구분
       // 값 자체에 양수, 음수 구분이 되어있는 것이 아니기 때문에 정렬하기 전에 구분을 지어줘야 함
       let rise_crypto: crypto[] = [];
@@ -183,7 +183,7 @@ function CryptoList() {
             states_copy[index] = 1;
           }
           if (states_copy[index] === 1) {
-            sortedData.sort((a, b) => b.tradeVolume - a.tradeVolume);
+            sortedData.sort((a, b) => b.tradePrice - a.tradePrice);
             // dispatch(setFilteredData(sortedData));
 
             sort_states[0] = 0;
@@ -191,7 +191,7 @@ function CryptoList() {
             sort_states[2] = 0;
           }
           if (states_copy[index] === 2) {
-            sortedData.sort((a, b) => a.tradeVolume - b.tradeVolume);
+            sortedData.sort((a, b) => a.tradePrice - b.tradePrice);
             // dispatch(setFilteredData(sortedData));
 
             sort_states[0] = 0;
@@ -320,7 +320,7 @@ function CryptoList() {
                           <td className='td-even'>{item.f_changeRate}% <br /> {item.f_changePrice}</td>
                       )
                   }
-                  <td className='td-volume'>{item.f_tradeVolume}백만</td>
+                  <td className='td-volume'>{item.f_tradePrice}백만</td>
                 </tr>
               )
             })

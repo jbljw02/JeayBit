@@ -21,11 +21,15 @@ def price():
 
     data = eval(response.text)
 
-    cur_price = []
-    change = []
-    change_rate = []
-    change_price = []
-    acc_trade_price_24h = []
+    cur_price = []  # 종가 및 현재가
+    change = []  # 변화여부(상승/유지/하락) 
+    change_rate = []  # 변화율
+    change_price = []  # 변화가격
+    acc_trade_price_24h = []  # 24시간 거래대금
+    acc_trade_volume_24h = []  # 24시간 거래량
+    opening_price = []  # 시가
+    high_price = []  # 고가
+    low_price = []  # 종가
     
     for i in range(len(data)):
 
@@ -44,7 +48,11 @@ def price():
             change_price.append(data[i]['change_price'])    # float
 
         acc_trade_price_24h.append(data[i]['acc_trade_price_24h'])  # float
+        acc_trade_volume_24h.append(data[i]['acc_trade_volume_24h'])  # float
+        opening_price.append(data[i]['opening_price'])  # float
+        high_price.append(data[i]['high_price'])  # 고가
+        low_price.append(data[i]['low_price'])  # 저가
 
-    return names, cur_price, unJoin_markets, change, change_rate, change_price, acc_trade_price_24h
+    return names, cur_price, unJoin_markets, change, change_rate, change_price, acc_trade_price_24h, acc_trade_volume_24h, opening_price, high_price, low_price
 
 price()

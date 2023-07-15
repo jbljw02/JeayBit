@@ -5,6 +5,11 @@ import price_fall from '../assets/images/price-down.png'
 
 function TradingDetail() {
 
+  const cr_trade_price = useSelector((state: RootState) => { return state.cr_trade_price });
+  const cr_trade_volume = useSelector((state: RootState) => { return state.cr_trade_volume });
+  const cr_opening_price = useSelector((state: RootState) => { return state.cr_opening_price });
+  const cr_high_price = useSelector((state: RootState) => { return state.cr_high_price });
+  const cr_low_price = useSelector((state: RootState) => { return state.cr_low_price });
   const cr_price_selected = useSelector((state: RootState) => { return state.cr_price_selected });
   const cr_change_selected = useSelector((state: RootState) => { return state.cr_change_selected });
   const cr_change_price_selected = useSelector((state: RootState) => { return state.cr_change_price_selected });   
@@ -49,13 +54,38 @@ function TradingDetail() {
                 </div>
             )
         }
+        <table>
+          <tr>
+            <td>
+
+            </td>
+            <td>
+
+            </td>
+          </tr>
+          <tr>
+            <td>
+
+            </td>
+            <td>
+
+            </td>
+          </tr>
+          <tr>
+            <td>
+
+            </td>
+            <td>
+
+            </td>
+          </tr>
+        </table>
       </div>
     </article>
   );
 }
 
-// 반복적으로 사용되는 코드를 컴포넌트로 정리
-// 화폐의 변화율에 따라 css 속성 다르게 적용
+// 반복적으로 사용되는 코드를 컴포넌트로 정리 - 화폐의 변화율에 따라 css 속성 다르게 적용
 function Crypto_changeRate_selected() {
   const cr_change_selected = useSelector((state: RootState) => { return state.cr_change_selected });
   const cr_change_rate_selected = useSelector((state: RootState) => { return state.cr_change_rate_selected });
