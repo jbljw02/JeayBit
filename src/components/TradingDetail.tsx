@@ -7,12 +7,18 @@ function TradingDetail() {
 
   const cr_trade_price = useSelector((state: RootState) => { return state.cr_trade_price });
   const cr_trade_volume = useSelector((state: RootState) => { return state.cr_trade_volume });
-  const cr_opening_price = useSelector((state: RootState) => { return state.cr_opening_price });
+  const cr_open_price = useSelector((state: RootState) => { return state.cr_open_price });
   const cr_high_price = useSelector((state: RootState) => { return state.cr_high_price });
   const cr_low_price = useSelector((state: RootState) => { return state.cr_low_price });
   const cr_price_selected = useSelector((state: RootState) => { return state.cr_price_selected });
+  const cr_markets_selected = useSelector((state: RootState) => { return state.cr_markets_selected });
   const cr_change_selected = useSelector((state: RootState) => { return state.cr_change_selected });
   const cr_change_price_selected = useSelector((state: RootState) => { return state.cr_change_price_selected });   
+  const cr_trade_price_selected = useSelector((state: RootState) => { return state.cr_trade_price_selected });
+  const cr_trade_volume_selected = useSelector((state: RootState) => { return state.cr_trade_volume_selected });
+  const cr_open_price_selected = useSelector((state: RootState) => { return state.cr_open_price_selected });
+  const cr_high_price_selected = useSelector((state: RootState) => { return state.cr_high_price_selected });
+  const cr_low_price_selected = useSelector((state: RootState) => { return state.cr_low_price_selected });
 
   return (
     <article className="TradingDetail">
@@ -54,31 +60,33 @@ function TradingDetail() {
                 </div>
             )
         }
-        <table>
+        <table className="table-selectedDetail">
+          <tbody>
           <tr>
             <td>
-
+                거래대금 : {cr_trade_price_selected}KRW
             </td>
             <td>
-
+                거래량 : {cr_trade_volume_selected}{cr_markets_selected.slice(4,7)}
             </td>
           </tr>
           <tr>
             <td>
-
+                시가 : {cr_open_price_selected}
             </td>
             <td>
-
+                종가 : {cr_high_price_selected}
             </td>
           </tr>
           <tr>
             <td>
-
+                고가 : {cr_high_price_selected}
             </td>
             <td>
-
+                저가 : {cr_low_price_selected}
             </td>
           </tr>
+          </tbody>
         </table>
       </div>
     </article>

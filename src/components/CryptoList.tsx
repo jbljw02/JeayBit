@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { RootState, setFilteredData, setStar, crypto, setCr_names_selected, setCr_markets_selected, setCr_price_selected, setCr_change_selected, setCr_change_rate_selected, setCr_change_price_selected, setSortedData } from "../store";
+import { RootState, setFilteredData, setStar, crypto, setCr_names_selected, setCr_markets_selected, setCr_price_selected, setCr_change_selected, setCr_change_rate_selected, setCr_change_price_selected, setSortedData, setCr_trade_price_selected, setCr_trade_volume_selected, setCr_open_price_selected, setCr_high_price_selected, setCr_low_price_selected } from "../store";
 import { useEffect, useState } from "react";
 import img_sort from '../assets/images/sort.png';
 import img_sort_up from '../assets/images/sort-up.png';
@@ -20,9 +20,14 @@ function CryptoList() {
   const cr_change_rate = useSelector((state: RootState) => { return state.cr_change_rate; });
   const cr_change_price = useSelector((state: RootState) => { return state.cr_change_price; });
   const cr_trade_price = useSelector((state: RootState) => { return state.cr_trade_price; });
+  const cr_trade_volume = useSelector((state: RootState) => { return state.cr_trade_volume });
+  const cr_open_price = useSelector((state: RootState) => { return state.cr_open_price });
+  const cr_high_price = useSelector((state: RootState) => { return state.cr_high_price });
+  const cr_low_price = useSelector((state: RootState) => { return state.cr_low_price });
   const star = useSelector((state: RootState) => { return state.star; });
   const filteredData = useSelector((state: RootState) => { return state.filteredData; });
   let sortedData = useSelector((state:RootState) => { return state.sortedData });
+  const cr_trade_price_selected = useSelector((state: RootState) => { return state.cr_trade_price_selected });
 
   // 검색값을 관리하기 위한 state
   const [search_cr, setSearch_cr] = useState<string>("");
@@ -50,6 +55,10 @@ function CryptoList() {
       f_changePrice: cr_change_price[i].toLocaleString(),
       tradePrice: cr_trade_price[i],
       f_tradePrice: Number(String(Math.floor(cr_trade_price[i])).slice(0, -6)).toLocaleString(),
+      tradeVolume: cr_trade_volume[i],
+      openPrice: cr_open_price[i],
+      highPrice: cr_high_price[i],
+      lowPrice: cr_low_price[i],
       star: star[i]
       // 검색어에 해당하는 데이터를 비교하여 배열을 재생성
     })).filter((item) => (
@@ -216,8 +225,23 @@ function CryptoList() {
   const priceSelect = (value: string) => {
     dispatch(setCr_price_selected(value));
   }
+  const openPriceSelect = (value: number) => {
+    dispatch(setCr_open_price_selected(value));
+  }
+  const highPriceSelect = (value: number) => {
+    dispatch(setCr_high_price_selected(value));
+  }
+  const lowPriceSelect = (value: number) => {
+    dispatch(setCr_low_price_selected(value));
+  }
   const changeSelect = (value: string) => {
     dispatch(setCr_change_selected(value));
+  }
+  const tradePriceSelect = (value: number) => {
+    dispatch(setCr_trade_price_selected(Number(String(Math.floor(value))).toLocaleString()));
+  }
+  const tradeVolumeSelect = (value: number) => {
+    dispatch(setCr_trade_volume_selected(Number(String(Math.floor(value))).toLocaleString()));
   }
   const change_rateSelect = (value: string) => {
     dispatch(setCr_change_rate_selected(value))
@@ -225,6 +249,7 @@ function CryptoList() {
   const change_priceSelect = (value: string) => {
     dispatch(setCr_change_price_selected(value));
   }
+
 
   return (
     <div className="div-list">
@@ -291,6 +316,11 @@ function CryptoList() {
                   changeSelect(filteredData[i].change);
                   change_rateSelect(filteredData[i].f_changeRate);
                   change_priceSelect(filteredData[i].f_changePrice);
+                  tradePriceSelect(filteredData[i].tradePrice);
+                  tradeVolumeSelect(filteredData[i].tradeVolume);
+                  openPriceSelect(filteredData[i].openPrice);
+                  highPriceSelect(filteredData[i].highPrice);
+                  lowPriceSelect(filteredData[i].lowPrice);
                 }}>
                   <td className='td-star'>
                     <img

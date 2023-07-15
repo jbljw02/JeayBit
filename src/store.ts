@@ -12,6 +12,10 @@ export type crypto = {
   f_changePrice: string,
   tradePrice: number,
   f_tradePrice: string,
+  tradeVolume: number,
+  openPrice: number,
+  highPrice: number,
+  lowPrice: number,
   star: string;
 }
 
@@ -24,7 +28,7 @@ export type RootState = {
   cr_change_price: number[],
   cr_trade_price: number[],
   cr_trade_volume: number[],
-  cr_opening_price: number[],
+  cr_open_price: number[],
   cr_high_price: number[],
   cr_low_price: number[],
   star: string[],
@@ -35,7 +39,12 @@ export type RootState = {
   cr_change_selected: string,
   cr_change_rate_selected: string,
   cr_change_price_selected: string,
-  sortedData: crypto[]
+  cr_trade_price_selected: number,
+  cr_trade_volume_selected: number,
+  cr_open_price_selected: number,
+  cr_high_price_selected: number,
+  cr_low_price_selected: number,
+  sortedData: crypto[];
 }
 
 const cr_names = createSlice({
@@ -117,11 +126,11 @@ const cr_trade_volume = createSlice({
   }
 })
 
-const cr_opening_price = createSlice({
-  name: 'cr_opening_pirce',
+const cr_open_price = createSlice({
+  name: 'cr_open_pirce',
   initialState: [],
   reducers: {
-    setCr_opening_price: (state, action) => {
+    setCr_open_price: (state, action) => {
       return action.payload;
     }
   }
@@ -170,6 +179,7 @@ const filteredData = createSlice({
   }
 })
 
+// 테이블에서 선택된 화폐의 정보들에 대한 state
 const cr_names_selected = createSlice({
   name: 'cr_selected',
   initialState: '',
@@ -179,7 +189,6 @@ const cr_names_selected = createSlice({
     }
   }
 })
-
 const cr_markets_selected = createSlice({
   name: 'cr_markets_selected',
   initialState: '',
@@ -230,6 +239,56 @@ const cr_change_price_selected = createSlice({
   }
 })
 
+const cr_trade_price_selected = createSlice({
+  name: 'cr_trade_price_selected',
+  initialState: '',
+  reducers: {
+    setCr_trade_price_selected: (state, action) => {
+      return action.payload;
+    }
+  }
+})
+
+const cr_trade_volume_selected = createSlice({
+  name: 'cr_trade_volume_selected',
+  initialState: '',
+  reducers: {
+    setCr_trade_volume_selected: (state, action) => {
+      return action.payload;
+    }
+  }
+})
+
+const cr_open_price_selected = createSlice({
+  name: 'cr_trade_price_selected',
+  initialState: '',
+  reducers: {
+    setCr_open_price_selected: (state, action) => {
+      return action.payload;
+    }
+  }
+})
+
+const cr_high_price_selected = createSlice({
+  name: 'cr_high_price_selected',
+  initialState: '',
+  reducers: {
+    setCr_high_price_selected: (state, action) => {
+      return action.payload;
+    }
+  }
+})
+
+const cr_low_price_selected = createSlice({
+  name: 'cr_low_price_selected',
+  initialState: '',
+  reducers: {
+    setCr_low_price_selected: (state, action) => {
+      return action.payload;
+    }
+  }
+})
+
 const sortedData = createSlice({
   name: 'sortedData',
   initialState: [] as crypto[],
@@ -250,7 +309,7 @@ export default configureStore({
     cr_change_price: cr_change_price.reducer,
     cr_trade_price: cr_trade_price.reducer,
     cr_trade_volume: cr_trade_volume.reducer,
-    cr_opening_price: cr_opening_price.reducer,
+    cr_open_price: cr_open_price.reducer,
     cr_high_price: cr_high_price.reducer,
     cr_low_price: cr_low_price.reducer,
     star: star.reducer,
@@ -261,6 +320,11 @@ export default configureStore({
     cr_change_selected: cr_change_selected.reducer,
     cr_change_rate_selected: cr_change_rate_selected.reducer,
     cr_change_price_selected: cr_change_price_selected.reducer,
+    cr_trade_price_selected: cr_trade_price_selected.reducer,
+    cr_trade_volume_selected: cr_trade_volume_selected.reducer,
+    cr_open_price_selected: cr_open_price_selected.reducer,
+    cr_high_price_selected: cr_high_price_selected.reducer,
+    cr_low_price_selected: cr_low_price_selected.reducer,
     sortedData: sortedData.reducer
   }
 })
@@ -289,7 +353,7 @@ export const { setCr_change_rate } = cr_change_rate.actions;
 export const { setCr_change_price } = cr_change_price.actions;
 export const { setCr_trade_price } = cr_trade_price.actions;
 export const { setCr_trade_volume } = cr_trade_volume.actions;
-export const { setCr_opening_price } = cr_opening_price.actions;
+export const { setCr_open_price } = cr_open_price.actions;
 export const { setCr_high_price } = cr_high_price.actions;
 export const { setCr_low_price } = cr_low_price.actions;
 export const { setStar } = star.actions;
@@ -300,6 +364,11 @@ export const { setCr_price_selected } = cr_price_selected.actions;
 export const { setCr_change_selected } = cr_change_selected.actions;
 export const { setCr_change_rate_selected } = cr_change_rate_selected.actions;
 export const { setCr_change_price_selected } = cr_change_price_selected.actions;
+export const { setCr_trade_price_selected } = cr_trade_price_selected.actions;
+export const { setCr_trade_volume_selected } = cr_trade_volume_selected.actions;
+export const { setCr_open_price_selected } = cr_open_price_selected.actions;
+export const { setCr_high_price_selected } = cr_high_price_selected.actions;
+export const { setCr_low_price_selected } = cr_low_price_selected.actions;
 export const { setSortedData } = sortedData.actions;
 
 // export default store;
