@@ -60,34 +60,51 @@ function TradingDetail() {
                 </div>
             )
         }
-        <table className="table-selectedDetail">
-          <tbody>
-          <tr>
-            <td>
-                거래대금 : {cr_trade_price_selected}KRW
-            </td>
-            <td>
-                거래량 : {cr_trade_volume_selected}{cr_markets_selected.slice(4,7)}
-            </td>
-          </tr>
-          <tr>
-            <td>
-                시가 : {cr_open_price_selected}
-            </td>
-            <td>
-                종가 : {cr_high_price_selected}
-            </td>
-          </tr>
-          <tr>
-            <td>
-                고가 : {cr_high_price_selected}
-            </td>
-            <td>
-                저가 : {cr_low_price_selected}
-            </td>
-          </tr>
-          </tbody>
-        </table>
+
+        <div className="selectedDetail">
+          <dl className="selectedDetail_dl_1">
+            <dt>
+              거래대금
+              <dd>
+                  {cr_trade_price_selected}KRW
+              </dd>
+            </dt>
+            <dt>
+              시가
+              <dd>
+                  {cr_open_price_selected}
+              </dd>
+            </dt>
+            <dt>
+              고가
+              <dd>
+                  {cr_high_price_selected}
+              </dd>
+            </dt>
+          </dl>
+
+          <dl className="selectedDetail_dl_2">
+            <dt>
+              거래량
+              <dd>
+                  {cr_trade_volume_selected}{cr_markets_selected.slice(4, 7)}
+              </dd>
+            </dt>
+            <dt>
+              종가
+              <dd>
+                  {cr_price_selected}
+              </dd>
+            </dt>
+            <dt>
+              저가
+              <dd>
+                  {cr_low_price_selected}
+              </dd>
+            </dt>
+          </dl>
+        </div>
+
       </div>
     </article>
   );

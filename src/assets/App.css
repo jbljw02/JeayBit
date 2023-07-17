@@ -60,8 +60,8 @@ body {
 }
 
 .TradingView {
-  height: 100%;
-  width: 71%;
+  height: 1320px;
+    width: 1550px;
 }
 
 .trading-view {
@@ -94,8 +94,8 @@ body {
 }
 
 .TradingDetail {
-  height: 100%;
-  width: 29%;
+  height: 1320px;
+  width: 540px;
 }
 
 .trading-detail {
@@ -183,6 +183,35 @@ body {
   padding-right: 3px;
 }
 
+.selectedDetail dl {
+  float: left;
+  font-size: 16px;
+  color: rgba(0, 0, 0, 0.6);
+  margin-left: 25px;
+}
+
+.selectedDetail dt {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid rgb(228, 229, 230);
+}
+
+.selectedDetail dd {
+  float: right;
+  display: inline;
+  margin: 0px;
+  color: black;
+  padding-left: 10px;
+}
+
+/* .selectedDetail_dl_1 {
+
+} */
+
+.selectedDetail_dl_2 {
+  margin-left: 15px;
+}
 /* 드롭다운 css */
 .dropdown {
   display: inline-block;
@@ -335,7 +364,7 @@ body {
   
 .scroll-tbody {
   overflow-y: auto;
-  max-height: calc(100vh - 250px);
+  max-height: calc(100vh - 255px);
     /* 스크롤바가 보일 최대 높이 지정 */
 }
 
