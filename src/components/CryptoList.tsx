@@ -252,7 +252,7 @@ function CryptoList() {
 
 
   return (
-    <div className="div-list">
+    <article className="div-list">
       {/* 검색 공간 */}
       <div className="list-search">
         {/* <img className="img-search" src={search}></img> */}
@@ -357,7 +357,7 @@ function CryptoList() {
           }
         </tbody>
       </table>
-    </div>
+    </article>
   );
 }
 

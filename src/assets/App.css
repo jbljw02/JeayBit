@@ -1,5 +1,5 @@
 body {
-  background-color: rgb(249, 249, 249);
+  background-color: white;
 }
   
 .container {
@@ -11,10 +11,10 @@ body {
 }
 
 .header {
-  background-color: rgb(249, 249, 249);
+  /* background-color: rgb(249, 249, 249); */
   height: 70px;
-  border-bottom: 1px solid rgb(228, 229, 230);
-  margin: 0 10px;
+  /* border-bottom: 1px solid rgba(0,0,0,0.1); */
+  margin-left: 10px;
 }
 
 .div-title {
@@ -23,7 +23,7 @@ body {
   font-weight: bold;
   margin-left: 5px;
   margin-top: 3px;
-    cursor: pointer;
+  cursor: pointer;
 }
 
 .title-img {
@@ -45,12 +45,7 @@ body {
   display: flex;
   flex-grow: 1;
   overflow: hidden;
-}
-
-.left {
-  background-color: rgb(249, 249, 249);
-  width: 85%;
-  float: left;
+  background-color: rgba(216, 216, 216, 0.1);
   display: flex;
   font-family: 'Asap Condensed', sans-serif;
   font-family: 'Barlow', sans-serif;
@@ -59,15 +54,27 @@ body {
   font-family: 'Roboto Flex', sans-serif;
 }
 
+/* .left {
+  background-color: rgb(249, 249, 249);
+  display: flex;
+  font-family: 'Asap Condensed', sans-serif;
+  font-family: 'Barlow', sans-serif;
+  font-family: 'Fira Sans', sans-serif;
+  font-family: 'Gowun Batang', serif;
+  font-family: 'Roboto Flex', sans-serif;
+} */
+
 .TradingView {
   height: 1320px;
-    width: 1550px;
+  width: 2000px;
 }
 
 .trading-view {
   background-color: white; 
-  margin: 30px 0px 30px 30px;
+  margin: 30px 30px 30px 30px;
   height: 95.5%;
+  border-radius: 10px;
+  /* border: 1px solid rgb(228, 229, 230); */
 }
 
 .crypto-name {
@@ -95,13 +102,15 @@ body {
 
 .TradingDetail {
   height: 1320px;
-  width: 540px;
+  width: 700px;
 }
 
 .trading-detail {
   background-color: white;
-  margin: 30px;
+  margin: 30px 3px 30px 3px;
   height: 95.5%;
+  border-radius: 10px;
+  /* border: 1px solid rgb(228, 229, 230); */
 }
 
 .crypto-price-even {
@@ -292,25 +301,26 @@ body {
   background-color: #f6f6f6;
 }
 
-.right {
+/* .right {
   background-color: rgb(249, 249, 249);
-  float: left;
-  width: 19.5%;
-  border-left: 1px solid rgb(228, 229, 230);
-}
+  float: left; */
+  /* border-left: 1px solid rgb(228, 229, 230); */
+/* } */
 
 .footer {
-  background-color: rgb(249, 249, 249);
   height: 60px;
-  border-top: 1px solid rgb(228, 229, 230);
+  /* border-top: 1px solid rgb(228, 229, 230); */
   margin: 0 10px;
 }
 
 .div-list {
   background-color: white; 
   margin: 30px 30px 30px 30px;
-  width: 415px;
+  width: 600px;
   max-height: calc(100vh - 160px);
+  border-radius: 10px;
+  /* border: 1px solid rgb(228, 229, 230); */
+
   }
 
 .list-search {
@@ -355,11 +365,6 @@ body {
   flex-direction: column;
   border-collapse: collapse;
   table-layout: fixed;
-  font-family: 'Asap Condensed', sans-serif;
-  font-family: 'Barlow', sans-serif;
-  font-family: 'Fira Sans', sans-serif;
-  font-family: 'Gowun Batang', serif;
-  font-family: 'Roboto Flex', sans-serif;
 }
   
 .scroll-tbody {
