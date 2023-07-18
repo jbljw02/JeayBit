@@ -252,7 +252,7 @@ function CryptoList() {
 
 
   return (
-    <article className="div-list">
+    <>
       {/* 검색 공간 */}
       <div className="list-search">
         {/* <img className="img-search" src={search}></img> */}
@@ -304,7 +304,6 @@ function CryptoList() {
         </thead>
 
         <tbody className='scroll-tbody'>
-
           {/* 검색값을 반환한 filteredData 함수를 다시 반복문을 이용하여 출력 */}
           {
             filteredData.map((item, i) => {
@@ -357,7 +356,7 @@ function CryptoList() {
           }
         </tbody>
       </table>
-    </article>
+    </>
   );
 }
 

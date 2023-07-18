@@ -4,16 +4,17 @@ body {
   
 .container {
   display: flex;
+  flex-grow: 1;
   flex-direction: column;
-  min-height: 100vh;
-  max-height: 100vh;
   overflow: hidden;
+  height: 100vh;
+    width: 100vw;
 }
 
 .header {
   /* background-color: rgb(249, 249, 249); */
   height: 70px;
-  /* border-bottom: 1px solid rgba(0,0,0,0.1); */
+  border-bottom: 1px solid #E3E8EC;
   margin-left: 10px;
 }
 
@@ -22,17 +23,17 @@ body {
   align-items: center;
   font-weight: bold;
   margin-left: 5px;
-  margin-top: 3px;
+  margin-top: 5px;
   cursor: pointer;
 }
 
 .title-img {
   padding: 15px;
-  width: 28px;
+  width: 23px;
 }
 
 .title-name {
-  font-size: 25px;
+  font-size: 23px;
   margin-left: -5px;
   font-family: 'Asap Condensed', sans-serif;
   font-family: 'Barlow', sans-serif;
@@ -41,12 +42,12 @@ body {
   font-family: 'Roboto Flex', sans-serif;
 }
 
-.center {
+.main {
   display: flex;
   flex-grow: 1;
   overflow: hidden;
-  background-color: rgba(216, 216, 216, 0.1);
-  display: flex;
+  flex-direction: row;
+    background-color: #F6F8FA;
   font-family: 'Asap Condensed', sans-serif;
   font-family: 'Barlow', sans-serif;
   font-family: 'Fira Sans', sans-serif;
@@ -54,27 +55,14 @@ body {
   font-family: 'Roboto Flex', sans-serif;
 }
 
-/* .left {
-  background-color: rgb(249, 249, 249);
-  display: flex;
-  font-family: 'Asap Condensed', sans-serif;
-  font-family: 'Barlow', sans-serif;
-  font-family: 'Fira Sans', sans-serif;
-  font-family: 'Gowun Batang', serif;
-  font-family: 'Roboto Flex', sans-serif;
-} */
-
 .TradingView {
-  height: 1320px;
-  width: 2000px;
+  height: 1422.98px;
+    width: 2140px;
 }
 
 .trading-view {
   background-color: white; 
-  margin: 30px 30px 30px 30px;
-  height: 95.5%;
-  border-radius: 10px;
-  /* border: 1px solid rgb(228, 229, 230); */
+  height: 100%;
 }
 
 .crypto-name {
@@ -91,26 +79,18 @@ body {
   color: rgba(0, 0, 0, 0.4);
 }
 
-.div-tradingView {
-  height: 100%;
-}
-
 .trading-header {
+  margin-top: 50px;
   padding: 5px;
-  border-bottom: 1px solid rgb(228, 229, 230);
-}
-
-.TradingDetail {
-  height: 1320px;
-  width: 700px;
+  border-bottom: 1px solid #E3E8EC;
+    border-top: 1px solid #E3E8EC;
 }
 
 .trading-detail {
   background-color: white;
-  margin: 30px 3px 30px 3px;
-  height: 95.5%;
-  border-radius: 10px;
-  /* border: 1px solid rgb(228, 229, 230); */
+  /* margin: 30px 3px 30px 3px; */
+    /* border-radius: 10px; */
+    border-left: 1px solid #E3E8EC;
 }
 
 .crypto-price-even {
@@ -192,21 +172,22 @@ body {
   padding-right: 3px;
 }
 
-.selectedDetail dl {
-  float: left;
+dl {
+  margin-top: -20px;
+  float: right;
   font-size: 16px;
   color: rgba(0, 0, 0, 0.6);
   margin-left: 25px;
 }
 
-.selectedDetail dt {
+dt {
   margin-top: 10px;
   margin-bottom: 10px;
   padding-bottom: 6px;
   border-bottom: 1px solid rgb(228, 229, 230);
 }
 
-.selectedDetail dd {
+dd {
   float: right;
   display: inline;
   margin: 0px;
@@ -301,27 +282,26 @@ body {
   background-color: #f6f6f6;
 }
 
-/* .right {
+.right {
+  display: flex;
   background-color: rgb(249, 249, 249);
-  float: left; */
+  float: right;
   /* border-left: 1px solid rgb(228, 229, 230); */
-/* } */
+}
 
 .footer {
   height: 60px;
-  /* border-top: 1px solid rgb(228, 229, 230); */
+  border-top: 1px solid #E3E8EC;
   margin: 0 10px;
 }
 
-.div-list {
+.CryptoList {
   background-color: white; 
-  margin: 30px 30px 30px 30px;
-  width: 600px;
-  max-height: calc(100vh - 160px);
-  border-radius: 10px;
-  /* border: 1px solid rgb(228, 229, 230); */
-
-  }
+  width: 420px;
+  height: 1422.98px;
+  height: 100%;
+  border-left: 1px solid #E3E8EC;
+}
 
 .list-search {
   height: 36px;
@@ -369,7 +349,7 @@ body {
   
 .scroll-tbody {
   overflow-y: auto;
-  max-height: calc(100vh - 255px);
+  max-height: calc(100vh - 200px);
     /* 스크롤바가 보일 최대 높이 지정 */
 }
 

@@ -72,12 +72,13 @@ function App() {
       <div className="App">
         <div className="container">
           <Header></Header>
-          <section className="center">
-            <TradingView></TradingView>
-            <TradingDetail></TradingDetail>
-            <CryptoList></CryptoList>
-            {/* <aside className="right">
-            </aside> */}
+          <section className='main'>
+            <article className='TradingView'>
+              <TradingView></TradingView>
+            </article>
+            <article className="CryptoList">
+              <CryptoList></CryptoList>
+            </article>
           </section>
           <Footer></Footer>
         </div>

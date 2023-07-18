@@ -3,6 +3,7 @@ import { RootState } from "../store";
 import price_rise from '../assets/images/price-up.png'
 import price_fall from '../assets/images/price-down.png'
 
+
 function TradingDetail() {
 
   const cr_trade_price = useSelector((state: RootState) => { return state.cr_trade_price });
