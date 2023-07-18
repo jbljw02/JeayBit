@@ -31,7 +31,7 @@ function TradingView() {
   }
 
   return (
-      <div className="trading-view">
+      <>
         <div className="crypto-name">
           {cr_names_selected}
           <span className="crypto-market">
@@ -81,7 +81,7 @@ function TradingView() {
       </div>
       <div className="trading-header">
         {/* 드롭다운 라벨 */}
-        <label className="dropdown">
+        <label className="dropDown">
           <div className="dd-button">
             {checkedValue}
             <svg className="img-dd" xmlns='http://www.w3.org/2000/svg' viewBox="0 0 16 8">
@@ -102,7 +102,8 @@ function TradingView() {
         </label>
       </div>
       <div className="trading-chart"></div>
-    </div>
+    </
+    >
   );
 }
 

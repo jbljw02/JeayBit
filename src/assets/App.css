@@ -1,18 +1,20 @@
-body {
-  background-color: white;
-}
-  
+/* 전체 요소를 감싸는 컨테이너 */
 .container {
   display: flex;
   flex-grow: 1;
   flex-direction: column;
   overflow: hidden;
   height: 100vh;
-    width: 100vw;
+  width: 100vw;
+  font-family: 'Asap Condensed', sans-serif;
+  font-family: 'Barlow', sans-serif;
+  font-family: 'Fira Sans', sans-serif;
+  font-family: 'Gowun Batang', serif;
+  font-family: 'Roboto Flex', sans-serif;
 }
 
+/* header CSS */
 .header {
-  /* background-color: rgb(249, 249, 249); */
   height: 70px;
   border-bottom: 1px solid #E3E8EC;
   margin-left: 10px;
@@ -35,34 +37,23 @@ body {
 .title-name {
   font-size: 23px;
   margin-left: -5px;
-  font-family: 'Asap Condensed', sans-serif;
-  font-family: 'Barlow', sans-serif;
-  font-family: 'Fira Sans', sans-serif;
-  font-family: 'Gowun Batang', serif;
-  font-family: 'Roboto Flex', sans-serif;
 }
 
+/* header, footer를 제외한 주요 내용을 담는 영역 */
 .main {
   display: flex;
   flex-grow: 1;
   overflow: hidden;
   flex-direction: row;
-    background-color: #F6F8FA;
-  font-family: 'Asap Condensed', sans-serif;
-  font-family: 'Barlow', sans-serif;
-  font-family: 'Fira Sans', sans-serif;
-  font-family: 'Gowun Batang', serif;
-  font-family: 'Roboto Flex', sans-serif;
+  background-color: #F6F8FA;
 }
 
+/* TradingView 컴포넌트 CSS */
 .TradingView {
+  /* height: 100%; */
   height: 1422.98px;
-    width: 2140px;
-}
-
-.trading-view {
-  background-color: white; 
-  height: 100%;
+  width: 2140px;
+  background-color: white;
 }
 
 .crypto-name {
@@ -79,26 +70,9 @@ body {
   color: rgba(0, 0, 0, 0.4);
 }
 
-.trading-header {
-  margin-top: 50px;
-  padding: 5px;
-  border-bottom: 1px solid #E3E8EC;
-    border-top: 1px solid #E3E8EC;
-}
-
 .trading-detail {
   background-color: white;
-  /* margin: 30px 3px 30px 3px; */
-    /* border-radius: 10px; */
-    border-left: 1px solid #E3E8EC;
-}
-
-.crypto-price-even {
-  padding: 25px 30px 0px;
-  font-weight: bold;
-  font-size: 33px;
-  color: black;
-  /* border-bottom: 1px solid rgb(228, 229, 230);  */
+  border-left: 1px solid #E3E8EC;
 }
 
 .crypto-price-rise {
@@ -117,10 +91,12 @@ body {
   /* border-bottom: 1px solid rgb(228, 229, 230);  */
 }
 
-.crypto-change_rate-even {
-  margin-left: 4px;
-  font-size: 17px;
-  font-weight: lighter;
+.crypto-price-even {
+  padding: 25px 30px 0px;
+  font-weight: bold;
+  font-size: 33px;
+  color: black;
+  /* border-bottom: 1px solid rgb(228, 229, 230);  */
 }
 
 .crypto-change_rate-rise {
@@ -135,10 +111,10 @@ body {
   font-weight: lighter;
 }
 
-.crypto-change_price-even {
-  padding: 10px 30px 0px;
-  font-size: 20px;
-  color: black;
+.crypto-change_rate-even {
+  margin-left: 4px;
+  font-size: 17px;
+  font-weight: lighter;
 }
 
 .crypto-change_price-rise {
@@ -147,63 +123,27 @@ body {
   color: #22ab94;
 }
 
+.crypto-change_price-even {
+  padding: 10px 30px 0px;
+  font-size: 20px;
+  color: black;
+}
+
 .crypto-change_price-fall {
   padding: 10px 30px 0px;
   font-size: 20px;
   color: #f23645;
 }
 
-.img-price_rise {
-  filter: invert(48%) sepia(100%) saturate(349%) hue-rotate(120deg) brightness(95%) contrast(84%);
-  width: 10px;
-  padding-right: 3px;
-  padding-left: 1px;
+.trading-header {
+  margin-top: 50px;
+  padding: 5px;
+  border-bottom: 1px solid #E3E8EC;
+  border-top: 1px solid #E3E8EC;
 }
 
-.img-price_fall {
-  filter: invert(56%) sepia(93%) saturate(4750%) hue-rotate(329deg) brightness(88%) contrast(118%);
-  width: 10px;
-  padding-right: 3px;
-  padding-left: 3px;
-}
-
-.img-price_even {
-  width: 10px;
-  padding-right: 3px;
-}
-
-dl {
-  margin-top: -20px;
-  float: right;
-  font-size: 16px;
-  color: rgba(0, 0, 0, 0.6);
-  margin-left: 25px;
-}
-
-dt {
-  margin-top: 10px;
-  margin-bottom: 10px;
-  padding-bottom: 6px;
-  border-bottom: 1px solid rgb(228, 229, 230);
-}
-
-dd {
-  float: right;
-  display: inline;
-  margin: 0px;
-  color: black;
-  padding-left: 10px;
-}
-
-/* .selectedDetail_dl_1 {
-
-} */
-
-.selectedDetail_dl_2 {
-  margin-left: 15px;
-}
 /* 드롭다운 css */
-.dropdown {
+.dropDown {
   display: inline-block;
   position: relative;
   font-size: 14px;
@@ -218,26 +158,11 @@ dd {
   white-space: nowrap;
 }
 
-/* .dd-button:after {
-  content: '';
-  position: absolute;
-  top: 55%;
-  right: 15px;
-  transform: translateY(-50%);
-  border-left: 5px solid transparent;
-  border-right: 5px solid transparent;
-  border-top: 5px solid black;
-} */
-
 .img-dd {
   width: 10px;
   margin-bottom: 1.5px;
   margin-left: 4px;
 }
-
-/* .dd-button:hover {
-  background-color: #eeeeee;
-} */
 
 .dd-input {
   display: none;
@@ -282,23 +207,61 @@ dd {
   background-color: #f6f6f6;
 }
 
-.right {
-  display: flex;
-  background-color: rgb(249, 249, 249);
+.img-price_rise {
+  filter: invert(48%) sepia(100%) saturate(349%) hue-rotate(120deg) brightness(95%) contrast(84%);
+  width: 10px;
+  padding-right: 3px;
+  padding-left: 1px;
+}
+
+.img-price_fall {
+  filter: invert(56%) sepia(93%) saturate(4750%) hue-rotate(329deg) brightness(88%) contrast(118%);
+  width: 10px;
+  padding-right: 3px;
+  padding-left: 3px;
+}
+
+.img-price_even {
+  width: 10px;
+  padding-right: 3px;
+}
+
+/* .selectedDetail_dl_1 {
+
+} */
+
+.selectedDetail_dl_2 {
+  margin-left: 15px;
+}
+
+dl {
+  margin-top: -20px;
   float: right;
-  /* border-left: 1px solid rgb(228, 229, 230); */
+  font-size: 16px;
+    color: rgba(0, 0, 0, 0.6);
+    margin-left: 25px;
 }
 
-.footer {
-  height: 60px;
-  border-top: 1px solid #E3E8EC;
-  margin: 0 10px;
+dt {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid rgb(228, 229, 230);
 }
 
+dd {
+  float: right;
+  display: inline;
+  margin: 0px;
+  color: black;
+  padding-left: 10px;
+}
+
+/* CryptoList 컴포넌트 CSS */
 .CryptoList {
   background-color: white; 
   width: 420px;
-  height: 1422.98px;
+  /* height: 1422.98px; */
   height: 100%;
   border-left: 1px solid #E3E8EC;
 }
@@ -325,52 +288,12 @@ dd {
   line-height: 17px;
 }
 
-.list-category {
-  border-bottom: 1px solid silver;
-  padding: 12px 0px 12px;
-  display: flex;
-  justify-content: space-between;
-  white-space: nowrap;
-}
-
-.krw, .btc, .usdt, .favorite {
-  font-size: 13px;
-  font-weight: bold;
-  padding: 0 35px;
-}
-
 .list-table {
   display: flex;
-  justify-content: space-between;
   flex-direction: column;
   border-collapse: collapse;
-  table-layout: fixed;
 }
   
-.scroll-tbody {
-  overflow-y: auto;
-  max-height: calc(100vh - 200px);
-    /* 스크롤바가 보일 최대 높이 지정 */
-}
-
-/* 스크롤바가 지나는 영역의 색상 */
-.scroll-tbody::-webkit-scrollbar {
-  width: 5px;
-  background-color: #f9f9f9;
-}
-
-/* 스크롤바 속성 설정 */
-.scroll-tbody::-webkit-scrollbar-thumb {
-  background-color: rgba(0, 0, 0, 0.21);
-  border-radius: 5px;
-  display: none;  /* 스크롤바를 숨김 */
-}
-
-/* 스크롤바 hover시 색상 변경 */
-.scroll-tbody::-webkit-scrollbar-thumb:hover {
-  background-color: rgba(0, 0, 0, 0.5);
-}
-
 .list-table th {
   padding-top: 11px;
   padding-bottom: 11px;
@@ -405,6 +328,31 @@ dd {
   background-color: #e6e6e6;
 }
 
+.scrollable-tbody {
+  overflow-y: auto;
+  /* 스크롤바가 보일 최대 높이 지정 */
+  max-height: calc(100vh - 200px);
+}
+
+/* 스크롤바가 지나는 영역의 색상 */
+.scrollable-tbody::-webkit-scrollbar {
+  width: 5px;
+  background-color: #f9f9f9;
+}
+
+/* 스크롤바 속성 설정 */
+.scrollable-tbody::-webkit-scrollbar-thumb {
+  /* 스크롤바를 숨김 */
+  display: none;
+}
+
+/* 스크롤바 hover시 색상 변경 */
+/* 
+.scrollable-tbody::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(0, 0, 0, 0.5);
+} 
+*/
+
 .td-name {
   width: 100%;
 }
@@ -425,4 +373,11 @@ dd {
   position: relative;
   top: 1px;
   left: 1px;
+}
+
+/* footer CSS */
+.footer {
+  height: 60px;
+  border-top: 1px solid #E3E8EC;
+  margin: 0 10px;
 }

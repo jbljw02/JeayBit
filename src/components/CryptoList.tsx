@@ -262,24 +262,6 @@ function CryptoList() {
         <input type="text" className='crypto-search' placeholder="검색" value={search_cr} onChange={(e) => setSearch_cr(e.target.value)}></input>
       </div>
 
-      {/* 화폐 구분 목록 */}
-      {/* <div className='list-category'>
-        <span className='krw'>
-          원화
-        </span>
-        <span className='btc'>
-          BTC
-        </span>
-        <span className='usdt'>
-          USDT
-        </span>
-        <span className='favorite'>
-          관심
-        </span>
-      </div> */}
-      {/* <div className='list-head'>
-      </div> */}
-
       {/* 화폐 정보 테이블 */}
       <table className='list-table'>
         <thead>
@@ -303,7 +285,7 @@ function CryptoList() {
           </tr>
         </thead>
 
-        <tbody className='scroll-tbody'>
+        <tbody className='scrollable-tbody'>
           {/* 검색값을 반환한 filteredData 함수를 다시 반복문을 이용하여 출력 */}
           {
             filteredData.map((item, i) => {
