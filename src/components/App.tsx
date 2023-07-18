@@ -4,7 +4,6 @@ import { useDispatch, useSelector, Provider } from 'react-redux';
 import store, { RootState, crypto, setCr_names, setCr_price, setCr_markets, setStar, setCr_change, setCr_change_rate, setCr_change_price, setCr_trade_price, setFilteredData, setCr_names_selected, setCr_markets_selected, setCr_price_selected, setCr_change_selected, setCr_change_rate_selected, setCr_change_price_selected, setSortedData, setCr_trade_volume, setCr_open_price, setCr_high_price, setCr_low_price } from "../store";
 import { Header } from './Header'
 import { TradingView } from './TradingView';
-import { TradingDetail } from './TradingDetail'
 import { CryptoList } from './CryptoList'
 import { Footer } from './Footer'
 import '../assets/App.css';
