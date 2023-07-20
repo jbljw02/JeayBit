@@ -46,19 +46,19 @@ function TradingView() {
             <div className="crypto-price-rise">
               {cr_price_selected}
               <Crypto_changeRate_selected></Crypto_changeRate_selected>
-              <Dl></Dl>
+              <Crypto_Detail></Crypto_Detail>
             </div> :
             (
               cr_change_selected === 'FALL' ?
                 <div className="crypto-price-fall">
                   {cr_price_selected}
                   <Crypto_changeRate_selected></Crypto_changeRate_selected>
-                  <Dl></Dl>
+                  <Crypto_Detail></Crypto_Detail>
                 </div> :
                 <div className="crypto-price-even">
                   {cr_price_selected}
                   <Crypto_changeRate_selected></Crypto_changeRate_selected>
-                  <Dl></Dl>
+                  <Crypto_Detail></Crypto_Detail>
                 </div>
             )
         }
@@ -107,12 +107,14 @@ function TradingView() {
   );
 }
 
-// 화폐의 변화율에 따라 css 속성 다르게 적용
+{/* 화폐의 변화율에 따라 css 속성 다르게 적용 */ }
 function Crypto_changeRate_selected() {
+
   const cr_change_selected = useSelector((state: RootState) => { return state.cr_change_selected });
   const cr_change_rate_selected = useSelector((state: RootState) => { return state.cr_change_rate_selected });
+
   return (
-    <span>
+    <>
       {
         cr_change_selected === 'RISE' ?
           <span className="crypto-change_rate-rise">
@@ -128,12 +130,13 @@ function Crypto_changeRate_selected() {
               </span>
           )
       }
-    </span>
+    </>
   );
 }
 
-// 24시간동안의 화폐의 상세정보
-function Dl() {
+{/* 24시간동안의 화폐의 상세정보 */ }
+function Crypto_Detail() {
+
   const cr_markets_selected = useSelector((state: RootState) => { return state.cr_markets_selected });
   const cr_price_selected = useSelector((state: RootState) => { return state.cr_price_selected });
   const cr_trade_price_selected = useSelector((state: RootState) => { return state.cr_trade_price_selected });
@@ -141,6 +144,7 @@ function Dl() {
   const cr_open_price_selected = useSelector((state: RootState) => { return state.cr_open_price_selected });
   const cr_high_price_selected = useSelector((state: RootState) => { return state.cr_high_price_selected });
   const cr_low_price_selected = useSelector((state: RootState) => { return state.cr_low_price_selected });
+
   return (
     <>
       <dl className="selectedDetail_dl_1">
@@ -153,13 +157,13 @@ function Dl() {
         <dt>
           시가
           <dd>
-            {cr_open_price_selected}
+            {cr_open_price_selected.toLocaleString()}
           </dd>
         </dt>
         <dt>
           고가
           <dd>
-            {cr_high_price_selected}
+            {cr_high_price_selected.toLocaleString()}
           </dd>
         </dt>
       </dl><dl className="selectedDetail_dl_2">
@@ -178,7 +182,7 @@ function Dl() {
         <dt>
           저가
           <dd>
-            {cr_low_price_selected}
+            {cr_low_price_selected.toLocaleString()}
           </dd>
         </dt>
       </dl>

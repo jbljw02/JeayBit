@@ -76,61 +76,61 @@
 }
 
 .crypto-price-rise {
-  padding: 25px 30px 0px;
+  padding: 25px 40px 0px;
   font-weight: bold;
-  font-size: 33px;
+  font-size: 36px;
   color: #22ab94;
   /* border-bottom: 1px solid rgb(228, 229, 230);  */
 }
 
 .crypto-price-fall {
-  padding: 25px 30px 0px;
+  padding: 25px 40px 0px;
   font-weight: bold;
-  font-size: 33px;
+  font-size: 36px;
   color: #f23645;
   /* border-bottom: 1px solid rgb(228, 229, 230);  */
 }
 
 .crypto-price-even {
-  padding: 25px 30px 0px;
+  padding: 25px 40px 0px;
   font-weight: bold;
-  font-size: 33px;
+  font-size: 36px;
   color: black;
   /* border-bottom: 1px solid rgb(228, 229, 230);  */
 }
 
 .crypto-change_rate-rise {
   margin-left: 4px;
-  font-size: 17px;
+  font-size: 18px;
   font-weight: lighter;
 }
 
 .crypto-change_rate-fall {
   margin-left: 4px;
-  font-size: 17px;
+  font-size: 18px;
   font-weight: lighter;
 }
 
 .crypto-change_rate-even {
   margin-left: 4px;
-  font-size: 17px;
+  font-size: 18px;
   font-weight: lighter;
 }
 
 .crypto-change_price-rise {
-  padding: 10px 30px 0px;
+  padding: 10px 43px 0px;
   font-size: 20px;
   color: #22ab94;
 }
 
 .crypto-change_price-even {
-  padding: 10px 30px 0px;
+  padding: 10px 43px 0px;
   font-size: 20px;
   color: black;
 }
 
 .crypto-change_price-fall {
-  padding: 10px 30px 0px;
+  padding: 10px 43px 0px;
   font-size: 20px;
   color: #f23645;
 }
@@ -235,24 +235,24 @@
 }
 
 dl {
-  margin-top: -20px;
+  margin-top: -18px;
   float: right;
-  font-size: 16px;
-    color: rgba(0, 0, 0, 0.6);
-    margin-left: 25px;
+  font-size: 15px;
+  font-weight: lighter;
+  color: rgba(0, 0, 0, 0.6);
+  margin-left: 25px;
 }
 
 dt {
   margin-top: 10px;
   margin-bottom: 10px;
   padding-bottom: 6px;
-  border-bottom: 1px solid rgb(228, 229, 230);
+  border-bottom: 1px solid #E3E8EC;
 }
 
 dd {
   float: right;
   display: inline;
-  margin: 0px;
   color: black;
   padding-left: 10px;
 }

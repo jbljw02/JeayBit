@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useDispatch, useSelector, Provider } from 'react-redux';
-import store, { RootState, crypto, setCr_names, setCr_price, setCr_markets, setStar, setCr_change, setCr_change_rate, setCr_change_price, setCr_trade_price, setFilteredData, setCr_names_selected, setCr_markets_selected, setCr_price_selected, setCr_change_selected, setCr_change_rate_selected, setCr_change_price_selected, setSortedData, setCr_trade_volume, setCr_open_price, setCr_high_price, setCr_low_price } from "../store";
+import store, { RootState, crypto, setCr_names, setCr_price, setCr_markets, setStar, setCr_change, setCr_change_rate, setCr_change_price, setCr_trade_price, setFilteredData, setCr_names_selected, setCr_markets_selected, setCr_price_selected, setCr_change_selected, setCr_change_rate_selected, setCr_change_price_selected, setSortedData, setCr_trade_volume, setCr_open_price, setCr_high_price, setCr_low_price, setCr_open_price_selected, setCr_high_price_selected, setCr_low_price_selected, setCr_trade_price_selected, setCr_trade_volume_selected } from "../store";
 import { Header } from './Header'
 import { TradingView } from './TradingView';
 import { CryptoList } from './CryptoList'
@@ -59,8 +59,14 @@ function App() {
       dispatch(setCr_markets_selected(response.data.markets[0]))
       dispatch(setCr_price_selected((response.data.cur_price[0]).toLocaleString()))
       dispatch(setCr_change_selected(response.data.change[0]))
+      dispatch(setCr_trade_volume_selected(response.data.trade_volume[0]))
+      dispatch(setCr_trade_volume_selected(Number(String(Math.floor(response.data.trade_volume[0]))).toLocaleString()));
+      dispatch(setCr_trade_price_selected(Number(String(Math.floor(response.data.trade_price[0]))).toLocaleString()));
       dispatch(setCr_change_rate_selected((response.data.change_rate[0] * 100).toFixed(2)))
       dispatch(setCr_change_price_selected((response.data.change_price[0]).toLocaleString()))
+      dispatch(setCr_open_price_selected((response.data.opening_price[0]).toLocaleString()))
+      dispatch(setCr_low_price_selected((response.data.low_price[0]).toLocaleString()))
+      dispatch(setCr_high_price_selected((response.data.high_price[0]).toLocaleString()))
     } catch (error) {
       console.error(error);
     }

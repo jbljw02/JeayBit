@@ -250,7 +250,6 @@ function CryptoList() {
     dispatch(setCr_change_price_selected(value));
   }
 
-
   return (
     <>
       {/* 검색 공간 */}
