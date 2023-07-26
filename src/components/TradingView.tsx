@@ -33,6 +33,8 @@ function TradingView() {
   return (
       <>
         <div className="crypto-name">
+        {/* src 내부에 동적으로 state를 넣기 위해선 `(햅틱) 사용 */}
+        <img className="crypto-img" src={`https://static.upbit.com/logos/${cr_markets_selected.slice(4)}.png`}></img>
           {cr_names_selected}
           <span className="crypto-market">
             {cr_markets_selected}
@@ -46,19 +48,19 @@ function TradingView() {
             <div className="crypto-price-rise">
               {cr_price_selected}
               <Crypto_changeRate_selected></Crypto_changeRate_selected>
-              <Crypto_Detail></Crypto_Detail>
+              <Crypto_detail></Crypto_detail>
             </div> :
             (
               cr_change_selected === 'FALL' ?
                 <div className="crypto-price-fall">
                   {cr_price_selected}
                   <Crypto_changeRate_selected></Crypto_changeRate_selected>
-                  <Crypto_Detail></Crypto_Detail>
+                  <Crypto_detail></Crypto_detail>
                 </div> :
                 <div className="crypto-price-even">
                   {cr_price_selected}
                   <Crypto_changeRate_selected></Crypto_changeRate_selected>
-                  <Crypto_Detail></Crypto_Detail>
+                  <Crypto_detail></Crypto_detail>
                 </div>
             )
         }
@@ -135,7 +137,7 @@ function Crypto_changeRate_selected() {
 }
 
 {/* 24시간동안의 화폐의 상세정보 */ }
-function Crypto_Detail() {
+function Crypto_detail() {
 
   const cr_markets_selected = useSelector((state: RootState) => { return state.cr_markets_selected });
   const cr_price_selected = useSelector((state: RootState) => { return state.cr_price_selected });
@@ -151,26 +153,10 @@ function Crypto_Detail() {
         <dt>
           거래대금
           <dd>
-            {cr_trade_price_selected}KRW
-          </dd>
-        </dt>
-        <dt>
-          시가
-          <dd>
-            {cr_open_price_selected.toLocaleString()}
-          </dd>
-        </dt>
-        <dt>
-          고가
-          <dd>
-            {cr_high_price_selected.toLocaleString()}
-          </dd>
-        </dt>
-      </dl><dl className="selectedDetail_dl_2">
-        <dt>
-          거래량
-          <dd>
-            {cr_trade_volume_selected}{cr_markets_selected.slice(4, 7)}
+            {cr_trade_price_selected}
+            <span>
+              &nbsp;KRW
+            </span>
           </dd>
         </dt>
         <dt>
@@ -180,9 +166,35 @@ function Crypto_Detail() {
           </dd>
         </dt>
         <dt>
+          고가
+          <dd>
+            <span className="dd-high_price">
+              {cr_high_price_selected.toLocaleString()}
+            </span>
+          </dd>
+        </dt>
+      </dl><dl className="selectedDetail_dl_2">
+        <dt>
+          거래량
+          <dd>
+            {cr_trade_volume_selected}
+            <span>
+              &nbsp;{cr_markets_selected.slice(4)}
+            </span>
+          </dd>
+        </dt>
+        <dt>
+          시가
+          <dd>
+            {cr_open_price_selected.toLocaleString()}
+          </dd>
+        </dt>
+        <dt>
           저가
           <dd>
-            {cr_low_price_selected.toLocaleString()}
+            <span className="dd-low_price">
+              {cr_low_price_selected.toLocaleString()}
+            </span>
           </dd>
         </dt>
       </dl>

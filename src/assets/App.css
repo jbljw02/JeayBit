@@ -60,7 +60,15 @@
   padding: 25px 30px;
   font-weight: bold;
   font-size: 26px;
+  color: rgba(0, 0, 0, 0.8);
   border-bottom: 1px solid rgb(228, 229, 230);
+}
+
+.crypto-img {
+  position: relative;
+  width: 24px;
+  margin-right: 7px;
+  top: 2px;
 }
 
 .crypto-market {
@@ -76,7 +84,7 @@
 }
 
 .crypto-price-rise {
-  padding: 25px 40px 0px;
+  padding: 30px 40px 0px;
   font-weight: bold;
   font-size: 36px;
   color: #22ab94;
@@ -84,7 +92,7 @@
 }
 
 .crypto-price-fall {
-  padding: 25px 40px 0px;
+  padding: 30px 40px 0px;
   font-weight: bold;
   font-size: 36px;
   color: #f23645;
@@ -92,7 +100,7 @@
 }
 
 .crypto-price-even {
-  padding: 25px 40px 0px;
+  padding: 30px 40px 0px;
   font-weight: bold;
   font-size: 36px;
   color: black;
@@ -235,15 +243,15 @@
 }
 
 dl {
-  margin-top: -18px;
+  margin-top: -9px;
   float: right;
-  font-size: 15px;
   font-weight: lighter;
   color: rgba(0, 0, 0, 0.6);
   margin-left: 25px;
 }
 
 dt {
+  font-size: 13px;
   margin-top: 10px;
   margin-bottom: 10px;
   padding-bottom: 6px;
@@ -251,10 +259,29 @@ dt {
 }
 
 dd {
+  font-size: 15px;
   float: right;
   display: inline;
   color: black;
   padding-left: 10px;
+}
+
+dd span {
+  color: rgba(0, 0, 0, 0.3);
+  font-size: 13px;
+  font-weight: bold;
+}
+
+.dd-high_price {
+  font-size: 15px;
+  color: red;
+  font-weight: lighter;
+}
+
+.dd-low_price {
+  font-size: 15px;
+  color: blue;
+  font-weight: lighter;
 }
 
 /* CryptoList 컴포넌트 CSS */

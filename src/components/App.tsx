@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useDispatch, useSelector, Provider } from 'react-redux';
-import store, { RootState, crypto, setCr_names, setCr_price, setCr_markets, setStar, setCr_change, setCr_change_rate, setCr_change_price, setCr_trade_price, setFilteredData, setCr_names_selected, setCr_markets_selected, setCr_price_selected, setCr_change_selected, setCr_change_rate_selected, setCr_change_price_selected, setSortedData, setCr_trade_volume, setCr_open_price, setCr_high_price, setCr_low_price, setCr_open_price_selected, setCr_high_price_selected, setCr_low_price_selected, setCr_trade_price_selected, setCr_trade_volume_selected } from "../store";
+import store, { RootState, setCr_names, setCr_price, setCr_markets, setCr_change, setCr_change_rate, setCr_change_price, setCr_trade_price, setCr_names_selected, setCr_markets_selected, setCr_price_selected, setCr_change_selected, setCr_change_rate_selected, setCr_change_price_selected, setCr_trade_volume, setCr_open_price, setCr_high_price, setCr_low_price, setCr_open_price_selected, setCr_high_price_selected, setCr_low_price_selected, setCr_trade_price_selected, setCr_trade_volume_selected } from "../store";
 import { Header } from './Header'
 import { TradingView } from './TradingView';
 import { CryptoList } from './CryptoList'
@@ -10,10 +10,10 @@ import '../assets/App.css';
 
 function App() {
 
-  let sortedData = useSelector((state: RootState) => { return state.sortedData });
-
+  const sortedData = useSelector((state: RootState) => { return state.sortedData });
+  
   const dispatch = useDispatch();
-
+  
   useEffect(() => {
 
     // const 변수 = setInterval(() => { 콜백함수, 시간 })
@@ -51,7 +51,7 @@ function App() {
     }
   };
 
-  // 화면에 보여질 초기 화폐의 상태 정보
+  // 화면에 보여질 초기 화폐의 상태 정보(비트코인)
   const initialData = async () => {
     try {
       const response = await axios.get('http://127.0.0.1:8000')

@@ -39,10 +39,8 @@ function CryptoList() {
   const sort_images = [img_sort, img_sort_down, img_sort_up];
 
   // 검색어 또는 정렬 상태가 변경되었을 때 재렌더링(변경이 없다면 초기 상태를 출력)
-  useEffect(() => {
-
-    // 필터링 및 정렬된 데이터를 새로운 배열로 생성 -> setFilteredData로 상태를 업데이트
-    // price = 숫자형, f_price = 문자형 / 숫자형으로 정렬, 문자형으로 출력
+  // 필터링 및 정렬된 데이터를 새로운 배열로 생성 -> setFilteredData로 상태를 업데이트
+  // price = 숫자형, f_price = 문자형 / 숫자형으로 정렬, 문자형으로 출력
     const updatedData = cr_names.map((name, i) => ({
       name,
       price: cr_price[i],
@@ -65,17 +63,25 @@ function CryptoList() {
       item.name.toLowerCase().includes(search_cr.toLowerCase())
     ));
 
-    dispatch(setFilteredData(updatedData))
+    // dispatch(setFilteredData(updatedData))
 
     // 재렌더링 발생X(filter 기능 작동X)
-    // if (filteredData.length === 0 && updatedData.length > 0) {
-    //   dispatch(setFilteredData(updatedData));
+    
+    // else if(sortedData.length !== 0){
+    //   dispatch(setSortedData(sortedData));
+    //   dispatch(setSortedData(updatedData))
     // }
 
     // 의존성 배열 추가(배열에 포함된 값들 중 하나라도 변경되면 useEffect 함수가 실행되며 재렌더링 발생 
     // filteredData가 포함될시 조건문이 없다면 무한 dispatch로 인한 런타임에러 발생)
-  }, [cr_names, cr_price, cr_markets, cr_change, cr_change_rate, cr_change_price, cr_trade_price, star, search_cr]
-  );
+    
+    useEffect(() => {
+      console.log("재렌더링 ----------------------- !")
+      if (filteredData.length === 0 && updatedData.length > 0) {
+        dispatch(setFilteredData(updatedData));
+      }
+    });
+
 
   // 별 이미지를 클릭하면 on off
   const starClick = (index: number) => {
@@ -210,6 +216,8 @@ function CryptoList() {
           break;
       }
       dispatch(setFilteredData(sortedData));
+      dispatch(setSortedData(sortedData));
+
       return states_copy;
 
     });
@@ -267,19 +275,19 @@ function CryptoList() {
           <tr>
             <th className='name' onClick={() => sortClick(0)}>
               화폐명&nbsp;
-              <img className='sort' src={sort_images[sort_states[0]]} ></img>
+              <img className='sort' src={sort_images[sort_states[0]]} alt="화폐명"></img>
             </th>
             <th className='price' onClick={() => sortClick(1)}>
               현재가&nbsp;
-              <img className='sort' src={sort_images[sort_states[1]]}></img>
+              <img className='sort' src={sort_images[sort_states[1]]} alt="현재가"></img>
             </th>
             <th className='compare' onClick={() => sortClick(2)}>
               전일대비&nbsp;
-              <img className='sort' src={sort_images[sort_states[2]]}></img>
+              <img className='sort' src={sort_images[sort_states[2]]} alt="전일대비"></img>
             </th>
             <th className='volume' onClick={() => sortClick(3)}>
               거래대금&nbsp;
-              <img className='sort' src={sort_images[sort_states[3]]}></img>
+              <img className='sort' src={sort_images[sort_states[3]]} alt="거래대금"></img>
             </th>
           </tr>
         </thead>
@@ -307,7 +315,7 @@ function CryptoList() {
                       onClick={() => starClick(i)}
                       // 최초 star[i]의 상태는 'starOn'일 수가 없으므로 반드시 starOff 출력
                       src={star[i] === 'starOn' ? starOn : starOff}
-                    />
+                      alt="star" />
                   </td>
                   <td className='td-name'>{item.name} <br /> {item.markets}</td>
 
