@@ -34,7 +34,7 @@ function TradingView() {
       <>
         <div className="crypto-name">
         {/* src 내부에 동적으로 state를 넣기 위해선 `(햅틱) 사용 */}
-        <img className="crypto-img" src={`https://static.upbit.com/logos/${cr_markets_selected.slice(4)}.png`}></img>
+        <img className="crypto-img" src={`https://static.upbit.com/logos/${cr_markets_selected.slice(4)}.png`} alt="화폐사진"></img>
           {cr_names_selected}
           <span className="crypto-market">
             {cr_markets_selected}
@@ -68,12 +68,12 @@ function TradingView() {
         {
           cr_change_selected === 'RISE' ?
             <div className="crypto-change_price-rise">
-              <img className="img-price_rise" src={price_rise} /> {cr_change_price_selected}
+              <img className="img-price_rise" src={price_rise} alt="상승"/> {cr_change_price_selected}
             </div> :
             (
               cr_change_selected === 'FALL' ?
                 <div className="crypto-change_price-fall">
-                  <img className="img-price_fall" src={price_fall} /> {cr_change_price_selected}
+                  <img className="img-price_fall" src={price_fall} alt="하락"/> {cr_change_price_selected}
                 </div> :
                 <div className="crypto-change_price-even">
                   {cr_change_price_selected}

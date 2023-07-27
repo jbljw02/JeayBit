@@ -6,6 +6,8 @@ import { Header } from './Header'
 import { TradingView } from './TradingView';
 import { CryptoList } from './CryptoList'
 import { Footer } from './Footer'
+import { ClosedPrice } from './ClosedPrice';
+import { AskingPrice } from './AskingPrice';
 import '../assets/App.css';
 
 function App() {
@@ -77,14 +79,26 @@ function App() {
       <div className="App">
         <div className="container">
           <Header></Header>
-          <section className='main'>
-            <article className='TradingView'>
-              <TradingView></TradingView>
-            </article>
-            <article className="CryptoList">
-              <CryptoList></CryptoList>
-            </article>
-          </section>
+          <div className='content-container'>
+            <section className='main'>
+              <article className='TradingView'>
+                <TradingView></TradingView>
+              </article>
+              <article className='ClosedPrice'>
+                <ClosedPrice></ClosedPrice>
+              </article>
+              <article className='AskingPrice'>
+                <AskingPrice></AskingPrice>
+              </article>
+            </section>
+            <aside className='aside'>
+              <article className="CryptoList">
+                <CryptoList></CryptoList>
+              </article>
+            </aside>
+          </div>
+          {/* <section className='detail'>
+          </section> */}
           <Footer></Footer>
         </div>
       </div>

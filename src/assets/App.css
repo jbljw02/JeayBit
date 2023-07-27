@@ -44,7 +44,7 @@
   display: flex;
   flex-grow: 1;
   overflow: hidden;
-  flex-direction: row;
+  flex-direction: column;
   background-color: #F6F8FA;
 }
 
@@ -288,7 +288,7 @@ dd span {
 .CryptoList {
   background-color: white; 
   width: 420px;
-  /* height: 1422.98px; */
+  height: 1422.98px;
   height: 100%;
   border-left: 1px solid #E3E8EC;
 }
@@ -402,9 +402,24 @@ dd span {
   left: 1px;
 }
 
+.AskingPrice {
+  width: 2140px;
+  background-color: red;
+}
+
+.ClosedPrice {
+  width: 2140px;
+  background-color: red;
+}
+
 /* footer CSS */
 .footer {
   height: 60px;
   border-top: 1px solid #E3E8EC;
   margin: 0 10px;
+}
+
+.content-container {
+  display: flex;
+  flex-direction: row;
 }
