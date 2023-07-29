@@ -76,7 +76,7 @@ function CryptoList() {
     // filteredData가 포함될시 조건문이 없다면 무한 dispatch로 인한 런타임에러 발생)
     
     useEffect(() => {
-      console.log("재렌더링 ----------------------- !")
+      // console.log("재렌더링 ----------------------- !")
       if (filteredData.length === 0 && updatedData.length > 0) {
         dispatch(setFilteredData(updatedData));
       }

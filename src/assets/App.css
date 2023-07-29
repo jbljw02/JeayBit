@@ -288,7 +288,7 @@ dd span {
 .CryptoList {
   background-color: white; 
   width: 420px;
-  height: 1422.98px;
+  /* height: 1422.98px; */
   height: 100%;
   border-left: 1px solid #E3E8EC;
 }
@@ -316,7 +316,6 @@ dd span {
 }
 
 .list-table {
-  display: flex;
   flex-direction: column;
   border-collapse: collapse;
 }
@@ -339,7 +338,7 @@ dd span {
 
 .name {
   padding-left: 42px;
-  padding-right: 115px;
+  padding-right: 27px;
   width: 100%;
 }
 
@@ -379,6 +378,11 @@ dd span {
   background-color: rgba(0, 0, 0, 0.5);
 } 
 */
+
+
+.td-star {
+  width: 20px;
+}
 
 .td-name {
   width: 100%;
@@ -421,5 +425,8 @@ dd span {
 
 .content-container {
   display: flex;
-  flex-direction: row;
+}
+
+.aside {
+  background-color: red;
 }

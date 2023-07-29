@@ -83,7 +83,7 @@ function App() {
             <section className='main'>
               <article className='TradingView'>
                 <TradingView></TradingView>
-              </article>
+              </article>/
               <article className='ClosedPrice'>
                 <ClosedPrice></ClosedPrice>
               </article>
