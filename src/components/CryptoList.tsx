@@ -6,12 +6,15 @@ import img_sort_up from '../assets/images/sort-up.png';
 import img_sort_down from '../assets/images/sort-down.png';
 import starOn from '../assets/images/star-on.png';
 import starOff from '../assets/images/star-off.png';
+import SimpleBar from 'simplebar-react';
+import 'simplebar/dist/simplebar.min.css';
+
 
 function CryptoList() {
 
   // dispatch 함수를 사용하기 위한 선언
   const dispatch = useDispatch();
-  
+
   // useSelector훅을 이용해 store에서 state를 가져옴
   const cr_names = useSelector((state: RootState) => { return state.cr_names; });
   const cr_price = useSelector((state: RootState) => { return state.cr_price; });
@@ -26,7 +29,7 @@ function CryptoList() {
   const cr_low_price = useSelector((state: RootState) => { return state.cr_low_price });
   const star = useSelector((state: RootState) => { return state.star; });
   const filteredData = useSelector((state: RootState) => { return state.filteredData; });
-  let sortedData = useSelector((state:RootState) => { return state.sortedData });
+  let sortedData = useSelector((state: RootState) => { return state.sortedData });
   const cr_trade_price_selected = useSelector((state: RootState) => { return state.cr_trade_price_selected });
 
   // 검색값을 관리하기 위한 state
@@ -41,53 +44,53 @@ function CryptoList() {
   // 검색어 또는 정렬 상태가 변경되었을 때 재렌더링(변경이 없다면 초기 상태를 출력)
   // 필터링 및 정렬된 데이터를 새로운 배열로 생성 -> setFilteredData로 상태를 업데이트
   // price = 숫자형, f_price = 문자형 / 숫자형으로 정렬, 문자형으로 출력
-    const updatedData = cr_names.map((name, i) => ({
-      name,
-      price: cr_price[i],
-      f_price: cr_price[i].toLocaleString(),
-      markets: cr_markets[i],
-      change: cr_change[i],
-      changeRate: cr_change_rate[i],
-      f_changeRate: (cr_change_rate[i] * 100).toFixed(2),
-      changePrice: cr_change_price[i],
-      f_changePrice: cr_change_price[i].toLocaleString(),
-      tradePrice: cr_trade_price[i],
-      f_tradePrice: Number(String(Math.floor(cr_trade_price[i])).slice(0, -6)).toLocaleString(),
-      tradeVolume: cr_trade_volume[i],
-      openPrice: cr_open_price[i],
-      highPrice: cr_high_price[i],
-      lowPrice: cr_low_price[i],
-      star: star[i]
-      // 검색어에 해당하는 데이터를 비교하여 배열을 재생성
-    })).filter((item) => (
-      item.name.toLowerCase().includes(search_cr.toLowerCase())
-    ));
+  const updatedData = cr_names.map((name, i) => ({
+    name,
+    price: cr_price[i],
+    f_price: cr_price[i].toLocaleString(),
+    markets: cr_markets[i],
+    change: cr_change[i],
+    changeRate: cr_change_rate[i],
+    f_changeRate: (cr_change_rate[i] * 100).toFixed(2),
+    changePrice: cr_change_price[i],
+    f_changePrice: cr_change_price[i].toLocaleString(),
+    tradePrice: cr_trade_price[i],
+    f_tradePrice: Number(String(Math.floor(cr_trade_price[i])).slice(0, -6)).toLocaleString(),
+    tradeVolume: cr_trade_volume[i],
+    openPrice: cr_open_price[i],
+    highPrice: cr_high_price[i],
+    lowPrice: cr_low_price[i],
+    star: star[i]
+    // 검색어에 해당하는 데이터를 비교하여 배열을 재생성
+  })).filter((item) => (
+    item.name.toLowerCase().includes(search_cr.toLowerCase())
+  ));
 
-    // dispatch(setFilteredData(updatedData))
+  // dispatch(setFilteredData(updatedData))
 
-    // 재렌더링 발생X(filter 기능 작동X)
-    
-    // else if(sortedData.length !== 0){
-    //   dispatch(setSortedData(sortedData));
-    //   dispatch(setSortedData(updatedData))
-    // }
+  // 재렌더링 발생X(filter 기능 작동X)
 
-    // 의존성 배열 추가(배열에 포함된 값들 중 하나라도 변경되면 useEffect 함수가 실행되며 재렌더링 발생 
-    // filteredData가 포함될시 조건문이 없다면 무한 dispatch로 인한 런타임에러 발생)
-    
-    useEffect(() => {
-      // console.log("재렌더링 ----------------------- !")
-      if (filteredData.length === 0 && updatedData.length > 0) {
-        dispatch(setFilteredData(updatedData));
-      }
-    });
+  // else if(sortedData.length !== 0){
+  //   dispatch(setSortedData(sortedData));
+  //   dispatch(setSortedData(updatedData))
+  // }
+
+  // 의존성 배열 추가(배열에 포함된 값들 중 하나라도 변경되면 useEffect 함수가 실행되며 재렌더링 발생 
+  // filteredData가 포함될시 조건문이 없다면 무한 dispatch로 인한 런타임에러 발생)
+
+  useEffect(() => {
+    // console.log("재렌더링 ----------------------- !")
+    if (filteredData.length === 0 && updatedData.length > 0) {
+      dispatch(setFilteredData(updatedData));
+    }
+  });
 
 
   // 별 이미지를 클릭하면 on off
   const starClick = (index: number) => {
     dispatch(setStar(index));
   };
-  
+
   // 정렬 이미지 클릭 이벤트
   const sortClick = (index: number) => {
 
@@ -97,7 +100,7 @@ function CryptoList() {
       states_copy[index] = (states_copy[index] + 1) % sort_images.length;
 
       let sortedData = [...filteredData];
-      
+
       // 화폐를 전일대비 상승/동결/하락 여부에 따라 구분
       // 값 자체에 양수, 음수 구분이 되어있는 것이 아니기 때문에 정렬하기 전에 구분을 지어줘야 함
       let rise_crypto: crypto[] = [];
@@ -271,7 +274,7 @@ function CryptoList() {
 
       {/* 화폐 정보 테이블 */}
       <table className='list-table'>
-        <thead>
+        <thead className="list-thead">
           <tr>
             <th className='name' onClick={() => sortClick(0)}>
               화폐명&nbsp;
@@ -291,60 +294,83 @@ function CryptoList() {
             </th>
           </tr>
         </thead>
-
-        <tbody className='scrollable-tbody'>
-          {/* 검색값을 반환한 filteredData 함수를 다시 반복문을 이용하여 출력 */}
-          {
-            filteredData.map((item, i) => {
-              return (
-                <tr key={i} onClick={() => {
-                  nameSelect(filteredData[i].name);
-                  marketSelect(filteredData[i].markets);
-                  priceSelect(filteredData[i].f_price);
-                  changeSelect(filteredData[i].change);
-                  change_rateSelect(filteredData[i].f_changeRate);
-                  change_priceSelect(filteredData[i].f_changePrice);
-                  tradePriceSelect(filteredData[i].tradePrice);
-                  tradeVolumeSelect(filteredData[i].tradeVolume);
-                  openPriceSelect(filteredData[i].openPrice);
-                  highPriceSelect(filteredData[i].highPrice);
-                  lowPriceSelect(filteredData[i].lowPrice);
-                }}>
-                  <td className='td-star'>
-                    <img
-                      onClick={() => starClick(i)}
-                      // 최초 star[i]의 상태는 'starOn'일 수가 없으므로 반드시 starOff 출력
-                      src={star[i] === 'starOn' ? starOn : starOff}
-                      alt="star" />
-                  </td>
-                  <td className='td-name'>{item.name} <br /> {item.markets}</td>
-
-                  {/* 삼항연산자 중첩 - 전일 대비 가격이 상승했다면 청색, 하락했다면 적색, 동일하다면 검정색 */}
-                  {
-                    item.change === 'RISE' ?
-                      <td className='td-rise'>{item.f_price}</td> :
-                      (
-                        item.change === 'FALL' ?
-                          <td className='td-fall'>{item.f_price}</td> :
-                          <td className='td-even'>{item.f_price}</td>
-                      )
-                  }
-                  {
-                    item.change === 'RISE' ?
-                      <td className='td-rise'>+{item.f_changeRate}% <br /> {item.f_changePrice}</td> :
-                      (
-                        item.change === 'FALL' ?
-                          <td className='td-fall'>-{item.f_changeRate}% <br /> {item.f_changePrice}</td> :
-                          <td className='td-even'>{item.f_changeRate}% <br /> {item.f_changePrice}</td>
-                      )
-                  }
-                  <td className='td-volume'>{item.f_tradePrice}백만</td>
-                </tr>
-              )
-            })
-          }
-        </tbody>
       </table>
+
+      <SimpleBar className="scrollBar">
+        <table className="list-table">
+          <tbody className='scrollable-tbody'>
+            {/* 검색값을 반환한 filteredData 함수를 다시 반복문을 이용하여 출력 */}
+            {
+              filteredData.map((item, i) => {
+                return (
+                  <tr key={i} onClick={() => {
+                    nameSelect(filteredData[i].name);
+                    marketSelect(filteredData[i].markets);
+                    priceSelect(filteredData[i].f_price);
+                    changeSelect(filteredData[i].change);
+                    change_rateSelect(filteredData[i].f_changeRate);
+                    change_priceSelect(filteredData[i].f_changePrice);
+                    tradePriceSelect(filteredData[i].tradePrice);
+                    tradeVolumeSelect(filteredData[i].tradeVolume);
+                    openPriceSelect(filteredData[i].openPrice);
+                    highPriceSelect(filteredData[i].highPrice);
+                    lowPriceSelect(filteredData[i].lowPrice);
+                  }}>
+                    {/* <td className='td-star'>
+                      <img
+                        onClick={() => starClick(i)}
+                        // 최초 star[i]의 상태는 'starOn'일 수가 없으므로 반드시 starOff 출력
+                        src={star[i] === 'starOn' ? starOn : starOff}
+                        alt="star" />
+                    </td> */}
+                    <td className='td-name'>
+                      <span className="span-star">
+                        <img
+                          onClick={() => starClick(i)}
+                          // 최초 star[i]의 상태는 'starOn'일 수가 없으므로 반드시 starOff 출력
+                          src={star[i] === 'starOn' ? starOn : starOff}
+                          alt="star" />
+                      </span>
+                      <div className="div-name">
+                        <div>
+                          {item.name}
+                        </div>
+                        <div>
+                          {item.markets}
+                        </div>
+                      </div>
+                    </td>
+
+                    {/* 삼항연산자 중첩 - 전일 대비 가격이 상승했다면 청색, 하락했다면 적색, 동일하다면 검정색 */}
+                    {
+                      item.change === 'RISE' ?
+                        <td className='td-rise'>{item.f_price}</td> :
+                        (
+                          item.change === 'FALL' ?
+                            <td className='td-fall'>{item.f_price}</td> :
+                            <td className='td-even'>{item.f_price}</td>
+                        )
+                    }
+                    {
+                      item.change === 'RISE' ?
+                        <td className='td-rise'>+{item.f_changeRate}% <br /> {item.f_changePrice}</td> :
+                        (
+                          item.change === 'FALL' ?
+                            <td className='td-fall'>-{item.f_changeRate}% <br /> {item.f_changePrice}</td> :
+                            <td className='td-even'>{item.f_changeRate}% <br /> {item.f_changePrice}</td>
+                        )
+                    }
+                    <td className='td-volume'>{item.f_tradePrice}백만</td>
+                  </tr>
+                )
+              })
+            }
+          </tbody>
+        </table>
+
+      </SimpleBar>
+
+      {/* </table> */}
     </>
   );
 }

@@ -318,8 +318,13 @@ dd span {
 .list-table {
   flex-direction: column;
   border-collapse: collapse;
+  table-layout: fixed;
 }
-  
+
+/* .list-thead {
+  width: 100%;
+} */
+
 .list-table th {
   padding-top: 11px;
   padding-bottom: 11px;
@@ -336,14 +341,22 @@ dd span {
   white-space: nowrap;
 }
 
+.liat-table tr {
+  width: 100%;
+}
+
 .name {
-  padding-left: 42px;
-  padding-right: 27px;
+  padding-right: 115px;
+    padding-left: 39px;
   width: 100%;
 }
 
 .price, .compare, .volume {
-  padding-right: 18px;
+  padding-right: 31px;
+  }
+  
+  .compare {
+    padding-right: 15px;
 }
 
 .list-table tbody tr:nth-child(even) {
@@ -354,38 +367,26 @@ dd span {
   background-color: #e6e6e6;
 }
 
-.scrollable-tbody {
-  overflow-y: auto;
-  /* 스크롤바가 보일 최대 높이 지정 */
-  max-height: calc(100vh - 200px);
-}
-
-/* 스크롤바가 지나는 영역의 색상 */
-.scrollable-tbody::-webkit-scrollbar {
-  width: 5px;
-  background-color: #f9f9f9;
-}
-
-/* 스크롤바 속성 설정 */
-.scrollable-tbody::-webkit-scrollbar-thumb {
-  /* 스크롤바를 숨김 */
-  display: none;
-}
-
-/* 스크롤바 hover시 색상 변경 */
-/* 
-.scrollable-tbody::-webkit-scrollbar-thumb:hover {
-  background-color: rgba(0, 0, 0, 0.5);
-} 
-*/
-
-
-.td-star {
-  width: 20px;
+.scrollBar {
+  width: 100%;
+  max-height: calc(100vh - 135px);
+  /* max-height: 1422.98px; */
+  overflow-x: hidden;
 }
 
 .td-name {
   width: 100%;
+}
+
+.span-star {
+  position: relative;
+  bottom: 6px;
+  padding-left: 5px;
+}
+
+.div-name {
+  padding-left: 13px;
+  display: inline-block;
 }
 
 .td-rise {
@@ -393,7 +394,7 @@ dd span {
 }
 
 .td-fall {
-  color: #f23645
+  color: #f23645;
 }
 
 .td-even {
