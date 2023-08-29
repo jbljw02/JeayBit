@@ -234,9 +234,9 @@
   padding-right: 3px;
 }
 
-/* .selectedDetail_dl_1 {
-
-} */
+.trading-chart {
+  height: 100vh;
+}
 
 .selectedDetail_dl_2 {
   margin-left: 15px;

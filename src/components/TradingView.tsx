@@ -4,6 +4,8 @@ import { useSelector } from "react-redux";
 import { RootState } from "../store";
 import price_rise from '../assets/images/price-up.png'
 import price_fall from '../assets/images/price-down.png'
+import React, { Component } from "react";
+import { Chart } from "./TradingChart";
 
 function TradingView() {
 
@@ -103,9 +105,10 @@ function TradingView() {
           </ul>
         </label>
       </div>
-      <div className="trading-chart"></div>
-    </
-    >
+      <div className="trading-chart">
+        <Chart />
+      </div>
+    </>
   );
 }
 
