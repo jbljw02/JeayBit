@@ -1,15 +1,20 @@
 import React, { useState } from 'react';
 import ReactApexChart from 'react-apexcharts';
 import dayjs from 'dayjs';
+import { useSelector } from 'react-redux';
+import { RootState } from '../store';
+
 
 const Chart = () => {
+  const cr_names_selected = useSelector((state: RootState) => state.cr_names_selected);
+
   const [options, setOptions] = useState<any>({
     chart: {
       height: '100%',
       type: 'candlestick',
     },
     title: {
-      text: 'CandleStick Chart - Category X-axis',
+      // text: 'cr_names_selected',
       align: 'left'
     },
     annotations: {

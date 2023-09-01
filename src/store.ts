@@ -16,7 +16,7 @@ export type crypto = {
   openPrice: number,
   highPrice: number,
   lowPrice: number,
-  star: string;
+  star: string,
 }
 
 export type RootState = {
@@ -44,7 +44,9 @@ export type RootState = {
   cr_open_price_selected: number,
   cr_high_price_selected: number,
   cr_low_price_selected: number,
-  sortedData: crypto[];
+  sortedData: crypto[],
+  delimitedTime: string[],
+  delimitedDate: string[]
 }
 
 const cr_names = createSlice({
@@ -189,6 +191,7 @@ const cr_names_selected = createSlice({
     }
   }
 })
+
 const cr_markets_selected = createSlice({
   name: 'cr_markets_selected',
   initialState: '',
@@ -299,6 +302,26 @@ const sortedData = createSlice({
   }
 })
 
+const delimitedTime = createSlice({
+  name: 'delimitedTime',
+  initialState: ['1분', '5분', '10분', '30분', '1시간', '4시간'],
+  reducers: {
+    setDelimitedTime: (state, action) => {
+      return action.payload;
+    }
+  }
+})
+
+const delimitedDate = createSlice({
+  name: 'delimitedDate',
+  initialState: ['1일', '1주', '1개월'],
+  reducers: {
+    setDelimitedDate: (state, action) => {
+      return action.payload;
+    }
+  }
+})
+
 export default configureStore({
   reducer: {
     cr_names: cr_names.reducer,
@@ -325,7 +348,9 @@ export default configureStore({
     cr_open_price_selected: cr_open_price_selected.reducer,
     cr_high_price_selected: cr_high_price_selected.reducer,
     cr_low_price_selected: cr_low_price_selected.reducer,
-    sortedData: sortedData.reducer
+    sortedData: sortedData.reducer,
+    delimitedTime: delimitedTime.reducer,
+    delimitedDate: delimitedDate.reducer,
   }
 })
 
@@ -370,5 +395,7 @@ export const { setCr_open_price_selected } = cr_open_price_selected.actions;
 export const { setCr_high_price_selected } = cr_high_price_selected.actions;
 export const { setCr_low_price_selected } = cr_low_price_selected.actions;
 export const { setSortedData } = sortedData.actions;
+export const { setDelimitedTime } = delimitedTime.actions;
+export const { setDelimitedDate } = delimitedDate.actions;
 
 // export default store;

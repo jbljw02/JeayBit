@@ -8,7 +8,7 @@ import starOn from '../assets/images/star-on.png';
 import starOff from '../assets/images/star-off.png';
 import SimpleBar from 'simplebar-react';
 import 'simplebar/dist/simplebar.min.css';
-
+import axios from "axios";
 
 function CryptoList() {
 
@@ -31,6 +31,8 @@ function CryptoList() {
   const filteredData = useSelector((state: RootState) => { return state.filteredData; });
   let sortedData = useSelector((state: RootState) => { return state.sortedData });
   const cr_trade_price_selected = useSelector((state: RootState) => { return state.cr_trade_price_selected });
+  const cr_markets_selected = useSelector((state: RootState) => { return state.cr_markets_selected });
+
 
   // 검색값을 관리하기 위한 state
   const [search_cr, setSearch_cr] = useState<string>("");
@@ -79,11 +81,27 @@ function CryptoList() {
   // filteredData가 포함될시 조건문이 없다면 무한 dispatch로 인한 런타임에러 발생)
 
   useEffect(() => {
-    console.log("재렌더링 ----------------------- !")
+    // console.log("재렌더링 ----------------------- !")
     if (filteredData.length === 0 && updatedData.length > 0) {
       dispatch(setFilteredData(updatedData));
     }
   });
+
+  const sendMarket = async (market : string) => {
+    try {
+      const response = await axios.post('http://localhost:8000', {
+        market: market,
+      }, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+
+    } catch (error) {
+      console.error('Failed to send data to Django server', error);
+    }
+  }
 
 
   // 별 이미지를 클릭하면 on off
@@ -315,6 +333,7 @@ function CryptoList() {
                     openPriceSelect(filteredData[i].openPrice);
                     highPriceSelect(filteredData[i].highPrice);
                     lowPriceSelect(filteredData[i].lowPrice);
+                    sendMarket(filteredData[i].markets);
                   }}>
                     {/* <td className='td-star'>
                       <img

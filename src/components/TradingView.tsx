@@ -6,13 +6,14 @@ import price_rise from '../assets/images/price-up.png'
 import price_fall from '../assets/images/price-down.png'
 import React, { Component } from "react";
 import { Chart } from "./TradingChart";
+import axios from "axios";
 
 function TradingView() {
 
   const [checkedValue, setCheckedValue] = useState<string>("1일")
 
   // 테이블에서 선택된 화폐의 이름, 마켓, 가격을 가져옴
-  const cr_names_selected = useSelector((state: RootState) => { return state.cr_names_selected });  
+  const cr_names_selected = useSelector((state: RootState) => { return state.cr_names_selected });
   const cr_markets_selected = useSelector((state: RootState) => { return state.cr_markets_selected });
   const cr_price_selected = useSelector((state: RootState) => { return state.cr_price_selected });
   const cr_trade_price = useSelector((state: RootState) => { return state.cr_trade_price });
@@ -27,21 +28,26 @@ function TradingView() {
   const cr_open_price_selected = useSelector((state: RootState) => { return state.cr_open_price_selected });
   const cr_high_price_selected = useSelector((state: RootState) => { return state.cr_high_price_selected });
   const cr_low_price_selected = useSelector((state: RootState) => { return state.cr_low_price_selected });
+  const delimitedTime = useSelector((state: RootState) => state.delimitedTime);
+  const delimitedDate = useSelector((state: RootState) => state.delimitedDate);
+
+
+
 
   const checkClick = (value: string) => {
     setCheckedValue(value)
   }
 
   return (
-      <>
-        <div className="crypto-name">
+    <>
+      <div className="crypto-name">
         {/* src 내부에 동적으로 state를 넣기 위해선 `(햅틱) 사용 */}
         <img className="crypto-img" src={`https://static.upbit.com/logos/${cr_markets_selected.slice(4)}.png`} alt="화폐사진"></img>
-          {cr_names_selected}
-          <span className="crypto-market">
-            {cr_markets_selected}
-          </span>
-        </div>
+        {cr_names_selected}
+        <span className="crypto-market">
+          {cr_markets_selected}
+        </span>
+      </div>
       <div className="trading-detail">
         {/* 삼항연산자 중첩 - 전일 대비 가격이 상승했다면 청색, 하락했다면 적색, 동일하다면 검정색 */}
         {/* 선택된 화폐의 가격과 변화율 */}
@@ -70,12 +76,12 @@ function TradingView() {
         {
           cr_change_selected === 'RISE' ?
             <div className="crypto-change_price-rise">
-              <img className="img-price_rise" src={price_rise} alt="상승"/> {cr_change_price_selected}
+              <img className="img-price_rise" src={price_rise} alt="상승" /> {cr_change_price_selected}
             </div> :
             (
               cr_change_selected === 'FALL' ?
                 <div className="crypto-change_price-fall">
-                  <img className="img-price_fall" src={price_fall} alt="하락"/> {cr_change_price_selected}
+                  <img className="img-price_fall" src={price_fall} alt="하락" /> {cr_change_price_selected}
                 </div> :
                 <div className="crypto-change_price-even">
                   {cr_change_price_selected}
@@ -84,26 +90,46 @@ function TradingView() {
         }
       </div>
       <div className="trading-header">
+        <table className="table-delimited">
+          <tr className="tr-delimited">
+            {
+              delimitedTime.map((item, i) => {
+                return (
+                  <td className="td-delimited">{item}</td>
+                )
+              })
+            }
+            {/* <td className="td-delimited">1분</td>
+            <td className="td-delimited">5분</td>
+            <td className="td-delimited">10분</td>
+            <td className="td-delimited">30분</td>
+            <td className="td-delimited">1시간</td>
+            <td className="td-delimited">4시간</td> */}
+            <label className="dropDown">
+              <div className="dd-button">
+                {checkedValue}
+                <svg className="img-dd" xmlns='http://www.w3.org/2000/svg' viewBox="0 0 16 8">
+                  <path fill="currentColor" d="M0 1.475l7.396 6.04.596.485.593-.49L16 1.39 14.807 0 7.393 6.122 8.58 6.12 1.186.08z"></path>
+                </svg>
+              </div>
+              <input type="checkbox" className="dd-input" />
+              <ul className="dd-menu">
+                {
+                  delimitedDate.map((item, i) => {
+                    return (
+                      <li onClick={(e) => checkClick(item)}>{item}</li>
+                    )
+                  })
+                }
+                {/* <li onClick={(e) => checkClick('1일')}>1일</li>
+                <li onClick={(e) => checkClick('1주')}>1주</li>
+                <li onClick={(e) => checkClick('1개월')}>1개월</li> */}
+              </ul>
+            </label>
+          </tr>
+        </table>
         {/* 드롭다운 라벨 */}
-        <label className="dropDown">
-          <div className="dd-button">
-            {checkedValue}
-            <svg className="img-dd" xmlns='http://www.w3.org/2000/svg' viewBox="0 0 16 8">
-              <path fill="currentColor" d="M0 1.475l7.396 6.04.596.485.593-.49L16 1.39 14.807 0 7.393 6.122 8.58 6.12 1.186.08z"></path>
-            </svg>
-          </div>
-          <input type="checkbox" className="dd-input" />
-          <ul className="dd-menu">
-            <li onClick={(e) => checkClick('1분')}>1분</li>
-            <li onClick={(e) => checkClick('3분')}>3분</li>
-            <li onClick={(e) => checkClick('5분')}>5분</li>
-            <li onClick={(e) => checkClick('10분')}>10분</li>
-            <li onClick={(e) => checkClick('15분')}>15분</li>
-            <li onClick={(e) => checkClick('30분')}>30분</li>
-            <li onClick={(e) => checkClick('1시간')}>1시간</li>
-            <li onClick={(e) => checkClick('4시간')}>4시간</li>
-          </ul>
-        </label>
+
       </div>
       <div className="trading-chart">
         <Chart />
