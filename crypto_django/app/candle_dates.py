@@ -1,13 +1,12 @@
 import os
 import django
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'crypto_django.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'crypto_django.crypto_app.settings')
 django.setup()
 
 from requests import get
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-
 
 # print("Current directory:", os.getcwd())
 # print("PYTHONPATH:", os.getenv('PYTHONPATH'))
@@ -19,6 +18,7 @@ headers = {"accept" : "application/json"}
 @api_view(['POST'])
 def handle_market(request):
     market = request.data['market']
+    print(market)
 
     if not market:
         return Response({'error' : '데이터를 받아올 수 없음'}, status=400)
@@ -33,10 +33,9 @@ def handle_market(request):
     data = response.json()
 
     # API 응답을 그대로 반환합니다. 실제 사용 시에는 필요한 데이터만 추출하여 반환하면 됩니다.
-    print(data)
     return Response(data)
 
-# handle_market()
+handle_market()
 
 def allMarkets():
     url = "https://api.upbit.com/v1/market/all"

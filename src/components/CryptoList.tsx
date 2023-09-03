@@ -89,7 +89,7 @@ function CryptoList() {
 
   const sendMarket = async (market : string) => {
     try {
-      const response = await axios.post('http://localhost:8000', {
+      const response = await axios.post('http://localhost:8000/handle_market/', {
         market: market,
       }, {
         headers: {
@@ -97,7 +97,7 @@ function CryptoList() {
         },
       });
 
-
+      console.log("요청된 값 :", response)
     } catch (error) {
       console.error('Failed to send data to Django server', error);
     }

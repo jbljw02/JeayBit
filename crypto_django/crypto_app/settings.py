@@ -37,7 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'app',
+    'crypto_django.app.apps.MyappConfig',
     'corsheaders',
     'rest_framework',
 ]
@@ -51,14 +51,14 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',  # 클라이언트 실행할 때 임시 해제
+    # 'django.middleware.csrf.CsrfViewMiddleware',  # 클라이언트 실행할 때 임시 해제
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware'
 ]
 
 CORS_ALLOW_ALL_ORIGINS = True
-ROOT_URLCONF = 'crypto_django.urls'
+ROOT_URLCONF = 'crypto_app.urls'
 
 TEMPLATES = [
     {
@@ -76,7 +76,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'crypto_django.wsgi.application'
+WSGI_APPLICATION = 'crypto_app.wsgi.application'
 
 
 # Database
@@ -130,3 +130,19 @@ STATIC_URL = '/static/'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': 'C:\VS_Project\cryptocurrency_rt\crypto_django\logfile.log', 
+        },
+    },
+    'root': {
+        'handlers': ['file'],
+        'level': 'DEBUG',
+    }
+}
