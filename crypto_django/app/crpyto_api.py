@@ -34,18 +34,18 @@ def price():
     for i in range(len(data)):
 
         if data[i]['trade_price'] % 1 == 0:
-            cur_price.append(int(data[i]['trade_price']))    # int
+            cur_price.append(int(data[i]['trade_price']))  # int
         else:
-            cur_price.append(data[i]['trade_price'])    # float
+            cur_price.append(data[i]['trade_price'])  # float
 
         change.append(data[i]['change'])    # str
-        change_rate.append(float(data[i]['change_rate'])) # str -> float
+        change_rate.append(float(data[i]['change_rate']))  # str -> float
 
 
         if data[i]['change_price'] % 1 == 0:
-            change_price.append(int(data[i]['change_price']))    # int
+            change_price.append(int(data[i]['change_price']))  # int
         else:
-            change_price.append(data[i]['change_price'])    # float
+            change_price.append(data[i]['change_price'])  # float
 
         acc_trade_price_24h.append(data[i]['acc_trade_price_24h'])  # float
         acc_trade_volume_24h.append(data[i]['acc_trade_volume_24h'])  # float

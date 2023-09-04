@@ -36,7 +36,7 @@ function App() {
   // = async function () {}
   const fetchData = async () => {
     try {
-      const response = await axios.get('http://127.0.0.1:8000')
+      const response = await axios.get('http://127.0.0.1:8000/get_data/')
       dispatch(setCr_names(response.data.names));
       dispatch(setCr_price(response.data.cur_price));
       dispatch(setCr_markets(response.data.markets));
@@ -56,7 +56,7 @@ function App() {
   // 화면에 보여질 초기 화폐의 상태 정보(비트코인)
   const initialData = async () => {
     try {
-      const response = await axios.get('http://127.0.0.1:8000')
+      const response = await axios.get('http://127.0.0.1:8000/get_data/')
       dispatch(setCr_names_selected(response.data.names[0]))
       dispatch(setCr_markets_selected(response.data.markets[0]))
       dispatch(setCr_price_selected((response.data.cur_price[0]).toLocaleString()))

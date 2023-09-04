@@ -1,7 +1,7 @@
 from django.urls import path
-from .views import get_data, handle_market
+from .views import get_data, candle_per_date
 
 urlpatterns = [
-    path('', get_data),
-    path('handle_market/', handle_market),
+    path('get_data/', get_data),
+    path('candle_per_date/', candle_per_date)
 ]

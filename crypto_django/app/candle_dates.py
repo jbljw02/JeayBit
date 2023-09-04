@@ -15,27 +15,29 @@ headers = {"accept" : "application/json"}
 
 # months / weeks / days / minutes + 1,3,5,10,15,30,60,240..
 
-@api_view(['POST'])
-def handle_market(request):
-    market = request.data['market']
-    print(market)
+@api_view(['GET', 'POST'])
+def candle_per_date(request):
+    try:
+        market = request.data['market']
 
-    if not market:
-        return Response({'error' : '데이터를 받아올 수 없음'}, status=400)
+        if not market:
+            return Response({'error': "market 데이터를 받아올 수 없음"}, status=400)
 
-    url = f"https://api.upbit.com/v1/candles/days?market=KRW-{market}&count=1"
+        url = f"https://api.upbit.com/v1/candles/days?market={market}&count=1"
+        
+        response = get(url)
+        print(response)
+        
+        # 업비트 api로부터 데이터 수신 실패
+        if response.status_code != 200:
+            return Response({'error': 'Failed to get data from Upbit'}, status=500)
+        
+        data = response.json()
+
+        return Response(data)
     
-    response = get(url)
-    
-    if response.status_code != 200:
-        return Response({'error': 'Failed to get data from Upbit'}, status=500)
-    
-    data = response.json()
-
-    # API 응답을 그대로 반환합니다. 실제 사용 시에는 필요한 데이터만 추출하여 반환하면 됩니다.
-    return Response(data)
-
-handle_market()
+    except Exception as e:  
+        print("error : ", e)
 
 def allMarkets():
     url = "https://api.upbit.com/v1/market/all"

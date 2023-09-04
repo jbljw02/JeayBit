@@ -130,19 +130,3 @@ STATIC_URL = '/static/'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'handlers': {
-        'file': {
-            'level': 'DEBUG',
-            'class': 'logging.FileHandler',
-            'filename': 'C:\VS_Project\cryptocurrency_rt\crypto_django\logfile.log', 
-        },
-    },
-    'root': {
-        'handlers': ['file'],
-        'level': 'DEBUG',
-    }
-}
