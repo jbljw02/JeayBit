@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useDispatch, useSelector, Provider } from 'react-redux';
-import store, { RootState, setCr_names, setCr_price, setCr_markets, setCr_change, setCr_change_rate, setCr_change_price, setCr_trade_price, setCr_names_selected, setCr_markets_selected, setCr_price_selected, setCr_change_selected, setCr_change_rate_selected, setCr_change_price_selected, setCr_trade_volume, setCr_open_price, setCr_high_price, setCr_low_price, setCr_open_price_selected, setCr_high_price_selected, setCr_low_price_selected, setCr_trade_price_selected, setCr_trade_volume_selected } from "../store";
+import store, { RootState, setCr_names, setCr_price, setCr_markets, setCr_change, setCr_change_rate, setCr_change_price, setCr_trade_price, setCr_names_selected, setCr_markets_selected, setCr_price_selected, setCr_change_selected, setCr_change_rate_selected, setCr_change_price_selected, setCr_trade_volume, setCr_open_price, setCr_high_price, setCr_low_price, setCr_open_price_selected, setCr_high_price_selected, setCr_low_price_selected, setCr_trade_price_selected, setCr_trade_volume_selected, setCandle_per_date_BTC } from "../store";
 import { Header } from './Header'
 import { TradingView } from './TradingView';
 import { CryptoList } from './CryptoList'
@@ -16,7 +16,7 @@ function App() {
   
   const dispatch = useDispatch();
   
-  useEffect(() => {
+  useEffect(() => { 
 
     // const 변수 = setInterval(() => { 콜백함수, 시간 })
     // fetchData 함수를 1초마다 실행 - 서버에서 받아오는 값을 1초마다 갱신시킴
@@ -69,6 +69,7 @@ function App() {
       dispatch(setCr_open_price_selected((response.data.opening_price[0]).toLocaleString()))
       dispatch(setCr_low_price_selected((response.data.low_price[0]).toLocaleString()))
       dispatch(setCr_high_price_selected((response.data.high_price[0]).toLocaleString()))
+      dispatch(setCandle_per_date_BTC(response.data.candle_btc_date))
     } catch (error) {
       console.error(error);
     }

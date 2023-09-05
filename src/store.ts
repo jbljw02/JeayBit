@@ -19,6 +19,16 @@ export type crypto = {
   star: string,
 }
 
+export type Market = {
+  market: string,
+  candle_date_time_utc: string,
+  candle_date_time_kst: string,
+  opening_price: number,
+  high_price: number,
+  low_price: number,
+  trade_price: number,
+}
+
 export type RootState = {
   cr_names: string[],
   cr_price: number[],
@@ -46,7 +56,11 @@ export type RootState = {
   cr_low_price_selected: number,
   sortedData: crypto[],
   delimitedTime: string[],
-  delimitedDate: string[]
+  delimitedDate: string[],
+  candle_per_date: Market[],
+  candle_per_date_BTC: Market[],
+  candle_per_week: Market[],
+  candle_per_month: Market[],
 }
 
 const cr_names = createSlice({
@@ -163,8 +177,8 @@ const star = createSlice({
   initialState: [] as string[],
   reducers: {
     setStar: (state, action) => {
-      const index = action.payload;     
-      
+      const index = action.payload;
+
       // 별의 on일 때 클릭하면 off로, off일 때 클릭하면 on으로 변경
       state[index] = state[index] === 'starOn' ? 'starOff' : 'starOn';
     }
@@ -322,6 +336,46 @@ const delimitedDate = createSlice({
   }
 })
 
+const candle_per_date = createSlice({
+  name: 'candle_per_date',
+  initialState: [] as Market[],
+  reducers: {
+    setCandle_per_date: (state, action) => {
+      return action.payload;
+    }
+  }
+})
+
+const candle_per_date_BTC = createSlice({
+  name: 'candle_per_date_BTC',
+  initialState: [] as Market[],
+  reducers: {
+    setCandle_per_date_BTC: (state, action) => {
+      return action.payload;
+    }
+  }
+})
+
+const candle_per_week = createSlice({
+  name: 'candle_per_week',
+  initialState: [],
+  reducers: {
+    setCandle_per_week: (state, action) => {
+      return action.payload;
+    }
+  }
+})
+
+const candle_per_month = createSlice({
+  name: 'candle_per_month',
+  initialState: [],
+  reducers: {
+    setCandle_per_month: (state, action) => {
+      return action.payload;
+    }
+  }
+})
+
 export default configureStore({
   reducer: {
     cr_names: cr_names.reducer,
@@ -351,6 +405,10 @@ export default configureStore({
     sortedData: sortedData.reducer,
     delimitedTime: delimitedTime.reducer,
     delimitedDate: delimitedDate.reducer,
+    candle_per_date: candle_per_date.reducer,
+    candle_per_date_BTC: candle_per_date_BTC.reducer,
+    candle_per_week: candle_per_week.reducer,
+    candle_per_month: candle_per_month.reducer,
   }
 })
 
@@ -397,5 +455,9 @@ export const { setCr_low_price_selected } = cr_low_price_selected.actions;
 export const { setSortedData } = sortedData.actions;
 export const { setDelimitedTime } = delimitedTime.actions;
 export const { setDelimitedDate } = delimitedDate.actions;
+export const { setCandle_per_date } = candle_per_date.actions;
+export const { setCandle_per_date_BTC } = candle_per_date_BTC.actions;
+export const { setCandle_per_week } = candle_per_week.actions;
+export const { setCandle_per_month } = candle_per_month.actions;
 
 // export default store;

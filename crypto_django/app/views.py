@@ -1,5 +1,6 @@
 from django.http import JsonResponse
 from .crpyto_api import price
+from .crpyto_api import candle_per_date_BTC
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from requests import get
@@ -12,7 +13,7 @@ def candle_per_date(request):
         if not market:
             return Response({'error': "market 데이터를 받아올 수 없음"}, status=400)
 
-        url = f"https://api.upbit.com/v1/candles/days?market={market}&count=1"
+        url = f"https://api.upbit.com/v1/candles/days?market={market}&count=30"
         
         response = get(url)
         print(response)
@@ -26,10 +27,12 @@ def candle_per_date(request):
         return Response(data)
     
     except Exception as e:  
-        print("error : ", e)
+        print("error : ", e)    
 
 def get_data(request):
     names, cur_price, unJoin_markets, change, change_rate, change_price, acc_trade_price_24h, acc_trade_volume_24h, opening_price, high_price, low_price = price()
+    
+    candle_btc_date = candle_per_date_BTC()
 
     data = {
         'names': names,
@@ -43,6 +46,7 @@ def get_data(request):
         'opening_price' : opening_price,
         'high_price' : high_price,
         'low_price' : low_price,
+        'candle_btc_date' : candle_btc_date,
     }
 
     return JsonResponse(data)

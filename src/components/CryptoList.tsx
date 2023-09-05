@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { RootState, setFilteredData, setStar, crypto, setCr_names_selected, setCr_markets_selected, setCr_price_selected, setCr_change_selected, setCr_change_rate_selected, setCr_change_price_selected, setSortedData, setCr_trade_price_selected, setCr_trade_volume_selected, setCr_open_price_selected, setCr_high_price_selected, setCr_low_price_selected } from "../store";
+import { RootState, setFilteredData, setStar, crypto, setCr_names_selected, setCr_markets_selected, setCr_price_selected, setCr_change_selected, setCr_change_rate_selected, setCr_change_price_selected, setSortedData, setCr_trade_price_selected, setCr_trade_volume_selected, setCr_open_price_selected, setCr_high_price_selected, setCr_low_price_selected, Market, setCandle_per_date } from "../store";
 import { useEffect, useState } from "react";
 import img_sort from '../assets/images/sort.png';
 import img_sort_up from '../assets/images/sort-up.png';
@@ -32,6 +32,7 @@ function CryptoList() {
   let sortedData = useSelector((state: RootState) => { return state.sortedData });
   const cr_trade_price_selected = useSelector((state: RootState) => { return state.cr_trade_price_selected });
   const cr_markets_selected = useSelector((state: RootState) => { return state.cr_markets_selected });
+  const candle_per_date = useSelector((state: RootState) => state.candle_per_date);
 
 
   // 검색값을 관리하기 위한 state
@@ -87,6 +88,10 @@ function CryptoList() {
     }
   });
 
+  const initialChart = async () => {
+    
+  }
+
   const sendMarket = async (market : string) => {
     try {
       const response = await axios.post('http://127.0.0.1:8000/candle_per_date/', {
@@ -97,12 +102,12 @@ function CryptoList() {
         },
       });
 
-      console.log("요청된 값 : ", response)
+      console.log("요청된 값 : ", response.data)
+      dispatch(setCandle_per_date(response.data));
     } catch (error) {
       console.error('Failed to send data to Django server', error);
     }
   }
-
 
   // 별 이미지를 클릭하면 on off
   const starClick = (index: number) => {

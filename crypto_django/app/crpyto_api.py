@@ -56,3 +56,14 @@ def price():
     return names, cur_price, unJoin_markets, change, change_rate, change_price, acc_trade_price_24h, acc_trade_volume_24h, opening_price, high_price, low_price
 
 price()
+
+def candle_per_date_BTC():
+    headers = {"accept" : "application/json"}
+    url = "https://api.upbit.com/v1/candles/days?market=KRW-BTC&count=100"
+    response = get(url, headers=headers)
+    
+    candle_btc_date = response.json()
+
+    return candle_btc_date
+
+candle_per_date_BTC()
