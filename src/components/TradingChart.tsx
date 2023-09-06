@@ -8,8 +8,11 @@ import axios from 'axios';
 
 const Chart = () => {
   const cr_names_selected = useSelector((state: RootState) => state.cr_names_selected);
-  const candle_per_date = useSelector((state: RootState) => state.candle_per_date);
   const candle_per_date_BTC = useSelector((state: RootState) => state.candle_per_date_BTC);
+  const candle_per_date = useSelector((state: RootState) => state.candle_per_date);
+  const candle_per_week = useSelector((state: RootState) => state.candle_per_week);
+  const candle_per_month = useSelector((state: RootState) => state.candle_per_month);
+  const selectedChartSort = useSelector((state: RootState) => state.selectedChartSort);
 
   // console.log("이거임 : ", candle_per_date_BTC)
 
@@ -74,14 +77,12 @@ const Chart = () => {
     }
   });
 
-  const series : any = [
+  const series: any = [
     {
       name: 'candle',
       data: []
     }
   ];
-
-  // console.log("시리즈 : ", series[0].data) 
 
   // X축(날짜)를 지정
   for (let i = candle_per_date_BTC.length - 1; i >= 0; i--) {
@@ -89,19 +90,54 @@ const Chart = () => {
       x: candle_per_date_BTC[i] !== undefined ? candle_per_date_BTC[i].candle_date_time_kst.slice(5, 10) : '',
       y: []  // 시가, 고가, 저가, 종가순
     };
-  
-    series[0].data.push(item);
-  } 
 
-  // 캔들의 실제 값을 지정
-  for (let i = series[0].data.length -1; i>=0; i--) {
-    if(series[0].data[i] !== undefined && candle_per_date_BTC[candle_per_date_BTC.length-1-i] !== undefined) {
-      series[0].data[i].y[0] = candle_per_date_BTC[candle_per_date_BTC.length-1-i].opening_price;
-      series[0].data[i].y[1] = candle_per_date_BTC[candle_per_date_BTC.length-1-i].high_price;
-      series[0].data[i].y[2] = candle_per_date_BTC[candle_per_date_BTC.length-1-i].low_price;
-      series[0].data[i].y[3] = candle_per_date_BTC[candle_per_date_BTC.length-1-i].trade_price;
+    series[0].data.push(item);
+  }
+
+  // 캔들의 값을 지정
+  if (selectedChartSort === '1일') {
+    if (candle_per_date.length === 0) {
+      for (let i = series[0].data.length - 1; i >= 0; i--) {
+        if (series[0].data[i] !== undefined && candle_per_date_BTC[candle_per_date_BTC.length - 1 - i] !== undefined) {
+          series[0].data[i].y[0] = candle_per_date_BTC[candle_per_date_BTC.length - 1 - i].opening_price;
+          series[0].data[i].y[1] = candle_per_date_BTC[candle_per_date_BTC.length - 1 - i].high_price;
+          series[0].data[i].y[2] = candle_per_date_BTC[candle_per_date_BTC.length - 1 - i].low_price;
+          series[0].data[i].y[3] = candle_per_date_BTC[candle_per_date_BTC.length - 1 - i].trade_price;
+        }
+      }
+    }
+    else {
+      for (let i = series[0].data.length - 1; i >= 0; i--) {
+        if (series[0].data[i] !== undefined && candle_per_date[candle_per_date.length - 1 - i] !== undefined) {
+          series[0].data[i].y[0] = candle_per_date[candle_per_date.length - 1 - i].opening_price;
+          series[0].data[i].y[1] = candle_per_date[candle_per_date.length - 1 - i].high_price;
+          series[0].data[i].y[2] = candle_per_date[candle_per_date.length - 1 - i].low_price;
+          series[0].data[i].y[3] = candle_per_date[candle_per_date.length - 1 - i].trade_price;
+        }
+      }
     }
   }
+  else if (selectedChartSort === '1주') {
+    for (let i = series[0].data.length - 1; i >= 0; i--) {
+      if (series[0].data[i] !== undefined && candle_per_week[candle_per_week.length - 1 - i] !== undefined) {
+        series[0].data[i].y[0] = candle_per_week[candle_per_week.length - 1 - i].opening_price;
+        series[0].data[i].y[1] = candle_per_week[candle_per_week.length - 1 - i].high_price;
+        series[0].data[i].y[2] = candle_per_week[candle_per_week.length - 1 - i].low_price;
+        series[0].data[i].y[3] = candle_per_week[candle_per_week.length - 1 - i].trade_price;
+      }
+    }
+  }
+  else if (selectedChartSort === '1개월') {
+    for (let i=series[0].data.length - 1; i>=0; i--) {
+      if(series[0].data[i] !== undefined && candle_per_month[candle_per_month.length-1-i] !== undefined) {
+        series[0].data[i].y[0] = candle_per_month[candle_per_month.length - 1 - i].opening_price;
+        series[0].data[i].y[1] = candle_per_month[candle_per_month.length - 1 - i].high_price;
+        series[0].data[i].y[2] = candle_per_month[candle_per_month.length - 1 - i].low_price;
+        series[0].data[i].y[3] = candle_per_month[candle_per_month.length - 1 - i].trade_price;
+      }
+    }
+  }
+
 
   return (
     <ReactApexChart options={options} series={series} type="candlestick" height={1050} />

@@ -61,6 +61,7 @@ export type RootState = {
   candle_per_date_BTC: Market[],
   candle_per_week: Market[],
   candle_per_month: Market[],
+  selectedChartSort: string,
 }
 
 const cr_names = createSlice({
@@ -376,6 +377,17 @@ const candle_per_month = createSlice({
   }
 })
 
+const selectedChartSort = createSlice({
+  name: 'selectedChartSort',
+  initialState: '1일',
+  reducers: {
+    setSelectedChartSort: (state, action) => {
+      return action.payload;
+    }
+  }
+})
+
+
 export default configureStore({
   reducer: {
     cr_names: cr_names.reducer,
@@ -409,6 +421,7 @@ export default configureStore({
     candle_per_date_BTC: candle_per_date_BTC.reducer,
     candle_per_week: candle_per_week.reducer,
     candle_per_month: candle_per_month.reducer,
+    selectedChartSort: selectedChartSort.reducer,
   }
 })
 
@@ -459,5 +472,6 @@ export const { setCandle_per_date } = candle_per_date.actions;
 export const { setCandle_per_date_BTC } = candle_per_date_BTC.actions;
 export const { setCandle_per_week } = candle_per_week.actions;
 export const { setCandle_per_month } = candle_per_month.actions;
+export const { setSelectedChartSort } = selectedChartSort.actions;
 
 // export default store;

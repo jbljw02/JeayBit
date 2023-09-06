@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { CryptoList } from "./CryptoList";
-import { useSelector } from "react-redux";
-import { RootState } from "../store";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState, setSelectedChartSort } from "../store";
 import price_rise from '../assets/images/price-up.png'
 import price_fall from '../assets/images/price-down.png'
 import React, { Component } from "react";
@@ -30,12 +30,13 @@ function TradingView() {
   const cr_low_price_selected = useSelector((state: RootState) => { return state.cr_low_price_selected });
   const delimitedTime = useSelector((state: RootState) => state.delimitedTime);
   const delimitedDate = useSelector((state: RootState) => state.delimitedDate);
+  const selectedChartSort = useSelector((state: RootState) => state.selectedChartSort);
 
-
-
+  const dispatch = useDispatch();
 
   const checkClick = (value: string) => {
-    setCheckedValue(value)
+    setCheckedValue(value);
+    dispatch(setSelectedChartSort(value));
   }
 
   return (
@@ -95,7 +96,7 @@ function TradingView() {
             {
               delimitedTime.map((item, i) => {
                 return (
-                  <td className="td-delimited">{item}</td>
+                  <td onClick={(e) => checkClick(item)} className="td-delimited">{item}</td>
                 )
               })
             }
