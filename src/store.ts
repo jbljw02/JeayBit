@@ -387,7 +387,6 @@ const selectedChartSort = createSlice({
   }
 })
 
-
 export default configureStore({
   reducer: {
     cr_names: cr_names.reducer,

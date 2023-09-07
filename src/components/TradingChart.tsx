@@ -14,8 +14,6 @@ const Chart = () => {
   const candle_per_month = useSelector((state: RootState) => state.candle_per_month);
   const selectedChartSort = useSelector((state: RootState) => state.selectedChartSort);
 
-  // console.log("이거임 : ", candle_per_date_BTC)
-
   // const dispatch = useDispatch();
 
   // const initialData = async () => {
@@ -28,10 +26,6 @@ const Chart = () => {
   //     console.error(error);
   //   }
   // }
-
-  // console.log("값: ", candle_per_date_BTC);
-  // console.log("값: ", candle_per_date[0].candle_date_time_kst.slice(0,10))
-
 
   const [options, setOptions] = useState<any>({
     chart: {
@@ -137,7 +131,6 @@ const Chart = () => {
       }
     }
   }
-
 
   return (
     <ReactApexChart options={options} series={series} type="candlestick" height={1050} />

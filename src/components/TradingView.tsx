@@ -31,12 +31,71 @@ function TradingView() {
   const delimitedTime = useSelector((state: RootState) => state.delimitedTime);
   const delimitedDate = useSelector((state: RootState) => state.delimitedDate);
   const selectedChartSort = useSelector((state: RootState) => state.selectedChartSort);
+  const candle_per_date = useSelector((state: RootState) => state.candle_per_date);
 
   const dispatch = useDispatch();
 
   const checkClick = (value: string) => {
     setCheckedValue(value);
     dispatch(setSelectedChartSort(value));
+  }
+
+  const selectMarket = () => {
+    console.log("이거머임 : ", cr_markets_selected);
+    if (selectedChartSort === '1일') {
+      void (async (cr_markets_selected) => {
+        try {
+          const response = await axios.post('http://127.0.0.1:8000/candle_per_date/', {
+            market: cr_markets_selected,
+          }, {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          });
+
+          console.log("1일 요청된 값 : ", response.data)
+          // dispatch(setCandle_per_date(response.data));
+        } catch (error) {
+          console.error('Failed to send data to Django server', error);
+        }
+      })(cr_markets_selected);
+    }
+    else if (selectedChartSort === '1주') {
+      void (async (cr_markets_selected) => {
+        try {
+          const response = await axios.post('http://127.0.0.1:8000/candle_per_week/', {
+            market: cr_markets_selected,
+          }, {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          });
+
+          console.log("1주 요청된 값 : ", response.data)
+          // dispatch(setCandle_per_week(response.data));
+        } catch (error) {
+          console.error('Failed to send data to Django server', error);
+        }
+      })(cr_markets_selected);
+    }
+    else if (selectedChartSort === '1개월') {
+      void (async (cr_markets_selected) => {
+        try {
+          const response = await axios.post('http://127.0.0.1:8000/candle_per_month/', {
+            market: cr_markets_selected,
+          }, {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          });
+
+          console.log("1개월 요청된 값 : ", response.data)
+          // dispatch(setCandle_per_month(response.data));
+        } catch (error) {
+          console.error('Failed to send data to Django server', error);
+        }
+      })(cr_markets_selected);
+    }
   }
 
   return (
@@ -118,13 +177,12 @@ function TradingView() {
                 {
                   delimitedDate.map((item, i) => {
                     return (
-                      <li onClick={(e) => checkClick(item)}>{item}</li>
+                      <li onClick={() => {
+                        checkClick(item);
+                      }}>{item}</li>
                     )
                   })
                 }
-                {/* <li onClick={(e) => checkClick('1일')}>1일</li>
-                <li onClick={(e) => checkClick('1주')}>1주</li>
-                <li onClick={(e) => checkClick('1개월')}>1개월</li> */}
               </ul>
             </label>
           </tr>

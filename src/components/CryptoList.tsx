@@ -43,11 +43,11 @@ function CryptoList() {
   // 정렬하려는 목적에 따라 이미지를 변경하기 위해 배열로 생성
   const sort_images = [img_sort, img_sort_down, img_sort_up];
 
-  const [a, setA] = useState(false);
-
   const delimitedDate = useSelector((state: RootState) => state.delimitedDate);
   const delimitedTime = useSelector((state: RootState) => state.delimitedTime);
   const selectedChartSort = useSelector((state: RootState) => state.selectedChartSort);
+
+  // console.log("선택 마켓 : ", cr_markets_selected)
 
   // 검색어 또는 정렬 상태가 변경되었을 때 재렌더링(변경이 없다면 초기 상태를 출력)
   // 필터링 및 정렬된 데이터를 새로운 배열로 생성 -> setFilteredData로 상태를 업데이트
@@ -93,9 +93,16 @@ function CryptoList() {
     }
   });
 
+  useEffect(() => {
+    if (cr_markets_selected && selectedChartSort) {
+      selectMarket(cr_markets_selected);
+    }
+  }, [cr_markets_selected, selectedChartSort]);
+
   // 리스트에서 화폐를 선택하면 해당 화폐에 대한 캔들 호출(차트의 분류값에 따라)
   const selectMarket = (market : string) => {
-    // dispatch(setCr_markets_selected(market))
+    // console.log("market : ", market)
+    dispatch(setCr_markets_selected(market))
     if (selectedChartSort === '1일') {
       void (async (market) => {
         try {
@@ -129,7 +136,7 @@ function CryptoList() {
           dispatch(setCandle_per_week(response.data));
         } catch (error) {
           console.error('Failed to send data to Django server', error);
-        }
+        } 
       })(market);
     }
     else if (selectedChartSort === '1개월') {
@@ -151,7 +158,6 @@ function CryptoList() {
       })(market);
     }
   }
-
 
   // 별 이미지를 클릭하면 on off
   const starClick = (index: number) => {
