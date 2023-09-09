@@ -57,6 +57,7 @@ export type RootState = {
   sortedData: crypto[],
   delimitedTime: string[],
   delimitedDate: string[],
+  candle_per_minute: Market[],
   candle_per_date: Market[],
   candle_per_date_BTC: Market[],
   candle_per_week: Market[],
@@ -337,6 +338,16 @@ const delimitedDate = createSlice({
   }
 })
 
+const candle_per_minute = createSlice({
+  name: 'candle_per_minute',
+  initialState: [],
+  reducers: {
+    setCandle_per_minute: (state, action) => {
+      return action.payload;
+    }
+  }
+})
+
 const candle_per_date = createSlice({
   name: 'candle_per_date',
   initialState: [] as Market[],
@@ -416,6 +427,7 @@ export default configureStore({
     sortedData: sortedData.reducer,
     delimitedTime: delimitedTime.reducer,
     delimitedDate: delimitedDate.reducer,
+    candle_per_minute: candle_per_minute.reducer,
     candle_per_date: candle_per_date.reducer,
     candle_per_date_BTC: candle_per_date_BTC.reducer,
     candle_per_week: candle_per_week.reducer,
@@ -467,6 +479,7 @@ export const { setCr_low_price_selected } = cr_low_price_selected.actions;
 export const { setSortedData } = sortedData.actions;
 export const { setDelimitedTime } = delimitedTime.actions;
 export const { setDelimitedDate } = delimitedDate.actions;
+export const { setCandle_per_minute } = candle_per_minute.actions;
 export const { setCandle_per_date } = candle_per_date.actions;
 export const { setCandle_per_date_BTC } = candle_per_date_BTC.actions;
 export const { setCandle_per_week } = candle_per_week.actions;

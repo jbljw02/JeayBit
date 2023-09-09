@@ -35,67 +35,8 @@ function TradingView() {
 
   const dispatch = useDispatch();
 
-  const checkClick = (value: string) => {
-    setCheckedValue(value);
+  const setChartSortValue = (value: string) => {
     dispatch(setSelectedChartSort(value));
-  }
-
-  const selectMarket = () => {
-    console.log("이거머임 : ", cr_markets_selected);
-    if (selectedChartSort === '1일') {
-      void (async (cr_markets_selected) => {
-        try {
-          const response = await axios.post('http://127.0.0.1:8000/candle_per_date/', {
-            market: cr_markets_selected,
-          }, {
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          });
-
-          console.log("1일 요청된 값 : ", response.data)
-          // dispatch(setCandle_per_date(response.data));
-        } catch (error) {
-          console.error('Failed to send data to Django server', error);
-        }
-      })(cr_markets_selected);
-    }
-    else if (selectedChartSort === '1주') {
-      void (async (cr_markets_selected) => {
-        try {
-          const response = await axios.post('http://127.0.0.1:8000/candle_per_week/', {
-            market: cr_markets_selected,
-          }, {
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          });
-
-          console.log("1주 요청된 값 : ", response.data)
-          // dispatch(setCandle_per_week(response.data));
-        } catch (error) {
-          console.error('Failed to send data to Django server', error);
-        }
-      })(cr_markets_selected);
-    }
-    else if (selectedChartSort === '1개월') {
-      void (async (cr_markets_selected) => {
-        try {
-          const response = await axios.post('http://127.0.0.1:8000/candle_per_month/', {
-            market: cr_markets_selected,
-          }, {
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          });
-
-          console.log("1개월 요청된 값 : ", response.data)
-          // dispatch(setCandle_per_month(response.data));
-        } catch (error) {
-          console.error('Failed to send data to Django server', error);
-        }
-      })(cr_markets_selected);
-    }
   }
 
   return (
@@ -155,7 +96,7 @@ function TradingView() {
             {
               delimitedTime.map((item, i) => {
                 return (
-                  <td onClick={(e) => checkClick(item)} className="td-delimited">{item}</td>
+                  <td onClick={() => setChartSortValue(item)} className="td-delimited">{item}</td>
                 )
               })
             }
@@ -167,7 +108,7 @@ function TradingView() {
             <td className="td-delimited">4시간</td> */}
             <label className="dropDown">
               <div className="dd-button">
-                {checkedValue}
+                {selectedChartSort}
                 <svg className="img-dd" xmlns='http://www.w3.org/2000/svg' viewBox="0 0 16 8">
                   <path fill="currentColor" d="M0 1.475l7.396 6.04.596.485.593-.49L16 1.39 14.807 0 7.393 6.122 8.58 6.12 1.186.08z"></path>
                 </svg>
@@ -177,9 +118,7 @@ function TradingView() {
                 {
                   delimitedDate.map((item, i) => {
                     return (
-                      <li onClick={() => {
-                        checkClick(item);
-                      }}>{item}</li>
+                      <li onClick={() => setChartSortValue(item)}>{item}</li>
                     )
                   })
                 }

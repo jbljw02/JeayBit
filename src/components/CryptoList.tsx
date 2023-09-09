@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { RootState, setFilteredData, setStar, crypto, setCr_names_selected, setCr_markets_selected, setCr_price_selected, setCr_change_selected, setCr_change_rate_selected, setCr_change_price_selected, setSortedData, setCr_trade_price_selected, setCr_trade_volume_selected, setCr_open_price_selected, setCr_high_price_selected, setCr_low_price_selected, Market, setCandle_per_date, setCandle_per_week, setCandle_per_month } from "../store";
+import { RootState, setFilteredData, setStar, crypto, setCr_names_selected, setCr_markets_selected, setCr_price_selected, setCr_change_selected, setCr_change_rate_selected, setCr_change_price_selected, setSortedData, setCr_trade_price_selected, setCr_trade_volume_selected, setCr_open_price_selected, setCr_high_price_selected, setCr_low_price_selected, Market, setCandle_per_date, setCandle_per_week, setCandle_per_month, setSelectedChartSort, setCandle_per_minute } from "../store";
 import { useEffect, useState } from "react";
 import img_sort from '../assets/images/sort.png';
 import img_sort_up from '../assets/images/sort-up.png';
@@ -33,6 +33,7 @@ function CryptoList() {
   const cr_trade_price_selected = useSelector((state: RootState) => { return state.cr_trade_price_selected });
   const cr_markets_selected = useSelector((state: RootState) => { return state.cr_markets_selected });
   const candle_per_date = useSelector((state: RootState) => state.candle_per_date);
+  const candle_per_minute = useSelector((state: RootState) => state.candle_per_minute);
 
   // 검색값을 관리하기 위한 state
   const [search_cr, setSearch_cr] = useState<string>("");
@@ -95,19 +96,39 @@ function CryptoList() {
 
   useEffect(() => {
     if (cr_markets_selected && selectedChartSort) {
-      selectMarket(cr_markets_selected);
+      selectMarket_date(cr_markets_selected);
+      selectMarket_time(cr_markets_selected, selectedChartSort);
     }
   }, [cr_markets_selected, selectedChartSort]);
 
+  const selectMarket_time = (market: string, minute: string) => {
+    (async (market, minute) => {
+      try {
+        const response = await axios.post('http://127.0.0.1:8000/candle_per_minute/', {
+          market: market,
+          minute: minute,
+        }, {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+
+        console.log("분당 요청값: ", response.data);
+        dispatch(setCandle_per_minute(response.data));
+      } catch (error) {
+        console.error('Failed to send data to Django server', error);
+      }
+    })(market, minute);
+  }
+
   // 리스트에서 화폐를 선택하면 해당 화폐에 대한 캔들 호출(차트의 분류값에 따라)
-  const selectMarket = (market : string) => {
-    // console.log("market : ", market)
-    dispatch(setCr_markets_selected(market))
+  const selectMarket_date = (market: string) => {
     if (selectedChartSort === '1일') {
-      void (async (market) => {
+      (async (market) => {
         try {
           const response = await axios.post('http://127.0.0.1:8000/candle_per_date/', {
             market: market,
+            // date: tempChartSort,
           }, {
             headers: {
               'Content-Type': 'application/json',
@@ -136,7 +157,7 @@ function CryptoList() {
           dispatch(setCandle_per_week(response.data));
         } catch (error) {
           console.error('Failed to send data to Django server', error);
-        } 
+        }
       })(market);
     }
     else if (selectedChartSort === '1개월') {
@@ -388,7 +409,8 @@ function CryptoList() {
                     openPriceSelect(filteredData[i].openPrice);
                     highPriceSelect(filteredData[i].highPrice);
                     lowPriceSelect(filteredData[i].lowPrice);
-                    selectMarket(filteredData[i].markets);
+                    selectMarket_date(filteredData[i].markets);
+                    selectMarket_time(filteredData[i].markets, selectedChartSort);
                   }}>
                     {/* <td className='td-star'>
                       <img

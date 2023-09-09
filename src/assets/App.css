@@ -285,13 +285,13 @@ dd span {
 
 .dd-high_price {
   font-size: 15px;
-  color: red;
+  color: #22ab94;
   font-weight: lighter;
 }
 
 .dd-low_price {
   font-size: 15px;
-  color: blue;
+  color: #f23645;
   font-weight: lighter;
 }
 

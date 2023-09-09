@@ -5,6 +5,47 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from requests import get
 
+# 1분 기준 차트
+@api_view(['GET', 'POST'])
+def candle_per_minute(request):
+    try:
+        print("마켓 : ", request.data['market'])
+        print("분 : ", request.data['minute'])
+        market = request.data['market']
+        minute = request.data['minute']
+
+        if minute == '1분':
+            minute = 1
+        elif minute == '5분':
+            minute = 5
+        elif minute == '10분':
+            minute = 10
+        elif minute == '30분':
+            minute = 30
+        elif minute == '1시간':
+            minute = 60
+        elif minute == '4시간':
+            minute = 240
+
+        if not market:
+            return Response({'error': "market 데이터를 받아올 수 없음"}, status=400)
+
+        url = f"https://api.upbit.com/v1/candles/minutes/{minute}?market={market}&count=100"    
+
+        response = get(url)
+        print(response)
+
+        # 업비트 api로부터 데이터 수신 실패
+        if response.status_code != 200:
+            return Response({'error': 'Failed to get data from Upbit'}, status=500)
+        
+        data = response.json()
+
+        return Response(data)
+    
+    except Exception as e:  
+        print("error : ", e) 
+
 # 1일 기준 차트
 @api_view(['GET', 'POST'])
 def candle_per_date(request):

@@ -12,6 +12,7 @@ const Chart = () => {
   const candle_per_date = useSelector((state: RootState) => state.candle_per_date);
   const candle_per_week = useSelector((state: RootState) => state.candle_per_week);
   const candle_per_month = useSelector((state: RootState) => state.candle_per_month);
+  const candle_per_minute = useSelector((state: RootState) => state.candle_per_minute);
   const selectedChartSort = useSelector((state: RootState) => state.selectedChartSort);
 
   // const dispatch = useDispatch();
@@ -122,12 +123,82 @@ const Chart = () => {
     }
   }
   else if (selectedChartSort === '1개월') {
-    for (let i=series[0].data.length - 1; i>=0; i--) {
-      if(series[0].data[i] !== undefined && candle_per_month[candle_per_month.length-1-i] !== undefined) {
+    for (let i = series[0].data.length - 1; i >= 0; i--) {
+      if (series[0].data[i] !== undefined && candle_per_month[candle_per_month.length - 1 - i] !== undefined) {
         series[0].data[i].y[0] = candle_per_month[candle_per_month.length - 1 - i].opening_price;
         series[0].data[i].y[1] = candle_per_month[candle_per_month.length - 1 - i].high_price;
         series[0].data[i].y[2] = candle_per_month[candle_per_month.length - 1 - i].low_price;
         series[0].data[i].y[3] = candle_per_month[candle_per_month.length - 1 - i].trade_price;
+      }
+    }
+  }
+  else if (selectedChartSort === '1분') {
+    for (let i = series[0].data.length - 1; i >= 0; i--) {
+      if (series[0].data[i] !== undefined && candle_per_minute[candle_per_minute.length - 1 - i] !== undefined) {
+        series[0].data[i].y[0] = candle_per_minute[candle_per_minute.length - 1 - i].opening_price;
+        series[0].data[i].y[1] = candle_per_minute[candle_per_minute.length - 1 - i].high_price;
+        series[0].data[i].y[2] = candle_per_minute[candle_per_minute.length - 1 - i].low_price;
+        series[0].data[i].y[3] = candle_per_minute[candle_per_minute.length - 1 - i].trade_price;
+      }
+    }
+  }
+  else if (selectedChartSort === '5분') {
+    for (let i = series[0].data.length - 1; i >= 0; i--) {
+      if (series[0].data[i] !== undefined && candle_per_minute[candle_per_minute.length - 1 - i] !== undefined) {
+        series[0].data[i].y[0] = candle_per_minute[candle_per_minute.length - 1 - i].opening_price;
+        series[0].data[i].y[1] = candle_per_minute[candle_per_minute.length - 1 - i].high_price;
+        series[0].data[i].y[2] = candle_per_minute[candle_per_minute.length - 1 - i].low_price;
+        series[0].data[i].y[3] = candle_per_minute[candle_per_minute.length - 1 - i].trade_price;
+      }
+    }
+  }
+  else if (selectedChartSort === '5분') {
+    for (let i = series[0].data.length - 1; i >= 0; i--) {
+      if (series[0].data[i] !== undefined && candle_per_minute[candle_per_minute.length - 1 - i] !== undefined) {
+        series[0].data[i].y[0] = candle_per_minute[candle_per_minute.length - 1 - i].opening_price;
+        series[0].data[i].y[1] = candle_per_minute[candle_per_minute.length - 1 - i].high_price;
+        series[0].data[i].y[2] = candle_per_minute[candle_per_minute.length - 1 - i].low_price;
+        series[0].data[i].y[3] = candle_per_minute[candle_per_minute.length - 1 - i].trade_price;
+      }
+    }
+  }
+  else if (selectedChartSort === '10분') {
+    for (let i = series[0].data.length - 1; i >= 0; i--) {
+      if (series[0].data[i] !== undefined && candle_per_minute[candle_per_minute.length - 1 - i] !== undefined) {
+        series[0].data[i].y[0] = candle_per_minute[candle_per_minute.length - 1 - i].opening_price;
+        series[0].data[i].y[1] = candle_per_minute[candle_per_minute.length - 1 - i].high_price;
+        series[0].data[i].y[2] = candle_per_minute[candle_per_minute.length - 1 - i].low_price;
+        series[0].data[i].y[3] = candle_per_minute[candle_per_minute.length - 1 - i].trade_price;
+      }
+    }
+  }
+  else if (selectedChartSort === '30분') {
+    for (let i = series[0].data.length - 1; i >= 0; i--) {
+      if (series[0].data[i] !== undefined && candle_per_minute[candle_per_minute.length - 1 - i] !== undefined) {
+        series[0].data[i].y[0] = candle_per_minute[candle_per_minute.length - 1 - i].opening_price;
+        series[0].data[i].y[1] = candle_per_minute[candle_per_minute.length - 1 - i].high_price;
+        series[0].data[i].y[2] = candle_per_minute[candle_per_minute.length - 1 - i].low_price;
+        series[0].data[i].y[3] = candle_per_minute[candle_per_minute.length - 1 - i].trade_price;
+      }
+    }
+  }
+  else if (selectedChartSort === '1시간') {
+    for (let i = series[0].data.length - 1; i >= 0; i--) {
+      if (series[0].data[i] !== undefined && candle_per_minute[candle_per_minute.length - 1 - i] !== undefined) {
+        series[0].data[i].y[0] = candle_per_minute[candle_per_minute.length - 1 - i].opening_price;
+        series[0].data[i].y[1] = candle_per_minute[candle_per_minute.length - 1 - i].high_price;
+        series[0].data[i].y[2] = candle_per_minute[candle_per_minute.length - 1 - i].low_price;
+        series[0].data[i].y[3] = candle_per_minute[candle_per_minute.length - 1 - i].trade_price;
+      }
+    }
+  }
+  else if (selectedChartSort === '4시간') {
+    for (let i = series[0].data.length - 1; i >= 0; i--) {
+      if (series[0].data[i] !== undefined && candle_per_minute[candle_per_minute.length - 1 - i] !== undefined) {
+        series[0].data[i].y[0] = candle_per_minute[candle_per_minute.length - 1 - i].opening_price;
+        series[0].data[i].y[1] = candle_per_minute[candle_per_minute.length - 1 - i].high_price;
+        series[0].data[i].y[2] = candle_per_minute[candle_per_minute.length - 1 - i].low_price;
+        series[0].data[i].y[3] = candle_per_minute[candle_per_minute.length - 1 - i].trade_price;
       }
     }
   }
