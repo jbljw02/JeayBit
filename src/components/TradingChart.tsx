@@ -30,6 +30,11 @@ const Chart = () => {
   //   }
   // }
 
+  // console.log("날짜 :", chartSortDate)
+  // console.log("일값: ", candle_per_date)
+  // console.log("주값: ", candle_per_week)
+  // console.log("달값: ", candle_per_month)
+
   const [options, setOptions] = useState<any>({
     chart: {
       height: '100%',
@@ -117,16 +122,25 @@ const Chart = () => {
   else if (chartSortDate === '1주') {
     for (let i = series[0].data.length - 1; i >= 0; i--) {
       if (series[0].data[i] !== undefined && candle_per_week[candle_per_week.length - 1 - i] !== undefined) {
+        // X축
+        series[0].data[i].x = candle_per_week[candle_per_week.length - 1 - i].candle_date_time_kst.slice(5, 10);
+
+        // Y축
         series[0].data[i].y[0] = candle_per_week[candle_per_week.length - 1 - i].opening_price;
         series[0].data[i].y[1] = candle_per_week[candle_per_week.length - 1 - i].high_price;
         series[0].data[i].y[2] = candle_per_week[candle_per_week.length - 1 - i].low_price;
         series[0].data[i].y[3] = candle_per_week[candle_per_week.length - 1 - i].trade_price;
+
       }
     }
   }
   else if (chartSortDate === '1개월') {
     for (let i = series[0].data.length - 1; i >= 0; i--) {
       if (series[0].data[i] !== undefined && candle_per_month[candle_per_month.length - 1 - i] !== undefined) {
+        // X축
+        series[0].data[i].x = candle_per_month[candle_per_month.length - 1 - i].candle_date_time_kst.slice(2, 10);
+
+        // Y축
         series[0].data[i].y[0] = candle_per_month[candle_per_month.length - 1 - i].opening_price;
         series[0].data[i].y[1] = candle_per_month[candle_per_month.length - 1 - i].high_price;
         series[0].data[i].y[2] = candle_per_month[candle_per_month.length - 1 - i].low_price;
@@ -134,11 +148,15 @@ const Chart = () => {
       }
     }
   }
-  
-  /* 캔들의 값을 지정 - 분별 */
+
+  /* 캔들의 값을 지정 - 시간별 */
   if (chartSortTime === '1분') {
     for (let i = series[0].data.length - 1; i >= 0; i--) {
       if (series[0].data[i] !== undefined && candle_per_minute[candle_per_minute.length - 1 - i] !== undefined) {
+        // X축
+        series[0].data[i].x = candle_per_minute[candle_per_minute.length - 1 - i].candle_date_time_kst.slice(11, 16);
+
+        // Y축
         series[0].data[i].y[0] = candle_per_minute[candle_per_minute.length - 1 - i].opening_price;
         series[0].data[i].y[1] = candle_per_minute[candle_per_minute.length - 1 - i].high_price;
         series[0].data[i].y[2] = candle_per_minute[candle_per_minute.length - 1 - i].low_price;
@@ -149,6 +167,10 @@ const Chart = () => {
   else if (chartSortTime === '5분') {
     for (let i = series[0].data.length - 1; i >= 0; i--) {
       if (series[0].data[i] !== undefined && candle_per_minute[candle_per_minute.length - 1 - i] !== undefined) {
+        // X축
+        series[0].data[i].x = candle_per_minute[candle_per_minute.length - 1 - i].candle_date_time_kst.slice(11, 16);
+
+        // Y축
         series[0].data[i].y[0] = candle_per_minute[candle_per_minute.length - 1 - i].opening_price;
         series[0].data[i].y[1] = candle_per_minute[candle_per_minute.length - 1 - i].high_price;
         series[0].data[i].y[2] = candle_per_minute[candle_per_minute.length - 1 - i].low_price;
@@ -156,21 +178,14 @@ const Chart = () => {
       }
     }
   }
-  // else if (chartSortTime === '5분') {
-  //   for (let i = series[0].data.length - 1; i >= 0; i--) {
-  //     if (series[0].data[i] !== undefined && candle_per_minute[candle_per_minute.length - 1 - i] !== undefined) {
-  //       series[0].data[i].y[0] = candle_per_minute[candle_per_minute.length - 1 - i].opening_price;
-  //       series[0].data[i].y[1] = candle_per_minute[candle_per_minute.length - 1 - i].high_price;
-  //       series[0].data[i].y[2] = candle_per_minute[candle_per_minute.length - 1 - i].low_price;
-  //       series[0].data[i].y[3] = candle_per_minute[candle_per_minute.length - 1 - i].trade_price;
-  //     }
-  //   }
-  // }
   else if (chartSortTime === '10분') {
-    console.log("10분")
     for (let i = series[0].data.length - 1; i >= 0; i--) {
       // console.log("serie : ", series[0].data[i] !== undefined)
       if (series[0].data[i] !== undefined && candle_per_minute[candle_per_minute.length - 1 - i] !== undefined) {
+        // X축
+        series[0].data[i].x = candle_per_minute[candle_per_minute.length - 1 - i].candle_date_time_kst.slice(11, 16);
+
+        // Y축
         series[0].data[i].y[0] = candle_per_minute[candle_per_minute.length - 1 - i].opening_price;
         series[0].data[i].y[1] = candle_per_minute[candle_per_minute.length - 1 - i].high_price;
         series[0].data[i].y[2] = candle_per_minute[candle_per_minute.length - 1 - i].low_price;
@@ -181,6 +196,10 @@ const Chart = () => {
   else if (chartSortTime === '30분') {
     for (let i = series[0].data.length - 1; i >= 0; i--) {
       if (series[0].data[i] !== undefined && candle_per_minute[candle_per_minute.length - 1 - i] !== undefined) {
+        // X축
+        series[0].data[i].x = candle_per_minute[candle_per_minute.length - 1 - i].candle_date_time_kst.slice(5, 16);
+
+        // Y축
         series[0].data[i].y[0] = candle_per_minute[candle_per_minute.length - 1 - i].opening_price;
         series[0].data[i].y[1] = candle_per_minute[candle_per_minute.length - 1 - i].high_price;
         series[0].data[i].y[2] = candle_per_minute[candle_per_minute.length - 1 - i].low_price;
@@ -191,6 +210,10 @@ const Chart = () => {
   else if (chartSortTime === '1시간') {
     for (let i = series[0].data.length - 1; i >= 0; i--) {
       if (series[0].data[i] !== undefined && candle_per_minute[candle_per_minute.length - 1 - i] !== undefined) {
+        // X축
+        series[0].data[i].x = candle_per_minute[candle_per_minute.length - 1 - i].candle_date_time_kst.slice(5, 16);
+
+        // Y축
         series[0].data[i].y[0] = candle_per_minute[candle_per_minute.length - 1 - i].opening_price;
         series[0].data[i].y[1] = candle_per_minute[candle_per_minute.length - 1 - i].high_price;
         series[0].data[i].y[2] = candle_per_minute[candle_per_minute.length - 1 - i].low_price;
@@ -201,6 +224,11 @@ const Chart = () => {
   else if (chartSortTime === '4시간') {
     for (let i = series[0].data.length - 1; i >= 0; i--) {
       if (series[0].data[i] !== undefined && candle_per_minute[candle_per_minute.length - 1 - i] !== undefined) {
+        console.log("4시간 길이 : ", candle_per_minute[candle_per_minute.length - 1 - i].candle_date_time_kst )
+        // X축
+        series[0].data[i].x = candle_per_minute[candle_per_minute.length - 1 - i].candle_date_time_kst.slice(5, 16);
+
+        // Y축
         series[0].data[i].y[0] = candle_per_minute[candle_per_minute.length - 1 - i].opening_price;
         series[0].data[i].y[1] = candle_per_minute[candle_per_minute.length - 1 - i].high_price;
         series[0].data[i].y[2] = candle_per_minute[candle_per_minute.length - 1 - i].low_price;
