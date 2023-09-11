@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { CryptoList } from "./CryptoList";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState, setSelectedChartSort } from "../store";
+import { RootState, setChartSortDate, setChartSortTime, setSelectedChartSort } from "../store";
 import price_rise from '../assets/images/price-up.png'
 import price_fall from '../assets/images/price-down.png'
 import React, { Component } from "react";
@@ -31,6 +31,9 @@ function TradingView() {
   const delimitedTime = useSelector((state: RootState) => state.delimitedTime);
   const delimitedDate = useSelector((state: RootState) => state.delimitedDate);
   const selectedChartSort = useSelector((state: RootState) => state.selectedChartSort);
+  const chartSortTime = useSelector((state: RootState) => state.chartSortTime);
+  const chartSortDate = useSelector((state: RootState) => state.chartSortDate);
+
   const candle_per_date = useSelector((state: RootState) => state.candle_per_date);
 
   const dispatch = useDispatch();
@@ -38,6 +41,19 @@ function TradingView() {
   const setChartSortValue = (value: string) => {
     dispatch(setSelectedChartSort(value));
   }
+
+  const clickChartSortTime = (value: string) => {
+    dispatch(setChartSortTime(value));
+    // dispatch(setChartSortDate(''))
+  }
+
+  const clickChartSortDate = (value: string) => {
+    dispatch(setChartSortDate(value));
+    dispatch(setChartSortTime(''))
+  }
+
+  // console.log("date :", chartSortDate)
+  // console.log("time :", chartSortTime)
 
   return (
     <>
@@ -96,7 +112,9 @@ function TradingView() {
             {
               delimitedTime.map((item, i) => {
                 return (
-                  <td onClick={() => setChartSortValue(item)} className="td-delimited">{item}</td>
+                  <td
+                    onClick={() => clickChartSortTime(item)}
+                    className={`"td-delimited" ${chartSortTime === item ? 'td-delimited-selected' : 'td-delimited'}`}>{item}</td>
                 )
               })
             }
@@ -107,18 +125,24 @@ function TradingView() {
             <td className="td-delimited">1시간</td>
             <td className="td-delimited">4시간</td> */}
             <label className="dropDown">
-              <div className="dd-button">
-                {selectedChartSort}
+              {
+                chartSortTime === '' ?
+                <span className="chartSortDate-selected">{chartSortDate}</span> :
+                <span onClick={() => clickChartSortDate(chartSortDate)}className="chartSortDate">{chartSortDate}</span>
+              }
+              <span className="dd-button">
                 <svg className="img-dd" xmlns='http://www.w3.org/2000/svg' viewBox="0 0 16 8">
                   <path fill="currentColor" d="M0 1.475l7.396 6.04.596.485.593-.49L16 1.39 14.807 0 7.393 6.122 8.58 6.12 1.186.08z"></path>
                 </svg>
-              </div>
+              </span>
               <input type="checkbox" className="dd-input" />
               <ul className="dd-menu">
                 {
                   delimitedDate.map((item, i) => {
                     return (
-                      <li onClick={() => setChartSortValue(item)}>{item}</li>
+                      item === chartSortDate && chartSortTime === '' ?
+                      <li onClick={() => clickChartSortDate(item)} className="dd-menu-li">{item}</li> :
+                      <li onClick={() => clickChartSortDate(item)}>{item}</li> 
                     )
                   })
                 }

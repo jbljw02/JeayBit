@@ -47,6 +47,8 @@ function CryptoList() {
   const delimitedDate = useSelector((state: RootState) => state.delimitedDate);
   const delimitedTime = useSelector((state: RootState) => state.delimitedTime);
   const selectedChartSort = useSelector((state: RootState) => state.selectedChartSort);
+  const chartSortTime = useSelector((state: RootState) => state.chartSortTime);
+  const chartSortDate = useSelector((state: RootState) => state.chartSortDate);
 
   // console.log("선택 마켓 : ", cr_markets_selected)
 
@@ -95,11 +97,11 @@ function CryptoList() {
   });
 
   useEffect(() => {
-    if (cr_markets_selected && selectedChartSort) {
+    if (cr_markets_selected) {
       selectMarket_date(cr_markets_selected);
-      selectMarket_time(cr_markets_selected, selectedChartSort);
+      selectMarket_time(cr_markets_selected, chartSortTime);
     }
-  }, [cr_markets_selected, selectedChartSort]);
+  }, [cr_markets_selected, chartSortDate, chartSortTime]);
 
   const selectMarket_time = (market: string, minute: string) => {
     (async (market, minute) => {
@@ -113,7 +115,7 @@ function CryptoList() {
           },
         });
 
-        console.log("분당 요청값: ", response.data);
+        console.log(chartSortTime,"당 요청값: ", response.data);
         dispatch(setCandle_per_minute(response.data));
       } catch (error) {
         console.error('Failed to send data to Django server', error);
@@ -123,7 +125,7 @@ function CryptoList() {
 
   // 리스트에서 화폐를 선택하면 해당 화폐에 대한 캔들 호출(차트의 분류값에 따라)
   const selectMarket_date = (market: string) => {
-    if (selectedChartSort === '1일') {
+    if (chartSortDate === '1일') {
       (async (market) => {
         try {
           const response = await axios.post('http://127.0.0.1:8000/candle_per_date/', {
@@ -142,7 +144,7 @@ function CryptoList() {
         }
       })(market);
     }
-    else if (selectedChartSort === '1주') {
+    else if (chartSortDate === '1주') {
       void (async (market) => {
         try {
           const response = await axios.post('http://127.0.0.1:8000/candle_per_week/', {
@@ -160,7 +162,7 @@ function CryptoList() {
         }
       })(market);
     }
-    else if (selectedChartSort === '1개월') {
+    else if (chartSortDate === '1개월') {
       void (async (market) => {
         try {
           const response = await axios.post('http://127.0.0.1:8000/candle_per_month/', {
