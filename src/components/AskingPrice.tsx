@@ -1,5 +1,5 @@
 
-function AskingPrice() {
+const AskingPrice = () => {
   return (
     <div>
       여기는 호가

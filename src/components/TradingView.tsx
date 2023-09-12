@@ -8,7 +8,7 @@ import React, { Component } from "react";
 import { Chart } from "./TradingChart";
 import axios from "axios";
 
-function TradingView() {
+const TradingView = () => {
 
   const [checkedValue, setCheckedValue] = useState<string>("1일")
 
@@ -118,12 +118,6 @@ function TradingView() {
                 )
               })
             }
-            {/* <td className="td-delimited">1분</td>
-            <td className="td-delimited">5분</td>
-            <td className="td-delimited">10분</td>
-            <td className="td-delimited">30분</td>
-            <td className="td-delimited">1시간</td>
-            <td className="td-delimited">4시간</td> */}
             <label className="dropDown">
               {
                 chartSortTime === '' ?
@@ -161,7 +155,7 @@ function TradingView() {
 }
 
 {/* 화폐의 변화율에 따라 css 속성 다르게 적용 */ }
-function Crypto_changeRate_selected() {
+const Crypto_changeRate_selected = () => {
 
   const cr_change_selected = useSelector((state: RootState) => { return state.cr_change_selected });
   const cr_change_rate_selected = useSelector((state: RootState) => { return state.cr_change_rate_selected });
@@ -188,7 +182,7 @@ function Crypto_changeRate_selected() {
 }
 
 {/* 24시간동안의 화폐의 상세정보 */ }
-function Crypto_detail() {
+const Crypto_detail = () => {
 
   const cr_markets_selected = useSelector((state: RootState) => { return state.cr_markets_selected });
   const cr_price_selected = useSelector((state: RootState) => { return state.cr_price_selected });

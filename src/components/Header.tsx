@@ -1,6 +1,6 @@
 import title from '../assets/images/title.png';
 
-function Header() {
+const Header = () => {
   return (
     <header className="header">
       {/* 제목 폰트를 사용하기 위한 구글 폰트 api */}
