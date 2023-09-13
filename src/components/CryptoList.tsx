@@ -134,13 +134,13 @@ const CryptoList = () => {
   ));
 
   useEffect(() => {
-    // console.log("재렌더링 ----------------------- !")
     if (filteredData.length === 0 && updatedData.length > 0) {
       dispatch(setFilteredData(updatedData));
     }
   });
 
   useEffect(() => {
+    dispatch(setFilteredData(updatedData));
     initialData();
     fetchData();
   }, [search_cr]);

@@ -224,7 +224,6 @@ const Chart = () => {
   else if (chartSortTime === '4시간') {
     for (let i = series[0].data.length - 1; i >= 0; i--) {
       if (series[0].data[i] !== undefined && candle_per_minute[candle_per_minute.length - 1 - i] !== undefined) {
-        console.log("4시간 길이 : ", candle_per_minute[candle_per_minute.length - 1 - i].candle_date_time_kst )
         // X축
         series[0].data[i].x = candle_per_minute[candle_per_minute.length - 1 - i].candle_date_time_kst.slice(5, 16);
 
