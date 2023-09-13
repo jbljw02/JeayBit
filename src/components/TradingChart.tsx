@@ -237,7 +237,7 @@ const Chart = () => {
   }
 
   return (
-    <ReactApexChart options={options} series={series} type="candlestick" height={1100} />
+    <ReactApexChart options={options} series={series} type="candlestick" height={'100%'} />
   );
 };
 

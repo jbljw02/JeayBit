@@ -1,7 +1,7 @@
 
 const AskingPrice = () => {
   return (
-    <div>
+    <div className="askingPrice">
       여기는 호가
     </div>
   );

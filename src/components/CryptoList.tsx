@@ -82,6 +82,7 @@ const CryptoList = () => {
       dispatch(setCr_low_price_selected((response.data.low_price[0]).toLocaleString()))
       dispatch(setCr_high_price_selected((response.data.high_price[0]).toLocaleString()))
       dispatch(setCandle_per_date_BTC(response.data.candle_btc_date))
+      console.log("BTC 업데이트")
     } catch (error) {
       console.error(error);
     }
@@ -138,11 +139,14 @@ const CryptoList = () => {
       dispatch(setFilteredData(updatedData));
     }
   });
-
+  
   useEffect(() => {
-    dispatch(setFilteredData(updatedData));
     initialData();
+  }, [])
+  
+  useEffect(() => {
     fetchData();
+    dispatch(setFilteredData(updatedData));
   }, [search_cr]);
 
   useEffect(() => {

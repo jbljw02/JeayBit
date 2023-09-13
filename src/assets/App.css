@@ -1,11 +1,11 @@
 /* 전체 요소를 감싸는 컨테이너 */
 .container {
   display: flex;
-  flex-grow: 1;
   flex-direction: column;
   overflow: hidden;
   height: 100vh;
   width: 100vw;
+  /* width: 1500px; */
   font-family: 'Asap Condensed', sans-serif;
   font-family: 'Barlow', sans-serif;
   font-family: 'Fira Sans', sans-serif;
@@ -18,6 +18,20 @@
   height: 70px;
   border-bottom: 1px solid #E3E8EC;
   margin-left: 10px;
+}
+
+/* 차트, 호가 및 체결내역, 화폐 리스트 영역 CSS */
+.content-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+}
+
+/* 차트, 호가 및 체결내역 CSS */
+.main {
+  width: 100%;
+  height: 100%;
+  display: flex;
 }
 
 .div-title {
@@ -39,20 +53,12 @@
   margin-left: -5px;
 }
 
-/* header, footer를 제외한 주요 내용을 담는 영역 */
-.main {
-  display: flex;
-  flex-grow: 1;
-  overflow: hidden;
-  flex-direction: column;
-  background-color: #F6F8FA;
-}
-
 /* TradingView 컴포넌트 CSS */
 .TradingView {
-  /* height: 100%; */
-  height: 1422.98px;
-  width: 2140px;
+  height: 100%;
+  /* height: 1422.98px; */
+  /* width: 65%; */
+  flex: 0 0 75%;
   background-color: white;
 }
 
@@ -175,7 +181,6 @@
   font-weight: bold;
 }
 
-
 /* 드롭다운 css */
 .dropDown {
   display: inline-block;
@@ -295,7 +300,7 @@
 }
 
 .trading-chart {
-  height: 100vh;
+  height: 80%;
 }
 
 .selectedDetail_dl_2 {
@@ -344,13 +349,29 @@ dd span {
   font-weight: lighter;
 }
 
-/* CryptoList 컴포넌트 CSS */
+/* 호가, 체결내역 공간 css */
+.PriceDetail {
+  flex: 0 0 25%;
+  background-color: white;
+  border-left: 1px solid #E3E8EC;
+  border-right: 1px solid #E3E8EC;
+  border-bottom: 1px solid #E3E8EC;
+}
+
+/* 화폐 리스트 영역 css */
+.aside {
+  width: 420px;
+  margin-left: auto;
+  height: 100%;
+}
+
 .CryptoList {
   background-color: white;
-  width: 420px;
+  /* width: 16.5%; */
   /* height: 1422.98px; */
-  height: 100%;
+  /* flex: 0 0 17%; */
   border-left: 1px solid #E3E8EC;
+  /* min-width: 0; */
 }
 
 .list-search {
@@ -469,14 +490,8 @@ dd span {
   left: 1px;
 }
 
-.AskingPrice {
-  width: 2140px;
-  background-color: red;
-}
-
-.ClosedPrice {
-  width: 2140px;
-  background-color: red;
+.askingPrice {
+  height: 1000px;
 }
 
 /* footer CSS */
@@ -484,12 +499,4 @@ dd span {
   height: 60px;
   border-top: 1px solid #E3E8EC;
   margin: 0 10px;
-}
-
-.content-container {
-  display: flex;
-}
-
-.aside {
-  background-color: red;
 }
