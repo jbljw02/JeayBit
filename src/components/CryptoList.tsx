@@ -156,6 +156,45 @@ const CryptoList = () => {
     }
   }, [cr_markets_selected, chartSortDate, chartSortTime]);
 
+  // 선택된 화폐에 대한 체결내역 호출
+  const selectClosedPrice = (market: string) => { 
+    (async (market) => {
+      try {
+        const response = await axios.post('http://127.0.0.1:8000/closed_price/', {
+          market: market,
+        }, {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+
+        console.log("체결내역 : ", response.data);
+      } catch (error) {
+        console.error('Failed to send data to Django server', error);
+      }
+    })(market);
+  }
+
+  // 선택된 화폐에 대한 호가내역 호출
+  const selectAskingPrice = (market: string) => { 
+    (async (market) => {
+      try {
+        const response = await axios.post('http://127.0.0.1:8000/asking_price/', {
+          market: market,
+        }, {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+
+        console.log("호가내역 : ", response.data);
+      } catch (error) {
+        console.error('Failed to send data to Django server', error);
+      }
+    })(market);
+  }
+
+  // 리스트에서 화폐를 선택하면 해당 화폐에 대한 캔들 호출(차트의 분에 따라)
   const selectMarket_time = (market: string, minute: string) => {
     (async (market, minute) => {
       try {
@@ -176,7 +215,7 @@ const CryptoList = () => {
     })(market, minute);
   }
 
-  // 리스트에서 화폐를 선택하면 해당 화폐에 대한 캔들 호출(차트의 분류값에 따라)
+  // 리스트에서 화폐를 선택하면 해당 화폐에 대한 캔들 호출(차트의 일자에 따라)
   const selectMarket_date = (market: string) => {
     if (chartSortDate === '1일') {
       (async (market) => {
@@ -466,6 +505,8 @@ const CryptoList = () => {
                     lowPriceSelect(filteredData[i].lowPrice);
                     selectMarket_date(filteredData[i].markets);
                     selectMarket_time(filteredData[i].markets, selectedChartSort);
+                    selectAskingPrice(filteredData[i].markets);
+                    selectClosedPrice(filteredData[i].markets);
                   }}>
                     {/* <td className='td-star'>
                       <img

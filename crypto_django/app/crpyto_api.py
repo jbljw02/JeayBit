@@ -83,5 +83,3 @@ def candle_per_month_BTC():
     candle_btc_date = response.json()
 
     return candle_btc_date
-
-candle_per_date_BTC()

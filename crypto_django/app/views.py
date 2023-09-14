@@ -121,6 +121,56 @@ def candle_per_month(request):
     except Exception as e:
         print("error : ", e)
 
+# 호가내역
+@api_view(['GET', 'POST'])
+def asking_price(request):
+    try:
+        market = request.data['market']
+
+        if not market:
+            return Response({'error': "market 데이터를 받아올 수 없음"}, status=400) 
+
+        url = f"https://api.upbit.com/v1/orderbook?markets={market}"
+
+        response = get(url)
+        print(response)
+
+        # 업비트 api로부터 데이터 수신 실패
+        if response.status_code != 200:
+            return Response({'error': 'Failed to get data from Upbit'}, status=500)
+        
+        data = response.json()
+
+        return Response(data)
+
+    except Exception as e:
+        print("error : ", e)
+
+# 체결내역
+@api_view(['GET', 'POST'])
+def closed_price(request):
+    try:
+        market = request.data['market']
+
+        if not market:
+            return Response({'error': "market 데이터를 받아올 수 없음"}, status=400)
+        
+        url = "https://api.upbit.com/v1/trades/ticks?market=KRW-BTC&count=50"
+
+        response = get(url)
+        print(response)
+
+        # 업비트 api로부터 데이터 수신 실패
+        if response.status_code != 200:
+            return Response({'error': 'Failed to get data from Upbit'}, status=500)
+
+        data = response.json()
+
+        return Response(data)
+    
+    except Exception as e:
+        print("error : ", e)
+
 def get_data(request):
     names, cur_price, unJoin_markets, change, change_rate, change_price, acc_trade_price_24h, acc_trade_volume_24h, opening_price, high_price, low_price = price()
     
