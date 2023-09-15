@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { RootState, setFilteredData, setStar, Crypto, setCr_names_selected, setCr_markets_selected, setCr_price_selected, setCr_change_selected, setCr_change_rate_selected, setCr_change_price_selected, setSortedData, setCr_trade_price_selected, setCr_trade_volume_selected, setCr_open_price_selected, setCr_high_price_selected, setCr_low_price_selected, Market, setCandle_per_date, setCandle_per_week, setCandle_per_month, setSelectedChartSort, setCandle_per_minute, setCr_names, setCr_price, setCr_markets, setCr_change, setCr_change_rate, setCr_change_price, setCr_trade_price, setCr_trade_volume, setCr_open_price, setCr_high_price, setCr_low_price, setCandle_per_date_BTC, setClosed_data, setAsking_data } from "../store";
+import { RootState, setFilteredData, setStar, Crypto, setCr_names_selected, setCr_markets_selected, setCr_price_selected, setCr_change_selected, setCr_change_rate_selected, setCr_change_price_selected, setSortedData, setCr_trade_price_selected, setCr_trade_volume_selected, setCr_open_price_selected, setCr_high_price_selected, setCr_low_price_selected, Market, setCandle_per_date, setCandle_per_week, setCandle_per_month, setSelectedChartSort, setCandle_per_minute, setCr_names, setCr_price, setCr_markets, setCr_change, setCr_change_rate, setCr_change_price, setCr_trade_price, setCr_trade_volume, setCr_open_price, setCr_high_price, setCr_low_price, setCandle_per_date_BTC, setClosed_data, setAsking_data, setAsking_dateTime } from "../store";
 import { useEffect, useState } from "react";
 import img_sort from '../assets/images/sort.png';
 import img_sort_up from '../assets/images/sort-up.png';
@@ -55,7 +55,7 @@ const CryptoList = () => {
 
   // 호가 내역을 담을 state
   const asking_data = useSelector((state: RootState) => state.asking_data);
-
+  const asking_dateTime = useSelector((state: RootState) => state.asking_dateTime);
 
   // useEffect(() => { 
   //   // const 변수 = setInterval(() => { 콜백함수, 시간 })
@@ -91,6 +91,7 @@ const CryptoList = () => {
       dispatch(setCandle_per_date_BTC(response.data.candle_btc_date))
       dispatch(setClosed_data(response.data.closed_price_btc))
       dispatch(setAsking_data(response.data.asking_price_btc[0].orderbook_units))
+      dispatch(setAsking_dateTime(response.data.asking_price_btc[0].timestamp))
     } catch (error) {
       console.error(error);
     }
@@ -176,7 +177,7 @@ const CryptoList = () => {
           },
         });
 
-        // console.log("체결내역 : ", response.data);
+        console.log("체결내역 : ", response.data);
         dispatch(setClosed_data(response.data));
       } catch (error) {
         console.error('Failed to send data to Django server', error);
@@ -196,8 +197,10 @@ const CryptoList = () => {
           },
         });
 
-        console.log("호가내역 : ", response.data[0].orderbook_units);
+        // console.log("호가내역 : ", response.data[0].timestamp);
+
         dispatch(setAsking_data(response.data[0].orderbook_units));
+        dispatch(setAsking_dateTime(response.data[0].timestamp))
       } catch (error) {
         console.error('Failed to send data to Django server', error);
       }
@@ -471,6 +474,7 @@ const CryptoList = () => {
       </div>
 
       {/* 화폐 정보 테이블 */}
+      {/* 스크롤바를 넣기 위해 테이블을 두 개로 구성 */}
       <table className='list-table'>
         <thead className="list-thead">
           <tr>
@@ -494,7 +498,7 @@ const CryptoList = () => {
         </thead>
       </table>
 
-      <SimpleBar className="scrollBar">
+      <SimpleBar className="scrollBar-listTable">
         <table className="list-table">
           <tbody className='scrollable-tbody'>
             {/* 검색값을 반환한 filteredData 함수를 다시 반복문을 이용하여 출력 */}

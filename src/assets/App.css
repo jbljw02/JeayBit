@@ -58,7 +58,8 @@
   height: 100%;
   /* height: 1422.98px; */
   /* width: 65%; */
-  flex: 0 0 75%;
+  /* flex: 0 0 75%; */
+  flex: 1;
   background-color: white;
 }
 
@@ -351,62 +352,90 @@ dd span {
 
 /* 호가, 체결내역 공간 css */
 .PriceDetail {
-  flex: 0 0 25%;
-  background-color: white;
+  /* flex: 0 0 25%; */
+  width: 450px;
+  margin-left: auto;
+  background-color: white;  
   border-left: 1px solid #E3E8EC;
-  border-right: 1px solid #E3E8EC;
+  /* border-right: 1px solid #E3E8EC; */
   border-bottom: 1px solid #E3E8EC;
 }
 
 .priceDetail-title {
-  display: flex;
-  flex-direction: row;
   border-bottom: 1px solid #E3E8EC;
   padding: 16px 50px;
+  align-items: center;
+  text-align: center;
+  font-size: 17px;
 }
 
-.askingPrice-title {
+/* .askingPrice-title {
+  font-size: 18px;
+  text-align: center;
+} */
+
+/* .askingPrice-title-selected {
   flex: 0 0 50%;
-  font-size: 19px;
+  font-size: 18px;
   font-weight: bold;
+  color: #2962FF;
+  text-align: center;
+} */
+
+/* .closedPrice-title {
+  font-size: 18px;
+  text-align: center;
+  align-items: center;
+} */
+
+/* .closedPrice-title-selected {
+  flex: 0 0 50%;
+  font-size: 18px;
+  font-weight: bold;
+  color: #2962FF;
   text-align: center;
   cursor: pointer;
+} */
+
+.askingPrice-table {
+  border-bottom: 1px solid #E3E8EC;
 }
 
-.closedPrice-title {
-  flex: 0 0 50%;
-  font-size: 19px;
+.askingPrice-table thead th {
+  font-weight: lighter;
+  font-size: 15px;
   font-weight: bold;
-  text-align: center;
-  cursor: pointer;
-}
-
-.closedPrice-table, .askingPrice-table {
-  border-collapse: collapse;
+  padding: 10px 40px;
+  white-space: nowrap;
 }
 
 .closedPrice-table thead tr, .askingPrice-table thead tr {
   border-bottom: 1px solid #E3E8EC;
 }
 
+.askingPrice-table tbody td {
+  padding: 5px 40px;
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.closedPrice-table, .askingPrice-table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
 .closedPrice-table thead th {
   font-weight: lighter;
-  font-size: 15px;
-  padding: 10px 61.5px;
+  font-size: 14px;
+  font-weight: bold;
+  padding: 10px 40px;
+  white-space: nowrap;
 }
 
 .closedPrice-table tbody td {
   padding: 5px 40px;
-}
-
-.askingPrice-table thead th {
-  font-weight: lighter;
-  font-size: 15px;
-  padding: 10px 118.5px;
-}
-
-.askingPrice-table tbody td {
-  
+  font-size: 14px;
+  white-space: nowrap;
 }
 
 /* 화폐 리스트 영역 css */
@@ -497,10 +526,15 @@ dd span {
   background-color: #e6e6e6;
 }
 
-.scrollBar {
+.scrollBar-listTable {
   width: 100%;
   max-height: calc(100vh - 135px);
-  /* max-height: 1422.98px; */
+  overflow-x: hidden;
+}
+
+.scrollBar-closedPriceTable {
+  width: 100%;
+  max-height: calc(100vh - 1035px);
   overflow-x: hidden;
 }
 

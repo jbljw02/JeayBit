@@ -79,6 +79,7 @@ export type RootState = {
   selectedChartSort: string,
   closed_data: ClosedData[],
   asking_data: AskingData[],
+  asking_dateTime: string,
   chartSortTime: string,
   chartSortDate: string,
 }
@@ -456,6 +457,16 @@ const asking_data = createSlice({
   }
 })
 
+const asking_dateTime = createSlice({
+  name: 'asking_dateTime',
+  initialState: '',
+  reducers: {
+    setAsking_dateTime: (state, action) => {
+      return action.payload;
+    }
+  }
+})
+
 export default configureStore({
   reducer: {
     cr_names: cr_names.reducer,
@@ -494,6 +505,7 @@ export default configureStore({
     chartSortTime: chartSortTime.reducer,
     closed_data: closed_data.reducer,
     asking_data: asking_data.reducer,
+    asking_dateTime: asking_dateTime.reducer,
     chartSortDate: chartSortDate.reducer,    
   }
 })
@@ -549,6 +561,7 @@ export const { setCandle_per_month } = candle_per_month.actions;
 export const { setSelectedChartSort } = selectedChartSort.actions;
 export const { setClosed_data } = closed_data.actions;
 export const { setAsking_data } = asking_data.actions;
+export const { setAsking_dateTime } = asking_dateTime.actions;
 export const { setChartSortTime } = chartSortTime.actions;
 export const { setChartSortDate } = chartSortDate.actions;
 
