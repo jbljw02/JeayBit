@@ -1,6 +1,6 @@
 import { configureStore, createSlice } from '@reduxjs/toolkit'
 
-export type crypto = {
+export type Crypto = {
   name: string,
   price: number,
   f_price: string,
@@ -17,6 +17,20 @@ export type crypto = {
   highPrice: number,
   lowPrice: number,
   star: string,
+}
+
+export type ClosedData = {
+  trade_date_utc: string,
+  trade_time_utc: string,
+  trade_price: number,
+  trade_volume: number
+}
+
+export type AskingData = {
+  ask_price: number,
+  ask_size: number,
+  bid_price: number,
+  bid_size: number,
 }
 
 export type Market = {
@@ -42,7 +56,7 @@ export type RootState = {
   cr_high_price: number[],
   cr_low_price: number[],
   star: string[],
-  filteredData: crypto[],
+  filteredData: Crypto[],
   cr_names_selected: string,
   cr_markets_selected: string,
   cr_price_selected: string,
@@ -54,7 +68,7 @@ export type RootState = {
   cr_open_price_selected: number,
   cr_high_price_selected: number,
   cr_low_price_selected: number,
-  sortedData: crypto[],
+  sortedData: Crypto[],
   delimitedTime: string[],
   delimitedDate: string[],
   candle_per_minute: Market[],
@@ -63,6 +77,8 @@ export type RootState = {
   candle_per_week: Market[],
   candle_per_month: Market[],
   selectedChartSort: string,
+  closed_data: ClosedData[],
+  asking_data: AskingData[],
   chartSortTime: string,
   chartSortDate: string,
 }
@@ -191,7 +207,7 @@ const star = createSlice({
 
 const filteredData = createSlice({
   name: 'filteredData',
-  initialState: [] as crypto[],
+  initialState: [] as Crypto[],
   reducers: {
     setFilteredData: (state, action) => {
       return action.payload;
@@ -312,7 +328,7 @@ const cr_low_price_selected = createSlice({
 
 const sortedData = createSlice({
   name: 'sortedData',
-  initialState: [] as crypto[],
+  initialState: [] as Crypto[],
   reducers: {
     setSortedData: (state, action) => {
       return action.payload;
@@ -420,6 +436,26 @@ const chartSortDate = createSlice({
   }
 })
 
+const closed_data = createSlice({
+  name: 'closed_data',
+  initialState: [] as ClosedData[],
+  reducers: {
+    setClosed_data: (state, action) => {
+      return action.payload;
+    }
+  }
+})
+
+const asking_data = createSlice({
+  name: 'asking_data',
+  initialState: [],
+  reducers: {
+    setAsking_data: (state, action) => {
+      return action.payload;
+    }
+  }
+})
+
 export default configureStore({
   reducer: {
     cr_names: cr_names.reducer,
@@ -456,6 +492,8 @@ export default configureStore({
     candle_per_month: candle_per_month.reducer,
     selectedChartSort: selectedChartSort.reducer,
     chartSortTime: chartSortTime.reducer,
+    closed_data: closed_data.reducer,
+    asking_data: asking_data.reducer,
     chartSortDate: chartSortDate.reducer,    
   }
 })
@@ -509,6 +547,8 @@ export const { setCandle_per_date_BTC } = candle_per_date_BTC.actions;
 export const { setCandle_per_week } = candle_per_week.actions;
 export const { setCandle_per_month } = candle_per_month.actions;
 export const { setSelectedChartSort } = selectedChartSort.actions;
+export const { setClosed_data } = closed_data.actions;
+export const { setAsking_data } = asking_data.actions;
 export const { setChartSortTime } = chartSortTime.actions;
 export const { setChartSortDate } = chartSortDate.actions;
 

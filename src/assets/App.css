@@ -358,6 +358,57 @@ dd span {
   border-bottom: 1px solid #E3E8EC;
 }
 
+.priceDetail-title {
+  display: flex;
+  flex-direction: row;
+  border-bottom: 1px solid #E3E8EC;
+  padding: 16px 50px;
+}
+
+.askingPrice-title {
+  flex: 0 0 50%;
+  font-size: 19px;
+  font-weight: bold;
+  text-align: center;
+  cursor: pointer;
+}
+
+.closedPrice-title {
+  flex: 0 0 50%;
+  font-size: 19px;
+  font-weight: bold;
+  text-align: center;
+  cursor: pointer;
+}
+
+.closedPrice-table, .askingPrice-table {
+  border-collapse: collapse;
+}
+
+.closedPrice-table thead tr, .askingPrice-table thead tr {
+  border-bottom: 1px solid #E3E8EC;
+}
+
+.closedPrice-table thead th {
+  font-weight: lighter;
+  font-size: 15px;
+  padding: 10px 61.5px;
+}
+
+.closedPrice-table tbody td {
+  padding: 5px 40px;
+}
+
+.askingPrice-table thead th {
+  font-weight: lighter;
+  font-size: 15px;
+  padding: 10px 118.5px;
+}
+
+.askingPrice-table tbody td {
+  
+}
+
 /* 화폐 리스트 영역 css */
 .aside {
   width: 420px;
@@ -401,10 +452,6 @@ dd span {
   border-collapse: collapse;
   table-layout: fixed;
 }
-
-/* .list-thead {
-  width: 100%;
-} */
 
 .list-table th {
   padding-top: 11px;
@@ -488,10 +535,6 @@ dd span {
   position: relative;
   top: 1px;
   left: 1px;
-}
-
-.askingPrice {
-  height: 1000px;
 }
 
 /* footer CSS */

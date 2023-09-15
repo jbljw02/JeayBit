@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { RootState, setFilteredData, setStar, crypto, setCr_names_selected, setCr_markets_selected, setCr_price_selected, setCr_change_selected, setCr_change_rate_selected, setCr_change_price_selected, setSortedData, setCr_trade_price_selected, setCr_trade_volume_selected, setCr_open_price_selected, setCr_high_price_selected, setCr_low_price_selected, Market, setCandle_per_date, setCandle_per_week, setCandle_per_month, setSelectedChartSort, setCandle_per_minute, setCr_names, setCr_price, setCr_markets, setCr_change, setCr_change_rate, setCr_change_price, setCr_trade_price, setCr_trade_volume, setCr_open_price, setCr_high_price, setCr_low_price, setCandle_per_date_BTC } from "../store";
+import { RootState, setFilteredData, setStar, Crypto, setCr_names_selected, setCr_markets_selected, setCr_price_selected, setCr_change_selected, setCr_change_rate_selected, setCr_change_price_selected, setSortedData, setCr_trade_price_selected, setCr_trade_volume_selected, setCr_open_price_selected, setCr_high_price_selected, setCr_low_price_selected, Market, setCandle_per_date, setCandle_per_week, setCandle_per_month, setSelectedChartSort, setCandle_per_minute, setCr_names, setCr_price, setCr_markets, setCr_change, setCr_change_rate, setCr_change_price, setCr_trade_price, setCr_trade_volume, setCr_open_price, setCr_high_price, setCr_low_price, setCandle_per_date_BTC, setClosed_data, setAsking_data } from "../store";
 import { useEffect, useState } from "react";
 import img_sort from '../assets/images/sort.png';
 import img_sort_up from '../assets/images/sort-up.png';
@@ -50,6 +50,13 @@ const CryptoList = () => {
   const chartSortTime = useSelector((state: RootState) => state.chartSortTime);
   const chartSortDate = useSelector((state: RootState) => state.chartSortDate);
 
+  // 체결 내역을 담을 state
+  const closedData = useSelector((state: RootState) => state.closed_data);
+
+  // 호가 내역을 담을 state
+  const asking_data = useSelector((state: RootState) => state.asking_data);
+
+
   // useEffect(() => { 
   //   // const 변수 = setInterval(() => { 콜백함수, 시간 })
   //   // fetchData 함수를 1초마다 실행 - 서버에서 받아오는 값을 1초마다 갱신시킴
@@ -82,7 +89,8 @@ const CryptoList = () => {
       dispatch(setCr_low_price_selected((response.data.low_price[0]).toLocaleString()))
       dispatch(setCr_high_price_selected((response.data.high_price[0]).toLocaleString()))
       dispatch(setCandle_per_date_BTC(response.data.candle_btc_date))
-      console.log("BTC 업데이트")
+      dispatch(setClosed_data(response.data.closed_price_btc))
+      dispatch(setAsking_data(response.data.asking_price_btc[0].orderbook_units))
     } catch (error) {
       console.error(error);
     }
@@ -168,7 +176,8 @@ const CryptoList = () => {
           },
         });
 
-        console.log("체결내역 : ", response.data);
+        // console.log("체결내역 : ", response.data);
+        dispatch(setClosed_data(response.data));
       } catch (error) {
         console.error('Failed to send data to Django server', error);
       }
@@ -187,7 +196,8 @@ const CryptoList = () => {
           },
         });
 
-        console.log("호가내역 : ", response.data);
+        console.log("호가내역 : ", response.data[0].orderbook_units);
+        dispatch(setAsking_data(response.data[0].orderbook_units));
       } catch (error) {
         console.error('Failed to send data to Django server', error);
       }
@@ -291,9 +301,9 @@ const CryptoList = () => {
 
       // 화폐를 전일대비 상승/동결/하락 여부에 따라 구분
       // 값 자체에 양수, 음수 구분이 되어있는 것이 아니기 때문에 정렬하기 전에 구분을 지어줘야 함
-      let rise_crypto: crypto[] = [];
-      let even_crypto: crypto[] = [];
-      let fall_crypto: crypto[] = [];
+      let rise_crypto: Crypto[] = [];
+      let even_crypto: Crypto[] = [];
+      let fall_crypto: Crypto[] = [];
 
       // 상승/동결/하락 여부에 따라 구분하여 새 배열 생성
       sortedData.map((item) => {

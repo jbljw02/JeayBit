@@ -83,3 +83,21 @@ def candle_per_month_BTC():
     candle_btc_date = response.json()
 
     return candle_btc_date
+
+def closed_price_BTC():
+    headers = {"accept" : "application/json"}
+    url = "https://api.upbit.com/v1/trades/ticks?market=KRW-BTC&count=50"
+    response = get(url, headers=headers)
+    
+    closed_price_btc = response.json()
+
+    return closed_price_btc 
+    
+def asking_price_BTC():
+    headers = {"accept" : "application/json"}
+    url = "https://api.upbit.com/v1/orderbook?markets=KRW-BTC"
+    response = get(url, headers=headers)
+
+    asking_price_btc = response.json()
+
+    return asking_price_btc

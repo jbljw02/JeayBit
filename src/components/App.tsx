@@ -8,6 +8,7 @@ import { CryptoList } from './CryptoList'
 import { Footer } from './Footer'
 import { ClosedPrice } from './ClosedPrice';
 import { AskingPrice } from './AskingPrice';
+import { PriceDetail } from './PriceDetail';
 import SimpleBar from 'simplebar-react';
 import 'simplebar/dist/simplebar.min.css';
 import '../assets/App.css';
@@ -24,8 +25,7 @@ const App = () => {
                 <TradingView></TradingView>
               </article>
               <article className='PriceDetail'>
-                <ClosedPrice></ClosedPrice>
-                <AskingPrice></AskingPrice>
+                <PriceDetail></PriceDetail>
               </article>
             </div>
             <aside className='aside'>
