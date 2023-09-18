@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { RootState, setFilteredData, setStar, Crypto, setCr_names_selected, setCr_markets_selected, setCr_price_selected, setCr_change_selected, setCr_change_rate_selected, setCr_change_price_selected, setSortedData, setCr_trade_price_selected, setCr_trade_volume_selected, setCr_open_price_selected, setCr_high_price_selected, setCr_low_price_selected, Market, setCandle_per_date, setCandle_per_week, setCandle_per_month, setSelectedChartSort, setCandle_per_minute, setCr_names, setCr_price, setCr_markets, setCr_change, setCr_change_rate, setCr_change_price, setCr_trade_price, setCr_trade_volume, setCr_open_price, setCr_high_price, setCr_low_price, setCandle_per_date_BTC, setClosed_data, setAsking_data, setAsking_dateTime } from "../store";
+import { RootState, setFilteredData, setStar, Crypto, setCr_names_selected, setCr_markets_selected, setCr_price_selected, setCr_change_selected, setCr_change_rate_selected, setCr_change_price_selected, setSortedData, setCr_trade_price_selected, setCr_trade_volume_selected, setCr_open_price_selected, setCr_high_price_selected, setCr_low_price_selected, Market, setCandle_per_date, setCandle_per_week, setCandle_per_month, setSelectedChartSort, setCandle_per_minute, setCr_names, setCr_price, setCr_markets, setCr_change, setCr_change_rate, setCr_change_price, setCr_trade_price, setCr_trade_volume, setCr_open_price, setCr_high_price, setCr_low_price, setCandle_per_date_BTC, setClosed_data, setAsking_data, setAsking_dateTime, setAsking_buySize, setAsking_totalAskSize, setAsking_totalBidSize } from "../store";
 import { useEffect, useState } from "react";
 import img_sort from '../assets/images/sort.png';
 import img_sort_up from '../assets/images/sort-up.png';
@@ -92,6 +92,10 @@ const CryptoList = () => {
       dispatch(setClosed_data(response.data.closed_price_btc))
       dispatch(setAsking_data(response.data.asking_price_btc[0].orderbook_units))
       dispatch(setAsking_dateTime(response.data.asking_price_btc[0].timestamp))
+      dispatch(setAsking_totalAskSize(response.data.asking_price_btc[0].total_ask_size))
+      dispatch(setAsking_totalBidSize(response.data.asking_price_btc[0].total_bid_size))
+      // dispatch(setAsking_buySize(response.data.asking_price_btc[0].orderbook_units.ask_size))
+      // console.log("호출값 :", response.data.asking_price_btc[0])
     } catch (error) {
       console.error(error);
     }
@@ -198,9 +202,10 @@ const CryptoList = () => {
         });
 
         // console.log("호가내역 : ", response.data[0].timestamp);
-
         dispatch(setAsking_data(response.data[0].orderbook_units));
-        dispatch(setAsking_dateTime(response.data[0].timestamp))
+        dispatch(setAsking_dateTime(response.data[0].timestamp));
+        dispatch(setAsking_totalAskSize(response.data[0].total_ask_size));
+        dispatch(setAsking_totalBidSize(response.data[0].total_bid_size));
       } catch (error) {
         console.error('Failed to send data to Django server', error);
       }

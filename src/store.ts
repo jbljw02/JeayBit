@@ -33,6 +33,14 @@ export type AskingData = {
   bid_size: number,
 }
 
+export type Temp = {
+  market: string,
+  orderbook_units: [],
+  timestampe: number,
+  total_ask_size: number,
+  total_bid_size: number,
+}
+
 export type Market = {
   market: string,
   candle_date_time_utc: string,
@@ -80,8 +88,13 @@ export type RootState = {
   closed_data: ClosedData[],
   asking_data: AskingData[],
   asking_dateTime: string,
+  asking_totalAskSize: number,
+  asking_totalBidSize: number,
+  asking_buySize: number[],
+  asking_sellSize: number[],
   chartSortTime: string,
   chartSortDate: string,
+  asking_temp: any,
 }
 
 const cr_names = createSlice({
@@ -467,6 +480,46 @@ const asking_dateTime = createSlice({
   }
 })
 
+const asking_buySize = createSlice({
+  name: 'asking_buySize',
+  initialState: [],
+  reducers: {
+    setAsking_buySize: (state, action) => {
+      return action.payload;
+    }
+  }
+})
+
+const asking_sellSize = createSlice({
+  name: 'asking_sellSize',
+  initialState: [],
+  reducers: {
+    setAsking_sellSize: (state, action) => {
+      return action.payload;
+    }
+  }
+})
+
+const asking_totalAskSize = createSlice({
+  name: 'asking_totalAskSize',
+  initialState: '',
+  reducers: {
+    setAsking_totalAskSize: (state, action) => {
+      return action.payload;
+    }
+  }
+})
+
+const asking_totalBidSize = createSlice({
+  name: 'asking_totalBidSize',
+  initialState: '',
+  reducers: {
+    setAsking_totalBidSize: (state, action) => {
+      return action.payload;
+    }
+  }
+})
+
 export default configureStore({
   reducer: {
     cr_names: cr_names.reducer,
@@ -506,7 +559,11 @@ export default configureStore({
     closed_data: closed_data.reducer,
     asking_data: asking_data.reducer,
     asking_dateTime: asking_dateTime.reducer,
+    asking_buySize: asking_buySize.reducer,
+    asking_sellSize: asking_sellSize.reducer,
     chartSortDate: chartSortDate.reducer,    
+    asking_totalAskSize: asking_totalAskSize.reducer,
+    asking_totalBidSize: asking_totalBidSize.reducer,
   }
 })
 
@@ -562,7 +619,11 @@ export const { setSelectedChartSort } = selectedChartSort.actions;
 export const { setClosed_data } = closed_data.actions;
 export const { setAsking_data } = asking_data.actions;
 export const { setAsking_dateTime } = asking_dateTime.actions;
+export const { setAsking_buySize } = asking_buySize.actions;
+export const { setAsking_sellSize } = asking_sellSize.actions;
 export const { setChartSortTime } = chartSortTime.actions;
 export const { setChartSortDate } = chartSortDate.actions;
+export const { setAsking_totalAskSize } = asking_totalAskSize.actions;
+export const { setAsking_totalBidSize } = asking_totalBidSize.actions;
 
 // export default store;

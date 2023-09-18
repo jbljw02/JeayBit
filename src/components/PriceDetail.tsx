@@ -3,6 +3,7 @@ import { RootState, setAsking_dateTime } from "../store";
 import { useState } from "react";
 import SimpleBar from 'simplebar-react';
 import 'simplebar/dist/simplebar.min.css';
+import { Root } from "react-dom/client";
 
 const PriceDetail = () => {
 
@@ -37,6 +38,8 @@ const AskingPrice = () => {
   const asking_data = useSelector((state: RootState) => state.asking_data);
   const cr_markets_selected = useSelector((state: RootState) => state.cr_markets_selected);
   const asking_dateTime = useSelector((state: RootState) => state.asking_dateTime);
+  const asking_totalAskSize = useSelector((state: RootState) => state.asking_totalAskSize);
+  const asking_totalBidSize = useSelector((state: RootState) => state.asking_totalBidSize);
 
   if (asking_dateTime) {
     const date = new Date(asking_dateTime);
@@ -50,6 +53,10 @@ const AskingPrice = () => {
     dispatch(setAsking_dateTime(newDateString.replace(". ", "/").replace(".", "").replace("오전 ", "").replace("오후 ", "")))
   }
 
+  // console.log("에스크 : ", asking_totalAskSize);
+  // console.log("비드 : ", asking_totalBidSize)
+  // console.log("asking_data : ", asking_data)
+
   return (
     <table className="askingPrice-table">
       <thead>
@@ -62,11 +69,12 @@ const AskingPrice = () => {
       <tbody>
         {
           asking_data.map((item, i) => {
+            const percentage = (item.bid_size / asking_totalBidSize) * 100;
             return (
-              <tr>
+              <tr style={{ background: `linear-gradient(270deg, rgba(34,171,148, .2) ${percentage}%, transparent ${percentage}%)`}}>
                 <td>{asking_dateTime}</td>
                 <td>{(item.bid_price).toLocaleString()}</td>
-                <td>{(item.bid_size).toFixed(3)}
+                <td>{(item.bid_size).toFixed(5)}
                   <span>{(cr_markets_selected).slice(4)}</span>
                 </td>
               </tr>
@@ -75,11 +83,12 @@ const AskingPrice = () => {
         }
         {
           asking_data.map((item, i) => {
+            const percentage = (item.ask_size / asking_totalBidSize) * 100;
             return (
-              <tr>
+              <tr style={{ background: `linear-gradient(270deg, rgba(242,54,69, .2) ${percentage}%, transparent ${percentage}%)`}}>
                 <td>{asking_dateTime}</td>
-                <td>{(item.bid_price).toLocaleString()}</td>
-                <td>{(item.bid_size).toFixed(3)}
+                <td>{(item.ask_price).toLocaleString()}</td>
+                <td>{(item.ask_size).toFixed(5)}
                   <span>{(cr_markets_selected).slice(4)}</span>
                 </td>
               </tr>
@@ -94,6 +103,7 @@ const AskingPrice = () => {
 const ClosedPrice = () => {
   const closed_data = useSelector((state: RootState) => state.closed_data);
   const cr_markets_selected = useSelector((state: RootState) => state.cr_markets_selected);
+
   return (
     <>
       {/* 스크롤바를 넣기 위해 테이블을 두 개로 구성 */}
@@ -106,8 +116,8 @@ const ClosedPrice = () => {
           </tr>
         </thead>
       </table>
-      <table className="closedPrice-table">
-        <SimpleBar className="scrollBar-closedPriceTable">
+      <SimpleBar className="scrollBar-closedPriceTable">
+        <table className="closedPrice-table">
           <tbody>
             {
               closed_data.map((item, i) => {
@@ -115,7 +125,7 @@ const ClosedPrice = () => {
                   <tr>
                     <td>{((item.trade_date_utc).slice(5)).replace("-", "/")} {String(item.trade_time_utc).slice(0, 5)}</td>
                     <td>{(item.trade_price).toLocaleString()}</td>
-                    <td>{(item.trade_volume).toFixed(3)}
+                    <td>{(item.trade_volume).toFixed(5)}
                       <span>{(cr_markets_selected).slice(4)}</span>
                     </td>
                   </tr>
@@ -124,8 +134,8 @@ const ClosedPrice = () => {
               )
             }
           </tbody>
-        </SimpleBar>
-      </table>
+        </table>
+      </SimpleBar>
     </>
   )
 }

@@ -353,7 +353,7 @@ dd span {
 /* 호가, 체결내역 공간 css */
 .PriceDetail {
   /* flex: 0 0 25%; */
-  width: 450px;
+  width: 350px;
   margin-left: auto;
   background-color: white;  
   border-left: 1px solid #E3E8EC;
@@ -366,7 +366,7 @@ dd span {
   padding: 16px 50px;
   align-items: center;
   text-align: center;
-  font-size: 17px;
+  font-size: 16px;
 }
 
 /* .askingPrice-title {
@@ -397,45 +397,113 @@ dd span {
   cursor: pointer;
 } */
 
+.closedPrice-table,
+.askingPrice-table {
+  table-layout: fixed;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.closedPrice-table thead tr,
+.askingPrice-table thead tr {
+  border-bottom: 1px solid #E3E8EC;
+}
+
+/* .closedPrice-table tbody tr,
+.askingPrice-table tbody tr:nth-child(even) {
+  background-color: #e6e6e6;
+} */
+
+.askingPrice-table th:nth-child(1),
+.askingPrice-table td:nth-child(1),
+.closedPrice-table th:nth-child(1),
+.closedPrice-table td:nth-child(1) {
+  text-align: left;
+}
+
+.askingPrice-table th:nth-child(2),
+.askingPrice-table td:nth-child(2),
+.closedPrice-table th:nth-child(2),
+.closedPrice-table td:nth-child(2) {
+  text-align: right;
+}
+
+.askingPrice-table th:nth-child(3),
+.askingPrice-table td:nth-child(3),
+.closedPrice-table th:nth-child(3),
+.closedPrice-table td:nth-child(3) {
+  text-align: right;
+}
+
 .askingPrice-table {
   border-bottom: 1px solid #E3E8EC;
 }
 
 .askingPrice-table thead th {
-  font-weight: lighter;
-  font-size: 15px;
-  font-weight: bold;
-  padding: 10px 40px;
+  font-size: 14px;
+  padding: 10px 0px;
   white-space: nowrap;
 }
 
-.closedPrice-table thead tr, .askingPrice-table thead tr {
-  border-bottom: 1px solid #E3E8EC;
+.askingPrice-table th:nth-child(1),
+.askingPrice-table td:nth-child(1) {
+  padding-left: 13px;
+}
+
+.askingPrice-table td:nth-child(1) {
+  /* border-right: 1px solid #E3E8EC;
+  color: silver; */
+}
+
+.askingPrice-table th:nth-child(3),
+.askingPrice-table td:nth-child(3) {
+  padding-right: 13px;
+}
+
+.askingPrice-table td:nth-child(3) {
+  /* background-color: green; */
 }
 
 .askingPrice-table tbody td {
-  padding: 5px 40px;
-  font-size: 14px;
+  padding: 5px 0px;
+  font-size: 13.5px;
   white-space: nowrap;
-}
-
-.closedPrice-table, .askingPrice-table {
-  border-collapse: collapse;
-  width: 100%;
 }
 
 .closedPrice-table thead th {
   font-weight: lighter;
   font-size: 14px;
   font-weight: bold;
-  padding: 10px 40px;
+  padding: 10px 0px;
   white-space: nowrap;
 }
 
 .closedPrice-table tbody td {
-  padding: 5px 40px;
-  font-size: 14px;
-  white-space: nowrap;
+  padding: 5px 0px;
+  font-size: 13.5px;
+  white-space: nowrap;  
+}
+
+.closedPrice-table th:nth-child(1),
+.closedPrice-table td:nth-child(1) {
+  padding-left: 13px;
+}
+
+.closedPrice-table th:nth-child(2) {
+  /* padding-right: 35px; */
+}
+
+.closedPrice-table th:nth-child(3),
+.closedPrice-table td:nth-child(3) {
+  padding-right: 13px;
+}
+
+.asking-buy {
+  color: #22ab94;
+}
+
+.asking-sell {
+  color: #f23645;
 }
 
 /* 화폐 리스트 영역 css */
