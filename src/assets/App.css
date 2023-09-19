@@ -369,40 +369,12 @@ dd span {
   font-size: 16px;
 }
 
-/* .askingPrice-title {
-  font-size: 18px;
-  text-align: center;
-} */
-
-/* .askingPrice-title-selected {
-  flex: 0 0 50%;
-  font-size: 18px;
-  font-weight: bold;
-  color: #2962FF;
-  text-align: center;
-} */
-
-/* .closedPrice-title {
-  font-size: 18px;
-  text-align: center;
-  align-items: center;
-} */
-
-/* .closedPrice-title-selected {
-  flex: 0 0 50%;
-  font-size: 18px;
-  font-weight: bold;
-  color: #2962FF;
-  text-align: center;
-  cursor: pointer;
-} */
-
 .closedPrice-table,
 .askingPrice-table {
   table-layout: fixed;
   border-collapse: collapse;
   width: 100%;
-}
+} 
 
 .closedPrice-table thead tr,
 .askingPrice-table thead tr {
@@ -450,24 +422,40 @@ dd span {
   padding-left: 13px;
 }
 
-.askingPrice-table td:nth-child(1) {
-  /* border-right: 1px solid #E3E8EC;
-  color: silver; */
-}
-
 .askingPrice-table th:nth-child(3),
 .askingPrice-table td:nth-child(3) {
   padding-right: 13px;
 }
 
-.askingPrice-table td:nth-child(3) {
-  /* background-color: green; */
+.askingPrice-table td:nth-child(3),
+.closedPrice-table td:nth-child(3) {
+  direction: rtl;
+}
+
+.askingPrice-table thead span, .closedPrice-table thead span {
+  font-size: 13.5px;
+  font-weight: lighter;
+  padding-left: 1px;
 }
 
 .askingPrice-table tbody td {
   padding: 5px 0px;
   font-size: 13.5px;
   white-space: nowrap;
+}
+
+/* .asking-size {
+  margin-left: 50px;
+} */
+
+.closedPrice-table th:nth-child(1),
+.closedPrice-table td:nth-child(1) {
+  padding-left: 13px;
+}
+
+.closedPrice-table th:nth-child(3),
+.closedPrice-table td:nth-child(3) {
+  padding-right: 13px;
 }
 
 .closedPrice-table thead th {
@@ -482,20 +470,6 @@ dd span {
   padding: 5px 0px;
   font-size: 13.5px;
   white-space: nowrap;  
-}
-
-.closedPrice-table th:nth-child(1),
-.closedPrice-table td:nth-child(1) {
-  padding-left: 13px;
-}
-
-.closedPrice-table th:nth-child(2) {
-  /* padding-right: 35px; */
-}
-
-.closedPrice-table th:nth-child(3),
-.closedPrice-table td:nth-child(3) {
-  padding-right: 13px;
 }
 
 .asking-buy {

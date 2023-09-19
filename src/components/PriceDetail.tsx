@@ -6,21 +6,6 @@ import 'simplebar/dist/simplebar.min.css';
 import { Root } from "react-dom/client";
 
 const PriceDetail = () => {
-
-  const [changeTitle, setChangeTitle] = useState<boolean>(true);
-
-  const changeTo_closedPrice = () => {
-    if (!changeTitle) {
-      setChangeTitle(true);
-    }
-  }
-
-  const changeTo_askingPrice = () => {
-    if (changeTitle) {
-      setChangeTitle(false);
-    }
-  }
-
   return (
     <>
       <div className="priceDetail-title">호가내역</div>
@@ -63,7 +48,9 @@ const AskingPrice = () => {
         <tr>
           <th>등록시간</th>
           <th>호가</th>
-          <th>수량</th>
+          <th>
+            수량<span>({(cr_markets_selected).slice(4)})</span>
+          </th>
         </tr>
       </thead>
       <tbody>
@@ -71,11 +58,10 @@ const AskingPrice = () => {
           asking_data.map((item, i) => {
             const percentage = (item.bid_size / asking_totalBidSize) * 100;
             return (
-              <tr style={{ background: `linear-gradient(270deg, rgba(34,171,148, .2) ${percentage}%, transparent ${percentage}%)`}}>
+              <tr style={{ background: `linear-gradient(270deg, rgba(34,171,148, .2) ${percentage}%, transparent ${percentage}%)` }}>
                 <td>{asking_dateTime}</td>
                 <td>{(item.bid_price).toLocaleString()}</td>
                 <td>{(item.bid_size).toFixed(5)}
-                  <span>{(cr_markets_selected).slice(4)}</span>
                 </td>
               </tr>
             )
@@ -83,13 +69,12 @@ const AskingPrice = () => {
         }
         {
           asking_data.map((item, i) => {
-            const percentage = (item.ask_size / asking_totalBidSize) * 100;
+            const percentage = (item.ask_size / asking_totalAskSize) * 100;
             return (
-              <tr style={{ background: `linear-gradient(270deg, rgba(242,54,69, .2) ${percentage}%, transparent ${percentage}%)`}}>
+              <tr style={{ background: `linear-gradient(270deg, rgba(242,54,69, .2) ${percentage}%, transparent ${percentage}%)` }}>
                 <td>{asking_dateTime}</td>
                 <td>{(item.ask_price).toLocaleString()}</td>
                 <td>{(item.ask_size).toFixed(5)}
-                  <span>{(cr_markets_selected).slice(4)}</span>
                 </td>
               </tr>
             )
@@ -104,6 +89,8 @@ const ClosedPrice = () => {
   const closed_data = useSelector((state: RootState) => state.closed_data);
   const cr_markets_selected = useSelector((state: RootState) => state.cr_markets_selected);
 
+  // console.log("closed_data : ", closed_data)
+
   return (
     <>
       {/* 스크롤바를 넣기 위해 테이블을 두 개로 구성 */}
@@ -112,7 +99,9 @@ const ClosedPrice = () => {
           <tr>
             <th>체결시간</th>
             <th>체결가격</th>
-            <th>체결량</th>
+            <th>
+              체결량<span>({(cr_markets_selected).slice(4)})</span>
+            </th>
           </tr>
         </thead>
       </table>
@@ -121,13 +110,23 @@ const ClosedPrice = () => {
           <tbody>
             {
               closed_data.map((item, i) => {
+                const date = new Date(item.timestamp);
+                let trade_time = new Intl.DateTimeFormat('ko-KR', {
+                  month: '2-digit',
+                  day: '2-digit',
+                  hour: '2-digit',
+                  minute: '2-digit'
+                }).format(date);
+                trade_time = trade_time.replace(". ", "/").replace(".", "").replace("오전 ", "").replace("오후 ", "")
                 return (
                   <tr>
-                    <td>{((item.trade_date_utc).slice(5)).replace("-", "/")} {String(item.trade_time_utc).slice(0, 5)}</td>
+                    <td>{trade_time}</td>
                     <td>{(item.trade_price).toLocaleString()}</td>
-                    <td>{(item.trade_volume).toFixed(5)}
-                      <span>{(cr_markets_selected).slice(4)}</span>
-                    </td>
+                    {
+                      item.ask_bid === 'BID' ?
+                        <td className="td-rise">{(item.trade_volume).toFixed(5)}</td> :
+                        <td className="td-fall">{(item.trade_volume).toFixed(5)}</td>
+                    }
                   </tr>
                 )
               }
@@ -139,7 +138,5 @@ const ClosedPrice = () => {
     </>
   )
 }
-
-
 
 export { PriceDetail };

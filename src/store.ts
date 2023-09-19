@@ -23,7 +23,9 @@ export type ClosedData = {
   trade_date_utc: string,
   trade_time_utc: string,
   trade_price: number,
-  trade_volume: number
+  trade_volume: number,
+  ask_bid: string,
+  timestamp: number,
 }
 
 export type AskingData = {
@@ -31,14 +33,6 @@ export type AskingData = {
   ask_size: number,
   bid_price: number,
   bid_size: number,
-}
-
-export type Temp = {
-  market: string,
-  orderbook_units: [],
-  timestampe: number,
-  total_ask_size: number,
-  total_bid_size: number,
 }
 
 export type Market = {
@@ -90,8 +84,6 @@ export type RootState = {
   asking_dateTime: string,
   asking_totalAskSize: number,
   asking_totalBidSize: number,
-  asking_buySize: number[],
-  asking_sellSize: number[],
   chartSortTime: string,
   chartSortDate: string,
   asking_temp: any,
@@ -480,26 +472,6 @@ const asking_dateTime = createSlice({
   }
 })
 
-const asking_buySize = createSlice({
-  name: 'asking_buySize',
-  initialState: [],
-  reducers: {
-    setAsking_buySize: (state, action) => {
-      return action.payload;
-    }
-  }
-})
-
-const asking_sellSize = createSlice({
-  name: 'asking_sellSize',
-  initialState: [],
-  reducers: {
-    setAsking_sellSize: (state, action) => {
-      return action.payload;
-    }
-  }
-})
-
 const asking_totalAskSize = createSlice({
   name: 'asking_totalAskSize',
   initialState: '',
@@ -559,8 +531,6 @@ export default configureStore({
     closed_data: closed_data.reducer,
     asking_data: asking_data.reducer,
     asking_dateTime: asking_dateTime.reducer,
-    asking_buySize: asking_buySize.reducer,
-    asking_sellSize: asking_sellSize.reducer,
     chartSortDate: chartSortDate.reducer,    
     asking_totalAskSize: asking_totalAskSize.reducer,
     asking_totalBidSize: asking_totalBidSize.reducer,
@@ -619,8 +589,6 @@ export const { setSelectedChartSort } = selectedChartSort.actions;
 export const { setClosed_data } = closed_data.actions;
 export const { setAsking_data } = asking_data.actions;
 export const { setAsking_dateTime } = asking_dateTime.actions;
-export const { setAsking_buySize } = asking_buySize.actions;
-export const { setAsking_sellSize } = asking_sellSize.actions;
 export const { setChartSortTime } = chartSortTime.actions;
 export const { setChartSortDate } = chartSortDate.actions;
 export const { setAsking_totalAskSize } = asking_totalAskSize.actions;
