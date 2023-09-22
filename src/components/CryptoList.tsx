@@ -468,14 +468,14 @@ const CryptoList = () => {
   }
 
   return (
-    <>
+    <div className="lightMode">
       {/* 검색 공간 */}
       <div className="list-search">
         {/* <img className="img-search" src={search}></img> */}
         <svg className="img-search" xmlns='http://www.w3.org/2000/svg' viewBox="0 0 18 18" width="30" height="30">
           <path fill="currentColor" d="M3.5 8a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM8 2a6 6 0 1 0 3.65 10.76l3.58 3.58 1.06-1.06-3.57-3.57A6 6 0 0 0 8 2Z"></path>
         </svg>
-        <input type="text" className='crypto-search' placeholder="검색" value={search_cr} onChange={(e) => setSearch_cr(e.target.value)}></input>
+        <input type="text" className='crypto-search lightMode' placeholder="검색" value={search_cr} onChange={(e) => setSearch_cr(e.target.value)}></input>
       </div>
 
       {/* 화폐 정보 테이블 */}
@@ -582,7 +582,7 @@ const CryptoList = () => {
       </SimpleBar>
 
       {/* </table> */}
-    </>
+    </div>
   );
 }
 

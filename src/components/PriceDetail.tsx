@@ -7,12 +7,12 @@ import { Root } from "react-dom/client";
 
 const PriceDetail = () => {
   return (
-    <>
+    <div className="lightMode">
       <div className="priceDetail-title">호가내역</div>
       <AskingPrice />
       <div className="priceDetail-title">체결내역</div>
       <ClosedPrice />
-    </>
+    </div>
   );
 }
 

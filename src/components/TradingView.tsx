@@ -16,8 +16,6 @@ const TradingView = () => {
   const cr_names_selected = useSelector((state: RootState) => { return state.cr_names_selected });
   const cr_markets_selected = useSelector((state: RootState) => { return state.cr_markets_selected });
   const cr_price_selected = useSelector((state: RootState) => { return state.cr_price_selected });
-  const cr_trade_price = useSelector((state: RootState) => { return state.cr_trade_price });
-  const cr_trade_volume = useSelector((state: RootState) => { return state.cr_trade_volume });
   const cr_open_price = useSelector((state: RootState) => { return state.cr_open_price });
   const cr_high_price = useSelector((state: RootState) => { return state.cr_high_price });
   const cr_low_price = useSelector((state: RootState) => { return state.cr_low_price });
@@ -57,7 +55,7 @@ const TradingView = () => {
 
   return (
     <>
-      <div className="crypto-name">
+      <div className="crypto-name lightMode">
         {/* src 내부에 동적으로 state를 넣기 위해선 `(햅틱) 사용 */}
         <img className="crypto-img" src={`https://static.upbit.com/logos/${cr_markets_selected.slice(4)}.png`} alt="화폐사진"></img>
         {cr_names_selected}
@@ -65,7 +63,7 @@ const TradingView = () => {
           {cr_markets_selected}
         </span>
       </div>
-      <div className="trading-detail">
+      <div className="trading-detail lightMode">
         {/* 삼항연산자 중첩 - 전일 대비 가격이 상승했다면 청색, 하락했다면 적색, 동일하다면 검정색 */}
         {/* 선택된 화폐의 가격과 변화율 */}
         {
@@ -106,7 +104,7 @@ const TradingView = () => {
             )
         }
       </div>
-      <div className="trading-header">
+      <div className="trading-header lightMode">
         <table className="table-delimited">
           <tr className="tr-delimited">
             {
@@ -147,7 +145,7 @@ const TradingView = () => {
         {/* 드롭다운 라벨 */}
 
       </div>
-      <div className="trading-chart">
+      <div className="trading-chart lightMode">
         <Chart />
       </div>
     </>
@@ -194,49 +192,50 @@ const Crypto_detail = () => {
 
   return (
     <>
-      <dl className="selectedDetail_dl_1">
+      <dl className="selectedDetail_dl_1 lightMode">
         <dt>
           거래대금
-          <dd>
+          <dd className="lightMode">
             {cr_trade_price_selected}
-            <span>
+            <span className="lightMode">
               &nbsp;KRW
             </span>
           </dd>
         </dt>
         <dt>
           종가
-          <dd>
+          <dd className="lightMode">
             {cr_price_selected}
           </dd>
         </dt>
         <dt>
           고가
-          <dd>
+          <dd className="lightMode">
             <span className="dd-high_price">
               {cr_high_price_selected.toLocaleString()}
             </span>
           </dd>
         </dt>
-      </dl><dl className="selectedDetail_dl_2">
+      </dl>
+      <dl className="selectedDetail_dl_2 lightMode">
         <dt>
           거래량
-          <dd>
+          <dd className="lightMode">
             {cr_trade_volume_selected}
-            <span>
+            <span className="lightMode">
               &nbsp;{cr_markets_selected.slice(4)}
             </span>
           </dd>
         </dt>
         <dt>
           시가
-          <dd>
+          <dd className="lightMode">
             {cr_open_price_selected.toLocaleString()}
           </dd>
         </dt>
         <dt>
           저가
-          <dd>
+          <dd className="lightMode">
             <span className="dd-low_price">
               {cr_low_price_selected.toLocaleString()}
             </span>

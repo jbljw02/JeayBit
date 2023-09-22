@@ -86,7 +86,7 @@ export type RootState = {
   asking_totalBidSize: number,
   chartSortTime: string,
   chartSortDate: string,
-  asking_temp: any,
+  theme: boolean,
 }
 
 const cr_names = createSlice({
@@ -492,6 +492,16 @@ const asking_totalBidSize = createSlice({
   }
 })
 
+const theme = createSlice({
+  name: 'theme',
+  initialState: false,
+  reducers: {
+    setTheme: (state, action) => {
+      return action.payload;
+    }
+  }
+})
+
 export default configureStore({
   reducer: {
     cr_names: cr_names.reducer,
@@ -534,6 +544,7 @@ export default configureStore({
     chartSortDate: chartSortDate.reducer,    
     asking_totalAskSize: asking_totalAskSize.reducer,
     asking_totalBidSize: asking_totalBidSize.reducer,
+    theme: theme.reducer,
   }
 })
 
@@ -593,5 +604,6 @@ export const { setChartSortTime } = chartSortTime.actions;
 export const { setChartSortDate } = chartSortDate.actions;
 export const { setAsking_totalAskSize } = asking_totalAskSize.actions;
 export const { setAsking_totalBidSize } = asking_totalBidSize.actions;
+export const { setTheme } = theme.actions;
 
 // export default store;

@@ -1,23 +1,23 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useDispatch, useSelector, Provider } from 'react-redux';
-import store from "../store";
+import store, { RootState } from "../store";
 import { Header } from './Header'
 import { TradingView } from './TradingView';
 import { CryptoList } from './CryptoList'
 import { Footer } from './Footer'
-import { ClosedPrice } from './ClosedPrice';
-import { AskingPrice } from './AskingPrice';
 import { PriceDetail } from './PriceDetail';
-import SimpleBar from 'simplebar-react';
-import 'simplebar/dist/simplebar.min.css';
 import '../assets/App.css';
+import { darkTheme, lightTheme } from '../assets/theme';
 
 const App = () => {
+
+  const theme = useSelector((state: RootState) => state.theme);
+
   return (
     <Provider store={store}>
       <div className="App">
-        <div className="container">
+        <div className="container lightMode">
           <Header></Header>
           <div className='content-container'>
             <div className='main'>
@@ -26,7 +26,7 @@ const App = () => {
               </article>
               <article className='PriceDetail'>
                 <PriceDetail></PriceDetail>
-              </article>
+              </article> 
             </div>
             <aside className='aside'>
               <article className="CryptoList">

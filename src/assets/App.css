@@ -13,10 +13,22 @@
   font-family: 'Roboto Flex', sans-serif;
 }
 
+.lightMode {  
+  border-color: #E3E8EC;
+}
+
+.darkMode {
+  border-color: red;
+  background-color: #161A1E;
+  color: #B7BDC6;
+}
+
 /* header CSS */
 .header {
   height: 70px;
   border-bottom: 1px solid #E3E8EC;
+  /* border-bottom-width: 1px; */
+  /* border-bottom-style: solid; */
   margin-left: 10px;
 }
 
@@ -40,7 +52,6 @@
   font-weight: bold;
   margin-left: 5px;
   margin-top: 5px;
-  cursor: pointer;
 }
 
 .title-img {
@@ -53,6 +64,17 @@
   margin-left: -5px;
 }
 
+.changeTheme {
+  position: absolute;
+  width: 25px;
+  left: 98%;
+  cursor: pointer;
+}
+
+.changeTheme:hover {
+  color: rgb(226, 226, 120);
+}
+
 /* TradingView 컴포넌트 CSS */
 .TradingView {
   height: 100%;
@@ -60,15 +82,16 @@
   /* width: 65%; */
   /* flex: 0 0 75%; */
   flex: 1;
-  background-color: white;
+  /* background-color: white; */
 }
 
 .crypto-name {
   padding: 25px 30px;
   font-weight: bold;
   font-size: 26px;
-  color: rgba(0, 0, 0, 0.8);
+  /* color: rgba(0, 0, 0, 0.8); */
   border-bottom: 1px solid rgb(228, 229, 230);
+  
 }
 
 .crypto-img {
@@ -86,8 +109,9 @@
 }
 
 .trading-detail {
-  background-color: white;
-  border-left: 1px solid #E3E8EC;
+  /* background-color: white; */
+  /* border-left: 1px solid #E3E8EC; */
+  height: 155px;
 }
 
 .crypto-price-rise {
@@ -151,7 +175,7 @@
 }
 
 .trading-header {
-  margin-top: 50px;
+  /* padding-top: 50px; */
   padding: 5px;
   border-bottom: 1px solid #E3E8EC;
   border-top: 1px solid #E3E8EC;
@@ -193,10 +217,10 @@
 .dd-button {
   display: inline-block;
   border: none;
-  padding: 10px 30px 10px 0px;
-  background-color: #ffffff;
+  padding: 10px 0px;
   cursor: pointer;
   white-space: nowrap;
+
 }
 
 .chartSortDate {
@@ -355,7 +379,7 @@ dd span {
   /* flex: 0 0 25%; */
   width: 350px;
   margin-left: auto;
-  background-color: white;  
+  /* background-color: white;   */
   border-left: 1px solid #E3E8EC;
   /* border-right: 1px solid #E3E8EC; */
   border-bottom: 1px solid #E3E8EC;
@@ -363,6 +387,7 @@ dd span {
 
 .priceDetail-title {
   border-bottom: 1px solid #E3E8EC;
+  /* border-bottom: 1px solid rgba(73, 73, 73, 0.5); */
   padding: 16px 50px;
   align-items: center;
   text-align: center;
@@ -379,6 +404,11 @@ dd span {
 .closedPrice-table thead tr,
 .askingPrice-table thead tr {
   border-bottom: 1px solid #E3E8EC;
+  /* border-bottom: 1px solid rgba(73, 73, 73, 0.5);  */
+}
+
+.border {
+  background-color: red;
 }
 
 /* .closedPrice-table tbody tr,
@@ -443,10 +473,6 @@ dd span {
   font-size: 13.5px;
   white-space: nowrap;
 }
-
-/* .asking-size {
-  margin-left: 50px;
-} */
 
 .closedPrice-table th:nth-child(1),
 .closedPrice-table td:nth-child(1) {
@@ -560,7 +586,7 @@ dd span {
   padding-right: 15px;
 }
 
-.list-table tbody tr:nth-child(even) {
+.lightMode .list-table tbody tr:nth-child(even) {
   background-color: #f9f9f9;
 }
 
