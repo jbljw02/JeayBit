@@ -8,7 +8,6 @@ import { CryptoList } from './CryptoList'
 import { Footer } from './Footer'
 import { PriceDetail } from './PriceDetail';
 import '../assets/App.css';
-import { darkTheme, lightTheme } from '../assets/theme';
 
 const App = () => {
 
@@ -24,7 +23,7 @@ const App = () => {
               <article className='TradingView'>
                 <TradingView></TradingView>
               </article>
-              <article className='PriceDetail'>
+              <article className='PriceDetail lightMode'>
                 <PriceDetail></PriceDetail>
               </article> 
             </div>

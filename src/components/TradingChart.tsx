@@ -16,24 +16,7 @@ const Chart = () => {
   const selectedChartSort = useSelector((state: RootState) => state.selectedChartSort);
   const chartSortTime = useSelector((state: RootState) => state.chartSortTime);
   const chartSortDate = useSelector((state: RootState) => state.chartSortDate);
-
-  // const dispatch = useDispatch();
-
-  // const initialData = async () => {
-  //   try {
-  //     const response = await axios.get('http://127.0.0.1:8000/get_data/')
-
-  //     console.log("BTC Chart: ", response.data.candle_btc_date)
-  //     dispatch(setCandle_per_date_BTC(response.data.candle_btc_date))
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // }
-
-  // console.log("날짜 :", chartSortDate)
-  // console.log("일값: ", candle_per_date)
-  // console.log("주값: ", candle_per_week)
-  // console.log("달값: ", candle_per_month)
+  const theme = useSelector((state: RootState) => state.theme);
 
   const [options, setOptions] = useState<any>({
     chart: {
@@ -66,15 +49,19 @@ const Chart = () => {
     tooltip: {
       enabled: true,
     },
-    // xaxis: {
-    //   type: 'category',
-    //   labels: {
-    //     formatter: function (val: any) {
-    //       return dayjs(val).format('MMM DD HH:mm')
-    //     }
-    //   }
-    // },
+    xaxis: {
+      labels: {
+        style: {
+          colors: '#7f7f7f',
+        }
+      }
+    },
     yaxis: {
+      labels: {
+        style: {
+          colors: '#7f7f7f',
+        }
+      },
       tooltip: { enabled: true }
     }
   });

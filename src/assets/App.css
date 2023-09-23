@@ -13,22 +13,12 @@
   font-family: 'Roboto Flex', sans-serif;
 }
 
-.lightMode {  
-  border-color: #E3E8EC;
-}
-
-.darkMode {
-  border-color: red;
-  background-color: #161A1E;
-  color: #B7BDC6;
-}
-
 /* header CSS */
 .header {
   height: 70px;
-  border-bottom: 1px solid #E3E8EC;
-  /* border-bottom-width: 1px; */
-  /* border-bottom-style: solid; */
+  /* border-bottom: 1px solid #E3E8EC; */
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
   margin-left: 10px;
 }
 
@@ -54,9 +44,15 @@
   margin-top: 5px;
 }
 
-.title-img {
+.title-img-light {
   padding: 15px;
   width: 23px;
+}
+
+.title-img-dark {
+  padding: 15px;
+  width: 23px;
+  filter: invert(100%) sepia(100%) saturate(0%) hue-rotate(99deg) brightness(104%) contrast(102%);
 }
 
 .title-name {
@@ -66,13 +62,13 @@
 
 .changeTheme {
   position: absolute;
-  width: 25px;
+  width: 23px;
   left: 98%;
   cursor: pointer;
 }
 
 .changeTheme:hover {
-  color: rgb(226, 226, 120);
+  color: rgb(242, 242, 4);
 }
 
 /* TradingView 컴포넌트 CSS */
@@ -326,6 +322,7 @@
 
 .trading-chart {
   height: 80%;
+  color: #000000;
 }
 
 .selectedDetail_dl_2 {
@@ -380,13 +377,18 @@ dd span {
   width: 350px;
   margin-left: auto;
   /* background-color: white;   */
-  border-left: 1px solid #E3E8EC;
+  /* border-left: 1px solid #E3E8EC; */
   /* border-right: 1px solid #E3E8EC; */
-  border-bottom: 1px solid #E3E8EC;
+  /* border-bottom: 1px solid #E3E8EC; */
+  border-left-width: 1px;
+  border-left-style: solid;
+  border-right-width: 1px;
+  border-right-style: solid;
 }
 
 .priceDetail-title {
-  border-bottom: 1px solid #E3E8EC;
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
   /* border-bottom: 1px solid rgba(73, 73, 73, 0.5); */
   padding: 16px 50px;
   align-items: center;
@@ -403,12 +405,10 @@ dd span {
 
 .closedPrice-table thead tr,
 .askingPrice-table thead tr {
-  border-bottom: 1px solid #E3E8EC;
+  /* border-bottom: 1px solid #E3E8EC; */
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
   /* border-bottom: 1px solid rgba(73, 73, 73, 0.5);  */
-}
-
-.border {
-  background-color: red;
 }
 
 /* .closedPrice-table tbody tr,
@@ -438,7 +438,8 @@ dd span {
 }
 
 .askingPrice-table {
-  border-bottom: 1px solid #E3E8EC;
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
 }
 
 .askingPrice-table thead th {
@@ -518,13 +519,14 @@ dd span {
   /* width: 16.5%; */
   /* height: 1422.98px; */
   /* flex: 0 0 17%; */
-  border-left: 1px solid #E3E8EC;
   /* min-width: 0; */
 }
 
 .list-search {
   height: 36px;
   border-bottom: 1px solid silver;
+  /* border-bottom-width: 1px; */
+  /* border-bottom-style: solid; */
 }
 
 .img-search {
@@ -550,18 +552,25 @@ dd span {
   table-layout: fixed;
 }
 
+.list-thead {
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
+}
+
 .list-table th {
   padding-top: 11px;
   padding-bottom: 11px;
   font-size: 12px;
-  border-bottom: 1px solid rgb(228, 229, 230);
+  /* border-bottom: 1px solid rgb(228, 229, 230); */
   white-space: nowrap;
   cursor: pointer;
 }
 
 .list-table td {
   font-size: 12px;
-  border-bottom: 1px solid rgb(228, 229, 230);
+  /* border-bottom: 1px solid rgb(228, 229, 230); */
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
   padding: 9.5px;
   white-space: nowrap;
 }
@@ -586,12 +595,24 @@ dd span {
   padding-right: 15px;
 }
 
-.lightMode .list-table tbody tr:nth-child(even) {
+.list-table tbody tr {
+  cursor: pointer;
+}
+
+.list-table tbody tr:nth-child(even) {
   background-color: #f9f9f9;
 }
 
 .list-table tbody tr:hover {
   background-color: #e6e6e6;
+}
+
+.hover-lightMode:hover {
+  background-color: #e6e6e6;
+}
+
+.hover-darMode:hover {
+  background-color: red;
 }
 
 .scrollBar-listTable {
@@ -604,6 +625,11 @@ dd span {
   width: 100%;
   max-height: calc(100vh - 1035px);
   overflow-x: hidden;
+}
+
+/* 스크롤바 색 지정 */
+.simplebar-scrollbar:before {
+  background-color: #727272;
 }
 
 .td-name {
@@ -644,4 +670,32 @@ dd span {
   height: 60px;
   border-top: 1px solid #E3E8EC;
   margin: 0 10px;
+}
+
+.lightMode {  
+  border-color: #E3E8EC;
+}
+
+.lightMode-title {  
+  border-color: #9e9e9e;
+}
+
+.lightMode-title {  
+  border-color: #7f7f7f;
+}
+
+.lightMode-title {  
+  border-color: #E3E8EC;
+}
+
+.darkMode {
+  border-color: rgb(156, 153, 153, 0.2);
+  background-color: #161A1E;
+  color: #B7BDC6;
+}
+
+.darkMode-title {
+  border-color: rgb(156, 153, 153, 0.2);
+  background-color: #161A1E;
+  color: #e1e1e1;
 }

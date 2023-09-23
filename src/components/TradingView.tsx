@@ -55,11 +55,11 @@ const TradingView = () => {
 
   return (
     <>
-      <div className="crypto-name lightMode">
+      <div className="crypto-name lightMode-title">
         {/* src 내부에 동적으로 state를 넣기 위해선 `(햅틱) 사용 */}
         <img className="crypto-img" src={`https://static.upbit.com/logos/${cr_markets_selected.slice(4)}.png`} alt="화폐사진"></img>
         {cr_names_selected}
-        <span className="crypto-market">
+        <span className="crypto-market lightMode">
           {cr_markets_selected}
         </span>
       </div>
@@ -128,7 +128,7 @@ const TradingView = () => {
                 </svg>
               </span>
               <input type="checkbox" className="dd-input" />
-              <ul className="dd-menu">
+              <ul className="dd-menu lightMode">
                 {
                   delimitedDate.map((item, i) => {
                     return (
@@ -142,10 +142,8 @@ const TradingView = () => {
             </label>
           </tr>
         </table>
-        {/* 드롭다운 라벨 */}
-
       </div>
-      <div className="trading-chart lightMode">
+      <div className="trading-chart">
         <Chart />
       </div>
     </>
@@ -193,24 +191,24 @@ const Crypto_detail = () => {
   return (
     <>
       <dl className="selectedDetail_dl_1 lightMode">
-        <dt>
+        <dt className="lightMode">
           거래대금
-          <dd className="lightMode">
+          <dd className="lightMode-title">
             {cr_trade_price_selected}
             <span className="lightMode">
               &nbsp;KRW
             </span>
           </dd>
         </dt>
-        <dt>
+        <dt className="lightMode">
           종가
-          <dd className="lightMode">
+          <dd className="lightMode-title">
             {cr_price_selected}
           </dd>
         </dt>
-        <dt>
+        <dt className="lightMode">
           고가
-          <dd className="lightMode">
+          <dd className="lightMode-title">
             <span className="dd-high_price">
               {cr_high_price_selected.toLocaleString()}
             </span>
@@ -218,22 +216,22 @@ const Crypto_detail = () => {
         </dt>
       </dl>
       <dl className="selectedDetail_dl_2 lightMode">
-        <dt>
+        <dt className="lightMode">
           거래량
-          <dd className="lightMode">
+          <dd className="lightMode-title">
             {cr_trade_volume_selected}
             <span className="lightMode">
               &nbsp;{cr_markets_selected.slice(4)}
             </span>
           </dd>
         </dt>
-        <dt>
+        <dt className="lightMode">
           시가
-          <dd className="lightMode">
+          <dd className="lightMode-title">
             {cr_open_price_selected.toLocaleString()}
           </dd>
         </dt>
-        <dt>
+        <dt className="lightMode">
           저가
           <dd className="lightMode">
             <span className="dd-low_price">

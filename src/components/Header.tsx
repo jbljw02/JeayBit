@@ -1,37 +1,68 @@
 import { useDispatch, useSelector } from 'react-redux';
 import title from '../assets/images/title.png';
 import { RootState, setTheme } from '../store';
-import { dark_borderColor } from "../assets/theme";
 
 const Header = () => {
 
   const dispatch = useDispatch();
   const theme = useSelector((state: RootState) => state.theme);
 
-  // console.log("테마 : ", theme)
-
   const themeChange = () => {
-    
-    dispatch(setTheme(!theme));
-    let temp = document.querySelectorAll('.lightMode, .darkMode');
 
-    temp.forEach(element => {
+    dispatch(setTheme(!theme));
+    let generalTheme = document.querySelectorAll('.lightMode, .darkMode');
+    let titleTheme = document.querySelectorAll('.lightMode-title, .darkMode-title');
+    let titleImgTheme = document.querySelectorAll('.title-img-light, .title-img-dark');
+    let hoverTheme = document.querySelectorAll('.hover-lightMode, .hover-darkMode');
+
+    // 라이트모드 <-> 다크모드 순회
+    generalTheme.forEach(element => {
       if (!theme) {
-        console.log("1")
         element.classList.remove('lightMode');
         element.classList.add('darkMode');
       }
       else {
-        console.log("2")
         element.classList.remove('darkMode');
         element.classList.add('lightMode');
       }
     })
-}
 
+    titleTheme.forEach(element => {
+      if (!theme) {
+        element.classList.remove('lightMode-title');
+        element.classList.add('darkMode-title');
+      }
+      else {
+        element.classList.remove('darkMode-title');
+        element.classList.add('lightMode-title');
+      }
+    })
+
+    titleImgTheme.forEach(element => {
+      if (!theme) {
+        element.classList.remove('title-img-light');
+        element.classList.add('title-img-dark')
+      }
+      else {
+        element.classList.remove('title-img-dark');
+        element.classList.add('title-img-light')
+      }
+    })
+
+    hoverTheme.forEach(element => {
+      if (!theme) {
+        element.classList.remove('hover-lightMode');
+        element.classList.add('hover-darkMode')
+      }
+      else {
+        element.classList.remove('hover-darkMode');
+        element.classList.add('hover-lightMode')
+      }
+    })
+  }
 
   return (
-    <header className="header lightMode">
+    <header className="header lightMode-title">
       {/* 제목 폰트를 사용하기 위한 구글 폰트 api */}
       <style>
         @import
@@ -42,8 +73,19 @@ const Header = () => {
         url('https://fonts.googleapis.com/css2?family=Asap+Condensed:wght@300&family=Barlow:ital@1&family=Fira+Sans:ital,wght@1,300&family=Gowun+Batang&family=Roboto+Flex&display=swap');
       </style>
       <div className="div-title">
-        <img src={title} className="title-img" alt='제목'></img>
+        <img src={title} className="title-img-light" alt='제목'></img>
         <span className="title-name">J TradingView</span>
+        {/* {
+          theme === true ?
+            <svg onClick={() => themeChange()} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" className="changeTheme">
+              <path fill="#D8D4EA" fill-rule="evenodd" d="M3.881.015L4.267.4c-.706 1.735-.503 3.708.543 5.263C5.857 7.218 7.608 8.15 9.481 8.148c.727 0 1.446-.14 2.118-.415l.386.386c-.947 2.35-3.229 3.887-5.763 3.881C3.246 12 .686 9.893.115 6.971c-.57-2.92 1.009-5.837 3.766-6.956zm7.883 3.278l.236.235.236-.235c.13-.13.34-.13.471 0 .13.13.13.341 0 .471L12.472 4l.235.237c.13.13.13.34 0 .471-.13.13-.341.13-.471 0L12 4.471l-.236.236c-.13.13-.34.13-.471 0-.13-.13-.13-.341 0-.471l.235-.237-.235-.235c-.13-.13-.13-.34 0-.471.13-.13.341-.13.471 0zM7.146 1.439l.354.354.354-.354c.195-.195.511-.195.707 0 .195.196.195.512 0 .707l-.353.353.353.355c.195.195.195.511 0 .707-.196.195-.512.195-.707 0L7.5 3.207l-.354.354c-.195.195-.511.195-.707 0-.195-.196-.195-.512 0-.707l.354-.354-.354-.354c-.195-.195-.195-.511 0-.707.196-.195.512-.195.707 0z"></path>
+            </svg> :
+            <span className='ddd'>
+              <svg onClick={() => themeChange()} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" className="changeTheme">
+                <path fill="#FF8D00" fill-rule="evenodd" d="M7 11.304c.304 0 .522.261.522.566v1.565c0 .304-.218.565-.522.565-.304 0-.522-.26-.522-.565V11.87c0-.305.218-.566.522-.566zm-3.826-1.26c.217-.174.522-.218.739 0 .217.217.217.565 0 .739l-1.13 1.13c-.087.13-.218.174-.348.174-.174 0-.305-.044-.392-.174-.217-.174-.217-.522 0-.696zm6.87-.044c.173-.174.521-.174.695.043l1.238 1.238c.15.185.13.477-.064.632-.217.217-.522.217-.74 0L10 10.739c-.174-.217-.174-.522.043-.739zM7 4.174c1.522 0 2.783 1.26 2.783 2.783 0 1.565-1.261 2.782-2.783 2.826-1.565 0-2.783-1.261-2.783-2.826 0-1.522 1.261-2.783 2.783-2.783zm0 1.13c-.913 0-1.696.74-1.696 1.653 0 .956.74 1.695 1.653 1.695.956 0 1.695-.739 1.695-1.695 0-.914-.739-1.653-1.652-1.653zm6.435 1.174c.304 0 .565.218.565.522 0 .304-.26.522-.565.522H11.87c-.305 0-.566-.218-.566-.522 0-.304.261-.522.566-.522zm-11.305 0c.305 0 .522.218.522.522 0 .304-.217.522-.522.522H.522C.217 7.522 0 7.304 0 7c0-.304.217-.522.522-.522zm9.151-4.455c.185-.15.477-.13.632.064.26.174.217.522 0 .74l-1.13 1.13c-.174.173-.479.173-.696 0-.217-.218-.217-.566 0-.74zm-9.238.064c.218-.217.522-.217.74 0l1.13 1.13c.174.218.174.479 0 .696-.217.217-.522.217-.74.044l-1.13-1.13c-.217-.218-.217-.566 0-.74zM7 0c.304 0 .522.217.522.522V2.13c0 .305-.218.522-.522.522-.304 0-.522-.217-.522-.478V.522C6.478.217 6.696 0 7 0z"></path>
+              </svg>
+            </span>
+        } */}
         {
           theme === true ?
             <svg onClick={() => themeChange()} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" className="changeTheme">

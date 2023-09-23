@@ -8,9 +8,9 @@ import { Root } from "react-dom/client";
 const PriceDetail = () => {
   return (
     <div className="lightMode">
-      <div className="priceDetail-title">호가내역</div>
+      <div className="priceDetail-title lightMode">호가내역</div>
       <AskingPrice />
-      <div className="priceDetail-title">체결내역</div>
+      <div className="priceDetail-title lightMode">체결내역</div>
       <ClosedPrice />
     </div>
   );
@@ -38,13 +38,9 @@ const AskingPrice = () => {
     dispatch(setAsking_dateTime(newDateString.replace(". ", "/").replace(".", "").replace("오전 ", "").replace("오후 ", "")))
   }
 
-  // console.log("에스크 : ", asking_totalAskSize);
-  // console.log("비드 : ", asking_totalBidSize)
-  // console.log("asking_data : ", asking_data)
-
   return (
-    <table className="askingPrice-table">
-      <thead>
+    <table className="askingPrice-table lightMode">
+      <thead className="lightMode-title">
         <tr>
           <th>등록시간</th>
           <th>호가</th>
@@ -89,12 +85,10 @@ const ClosedPrice = () => {
   const closed_data = useSelector((state: RootState) => state.closed_data);
   const cr_markets_selected = useSelector((state: RootState) => state.cr_markets_selected);
 
-  // console.log("closed_data : ", closed_data)
-
   return (
     <>
       {/* 스크롤바를 넣기 위해 테이블을 두 개로 구성 */}
-      <table className="closedPrice-table">
+      <table className="closedPrice-table lightMode-title">
         <thead>
           <tr>
             <th>체결시간</th>

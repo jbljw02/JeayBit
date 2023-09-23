@@ -57,6 +57,8 @@ const CryptoList = () => {
   const asking_data = useSelector((state: RootState) => state.asking_data);
   const asking_dateTime = useSelector((state: RootState) => state.asking_dateTime);
 
+  const theme = useSelector((state: RootState) => state.theme);
+
   // useEffect(() => { 
   //   // const 변수 = setInterval(() => { 콜백함수, 시간 })
   //   // fetchData 함수를 1초마다 실행 - 서버에서 받아오는 값을 1초마다 갱신시킴
@@ -470,7 +472,7 @@ const CryptoList = () => {
   return (
     <div className="lightMode">
       {/* 검색 공간 */}
-      <div className="list-search">
+      <div className="list-search lightMode">
         {/* <img className="img-search" src={search}></img> */}
         <svg className="img-search" xmlns='http://www.w3.org/2000/svg' viewBox="0 0 18 18" width="30" height="30">
           <path fill="currentColor" d="M3.5 8a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM8 2a6 6 0 1 0 3.65 10.76l3.58 3.58 1.06-1.06-3.57-3.57A6 6 0 0 0 8 2Z"></path>
@@ -481,8 +483,8 @@ const CryptoList = () => {
       {/* 화폐 정보 테이블 */}
       {/* 스크롤바를 넣기 위해 테이블을 두 개로 구성 */}
       <table className='list-table'>
-        <thead className="list-thead">
-          <tr>
+        <thead className="list-thead lightMode">
+          <tr className="lightMode-title">
             <th className='name' onClick={() => sortClick(0)}>
               화폐명&nbsp;
               <img className='sort' src={sort_images[sort_states[0]]} alt="화폐명"></img>
@@ -527,14 +529,7 @@ const CryptoList = () => {
                     selectAskingPrice(filteredData[i].markets);
                     selectClosedPrice(filteredData[i].markets);
                   }}>
-                    {/* <td className='td-star'>
-                      <img
-                        onClick={() => starClick(i)}
-                        // 최초 star[i]의 상태는 'starOn'일 수가 없으므로 반드시 starOff 출력
-                        src={star[i] === 'starOn' ? starOn : starOff}
-                        alt="star" />
-                    </td> */}
-                    <td className='td-name'>
+                    <td className='td-name lightMode'>
                       <span className="span-star">
                         <img
                           onClick={() => starClick(i)}
@@ -555,23 +550,37 @@ const CryptoList = () => {
                     {/* 삼항연산자 중첩 - 전일 대비 가격이 상승했다면 청색, 하락했다면 적색, 동일하다면 검정색 */}
                     {
                       item.change === 'RISE' ?
-                        <td className='td-rise'>{item.f_price}</td> :
+                        <td className="lightMode">
+                          <span className='td-rise'>{item.f_price}</span>
+                        </td> :
                         (
                           item.change === 'FALL' ?
-                            <td className='td-fall'>{item.f_price}</td> :
-                            <td className='td-even'>{item.f_price}</td>
+                            <td className='lightMode'>
+                              <span className="td-fall">{item.f_price}</span>
+                            </td> :
+                            <td className='lightMode'>
+                              <span>{item.f_price}</span>
+                            </td>
                         )
                     }
                     {
                       item.change === 'RISE' ?
-                        <td className='td-rise'>+{item.f_changeRate}% <br /> {item.f_changePrice}</td> :
+                        <td className='lightMode'>
+                          <span className='td-rise'>+{item.f_changeRate}% <br /> {item.f_changePrice}</span>
+                        </td> :
                         (
                           item.change === 'FALL' ?
-                            <td className='td-fall'>-{item.f_changeRate}% <br /> {item.f_changePrice}</td> :
-                            <td className='td-even'>{item.f_changeRate}% <br /> {item.f_changePrice}</td>
+                            <td className='lightMode'>
+                              <span className='td-fall'>-{item.f_changeRate}% <br /> {item.f_changePrice}</span>
+                            </td> :
+                            <td className='lightMode'>
+                              <span>{item.f_changeRate}% <br /> {item.f_changePrice}</span>
+                            </td>
                         )
                     }
-                    <td className='td-volume'>{item.f_tradePrice}백만</td>
+                    <td className='lightMode'>
+                      <span className="td-volume">{item.f_tradePrice}백만</span>
+                    </td>
                   </tr>
                 )
               })
