@@ -34,6 +34,7 @@ const CryptoList = () => {
   const cr_markets_selected = useSelector((state: RootState) => { return state.cr_markets_selected });
   const candle_per_date = useSelector((state: RootState) => state.candle_per_date);
   const candle_per_minute = useSelector((state: RootState) => state.candle_per_minute);
+  const cr_price_selected = useSelector((state: RootState) => state.cr_price_selected);
 
   // 검색값을 관리하기 위한 state
   const [search_cr, setSearch_cr] = useState<string>("");
@@ -50,6 +51,9 @@ const CryptoList = () => {
   const chartSortTime = useSelector((state: RootState) => state.chartSortTime);
   const chartSortDate = useSelector((state: RootState) => state.chartSortDate);
 
+  const [tempPrice, setTempPrice] = useState<number>();
+  const [selectedCrypto, setSelectedCrypto] = useState<any>();
+
   // 체결 내역을 담을 state
   const closedData = useSelector((state: RootState) => state.closed_data);
 
@@ -59,20 +63,21 @@ const CryptoList = () => {
 
   const theme = useSelector((state: RootState) => state.theme);
 
-  // useEffect(() => { 
-  //   // const 변수 = setInterval(() => { 콜백함수, 시간 })
-  //   // fetchData 함수를 1초마다 실행 - 서버에서 받아오는 값을 1초마다 갱신시킴
-  //   const interval = setInterval(() => {
-  //     fetchData();
-  //   }, 1000);
+  useEffect(() => {
+    // const 변수 = setInterval(() => { 콜백함수, 시간 })
+    // fetchData 함수를 1초마다 실행 - 서버에서 받아오는 값을 1초마다 갱신시킴
+    const interval = setInterval(() => {
+      fetchData();
+    }, 1000);
 
-  //   // 반복 실행하지 않고 초기 렌더링시 1회만 실행
-  //   initialData();
+    // 반복 실행하지 않고 초기 렌더링시 1회만 실행
+    initialData();
 
-  //   // clearInterval(변수)
-  //   // setInterval이 반환하는 interval ID를 clearInterval 함수로 제거
-  //   return () => clearInterval(interval);
-  // }, []);
+    // clearInterval(변수)
+    // setInterval이 반환하는 interval ID를 clearInterval 함수로 제거
+    return () => clearInterval(interval);
+  }, []);
+
 
   // 화면에 보여질 초기 화폐의 상태 정보(비트코인)
   const initialData = async () => {
@@ -124,7 +129,6 @@ const CryptoList = () => {
     }
   };
 
-  // 검색어 또는 정렬 상태가 변경되었을 때 재렌더링(변경이 없다면 초기 상태를 출력)
   // 필터링 및 정렬된 데이터를 새로운 배열로 생성 -> setFilteredData로 상태를 업데이트
   // price = 숫자형, f_price = 문자형 / 숫자형으로 정렬, 문자형으로 출력
   const updatedData = cr_names.map((name, i) => ({
@@ -154,15 +158,32 @@ const CryptoList = () => {
       dispatch(setFilteredData(updatedData));
     }
   });
+
+  // useEffect(() => {
+  //   let selectedCrypto = filteredData.find(crypto => crypto.price === cr_price_selected);
+    
+  //   if (!selectedCrypto && filteredData.length > 0) {
+  //     // 선택된 가격과 일치하는 항목이 없으면 첫 번째 항목을 선택
+  //     selectedCrypto = filteredData[0];
+  //     dispatch(setCr_price_selected(selectedCrypto.price));
+  //   } else if (selectedCrypto) {
+  //     dispatch(setCr_price_selected(selectedCrypto.price));
+  //   }
+
+  //   console.log("선택가격 : ", cr_price_selected)
+  //   console.log("임시 : ", selectedCrypto)
+  
+  // }, [filteredData, cr_price_selected]);
+
   
   useEffect(() => {
     initialData();
   }, [])
   
   useEffect(() => {
-    fetchData();
+    // fetchData();
     dispatch(setFilteredData(updatedData));
-  }, [search_cr]);
+  }, [search_cr, cr_price]);
 
   useEffect(() => {
     if (cr_markets_selected) {
@@ -170,6 +191,22 @@ const CryptoList = () => {
       selectMarket_time(cr_markets_selected, chartSortTime);
     }
   }, [cr_markets_selected, chartSortDate, chartSortTime]);
+
+  // let temp = filteredData.find(crypto => crypto.price === cr_price_selected);
+  // console.log("선택된값: ", cr_price_selected)
+  // console.log("FF: ", temp)
+
+  // useEffect(() => {
+  //   if (cr_price_selected) {
+  //     console.log("선택가격 : ", cr_price_selected)
+  //     const selectedCrypto = filteredData.find(crypto => crypto.price === cr_price_selected);
+
+  //     console.log("ADAD : ", selectedCrypto)
+  //     if(selectedCrypto) {
+  //       dispatch(setCr_price_selected(selectedCrypto.price));
+  //     }
+  //   }
+  // }, [filteredData])
 
   // 선택된 화폐에 대한 체결내역 호출
   const selectClosedPrice = (market: string) => { 
@@ -183,7 +220,7 @@ const CryptoList = () => {
           },
         });
 
-        console.log("체결내역 : ", response.data);
+        // console.log("체결내역 : ", response.data);
         dispatch(setClosed_data(response.data));
       } catch (error) {
         console.error('Failed to send data to Django server', error);
@@ -227,7 +264,7 @@ const CryptoList = () => {
           },
         });
 
-        console.log(chartSortTime, "당 요청값: ", response.data);
+        // console.log(chartSortTime, "당 요청값: ", response.data);
         dispatch(setCandle_per_minute(response.data));
       } catch (error) {
         console.error('Failed to send data to Django server', error);
@@ -249,7 +286,7 @@ const CryptoList = () => {
             },
           });
 
-          console.log("1일 요청된 값 : ", response.data)
+          // console.log("1일 요청된 값 : ", response.data)
           dispatch(setCandle_per_date(response.data));
         } catch (error) {
           console.error('Failed to send data to Django server', error);
@@ -267,7 +304,7 @@ const CryptoList = () => {
             },
           });
 
-          console.log("1주 요청된 값 : ", response.data)
+          // console.log("1주 요청된 값 : ", response.data)
           dispatch(setCandle_per_week(response.data));
         } catch (error) {
           console.error('Failed to send data to Django server', error);
@@ -285,7 +322,7 @@ const CryptoList = () => {
             },
           });
 
-          console.log("1개월 요청된 값 : ", response.data)
+          // console.log("1개월 요청된 값 : ", response.data)
           dispatch(setCandle_per_month(response.data));
         } catch (error) {
           console.error('Failed to send data to Django server', error);
@@ -434,6 +471,19 @@ const CryptoList = () => {
     });
   };
 
+  useEffect(() => {
+    if (filteredData.length > 0 && selectedCrypto) {
+      const newSelectedCrypto = filteredData.find(crypto => crypto.name === selectedCrypto.name);
+      if (newSelectedCrypto) {
+        setSelectedCrypto(newSelectedCrypto);
+        dispatch(setCr_price_selected(newSelectedCrypto.price));
+      }
+    }
+  }, [filteredData]);
+
+  console.log("선택된값: ", cr_price_selected)
+  console.log("임시: ", selectedCrypto)
+
   // 각 값들을 테이블에서 클릭한 화폐의 정보로 변경 -> TradingView, TradingDetail로 전달
   const nameSelect = (value: string) => {
     dispatch(setCr_names_selected(value));
@@ -441,7 +491,7 @@ const CryptoList = () => {
   const marketSelect = (value: string) => {
     dispatch(setCr_markets_selected(value));
   }
-  const priceSelect = (value: string) => {
+  const priceSelect = (value: number) => {
     dispatch(setCr_price_selected(value));
   }
   const openPriceSelect = (value: number) => {
@@ -468,6 +518,16 @@ const CryptoList = () => {
   const change_priceSelect = (value: string) => {
     dispatch(setCr_change_price_selected(value));
   }
+
+  // useEffect(() => {
+  //   console.log("업뎃")
+  //   if(tempPrice) {
+  //     dispatch(setCr_price_selected(tempPrice))
+  //   }
+  // }, [tempPrice, filteredData])
+
+  // console.log("임시 : ", tempPrice)
+  // console.log("그그 : ", cr_price_selected)
 
   return (
     <div className="lightMode">
@@ -515,7 +575,9 @@ const CryptoList = () => {
                   <tr key={i} onClick={() => {
                     nameSelect(filteredData[i].name);
                     marketSelect(filteredData[i].markets);
-                    priceSelect(filteredData[i].f_price);
+                    priceSelect(filteredData[i].price);
+                    // setTempPrice(filteredData[i].price);
+                    setSelectedCrypto(filteredData[i]);
                     changeSelect(filteredData[i].change);
                     change_rateSelect(filteredData[i].f_changeRate);
                     change_priceSelect(filteredData[i].f_changePrice);

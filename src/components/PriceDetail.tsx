@@ -3,7 +3,6 @@ import { RootState, setAsking_dateTime } from "../store";
 import { useState } from "react";
 import SimpleBar from 'simplebar-react';
 import 'simplebar/dist/simplebar.min.css';
-import { Root } from "react-dom/client";
 
 const PriceDetail = () => {
   return (

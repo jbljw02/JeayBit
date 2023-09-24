@@ -691,7 +691,8 @@ dd span {
 .darkMode {
   border-color: rgb(156, 153, 153, 0.2);
   background-color: #161A1E;
-  color: #B7BDC6;
+  /* color: #B7BDC6; */
+    color: #b3b4b6;
 }
 
 .darkMode-title {

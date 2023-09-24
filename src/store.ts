@@ -61,7 +61,7 @@ export type RootState = {
   filteredData: Crypto[],
   cr_names_selected: string,
   cr_markets_selected: string,
-  cr_price_selected: string,
+  cr_price_selected: number,
   cr_change_selected: string,
   cr_change_rate_selected: string,
   cr_change_price_selected: string,
