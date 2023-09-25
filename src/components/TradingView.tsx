@@ -13,24 +13,25 @@ const TradingView = () => {
   const [checkedValue, setCheckedValue] = useState<string>("1일")
 
   // 테이블에서 선택된 화폐의 이름, 마켓, 가격을 가져옴
-  const cr_names_selected = useSelector((state: RootState) => { return state.cr_names_selected });
-  const cr_markets_selected = useSelector((state: RootState) => { return state.cr_markets_selected });
-  const cr_price_selected = useSelector((state: RootState) => { return state.cr_price_selected });
+  const cr_name_selected = useSelector((state: RootState) => { return state.cr_name_selected });
+  // const (cr_selected.markets) = useSelector((state: RootState) => { return state.(cr_selected.markets) });
+  // const cr_selected.price = useSelector((state: RootState) => { return state.cr_selected.price });
   const cr_open_price = useSelector((state: RootState) => { return state.cr_open_price });
   const cr_high_price = useSelector((state: RootState) => { return state.cr_high_price });
   const cr_low_price = useSelector((state: RootState) => { return state.cr_low_price });
-  const cr_change_selected = useSelector((state: RootState) => { return state.cr_change_selected });
-  const cr_change_price_selected = useSelector((state: RootState) => { return state.cr_change_price_selected });
-  const cr_trade_price_selected = useSelector((state: RootState) => { return state.cr_trade_price_selected });
-  const cr_trade_volume_selected = useSelector((state: RootState) => { return state.cr_trade_volume_selected });
-  const cr_open_price_selected = useSelector((state: RootState) => { return state.cr_open_price_selected });
-  const cr_high_price_selected = useSelector((state: RootState) => { return state.cr_high_price_selected });
-  const cr_low_price_selected = useSelector((state: RootState) => { return state.cr_low_price_selected });
+  // const cr_selected.change = useSelector((state: RootState) => { return state.cr_selected.change });
+  // const cr_selected.change_rate = useSelector((state: RootState) => { return state.cr_selected.change_rate });
+  // const cr_selected.trade_price = useSelector((state: RootState) => { return state.cr_selected.trade_price });
+  // const cr_selected.tradeVolume = useSelector((state: RootState) => { return state.cr_selected.tradeVolume });
+  // const cr_selected.open_price = useSelector((state: RootState) => { return state.cr_selected.open_price });
+  // const cr_selected.high_price = useSelector((state: RootState) => { return state.cr_selected.high_price });
+  // const (cr_selected.low_price) = useSelector((state: RootState) => { return state.(cr_selected.low_price) });
   const delimitedTime = useSelector((state: RootState) => state.delimitedTime);
   const delimitedDate = useSelector((state: RootState) => state.delimitedDate);
   const selectedChartSort = useSelector((state: RootState) => state.selectedChartSort);
   const chartSortTime = useSelector((state: RootState) => state.chartSortTime);
   const chartSortDate = useSelector((state: RootState) => state.chartSortDate);
+  const cr_selected = useSelector((state: RootState) => state.cr_selected);
 
   const candle_per_date = useSelector((state: RootState) => state.candle_per_date);
 
@@ -50,56 +51,149 @@ const TradingView = () => {
     dispatch(setChartSortTime(''))
   }
 
-  // console.log("date :", chartSortDate)
-  // console.log("time :", chartSortTime)
+  // if (Object.keys(cr_selected).length > 0) {
+  //   // console.log("cr_see_ : ", cr_selected)
+  //   console.log("O")
+  // }
+  // else {
+  //   console.log("X")
+  // }
 
+  // cr_selected.markets 필요
+
+  // if (cr_selected && cr_selected.markets) {
+  //   console.log("잇음")
+  // } else {
+  //   console.log("없음")
+  // }
+
+  // console.log(cr_selected.markets[0]);
+  // if(cr_selected && cr_selected.markets) {
+  //   console.log(cr_selected.markets[0])
+  // }
+  // if(Object.keys(cr_selected).length > 0) {
+  //   console.log(cr_selected.markets[0].slice(4))
+  // } else {
+  //   console.log("없음")
+  // }
+  if (Object.keys(cr_selected).length > 0) {
+
+    console.log("테스트: ", cr_selected)
+  }
   return (
     <>
       <div className="crypto-name lightMode-title">
         {/* src 내부에 동적으로 state를 넣기 위해선 `(햅틱) 사용 */}
-        <img className="crypto-img" src={`https://static.upbit.com/logos/${cr_markets_selected.slice(4)}.png`} alt="화폐사진"></img>
-        {cr_names_selected}
+        <img className="crypto-img" src={
+          cr_selected && cr_selected.market ?
+            (
+              Array.isArray(cr_selected.market) ?
+                `https://static.upbit.com/logos/${(cr_selected.market[0]).slice(4)}.png` :
+                `https://static.upbit.com/logos/${(cr_selected.market).slice(4)}.png`) : undefined
+        } alt="화폐사진">
+        </img>
+        {/* 화폐 이름 */}
+        {
+          cr_selected && cr_selected.name ?
+            (
+              Array.isArray(cr_selected.name) ?
+                cr_selected.name[0] :
+                cr_selected.name
+            ) : undefined
+        }
         <span className="crypto-market lightMode">
-          {cr_markets_selected}
+          {/* 마켓 이름 */}
+          {
+            cr_selected && cr_selected.market ?
+              (
+                Array.isArray(cr_selected.market) ?
+                  cr_selected.market[0] :
+                  cr_selected.market
+              ) : undefined
+          }
         </span>
       </div>
       <div className="trading-detail lightMode">
         {/* 삼항연산자 중첩 - 전일 대비 가격이 상승했다면 청색, 하락했다면 적색, 동일하다면 검정색 */}
         {/* 선택된 화폐의 가격과 변화율 */}
         {
-          cr_change_selected === 'RISE' ?
+          cr_selected.change === 'RISE' ?
             <div className="crypto-price-rise">
-              {cr_price_selected}
-              <Crypto_changeRate_selected></Crypto_changeRate_selected>
+              {
+                cr_selected && cr_selected.price ?
+                  (
+                    Array.isArray(cr_selected.price) ?
+                      (cr_selected.price[0]).toLocaleString() :
+                      (cr_selected.price).toLocaleString()
+                  ) : undefined
+              }
+              <Crypto_change_rate_selected></Crypto_change_rate_selected>
               <Crypto_detail></Crypto_detail>
             </div> :
             (
-              cr_change_selected === 'FALL' ?
+              cr_selected.change === 'FALL' ?
                 <div className="crypto-price-fall">
-                  {cr_price_selected}
-                  <Crypto_changeRate_selected></Crypto_changeRate_selected>
+                  {
+                    cr_selected && cr_selected.price ?
+                      (
+                        Array.isArray(cr_selected.price) ?
+                          (cr_selected.price[0]).toLocaleString() :
+                          (cr_selected.price).toLocaleString()
+                      ) : undefined
+                  }
+                  <Crypto_change_rate_selected></Crypto_change_rate_selected>
                   <Crypto_detail></Crypto_detail>
                 </div> :
                 <div className="crypto-price-even">
-                  {cr_price_selected}
-                  <Crypto_changeRate_selected></Crypto_changeRate_selected>
+                  {
+                    cr_selected && cr_selected.price ?
+                      (
+                        Array.isArray(cr_selected.price) ?
+                          (cr_selected.price[0]).toLocaleString() :
+                          (cr_selected.price).toLocaleString()
+                      ) : undefined
+                  }
+                  <Crypto_change_rate_selected></Crypto_change_rate_selected>
                   <Crypto_detail></Crypto_detail>
                 </div>
             )
         }
         {/* 선택된 화폐의 변화가격 */}
         {
-          cr_change_selected === 'RISE' ?
+          cr_selected.change === 'RISE' ?
             <div className="crypto-change_price-rise">
-              <img className="img-price_rise" src={price_rise} alt="상승" /> {cr_change_price_selected}
+              <img className="img-price_rise" src={price_rise} alt="상승" />
+              {
+                cr_selected && cr_selected.change_price ?
+                  (
+                    Array.isArray(cr_selected.change_price) ?
+                      (cr_selected.change_price[0]).toLocaleString() :
+                      (cr_selected.change_price).toLocaleString()
+                  ) : undefined
+              }
             </div> :
             (
-              cr_change_selected === 'FALL' ?
+              cr_selected.change === 'FALL' ?
                 <div className="crypto-change_price-fall">
-                  <img className="img-price_fall" src={price_fall} alt="하락" /> {cr_change_price_selected}
+                  <img className="img-price_fall" src={price_fall} alt="하락" />
+                  {
+                    cr_selected && cr_selected.change_price ?
+                      (
+                        Array.isArray(cr_selected.change_price) ?
+                          (cr_selected.change_price[0]).toLocaleString() :
+                          (cr_selected.change_price).toLocaleString()
+                      ) : undefined
+                  }
                 </div> :
                 <div className="crypto-change_price-even">
-                  {cr_change_price_selected}
+                  {
+                    cr_selected && cr_selected.change_price ?
+                      (
+                        Array.isArray(cr_selected.change_price) ?
+                          (cr_selected.change_price[0]).toLocaleString() :
+                          (cr_selected.change_price).toLocaleString()
+                      ) : undefined
+                  }
                 </div>
             )
         }
@@ -119,8 +213,8 @@ const TradingView = () => {
             <label className="dropDown">
               {
                 chartSortTime === '' ?
-                <span className="chartSortDate-selected">{chartSortDate}</span> :
-                <span onClick={() => clickChartSortDate(chartSortDate)}className="chartSortDate">{chartSortDate}</span>
+                  <span className="chartSortDate-selected">{chartSortDate}</span> :
+                  <span onClick={() => clickChartSortDate(chartSortDate)} className="chartSortDate">{chartSortDate}</span>
               }
               <span className="dd-button">
                 <svg className="img-dd" xmlns='http://www.w3.org/2000/svg' viewBox="0 0 16 8">
@@ -133,8 +227,8 @@ const TradingView = () => {
                   delimitedDate.map((item, i) => {
                     return (
                       item === chartSortDate && chartSortTime === '' ?
-                      <li onClick={() => clickChartSortDate(item)} className="dd-menu-li">{item}</li> :
-                      <li onClick={() => clickChartSortDate(item)}>{item}</li> 
+                        <li onClick={() => clickChartSortDate(item)} className="dd-menu-li">{item}</li> :
+                        <li onClick={() => clickChartSortDate(item)}>{item}</li>
                     )
                   })
                 }
@@ -151,25 +245,53 @@ const TradingView = () => {
 }
 
 {/* 화폐의 변화율에 따라 css 속성 다르게 적용 */ }
-const Crypto_changeRate_selected = () => {
+const Crypto_change_rate_selected = () => {
 
-  const cr_change_selected = useSelector((state: RootState) => { return state.cr_change_selected });
-  const cr_change_rate_selected = useSelector((state: RootState) => { return state.cr_change_rate_selected });
+  // const cr_selected.change = useSelector((state: RootState) => { return state.cr_selected.change });
+  // const cr_selected.change_rate = useSelector((state: RootState) => { return state.cr_selected.change_rate });
+  const cr_selected = useSelector((state: RootState) => state.cr_selected);
 
   return (
     <>
       {
-        cr_change_selected === 'RISE' ?
+        cr_selected.change === 'RISE' ?
           <span className="crypto-change_rate-rise">
-            &nbsp; +{cr_change_rate_selected}%
+            &nbsp; +
+            {
+              cr_selected && cr_selected.change_rate ?
+                (
+                  Array.isArray(cr_selected.change_rate) ?
+                    ((cr_selected.change_rate[0]) * 100).toFixed(2) :
+                    ((cr_selected.change_rate) * 100).toFixed(2)
+                ) : undefined
+            }
+            %
           </span> :
           (
-            cr_change_selected === 'FALL' ?
+            cr_selected.change === 'FALL' ?
               <span className="crypto-change_rate-fall">
-                &nbsp; -{cr_change_rate_selected}%
+                &nbsp; +
+                {
+                  cr_selected && cr_selected.change_rate ?
+                    (
+                      Array.isArray(cr_selected.change_rate) ?
+                        ((cr_selected.change_rate[0]) * 100).toFixed(2) :
+                        ((cr_selected.change_rate) * 100).toFixed(2)
+                    ) : undefined
+                }
+                %
               </span> :
               <span className="crypto-change_rate-even">
-                &nbsp; {cr_change_rate_selected}%
+                &nbsp; +
+                {
+                  cr_selected && cr_selected.change_rate ?
+                    (
+                      Array.isArray(cr_selected.change_rate) ?
+                        ((cr_selected.change_rate[0]) * 100).toFixed(2) :
+                        ((cr_selected.change_rate) * 100).toFixed(2)
+                    ) : undefined
+                }
+                %
               </span>
           )
       }
@@ -180,13 +302,12 @@ const Crypto_changeRate_selected = () => {
 {/* 24시간동안의 화폐의 상세정보 */ }
 const Crypto_detail = () => {
 
-  const cr_markets_selected = useSelector((state: RootState) => { return state.cr_markets_selected });
-  const cr_price_selected = useSelector((state: RootState) => { return state.cr_price_selected });
-  const cr_trade_price_selected = useSelector((state: RootState) => { return state.cr_trade_price_selected });
-  const cr_trade_volume_selected = useSelector((state: RootState) => { return state.cr_trade_volume_selected });
-  const cr_open_price_selected = useSelector((state: RootState) => { return state.cr_open_price_selected });
-  const cr_high_price_selected = useSelector((state: RootState) => { return state.cr_high_price_selected });
-  const cr_low_price_selected = useSelector((state: RootState) => { return state.cr_low_price_selected });
+  // const (cr_selected.markets) = useSelector((state: RootState) => { return state.(cr_selected.markets) });
+  // const cr_selected.price = useSelector((state: RootState) => { return state.cr_selected.price });
+  // const cr_selected.tradeVolume = useSelector((state: RootState) => { return state.cr_selected.tradeVolume });
+  // const cr_selected.open_price = useSelector((state: RootState) => { return state.cr_selected.open_price });
+  // const cr_selected.high_price = useSelector((state: RootState) => { return state.cr_selected.high_price });
+  const cr_selected = useSelector((state: RootState) => state.cr_selected);
 
   return (
     <>
@@ -194,23 +315,49 @@ const Crypto_detail = () => {
         <dt className="lightMode">
           거래대금
           <dd className="lightMode-title">
-            {cr_trade_price_selected}
+            {
+              cr_selected && cr_selected.trade_price ?
+                (
+                  Array.isArray(cr_selected.trade_price) ?
+                  (Number(String(Math.floor(cr_selected.trade_price[0])))).toLocaleString() :
+                  (Number(String(Math.floor(cr_selected.trade_price)))).toLocaleString()
+                ) : undefined
+            }
             <span className="lightMode">
-              &nbsp;KRW
+              &nbsp;
+              {
+                cr_selected && cr_selected.market ?
+                  (cr_selected.market[0]).slice(0, 3) :
+                  undefined
+              }
             </span>
           </dd>
         </dt>
         <dt className="lightMode">
           종가
           <dd className="lightMode-title">
-            {cr_price_selected}
+            {
+              cr_selected && cr_selected.price ?
+                (
+                  Array.isArray(cr_selected.price) ?
+                    (cr_selected.price[0]).toLocaleString() :
+                    (cr_selected.price).toLocaleString()
+                ) : undefined
+            }
           </dd>
         </dt>
         <dt className="lightMode">
           고가
           <dd className="lightMode-title">
             <span className="dd-high_price">
-              {cr_high_price_selected.toLocaleString()}
+              {
+                cr_selected && cr_selected.high_price ?
+                  (
+                    Array.isArray(cr_selected.high_price) ?
+                      (cr_selected.high_price[0]).toLocaleString() :
+                      (cr_selected.high_price).toLocaleString()
+                  ) : undefined
+              }
             </span>
           </dd>
         </dt>
@@ -219,23 +366,52 @@ const Crypto_detail = () => {
         <dt className="lightMode">
           거래량
           <dd className="lightMode-title">
-            {cr_trade_volume_selected}
+            {
+              cr_selected && cr_selected.trade_volume ?
+                (
+                  Array.isArray(cr_selected.trade_volume) ?
+                    (Number(String(Math.floor(cr_selected.trade_volume[0])))).toLocaleString() :
+                    (Number(String(Math.floor(cr_selected.trade_volume)))).toLocaleString()
+                ) : undefined
+            }
             <span className="lightMode">
-              &nbsp;{cr_markets_selected.slice(4)}
+              &nbsp;
+              {
+                cr_selected && cr_selected.market ?
+                  (
+                    Array.isArray(cr_selected.market) ?
+                      (cr_selected.market[0]).slice(4) :
+                      (cr_selected.market).slice(4)
+                  ) : undefined
+              }
             </span>
           </dd>
         </dt>
         <dt className="lightMode">
           시가
           <dd className="lightMode-title">
-            {cr_open_price_selected.toLocaleString()}
+            {
+              cr_selected && cr_selected.open_price ?
+                (
+                  Array.isArray(cr_selected.open_price) ?
+                    (cr_selected.open_price[0]).toLocaleString() :
+                    (cr_selected.open_price).toLocaleString()
+                ) : undefined
+            }
           </dd>
         </dt>
         <dt className="lightMode">
           저가
           <dd className="lightMode">
             <span className="dd-low_price">
-              {cr_low_price_selected.toLocaleString()}
+              {
+                cr_selected && cr_selected.low_price ?
+                  (
+                    Array.isArray(cr_selected.low_price) ?
+                      (cr_selected.low_price[0]).toLocaleString() :
+                      (cr_selected.low_price).toLocaleString()
+                  ) : undefined
+              }
             </span>
           </dd>
         </dt>

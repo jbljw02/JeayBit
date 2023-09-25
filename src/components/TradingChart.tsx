@@ -7,7 +7,7 @@ import axios from 'axios';
 
 
 const Chart = () => {
-  const cr_names_selected = useSelector((state: RootState) => state.cr_names_selected);
+  const cr_name_selected = useSelector((state: RootState) => state.cr_name_selected);
   const candle_per_date_BTC = useSelector((state: RootState) => state.candle_per_date_BTC);
   const candle_per_date = useSelector((state: RootState) => state.candle_per_date);
   const candle_per_week = useSelector((state: RootState) => state.candle_per_week);

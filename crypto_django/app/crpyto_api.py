@@ -5,18 +5,18 @@ def price():
     url = "https://api.upbit.com/v1/market/all?isDetails=true"
     response = get(url, headers=headers)
 
-    markets = []
-    names = []
+    market = []
+    name = []
 
     for crypto in eval(response.text):
         if crypto['market'].startswith('KRW') and crypto['market_warning'] == 'NONE':
-            names.append(crypto['korean_name']) 
-            markets.append(crypto['market'])  
+            name.append(crypto['korean_name']) 
+            market.append(crypto['market'])  
 
-    unJoin_markets = markets
+    unJoin_market = market
 
-    markets = "%2C%20".join(markets)
-    url = f"https://api.upbit.com/v1/ticker?markets={markets}"
+    market = "%2C%20".join(market)
+    url = f"https://api.upbit.com/v1/ticker?markets={market}"
     response = get(url, headers=headers)
 
     data = eval(response.text)
@@ -27,7 +27,7 @@ def price():
     change_price = []  # 변화가격
     acc_trade_price_24h = []  # 24시간 거래대금
     acc_trade_volume_24h = []  # 24시간 거래량
-    opening_price = []  # 시가
+    open_price = []  # 시가
     high_price = []  # 고가
     low_price = []  # 종가
     
@@ -49,11 +49,11 @@ def price():
 
         acc_trade_price_24h.append(data[i]['acc_trade_price_24h'])  # float
         acc_trade_volume_24h.append(data[i]['acc_trade_volume_24h'])  # float
-        opening_price.append(data[i]['opening_price'])  # float
+        open_price.append(data[i]['opening_price'])  # float
         high_price.append(data[i]['high_price'])  # 고가
         low_price.append(data[i]['low_price'])  # 저가
 
-    return names, cur_price, unJoin_markets, change, change_rate, change_price, acc_trade_price_24h, acc_trade_volume_24h, opening_price, high_price, low_price
+    return name, cur_price, unJoin_market, change, change_rate, change_price, acc_trade_price_24h, acc_trade_volume_24h, open_price, high_price, low_price
 
 price()
 

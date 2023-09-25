@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { RootState, setFilteredData, setStar, Crypto, setCr_names_selected, setCr_markets_selected, setCr_price_selected, setCr_change_selected, setCr_change_rate_selected, setCr_change_price_selected, setSortedData, setCr_trade_price_selected, setCr_trade_volume_selected, setCr_open_price_selected, setCr_high_price_selected, setCr_low_price_selected, Market, setCandle_per_date, setCandle_per_week, setCandle_per_month, setSelectedChartSort, setCandle_per_minute, setCr_names, setCr_price, setCr_markets, setCr_change, setCr_change_rate, setCr_change_price, setCr_trade_price, setCr_trade_volume, setCr_open_price, setCr_high_price, setCr_low_price, setCandle_per_date_BTC, setClosed_data, setAsking_data, setAsking_dateTime, setAsking_totalAskSize, setAsking_totalBidSize } from "../store";
+import { RootState, setFilteredData, setStar, Crypto, setCr_name_selected, setCr_market_selected, setCr_price_selected, setCr_change_selected, setCr_change_rate_selected, setCr_change_price_selected, setSortedData, setCr_trade_price_selected, setCr_trade_volume_selected, setCr_open_price_selected, setCr_high_price_selected, setCr_low_price_selected, Market, setCandle_per_date, setCandle_per_week, setCandle_per_month, setSelectedChartSort, setCandle_per_minute, setCr_name, setCr_price, setCr_market, setCr_change, setCr_change_rate, setCr_change_price, setCr_trade_price, setCr_trade_volume, setCr_open_price, setCr_high_price, setCr_low_price, setCandle_per_date_BTC, setClosed_data, setAsking_data, setAsking_dateTime, setAsking_totalAskSize, setAsking_totalBidSize, setCr_selected } from "../store";
 import { useEffect, useState } from "react";
 import img_sort from '../assets/images/sort.png';
 import img_sort_up from '../assets/images/sort-up.png';
@@ -16,9 +16,9 @@ const CryptoList = () => {
   const dispatch = useDispatch();
 
   // useSelector훅을 이용해 store에서 state를 가져옴
-  const cr_names = useSelector((state: RootState) => { return state.cr_names; });
+  const cr_name = useSelector((state: RootState) => { return state.cr_name; });
   const cr_price = useSelector((state: RootState) => { return state.cr_price; });
-  const cr_markets = useSelector((state: RootState) => { return state.cr_markets; });
+  const cr_market = useSelector((state: RootState) => { return state.cr_market; });
   const cr_change = useSelector((state: RootState) => { return state.cr_change; });
   const cr_change_rate = useSelector((state: RootState) => { return state.cr_change_rate; });
   const cr_change_price = useSelector((state: RootState) => { return state.cr_change_price; });
@@ -31,7 +31,7 @@ const CryptoList = () => {
   const filteredData = useSelector((state: RootState) => { return state.filteredData; });
   let sortedData = useSelector((state: RootState) => { return state.sortedData });
   const cr_trade_price_selected = useSelector((state: RootState) => { return state.cr_trade_price_selected });
-  const cr_markets_selected = useSelector((state: RootState) => { return state.cr_markets_selected });
+  const cr_market_selected = useSelector((state: RootState) => { return state.cr_market_selected });
   const candle_per_date = useSelector((state: RootState) => state.candle_per_date);
   const candle_per_minute = useSelector((state: RootState) => state.candle_per_minute);
   const cr_price_selected = useSelector((state: RootState) => state.cr_price_selected);
@@ -51,8 +51,8 @@ const CryptoList = () => {
   const chartSortTime = useSelector((state: RootState) => state.chartSortTime);
   const chartSortDate = useSelector((state: RootState) => state.chartSortDate);
 
-  const [tempPrice, setTempPrice] = useState<number>();
   const [selectedCrypto, setSelectedCrypto] = useState<any>();
+  const cr_selected = useSelector((state: RootState) => state.cr_selected);
 
   // 체결 내역을 담을 state
   const closedData = useSelector((state: RootState) => state.closed_data);
@@ -78,13 +78,13 @@ const CryptoList = () => {
     return () => clearInterval(interval);
   }, []);
 
-
   // 화면에 보여질 초기 화폐의 상태 정보(비트코인)
   const initialData = async () => {
     try {
       const response = await axios.get('http://127.0.0.1:8000/get_data/')
-      dispatch(setCr_names_selected(response.data.names[0]))
-      dispatch(setCr_markets_selected(response.data.markets[0]))
+      dispatch(setCr_selected(response.data));
+      dispatch(setCr_name_selected(response.data.name[0]))
+      dispatch(setCr_market_selected(response.data.markets[0]))
       dispatch(setCr_price_selected((response.data.cur_price[0]).toLocaleString()))
       dispatch(setCr_change_selected(response.data.change[0]))
       dispatch(setCr_trade_volume_selected(response.data.trade_volume[0]))
@@ -113,9 +113,9 @@ const CryptoList = () => {
   const fetchData = async () => {
     try {
       const response = await axios.get('http://127.0.0.1:8000/get_data/');
-      dispatch(setCr_names(response.data.names));
+      dispatch(setCr_name(response.data.name));
       dispatch(setCr_price(response.data.cur_price));
-      dispatch(setCr_markets(response.data.markets));
+      dispatch(setCr_market(response.data.market));
       dispatch(setCr_change(response.data.change));
       dispatch(setCr_change_rate(response.data.change_rate));
       dispatch(setCr_change_price(response.data.change_price));
@@ -131,22 +131,22 @@ const CryptoList = () => {
 
   // 필터링 및 정렬된 데이터를 새로운 배열로 생성 -> setFilteredData로 상태를 업데이트
   // price = 숫자형, f_price = 문자형 / 숫자형으로 정렬, 문자형으로 출력
-  const updatedData = cr_names.map((name, i) => ({
+  const updatedData = cr_name.map((name, i) => ({
     name,
     price: cr_price[i],
-    f_price: cr_price[i].toLocaleString(),
-    markets: cr_markets[i],
+    // f_price: cr_price[i].toLocaleString(),
+    market: cr_market[i],
     change: cr_change[i],
-    changeRate: cr_change_rate[i],
-    f_changeRate: (cr_change_rate[i] * 100).toFixed(2),
-    changePrice: cr_change_price[i],
-    f_changePrice: cr_change_price[i].toLocaleString(),
-    tradePrice: cr_trade_price[i],
-    f_tradePrice: Number(String(Math.floor(cr_trade_price[i])).slice(0, -6)).toLocaleString(),
-    tradeVolume: cr_trade_volume[i],
-    openPrice: cr_open_price[i],
-    highPrice: cr_high_price[i],
-    lowPrice: cr_low_price[i],
+    change_rate: cr_change_rate[i],
+    f_change_rate: (cr_change_rate[i] * 100).toFixed(2),
+    change_price: cr_change_price[i],
+    f_change_price: cr_change_price[i].toLocaleString(),
+    trade_price: cr_trade_price[i],
+    f_trade_price: Number(String(Math.floor(cr_trade_price[i])).slice(0, -6)).toLocaleString(),
+    trade_volume: cr_trade_volume[i],
+    open_price: cr_open_price[i],
+    high_price: cr_high_price[i],
+    low_price: cr_low_price[i],
     star: star[i]
     // 검색어에 해당하는 데이터를 비교하여 배열을 재생성
   })).filter((item) => (
@@ -186,27 +186,21 @@ const CryptoList = () => {
   }, [search_cr, cr_price]);
 
   useEffect(() => {
-    if (cr_markets_selected) {
-      selectMarket_date(cr_markets_selected);
-      selectMarket_time(cr_markets_selected, chartSortTime);
+    if (cr_market_selected) {
+      selectMarket_date(cr_market_selected);
+      selectMarket_time(cr_market_selected, chartSortTime);
     }
-  }, [cr_markets_selected, chartSortDate, chartSortTime]);
+  }, [cr_market_selected, chartSortDate, chartSortTime]);
 
-  // let temp = filteredData.find(crypto => crypto.price === cr_price_selected);
-  // console.log("선택된값: ", cr_price_selected)
-  // console.log("FF: ", temp)
-
-  // useEffect(() => {
-  //   if (cr_price_selected) {
-  //     console.log("선택가격 : ", cr_price_selected)
-  //     const selectedCrypto = filteredData.find(crypto => crypto.price === cr_price_selected);
-
-  //     console.log("ADAD : ", selectedCrypto)
-  //     if(selectedCrypto) {
-  //       dispatch(setCr_price_selected(selectedCrypto.price));
-  //     }
-  //   }
-  // }, [filteredData])
+  useEffect(() => {
+    if (selectedCrypto) {
+      const newSelectedCrypto = filteredData.find(crypto => crypto.name === selectedCrypto.name);
+      if (newSelectedCrypto) {
+        // setSelectedCrypto(newSelectedCrypto);
+        dispatch(setCr_selected(newSelectedCrypto));
+      }
+    }
+  }, [filteredData]);
 
   // 선택된 화폐에 대한 체결내역 호출
   const selectClosedPrice = (market: string) => { 
@@ -413,9 +407,9 @@ const CryptoList = () => {
             states_copy[index] = 1;
           }
           if (states_copy[index] === 1) {
-            rise_crypto.sort((a, b) => b.changeRate - a.changeRate);
-            even_crypto.sort((a, b) => b.changeRate - a.changeRate);
-            fall_crypto.sort((a, b) => a.changeRate - b.changeRate);
+            rise_crypto.sort((a, b) => b.change_rate - a.change_rate);
+            even_crypto.sort((a, b) => b.change_rate - a.change_rate);
+            fall_crypto.sort((a, b) => a.change_rate - b.change_rate);
 
             // 새 배열을 원본 배열의 카피본에 병합 - 내림차순이기 때문에 상승, 동결, 하락순으로 병합
             sortedData = [...rise_crypto, ...even_crypto, ...fall_crypto];
@@ -426,9 +420,9 @@ const CryptoList = () => {
             sort_states[3] = 0;
           }
           if (states_copy[index] === 2) {
-            fall_crypto.sort((a, b) => b.changeRate - a.changeRate);
-            even_crypto.sort((a, b) => b.changeRate - a.changeRate);
-            rise_crypto.sort((a, b) => a.changeRate - b.changeRate);
+            fall_crypto.sort((a, b) => b.change_rate - a.change_rate);
+            even_crypto.sort((a, b) => b.change_rate - a.change_rate);
+            rise_crypto.sort((a, b) => a.change_rate - b.change_rate);
 
             // 새 배열을 원본 배열의 카피본에 병합 - 오름차순이기 때문에 하락, 동결, 상승순으로 병합
             sortedData = [...fall_crypto, ...even_crypto, ...rise_crypto];
@@ -446,7 +440,7 @@ const CryptoList = () => {
             states_copy[index] = 1;
           }
           if (states_copy[index] === 1) {
-            sortedData.sort((a, b) => b.tradePrice - a.tradePrice);
+            sortedData.sort((a, b) => b.trade_price - a.trade_price);
             // dispatch(setFilteredData(sortedData));
 
             sort_states[0] = 0;
@@ -454,7 +448,7 @@ const CryptoList = () => {
             sort_states[2] = 0;
           }
           if (states_copy[index] === 2) {
-            sortedData.sort((a, b) => a.tradePrice - b.tradePrice);
+            sortedData.sort((a, b) => a.trade_price - b.trade_price);
             // dispatch(setFilteredData(sortedData));
 
             sort_states[0] = 0;
@@ -471,45 +465,32 @@ const CryptoList = () => {
     });
   };
 
-  useEffect(() => {
-    if (filteredData.length > 0 && selectedCrypto) {
-      const newSelectedCrypto = filteredData.find(crypto => crypto.name === selectedCrypto.name);
-      if (newSelectedCrypto) {
-        setSelectedCrypto(newSelectedCrypto);
-        dispatch(setCr_price_selected(newSelectedCrypto.price));
-      }
-    }
-  }, [filteredData]);
-
-  console.log("선택된값: ", cr_price_selected)
-  console.log("임시: ", selectedCrypto)
-
   // 각 값들을 테이블에서 클릭한 화폐의 정보로 변경 -> TradingView, TradingDetail로 전달
-  const nameSelect = (value: string) => {
-    dispatch(setCr_names_selected(value));
+  const nameelect = (value: string) => {
+    dispatch(setCr_name_selected(value));
   }
   const marketSelect = (value: string) => {
-    dispatch(setCr_markets_selected(value));
+    dispatch(setCr_market_selected(value));
   }
   const priceSelect = (value: number) => {
     dispatch(setCr_price_selected(value));
   }
-  const openPriceSelect = (value: number) => {
+  const open_priceSelect = (value: number) => {
     dispatch(setCr_open_price_selected(value));
   }
-  const highPriceSelect = (value: number) => {
+  const high_priceSelect = (value: number) => {
     dispatch(setCr_high_price_selected(value));
   }
-  const lowPriceSelect = (value: number) => {
+  const low_priceSelect = (value: number) => {
     dispatch(setCr_low_price_selected(value));
   }
   const changeSelect = (value: string) => {
     dispatch(setCr_change_selected(value));
   }
-  const tradePriceSelect = (value: number) => {
+  const trade_priceSelect = (value: number) => {
     dispatch(setCr_trade_price_selected(Number(String(Math.floor(value))).toLocaleString()));
   }
-  const tradeVolumeSelect = (value: number) => {
+  const trade_volumeSelect = (value: number) => {
     dispatch(setCr_trade_volume_selected(Number(String(Math.floor(value))).toLocaleString()));
   }
   const change_rateSelect = (value: string) => {
@@ -573,23 +554,23 @@ const CryptoList = () => {
               filteredData.map((item, i) => {
                 return (
                   <tr key={i} onClick={() => {
-                    nameSelect(filteredData[i].name);
-                    marketSelect(filteredData[i].markets);
+                    nameelect(filteredData[i].name);
+                    marketSelect(filteredData[i].market);
                     priceSelect(filteredData[i].price);
                     // setTempPrice(filteredData[i].price);
                     setSelectedCrypto(filteredData[i]);
                     changeSelect(filteredData[i].change);
-                    change_rateSelect(filteredData[i].f_changeRate);
-                    change_priceSelect(filteredData[i].f_changePrice);
-                    tradePriceSelect(filteredData[i].tradePrice);
-                    tradeVolumeSelect(filteredData[i].tradeVolume);
-                    openPriceSelect(filteredData[i].openPrice);
-                    highPriceSelect(filteredData[i].highPrice);
-                    lowPriceSelect(filteredData[i].lowPrice);
-                    selectMarket_date(filteredData[i].markets);
-                    selectMarket_time(filteredData[i].markets, selectedChartSort);
-                    selectAskingPrice(filteredData[i].markets);
-                    selectClosedPrice(filteredData[i].markets);
+                    change_rateSelect(filteredData[i].f_change_rate);
+                    change_priceSelect(filteredData[i].f_change_price);
+                    trade_priceSelect(filteredData[i].trade_price);
+                    trade_volumeSelect(filteredData[i].trade_volume);
+                    open_priceSelect(filteredData[i].open_price);
+                    high_priceSelect(filteredData[i].high_price);
+                    low_priceSelect(filteredData[i].low_price);
+                    selectMarket_date(filteredData[i].market);
+                    selectMarket_time(filteredData[i].market, selectedChartSort);
+                    selectAskingPrice(filteredData[i].market);
+                    selectClosedPrice(filteredData[i].market);
                   }}>
                     <td className='td-name lightMode'>
                       <span className="span-star">
@@ -604,7 +585,7 @@ const CryptoList = () => {
                           {item.name}
                         </div>
                         <div>
-                          {item.markets}
+                          {item.market}
                         </div>
                       </div>
                     </td>
@@ -628,20 +609,20 @@ const CryptoList = () => {
                     {
                       item.change === 'RISE' ?
                         <td className='lightMode'>
-                          <span className='td-rise'>+{item.f_changeRate}% <br /> {item.f_changePrice}</span>
+                          <span className='td-rise'>+{item.f_change_rate}% <br /> {item.f_change_price}</span>
                         </td> :
                         (
                           item.change === 'FALL' ?
                             <td className='lightMode'>
-                              <span className='td-fall'>-{item.f_changeRate}% <br /> {item.f_changePrice}</span>
+                              <span className='td-fall'>-{item.f_change_rate}% <br /> {item.f_change_price}</span>
                             </td> :
                             <td className='lightMode'>
-                              <span>{item.f_changeRate}% <br /> {item.f_changePrice}</span>
+                              <span>{item.f_change_rate}% <br /> {item.f_change_price}</span>
                             </td>
                         )
                     }
                     <td className='lightMode'>
-                      <span className="td-volume">{item.f_tradePrice}백만</span>
+                      <span className="td-volume">{item.f_trade_price}백만</span>
                     </td>
                   </tr>
                 )

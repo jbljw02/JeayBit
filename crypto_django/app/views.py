@@ -172,7 +172,7 @@ def closed_price(request):
         print("error : ", e)
 
 def get_data(request):
-    names, cur_price, unJoin_markets, change, change_rate, change_price, acc_trade_price_24h, acc_trade_volume_24h, opening_price, high_price, low_price = price()
+    name, cur_price, unJoin_market, change, change_rate, change_price, acc_trade_price_24h, acc_trade_volume_24h, open_price, high_price, low_price = price()
     
     candle_btc_date = candle_per_date_BTC()
     closed_price_btc = closed_price_BTC()
@@ -180,15 +180,15 @@ def get_data(request):
 
 
     data = {
-        'names': names,
-        'cur_price' : cur_price,
-        'markets' : unJoin_markets,
+        'name': name,
+        'price' : cur_price,
+        'market' : unJoin_market,
         'change' : change,
         'change_rate' : change_rate, 
         'change_price' : change_price,
         'trade_price' : acc_trade_price_24h,
         'trade_volume' : acc_trade_volume_24h,
-        'opening_price' : opening_price,
+        'open_price' : open_price,
         'high_price' : high_price,
         'low_price' : low_price,
         'candle_btc_date' : candle_btc_date,

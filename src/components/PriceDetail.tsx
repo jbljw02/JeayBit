@@ -20,7 +20,7 @@ const AskingPrice = () => {
   const dispatch = useDispatch();
 
   const asking_data = useSelector((state: RootState) => state.asking_data);
-  const cr_markets_selected = useSelector((state: RootState) => state.cr_markets_selected);
+  const cr_market_selected = useSelector((state: RootState) => state.cr_market_selected);
   const asking_dateTime = useSelector((state: RootState) => state.asking_dateTime);
   const asking_totalAskSize = useSelector((state: RootState) => state.asking_totalAskSize);
   const asking_totalBidSize = useSelector((state: RootState) => state.asking_totalBidSize);
@@ -44,7 +44,7 @@ const AskingPrice = () => {
           <th>등록시간</th>
           <th>호가</th>
           <th>
-            수량<span>({(cr_markets_selected).slice(4)})</span>
+            수량<span>({(cr_market_selected).slice(4)})</span>
           </th>
         </tr>
       </thead>
@@ -82,7 +82,7 @@ const AskingPrice = () => {
 
 const ClosedPrice = () => {
   const closed_data = useSelector((state: RootState) => state.closed_data);
-  const cr_markets_selected = useSelector((state: RootState) => state.cr_markets_selected);
+  const cr_markets_selected = useSelector((state: RootState) => state.cr_market_selected);
 
   return (
     <>
