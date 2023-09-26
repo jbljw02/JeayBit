@@ -33,6 +33,7 @@ const CryptoList = () => {
   const cr_trade_price_selected = useSelector((state: RootState) => { return state.cr_trade_price_selected });
   const cr_market_selected = useSelector((state: RootState) => { return state.cr_market_selected });
   const candle_per_date = useSelector((state: RootState) => state.candle_per_date);
+  const candle_per_date_BTC = useSelector((state: RootState) => state.candle_per_date_BTC);
   const candle_per_minute = useSelector((state: RootState) => state.candle_per_minute);
   const cr_price_selected = useSelector((state: RootState) => state.cr_price_selected);
 
@@ -84,15 +85,15 @@ const CryptoList = () => {
       const response = await axios.get('http://127.0.0.1:8000/get_data/')
       dispatch(setCr_selected(response.data));
       dispatch(setCr_name_selected(response.data.name[0]))
-      dispatch(setCr_market_selected(response.data.markets[0]))
-      dispatch(setCr_price_selected((response.data.cur_price[0]).toLocaleString()))
+      dispatch(setCr_market_selected(response.data.market[0]))
+      dispatch(setCr_price_selected((response.data.price[0]).toLocaleString()))
       dispatch(setCr_change_selected(response.data.change[0]))
       dispatch(setCr_trade_volume_selected(response.data.trade_volume[0]))
       dispatch(setCr_trade_volume_selected(Number(String(Math.floor(response.data.trade_volume[0]))).toLocaleString()));
       dispatch(setCr_trade_price_selected(Number(String(Math.floor(response.data.trade_price[0]))).toLocaleString()));
       dispatch(setCr_change_rate_selected((response.data.change_rate[0] * 100).toFixed(2)))
       dispatch(setCr_change_price_selected((response.data.change_price[0]).toLocaleString()))
-      dispatch(setCr_open_price_selected((response.data.opening_price[0]).toLocaleString()))
+      dispatch(setCr_open_price_selected((response.data.open_price[0]).toLocaleString()))
       dispatch(setCr_low_price_selected((response.data.low_price[0]).toLocaleString()))
       dispatch(setCr_high_price_selected((response.data.high_price[0]).toLocaleString()))
       dispatch(setCandle_per_date_BTC(response.data.candle_btc_date))
@@ -102,7 +103,6 @@ const CryptoList = () => {
       dispatch(setAsking_totalAskSize(response.data.asking_price_btc[0].total_ask_size))
       dispatch(setAsking_totalBidSize(response.data.asking_price_btc[0].total_bid_size))
       // dispatch(setAsking_buySize(response.data.asking_price_btc[0].orderbook_units.ask_size))
-      // console.log("호출값 :", response.data.asking_price_btc[0])
     } catch (error) {
       console.error(error);
     }
@@ -114,14 +114,14 @@ const CryptoList = () => {
     try {
       const response = await axios.get('http://127.0.0.1:8000/get_data/');
       dispatch(setCr_name(response.data.name));
-      dispatch(setCr_price(response.data.cur_price));
+      dispatch(setCr_price(response.data.price));
       dispatch(setCr_market(response.data.market));
       dispatch(setCr_change(response.data.change));
       dispatch(setCr_change_rate(response.data.change_rate));
       dispatch(setCr_change_price(response.data.change_price));
       dispatch(setCr_trade_price(response.data.trade_price));
       dispatch(setCr_trade_volume(response.data.trade_volume));
-      dispatch(setCr_open_price(response.data.opening_price));
+      dispatch(setCr_open_price(response.data.open_price));
       dispatch(setCr_high_price(response.data.high_price));
       dispatch(setCr_low_price(response.data.low_price));
     } catch (error) {
@@ -134,7 +134,7 @@ const CryptoList = () => {
   const updatedData = cr_name.map((name, i) => ({
     name,
     price: cr_price[i],
-    // f_price: cr_price[i].toLocaleString(),
+    f_price: cr_price[i].toLocaleString(),
     market: cr_market[i],
     change: cr_change[i],
     change_rate: cr_change_rate[i],
@@ -159,23 +159,6 @@ const CryptoList = () => {
     }
   });
 
-  // useEffect(() => {
-  //   let selectedCrypto = filteredData.find(crypto => crypto.price === cr_price_selected);
-    
-  //   if (!selectedCrypto && filteredData.length > 0) {
-  //     // 선택된 가격과 일치하는 항목이 없으면 첫 번째 항목을 선택
-  //     selectedCrypto = filteredData[0];
-  //     dispatch(setCr_price_selected(selectedCrypto.price));
-  //   } else if (selectedCrypto) {
-  //     dispatch(setCr_price_selected(selectedCrypto.price));
-  //   }
-
-  //   console.log("선택가격 : ", cr_price_selected)
-  //   console.log("임시 : ", selectedCrypto)
-  
-  // }, [filteredData, cr_price_selected]);
-
-  
   useEffect(() => {
     initialData();
   }, [])
@@ -466,7 +449,7 @@ const CryptoList = () => {
   };
 
   // 각 값들을 테이블에서 클릭한 화폐의 정보로 변경 -> TradingView, TradingDetail로 전달
-  const nameelect = (value: string) => {
+  const nameSelect = (value: string) => {
     dispatch(setCr_name_selected(value));
   }
   const marketSelect = (value: string) => {
@@ -554,19 +537,19 @@ const CryptoList = () => {
               filteredData.map((item, i) => {
                 return (
                   <tr key={i} onClick={() => {
-                    nameelect(filteredData[i].name);
+                    nameSelect(filteredData[i].name);
                     marketSelect(filteredData[i].market);
-                    priceSelect(filteredData[i].price);
-                    // setTempPrice(filteredData[i].price);
+                    // priceSelect(filteredData[i].price);
+                    // // setTempPrice(filteredData[i].price);
                     setSelectedCrypto(filteredData[i]);
-                    changeSelect(filteredData[i].change);
-                    change_rateSelect(filteredData[i].f_change_rate);
-                    change_priceSelect(filteredData[i].f_change_price);
-                    trade_priceSelect(filteredData[i].trade_price);
-                    trade_volumeSelect(filteredData[i].trade_volume);
-                    open_priceSelect(filteredData[i].open_price);
-                    high_priceSelect(filteredData[i].high_price);
-                    low_priceSelect(filteredData[i].low_price);
+                    // changeSelect(filteredData[i].change);
+                    // change_rateSelect(filteredData[i].f_change_rate);
+                    // change_priceSelect(filteredData[i].f_change_price);
+                    // trade_priceSelect(filteredData[i].trade_price);
+                    // trade_volumeSelect(filteredData[i].trade_volume);
+                    // open_priceSelect(filteredData[i].open_price);
+                    // high_priceSelect(filteredData[i].high_price);
+                    // low_priceSelect(filteredData[i].low_price);
                     selectMarket_date(filteredData[i].market);
                     selectMarket_time(filteredData[i].market, selectedChartSort);
                     selectAskingPrice(filteredData[i].market);

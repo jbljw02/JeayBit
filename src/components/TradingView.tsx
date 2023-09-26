@@ -52,34 +52,9 @@ const TradingView = () => {
   }
 
   // if (Object.keys(cr_selected).length > 0) {
-  //   // console.log("cr_see_ : ", cr_selected)
-  //   console.log("O")
-  // }
-  // else {
-  //   console.log("X")
+  console.log("테스트 : ", cr_selected);
   // }
 
-  // cr_selected.markets 필요
-
-  // if (cr_selected && cr_selected.markets) {
-  //   console.log("잇음")
-  // } else {
-  //   console.log("없음")
-  // }
-
-  // console.log(cr_selected.markets[0]);
-  // if(cr_selected && cr_selected.markets) {
-  //   console.log(cr_selected.markets[0])
-  // }
-  // if(Object.keys(cr_selected).length > 0) {
-  //   console.log(cr_selected.markets[0].slice(4))
-  // } else {
-  //   console.log("없음")
-  // }
-  if (Object.keys(cr_selected).length > 0) {
-
-    console.log("테스트: ", cr_selected)
-  }
   return (
     <>
       <div className="crypto-name lightMode-title">
@@ -117,85 +92,118 @@ const TradingView = () => {
         {/* 삼항연산자 중첩 - 전일 대비 가격이 상승했다면 청색, 하락했다면 적색, 동일하다면 검정색 */}
         {/* 선택된 화폐의 가격과 변화율 */}
         {
-          cr_selected.change === 'RISE' ?
-            <div className="crypto-price-rise">
-              {
-                cr_selected && cr_selected.price ?
-                  (
-                    Array.isArray(cr_selected.price) ?
-                      (cr_selected.price[0]).toLocaleString() :
-                      (cr_selected.price).toLocaleString()
-                  ) : undefined
-              }
-              <Crypto_change_rate_selected></Crypto_change_rate_selected>
-              <Crypto_detail></Crypto_detail>
-            </div> :
+          cr_selected && cr_selected.change ?
             (
-              cr_selected.change === 'FALL' ?
-                <div className="crypto-price-fall">
-                  {
-                    cr_selected && cr_selected.price ?
-                      (
-                        Array.isArray(cr_selected.price) ?
-                          (cr_selected.price[0]).toLocaleString() :
-                          (cr_selected.price).toLocaleString()
-                      ) : undefined
-                  }
-                  <Crypto_change_rate_selected></Crypto_change_rate_selected>
-                  <Crypto_detail></Crypto_detail>
-                </div> :
-                <div className="crypto-price-even">
-                  {
-                    cr_selected && cr_selected.price ?
-                      (
-                        Array.isArray(cr_selected.price) ?
-                          (cr_selected.price[0]).toLocaleString() :
-                          (cr_selected.price).toLocaleString()
-                      ) : undefined
-                  }
-                  <Crypto_change_rate_selected></Crypto_change_rate_selected>
-                  <Crypto_detail></Crypto_detail>
-                </div>
-            )
+              Array.isArray(cr_selected.price) ?
+                (
+                  cr_selected.change[0] === 'RISE' ?
+                    <div className="crypto-price-rise">
+                      {
+                        (cr_selected.price[0]).toLocaleString()
+                      }
+                      <Crypto_change_rate_selected></Crypto_change_rate_selected>
+                      <Crypto_detail></Crypto_detail>
+                    </div> :
+                    (
+                      cr_selected.change[0] === 'FALL' ?
+                        <div className="crypto-price-fall">
+                          {
+                            (cr_selected.price[0]).toLocaleString()
+                          }
+                          <Crypto_change_rate_selected></Crypto_change_rate_selected>
+                          <Crypto_detail></Crypto_detail>
+                        </div> :
+                        <div className="crypto-price-even">
+                          {
+                            (cr_selected.price[0]).toLocaleString()
+                          }
+                          <Crypto_change_rate_selected></Crypto_change_rate_selected>
+                          <Crypto_detail></Crypto_detail>
+                        </div>
+                    )
+
+                ) :
+                (
+                  cr_selected.change === 'RISE' ?
+                    <div className="crypto-price-rise">
+                      {
+                        (cr_selected.price).toLocaleString()
+                      }
+                      <Crypto_change_rate_selected></Crypto_change_rate_selected>
+                      <Crypto_detail></Crypto_detail>
+                    </div> :
+                    (
+                      cr_selected.change === 'FALL' ?
+                        <div className="crypto-price-fall">
+                          {
+                            (cr_selected.price).toLocaleString()
+                          }
+                          <Crypto_change_rate_selected></Crypto_change_rate_selected>
+                          <Crypto_detail></Crypto_detail>
+                        </div> :
+                        <div className="crypto-price-even">
+                          {
+                            (cr_selected.price).toLocaleString()
+                          }
+                          <Crypto_change_rate_selected></Crypto_change_rate_selected>
+                          <Crypto_detail></Crypto_detail>
+                        </div>
+                    )
+                )
+            ) : null
         }
         {/* 선택된 화폐의 변화가격 */}
         {
-          cr_selected.change === 'RISE' ?
-            <div className="crypto-change_price-rise">
-              <img className="img-price_rise" src={price_rise} alt="상승" />
-              {
-                cr_selected && cr_selected.change_price ?
-                  (
-                    Array.isArray(cr_selected.change_price) ?
-                      (cr_selected.change_price[0]).toLocaleString() :
-                      (cr_selected.change_price).toLocaleString()
-                  ) : undefined
-              }
-            </div> :
+          cr_selected && cr_selected.change_price !== undefined ?
             (
-              cr_selected.change === 'FALL' ?
-                <div className="crypto-change_price-fall">
-                  <img className="img-price_fall" src={price_fall} alt="하락" />
-                  {
-                    cr_selected && cr_selected.change_price ?
-                      (
-                        Array.isArray(cr_selected.change_price) ?
-                          (cr_selected.change_price[0]).toLocaleString() :
-                          (cr_selected.change_price).toLocaleString()
-                      ) : undefined
-                  }
-                </div> :
-                <div className="crypto-change_price-even">
-                  {
-                    cr_selected && cr_selected.change_price ?
-                      (
-                        Array.isArray(cr_selected.change_price) ?
-                          (cr_selected.change_price[0]).toLocaleString() :
-                          (cr_selected.change_price).toLocaleString()
-                      ) : undefined
-                  }
-                </div>
-            )
+              Array.isArray(cr_selected.change_price) ?
+                (
+                  cr_selected.change[0] === 'RISE' ?
+                    <div className="crypto-change_price-rise">
+                      <img className="img-price_rise" src={price_rise} alt="상승" />
+                      {
+                        (cr_selected.change_price[0]).toLocaleString()
+                      }
+                    </div> :
+                    (
+                      cr_selected.change[0] === 'FALL' ?
+                        <div className="crypto-change_price-fall">
+                          <img className="img-price_fall" src={price_fall} alt="하락" />
+                          {
+                            (cr_selected.change_price[0]).toLocaleString()
+                          }
+                        </div> :
+                        <div className="crypto-change_price-even">
+                          {
+                            (cr_selected.change_price[0]).toLocaleString()
+                          }
+                        </div>
+                    )
+                ) :
+                (
+                  cr_selected.change === 'RISE' ?
+                    <div className="crypto-change_price-rise">
+                      <img className="img-price_rise" src={price_rise} alt="상승" />
+                      {
+                        (cr_selected.change_price).toLocaleString()
+                      }
+                    </div> :
+                    (
+                      cr_selected.change === 'FALL' ?
+                        <div className="crypto-change_price-fall">
+                          <img className="img-price_fall" src={price_fall} alt="하락" />
+                          {
+                            (cr_selected.change_price).toLocaleString()
+                          }
+                        </div> :
+                        <div className="crypto-change_price-even">
+                          {
+                            (cr_selected.change_price).toLocaleString()
+                          }
+                        </div>
+                    )
+                )
+            ) : null
         }
       </div>
       <div className="trading-header lightMode">
@@ -227,8 +235,14 @@ const TradingView = () => {
                   delimitedDate.map((item, i) => {
                     return (
                       item === chartSortDate && chartSortTime === '' ?
-                        <li onClick={() => clickChartSortDate(item)} className="dd-menu-li">{item}</li> :
-                        <li onClick={() => clickChartSortDate(item)}>{item}</li>
+                        <li onClick={() => {
+                          clickChartSortDate(item)
+                          setChartSortValue(item)
+                        }} className="dd-menu-li">{item}</li> :
+                        <li onClick={() => {
+                          clickChartSortDate(item)
+                          setChartSortValue(item)
+                        }}>{item}</li>
                     )
                   })
                 }
@@ -246,7 +260,6 @@ const TradingView = () => {
 
 {/* 화폐의 변화율에 따라 css 속성 다르게 적용 */ }
 const Crypto_change_rate_selected = () => {
-
   // const cr_selected.change = useSelector((state: RootState) => { return state.cr_selected.change });
   // const cr_selected.change_rate = useSelector((state: RootState) => { return state.cr_selected.change_rate });
   const cr_selected = useSelector((state: RootState) => state.cr_selected);
@@ -254,47 +267,66 @@ const Crypto_change_rate_selected = () => {
   return (
     <>
       {
-        cr_selected.change === 'RISE' ?
-          <span className="crypto-change_rate-rise">
-            &nbsp; +
-            {
-              cr_selected && cr_selected.change_rate ?
-                (
-                  Array.isArray(cr_selected.change_rate) ?
-                    ((cr_selected.change_rate[0]) * 100).toFixed(2) :
-                    ((cr_selected.change_rate) * 100).toFixed(2)
-                ) : undefined
-            }
-            %
-          </span> :
+        cr_selected && cr_selected.change_rate !== undefined ?
           (
-            cr_selected.change === 'FALL' ?
-              <span className="crypto-change_rate-fall">
-                &nbsp; +
-                {
-                  cr_selected && cr_selected.change_rate ?
-                    (
-                      Array.isArray(cr_selected.change_rate) ?
-                        ((cr_selected.change_rate[0]) * 100).toFixed(2) :
-                        ((cr_selected.change_rate) * 100).toFixed(2)
-                    ) : undefined
-                }
-                %
-              </span> :
-              <span className="crypto-change_rate-even">
-                &nbsp; +
-                {
-                  cr_selected && cr_selected.change_rate ?
-                    (
-                      Array.isArray(cr_selected.change_rate) ?
-                        ((cr_selected.change_rate[0]) * 100).toFixed(2) :
-                        ((cr_selected.change_rate) * 100).toFixed(2)
-                    ) : undefined
-                }
-                %
-              </span>
-          )
+            Array.isArray(cr_selected.change_rate) ?
+              (
+                cr_selected.change[0] === 'RISE' ?
+                  <span className="crypto-change_rate-rise">
+                    &nbsp; +
+                    {
+                      ((cr_selected.change_rate[0]) * 100).toFixed(2)
+                    }
+                    %
+                  </span> :
+                  (
+                    cr_selected.change[0] === 'FALL' ?
+                      <span className="crypto-change_rate-fall">
+                        &nbsp; +
+                        {
+                          ((cr_selected.change_rate[0]) * 100).toFixed(2)
+                        }
+                        %
+                      </span> :
+                      <span className="crypto-change_rate-even">
+                        &nbsp; +
+                        {
+                          cr_selected.change_rate[0]
+                        }
+                        .00%
+                      </span>
+                  )
+              ) :
+              (
+                cr_selected.change === 'RISE' ?
+                  <span className="crypto-change_rate-rise">
+                    &nbsp; +
+                    {
+                      ((cr_selected.change_rate) * 100).toFixed(2)
+                    }
+                    %
+                  </span> :
+                  (
+                    cr_selected.change === 'FALL' ?
+                      <span className="crypto-change_rate-fall">
+                        &nbsp; +
+                        {
+                          ((cr_selected.change_rate) * 100).toFixed(2)
+                        }
+                        %
+                      </span> :
+                      <span className="crypto-change_rate-even">
+                        &nbsp; +
+                        {
+                          cr_selected.change_rate
+                        }
+                        .00%
+                      </span>
+                  )
+              )
+          ) : null
       }
+
     </>
   );
 }
@@ -319,17 +351,12 @@ const Crypto_detail = () => {
               cr_selected && cr_selected.trade_price ?
                 (
                   Array.isArray(cr_selected.trade_price) ?
-                  (Number(String(Math.floor(cr_selected.trade_price[0])))).toLocaleString() :
-                  (Number(String(Math.floor(cr_selected.trade_price)))).toLocaleString()
+                    (Number(String(Math.floor(cr_selected.trade_price[0])))).toLocaleString() :
+                    (Number(String(Math.floor(cr_selected.trade_price)))).toLocaleString()
                 ) : undefined
             }
             <span className="lightMode">
-              &nbsp;
-              {
-                cr_selected && cr_selected.market ?
-                  (cr_selected.market[0]).slice(0, 3) :
-                  undefined
-              }
+              &nbsp;KRW
             </span>
           </dd>
         </dt>
