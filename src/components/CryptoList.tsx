@@ -46,6 +46,7 @@ const CryptoList = () => {
   // 정렬하려는 목적에 따라 이미지를 변경하기 위해 배열로 생성
   const sort_images = [img_sort, img_sort_down, img_sort_up];
 
+
   const delimitedDate = useSelector((state: RootState) => state.delimitedDate);
   const delimitedTime = useSelector((state: RootState) => state.delimitedTime);
   const selectedChartSort = useSelector((state: RootState) => state.selectedChartSort);
@@ -61,6 +62,8 @@ const CryptoList = () => {
   // 호가 내역을 담을 state
   const asking_data = useSelector((state: RootState) => state.asking_data);
   const asking_dateTime = useSelector((state: RootState) => state.asking_dateTime);
+
+
 
   const theme = useSelector((state: RootState) => state.theme);
 
@@ -134,15 +137,15 @@ const CryptoList = () => {
   const updatedData = cr_name.map((name, i) => ({
     name,
     price: cr_price[i],
-    f_price: cr_price[i].toLocaleString(),
+    // f_price: cr_price[i].toLocaleString(),
     market: cr_market[i],
     change: cr_change[i],
     change_rate: cr_change_rate[i],
-    f_change_rate: (cr_change_rate[i] * 100).toFixed(2),
+    // f_change_rate: (cr_change_rate[i] * 100).toFixed(2),
     change_price: cr_change_price[i],
-    f_change_price: cr_change_price[i].toLocaleString(),
+    // f_change_price: cr_change_price[i].toLocaleString(),
     trade_price: cr_trade_price[i],
-    f_trade_price: Number(String(Math.floor(cr_trade_price[i])).slice(0, -6)).toLocaleString(),
+    // f_trade_price: Number(String(Math.floor(cr_trade_price[i])).slice(0, -6)).toLocaleString(),
     trade_volume: cr_trade_volume[i],
     open_price: cr_open_price[i],
     high_price: cr_high_price[i],
@@ -159,10 +162,73 @@ const CryptoList = () => {
     }
   });
 
+  // for(let i=0; i<filteredData.length; i++) {
+  //   console.log(i, "번째 값 : ", filteredData[i].price)
+  // }
+
+  const [prevData, setPrevData] = useState<number[]>();
+
+  const [differences, setDifferences] = useState<{
+    index: number,
+    oldValue: number,
+    newValue: number,
+  }[]>([]);
+
+  useEffect(() => {
+    setPrevData(cr_price)
+  }, [filteredData])
+
+  // let differences: {
+  //   index: number,
+  //   oldValue: number,
+  //   newValue: number,
+  // }[] = [];
+
+  useEffect(() => {
+    let newDifferences: {
+      index: number,
+      oldValue: number,
+      newValue: number,
+    }[] = [];
+
+    if (prevData !== undefined) {
+      prevData.forEach((value, index) => {
+        if (value !== cr_price[index]) {
+          newDifferences.push({ index: index, oldValue: value, newValue: cr_price[index] });
+        }
+      })
+    }
+
+    setDifferences(newDifferences)
+  }, [prevData])
+
+  console.log("차이 : ", differences);
+
+  for(let i=0; i<differences.length; i++) {
+    console.log(differences[i].newValue)
+  }
+
+  cr_price.forEach((value, index) => {
+    if(differences[index] !== undefined) {
+      console.log("if전 value: ", value)
+      console.log("if전 difff: ", differences[index].newValue)
+      if (value === differences[index].newValue) {
+        // console.log("가격차이", cr_price[index])
+        console.log("value: ", value)
+        console.log("difff: ", differences[index].newValue)
+        console.log("if 끝 --------------------------")
+      }
+    }
+  })
+  console.log("--------------------------------------------------")
+  console.log("prevData : ", prevData)
+  console.log("cr_price : ", cr_price)
+
   useEffect(() => {
     initialData();
   }, [])
-  
+
+  // 리스트에 있는 화폐 검색시 업데이트
   useEffect(() => {
     // fetchData();
     dispatch(setFilteredData(updatedData));
@@ -175,18 +241,21 @@ const CryptoList = () => {
     }
   }, [cr_market_selected, chartSortDate, chartSortTime]);
 
+  // 화폐 리스트에 변화가 있을 때마다 TradingView에 있는 정보 업데이트
   useEffect(() => {
     if (selectedCrypto) {
       const newSelectedCrypto = filteredData.find(crypto => crypto.name === selectedCrypto.name);
       if (newSelectedCrypto) {
-        // setSelectedCrypto(newSelectedCrypto);
+        setSelectedCrypto(newSelectedCrypto);
         dispatch(setCr_selected(newSelectedCrypto));
       }
     }
+    selectClosedPrice(cr_market_selected);
+    selectAskingPrice(cr_market_selected);
   }, [filteredData]);
 
   // 선택된 화폐에 대한 체결내역 호출
-  const selectClosedPrice = (market: string) => { 
+  const selectClosedPrice = (market: string) => {
     (async (market) => {
       try {
         const response = await axios.post('http://127.0.0.1:8000/closed_price/', {
@@ -206,7 +275,7 @@ const CryptoList = () => {
   }
 
   // 선택된 화폐에 대한 호가내역 호출
-  const selectAskingPrice = (market: string) => { 
+  const selectAskingPrice = (market: string) => {
     (async (market) => {
       try {
         const response = await axios.post('http://127.0.0.1:8000/asking_price/', {
@@ -529,15 +598,24 @@ const CryptoList = () => {
         </thead>
       </table>
 
+      {/* 첫 화면에서 비트코인 값 안 바뀌는 버그 수정해야함 */}
       <SimpleBar className="scrollBar-listTable">
         <table className="list-table">
           <tbody className='scrollable-tbody'>
             {/* 검색값을 반환한 filteredData 함수를 다시 반복문을 이용하여 출력 */}
             {
               filteredData.map((item, i) => {
+                // let isChanged = differences.some((diff, index) => {
+                //   console.log("i :", diff.index === i)
+                //   console.log("밸루: ", diff.newValue === item.price)
+                //   return diff.index === i && diff.newValue === item.price
+                // });
+                // // console.log("비교여부 :", isChanged)
+                // let priceClass = isChanged ? 'change-price' : '';
+                // console.log("필터데이트 : ", filteredData[i].price)
                 return (
                   <tr key={i} onClick={() => {
-                    nameSelect(filteredData[i].name);
+                    // nameSelect(filteredData[i].name);
                     marketSelect(filteredData[i].market);
                     // priceSelect(filteredData[i].price);
                     // // setTempPrice(filteredData[i].price);
@@ -577,35 +655,35 @@ const CryptoList = () => {
                     {
                       item.change === 'RISE' ?
                         <td className="lightMode">
-                          <span className='td-rise'>{item.f_price}</span>
+                          <span className='td-rise'>{(item.price).toLocaleString()}</span>
                         </td> :
                         (
                           item.change === 'FALL' ?
                             <td className='lightMode'>
-                              <span className="td-fall">{item.f_price}</span>
+                              <span className="td-fall">{(item.price).toLocaleString()}</span>
                             </td> :
                             <td className='lightMode'>
-                              <span>{item.f_price}</span>
+                              <span>{(item.price).toLocaleString()}</span>
                             </td>
                         )
                     }
                     {
                       item.change === 'RISE' ?
                         <td className='lightMode'>
-                          <span className='td-rise'>+{item.f_change_rate}% <br /> {item.f_change_price}</span>
+                          <span className='td-rise'>+{(item.change_rate * 100).toFixed(2)}% <br /> {(item.change_price).toLocaleString()}</span>
                         </td> :
                         (
                           item.change === 'FALL' ?
                             <td className='lightMode'>
-                              <span className='td-fall'>-{item.f_change_rate}% <br /> {item.f_change_price}</span>
+                              <span className='td-fall'>-{(item.change_rate * 100).toFixed(2)}% <br /> {(item.change_price).toLocaleString()}</span>
                             </td> :
                             <td className='lightMode'>
-                              <span>{item.f_change_rate}% <br /> {item.f_change_price}</span>
+                              <span>{(item.change_rate * 100).toFixed(2)}% <br /> {(item.change_price).toLocaleString()}</span>
                             </td>
                         )
                     }
                     <td className='lightMode'>
-                      <span className="td-volume">{item.f_trade_price}백만</span>
+                      <span className="td-volume">{Number(String(Math.floor(item.trade_price)).slice(0, -6)).toLocaleString()}백만</span>
                     </td>
                   </tr>
                 )

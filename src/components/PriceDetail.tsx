@@ -37,6 +37,8 @@ const AskingPrice = () => {
     dispatch(setAsking_dateTime(newDateString.replace(". ", "/").replace(".", "").replace("오전 ", "").replace("오후 ", "")))
   }
 
+  // console.log("호가 : ", asking_data);
+
   return (
     <table className="askingPrice-table lightMode">
       <thead className="lightMode-title">

@@ -104,6 +104,11 @@
   color: rgba(0, 0, 0, 0.4);
 }
 
+.priceClass {
+  background-color: red;
+  font-size: 30px;
+}
+
 .trading-detail {
   /* background-color: white; */
   /* border-left: 1px solid #E3E8EC; */

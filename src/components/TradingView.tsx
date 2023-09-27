@@ -52,7 +52,7 @@ const TradingView = () => {
   }
 
   // if (Object.keys(cr_selected).length > 0) {
-  console.log("테스트 : ", cr_selected);
+  // console.log("테스트 : ", cr_selected);
   // }
 
   return (
@@ -90,7 +90,7 @@ const TradingView = () => {
       </div>
       <div className="trading-detail lightMode">
         {/* 삼항연산자 중첩 - 전일 대비 가격이 상승했다면 청색, 하락했다면 적색, 동일하다면 검정색 */}
-        {/* 선택된 화폐의 가격과 변화율 */}
+        {/* 선택된 화폐의 가격과 변화율 및 24시간 동안의 상세정보 */}
         {
           cr_selected && cr_selected.change ?
             (
