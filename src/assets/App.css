@@ -475,6 +475,16 @@ dd span {
   white-space: nowrap;
 }
 
+.change-bid {
+  font-weight: bold;
+  color: #22ab94;
+}
+
+.change-ask {
+  font-weight: bold;
+  color: #f23645;
+}
+
 .closedPrice-table th:nth-child(1),
 .closedPrice-table td:nth-child(1) {
   padding-left: 13px;

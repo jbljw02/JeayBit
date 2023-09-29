@@ -73,7 +73,6 @@ const CryptoList = () => {
     newValue: number,
   }[]>([]);
 
-
   const theme = useSelector((state: RootState) => state.theme);
 
   useEffect(() => {
@@ -170,14 +169,11 @@ const CryptoList = () => {
       dispatch(setFilteredData(updatedData));
     }
   });
-
-  // 화폐 가격에 변화가 생길 때마다 state에 저장
-  useEffect(() => {
-    setPrevData(cr_price);
-  }, [filteredData])
-
+  
   // 화폐 가격의 변화를 감지하고 이전 값과 비교하여 변화가 생긴 값을 상태에 업데이트
   useEffect(() => {
+    setPrevData(cr_price);  // state의 업데이트는 비동기적이기 때문에 값이 즉시 바뀌지 않음. 그러므로 이 useEffect() 안에서 prevData는 아직 이전의 값을 가지고 있기 때문에 cr_price와 prevData는 다른 값을 가짐. (cr_price = 현재값, prevData = 이전값)
+
     let newDifferences: {
       index: number,
       oldValue: number,
@@ -193,7 +189,7 @@ const CryptoList = () => {
     }
 
     setDifferences(newDifferences)
-  }, [cr_price])
+  }, [filteredData])
 
   // console.log("차이 : ", differences);
 
