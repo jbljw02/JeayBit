@@ -63,6 +63,15 @@ const CryptoList = () => {
   const asking_data = useSelector((state: RootState) => state.asking_data);
   const asking_dateTime = useSelector((state: RootState) => state.asking_dateTime);
 
+  // 화폐 가격을 업데이트 하기 전에 해당 state에 담음
+  const [prevData, setPrevData] = useState<number[]>();
+
+  // 이전 화폐 가격과 현재 화폐 가격을 비교하여 변화가 발생한 화폐를 저장할 state
+  const [differences, setDifferences] = useState<{
+    index: number,
+    oldValue: number,
+    newValue: number,
+  }[]>([]);
 
 
   const theme = useSelector((state: RootState) => state.theme);
@@ -162,28 +171,12 @@ const CryptoList = () => {
     }
   });
 
-  // for(let i=0; i<filteredData.length; i++) {
-  //   console.log(i, "번째 값 : ", filteredData[i].price)
-  // }
-
-  const [prevData, setPrevData] = useState<number[]>();
-
-  const [differences, setDifferences] = useState<{
-    index: number,
-    oldValue: number,
-    newValue: number,
-  }[]>([]);
-
+  // 화폐 가격에 변화가 생길 때마다 state에 저장
   useEffect(() => {
-    setPrevData(cr_price)
+    setPrevData(cr_price);
   }, [filteredData])
 
-  // let differences: {
-  //   index: number,
-  //   oldValue: number,
-  //   newValue: number,
-  // }[] = [];
-
+  // 화폐 가격의 변화를 감지하고 이전 값과 비교하여 변화가 생긴 값을 상태에 업데이트
   useEffect(() => {
     let newDifferences: {
       index: number,
@@ -200,29 +193,9 @@ const CryptoList = () => {
     }
 
     setDifferences(newDifferences)
-  }, [prevData])
+  }, [cr_price])
 
-  console.log("차이 : ", differences);
-
-  for(let i=0; i<differences.length; i++) {
-    console.log(differences[i].newValue)
-  }
-
-  cr_price.forEach((value, index) => {
-    if(differences[index] !== undefined) {
-      console.log("if전 value: ", value)
-      console.log("if전 difff: ", differences[index].newValue)
-      if (value === differences[index].newValue) {
-        // console.log("가격차이", cr_price[index])
-        console.log("value: ", value)
-        console.log("difff: ", differences[index].newValue)
-        console.log("if 끝 --------------------------")
-      }
-    }
-  })
-  console.log("--------------------------------------------------")
-  console.log("prevData : ", prevData)
-  console.log("cr_price : ", cr_price)
+  // console.log("차이 : ", differences);
 
   useEffect(() => {
     initialData();
@@ -605,14 +578,12 @@ const CryptoList = () => {
             {/* 검색값을 반환한 filteredData 함수를 다시 반복문을 이용하여 출력 */}
             {
               filteredData.map((item, i) => {
-                // let isChanged = differences.some((diff, index) => {
-                //   console.log("i :", diff.index === i)
-                //   console.log("밸루: ", diff.newValue === item.price)
-                //   return diff.index === i && diff.newValue === item.price
-                // });
-                // // console.log("비교여부 :", isChanged)
-                // let priceClass = isChanged ? 'change-price' : '';
-                // console.log("필터데이트 : ", filteredData[i].price)
+                // 가격의 변화가 생긴 state를 테이블에서 찾아 해당 td 시각화
+                let isChanged = differences.some((diff, index) => {
+                  return diff.index === i && diff.newValue === item.price
+                });
+                let priceClass_rise = isChanged ? 'change-price-rise' : '';
+                let priceClass_fall = isChanged ? 'change-price-fall' : '';
                 return (
                   <tr key={i} onClick={() => {
                     // nameSelect(filteredData[i].name);
@@ -654,13 +625,13 @@ const CryptoList = () => {
                     {/* 삼항연산자 중첩 - 전일 대비 가격이 상승했다면 청색, 하락했다면 적색, 동일하다면 검정색 */}
                     {
                       item.change === 'RISE' ?
-                        <td className="lightMode">
-                          <span className='td-rise'>{(item.price).toLocaleString()}</span>
+                        <td className='lightMode'>
+                          <span className={`td-rise ${priceClass_rise}`}>{(item.price).toLocaleString()}</span>
                         </td> :
                         (
                           item.change === 'FALL' ?
                             <td className='lightMode'>
-                              <span className="td-fall">{(item.price).toLocaleString()}</span>
+                              <span className={`td-fall ${priceClass_fall}`}>{(item.price).toLocaleString()}</span>
                             </td> :
                             <td className='lightMode'>
                               <span>{(item.price).toLocaleString()}</span>

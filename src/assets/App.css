@@ -104,11 +104,6 @@
   color: rgba(0, 0, 0, 0.4);
 }
 
-.priceClass {
-  background-color: red;
-  font-size: 30px;
-}
-
 .trading-detail {
   /* background-color: white; */
   /* border-left: 1px solid #E3E8EC; */
@@ -574,10 +569,23 @@ dd span {
 .list-table td {
   font-size: 12px;
   /* border-bottom: 1px solid rgb(228, 229, 230); */
-  border-bottom-width: 1px;
+  /* border: 1px solid transparent; */
+  border-bottom-width: 1px; 
   border-bottom-style: solid;
+  /* border-bottom: 1px solid #E3E8EC;
+  border-top: 1pxs solid transparent; */
   padding: 9.5px;
   white-space: nowrap;
+}
+
+.change-price-rise {
+  border-bottom: 1.5px solid #22ab94 !important;
+  font-weight: bold;
+}
+
+.change-price-fall {
+  border-bottom: 1.5px solid #f23645 !important;
+  font-weight: bold;
 }
 
 .liat-table tr {
