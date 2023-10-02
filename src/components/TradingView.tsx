@@ -55,7 +55,7 @@ const TradingView = () => {
   // console.log("테스트 : ", cr_selected);
   // }
 
-  console.log("선택 : ", cr_selected)
+  // console.log("선택 : ", cr_selected)
 
 
   return (

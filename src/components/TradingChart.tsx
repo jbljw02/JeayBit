@@ -83,6 +83,8 @@ const Chart = () => {
 
   }
 
+  // console.log("값 : ", candle_per_minute)
+
   /* 캔들의 값을 지정 - 날짜별 */
   if (chartSortDate === '1일') {
     if (candle_per_date.length === 0) {

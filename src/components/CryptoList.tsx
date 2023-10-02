@@ -169,7 +169,7 @@ const CryptoList = () => {
       dispatch(setFilteredData(updatedData));
     }
   });
-  
+
   // 화폐 가격의 변화를 감지하고 이전 값과 비교하여 변화가 생긴 값을 상태에 업데이트
   useEffect(() => {
     setPrevData(cr_price);  // state의 업데이트는 비동기적이기 때문에 값이 즉시 바뀌지 않음. 그러므로 이 useEffect() 안에서 prevData는 아직 이전의 값을 가지고 있기 때문에 cr_price와 prevData는 다른 값을 가짐. (cr_price = 현재값, prevData = 이전값)
@@ -212,6 +212,7 @@ const CryptoList = () => {
 
   // 화폐 리스트에 변화가 있을 때마다 TradingView에 있는 정보 업데이트
   useEffect(() => {
+
     // 별도로 선택한 화폐가 있을 때
     if (selectedCrypto) {
       const newSelectedCrypto = filteredData.find(crypto => crypto.name === selectedCrypto.name);
@@ -224,12 +225,23 @@ const CryptoList = () => {
     else {
       if (filteredData.length > 0) {
         const initial_newSelectedCrypto = filteredData[0];
-        if(initial_newSelectedCrypto) {
+        if (initial_newSelectedCrypto) {
           setSelectedCrypto(initial_newSelectedCrypto);
           dispatch(setCr_selected);
         }
       }
     }
+
+    // 차트에 실시간 데이터를 전달(시간당)
+    if (filteredData.length > 0 && selectedCrypto) {
+      if (selectedCrypto.name && selectedCrypto.market === 'KRW-BTC') {
+        selectMarket_time(filteredData[0].market, chartSortTime)
+      }
+      else {
+        selectMarket_time(selectedCrypto.market, chartSortTime)
+      }
+    }
+
     selectClosedPrice(cr_market_selected);
     selectAskingPrice(cr_market_selected);
   }, [filteredData]);
@@ -289,7 +301,6 @@ const CryptoList = () => {
             'Content-Type': 'application/json',
           },
         });
-
         // console.log(chartSortTime, "당 요청값: ", response.data);
         dispatch(setCandle_per_minute(response.data));
       } catch (error) {
