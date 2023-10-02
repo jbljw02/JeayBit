@@ -212,11 +212,22 @@ const CryptoList = () => {
 
   // 화폐 리스트에 변화가 있을 때마다 TradingView에 있는 정보 업데이트
   useEffect(() => {
+    // 별도로 선택한 화폐가 있을 때
     if (selectedCrypto) {
       const newSelectedCrypto = filteredData.find(crypto => crypto.name === selectedCrypto.name);
       if (newSelectedCrypto) {
         setSelectedCrypto(newSelectedCrypto);
         dispatch(setCr_selected(newSelectedCrypto));
+      }
+    }
+    // 선택한 화폐가 없을 때(비트코인의 정보 출력)
+    else {
+      if (filteredData.length > 0) {
+        const initial_newSelectedCrypto = filteredData[0];
+        if(initial_newSelectedCrypto) {
+          setSelectedCrypto(initial_newSelectedCrypto);
+          dispatch(setCr_selected);
+        }
       }
     }
     selectClosedPrice(cr_market_selected);
