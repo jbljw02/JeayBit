@@ -24,6 +24,7 @@ const AskingPrice = () => {
   const asking_dateTime = useSelector((state: RootState) => state.asking_dateTime);
   const asking_totalAskSize = useSelector((state: RootState) => state.asking_totalAskSize);
   const asking_totalBidSize = useSelector((state: RootState) => state.asking_totalBidSize);
+  const cr_selected = useSelector((state: RootState) => state.cr_selected);
 
   const [prevData, setPrevData] = useState<AskingData[]>();
 
@@ -65,13 +66,6 @@ const AskingPrice = () => {
     setDifferences_bid(newDifferences_bid);
   }, [asking_data])
 
-  // console.log("에스크 : ", differences_ask)
-  // console.log("비드 : ", differences_bid)
-
-  useEffect(() => {
-
-  }, [asking_data])
-
   if (asking_dateTime) {
     const date = new Date(asking_dateTime);
     let newDateString = new Intl.DateTimeFormat('ko-KR', {
@@ -83,8 +77,6 @@ const AskingPrice = () => {
 
     dispatch(setAsking_dateTime(newDateString.replace(". ", "/").replace(".", "").replace("오전 ", "").replace("오후 ", "")))
   }
-
-  // console.log("호가 : ", asking_data);
 
   return (
     <table className="askingPrice-table lightMode">
@@ -104,7 +96,6 @@ const AskingPrice = () => {
             let isChanged_bid = differences_bid.some((value, index) => {
               return value.new_bid_size === item.bid_size;
             })
-            // console.log("비드결과 : ", isChanged_bid)
             let bidClass = isChanged_bid ? 'change-bid' : '';
             const percentage = (item.bid_size / asking_totalBidSize) * 100;  // 전체호가를 각각 호가로 나누어 비울을 환산한 후 해당 비율만큼 스타일 설정
             return (
@@ -142,7 +133,8 @@ const AskingPrice = () => {
 
 const ClosedPrice = () => {
   const closed_data = useSelector((state: RootState) => state.closed_data);
-  const cr_markets_selected = useSelector((state: RootState) => state.cr_market_selected);
+  const cr_market_selected = useSelector((state: RootState) => state.cr_market_selected);
+  const cr_selected = useSelector((state: RootState) => state.cr_selected);
 
   return (
     <>
@@ -153,7 +145,7 @@ const ClosedPrice = () => {
             <th>체결시간</th>
             <th>체결가격</th>
             <th>
-              체결량<span>({(cr_markets_selected).slice(4)})</span>
+              체결량<span>({(cr_market_selected).slice(4)})</span>
             </th>
           </tr>
         </thead>

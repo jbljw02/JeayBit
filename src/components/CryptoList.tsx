@@ -54,6 +54,7 @@ const CryptoList = () => {
   const chartSortDate = useSelector((state: RootState) => state.chartSortDate);
 
   const [selectedCrypto, setSelectedCrypto] = useState<any>();
+  const [userSelectedCrypto, setUserSelectedCrypto] = useState<any>();
   const cr_selected = useSelector((state: RootState) => state.cr_selected);
 
   // 체결 내역을 담을 state
@@ -75,6 +76,8 @@ const CryptoList = () => {
 
   const theme = useSelector((state: RootState) => state.theme);
 
+  // console.log("길이 : ", filteredData.length)
+
   useEffect(() => {
     // const 변수 = setInterval(() => { 콜백함수, 시간 })
     // fetchData 함수를 1초마다 실행 - 서버에서 받아오는 값을 1초마다 갱신시킴
@@ -82,38 +85,20 @@ const CryptoList = () => {
       fetchData();
     }, 1000);
 
-    // 반복 실행하지 않고 초기 렌더링시 1회만 실행
-    initialData();
+    initialData();  // 초기 렌더링시 1회만 실행
 
     // clearInterval(변수)
     // setInterval이 반환하는 interval ID를 clearInterval 함수로 제거
     return () => clearInterval(interval);
   }, []);
 
-  // 화면에 보여질 초기 화폐의 상태 정보(비트코인)
+  // 화면에 보여질 초기 화폐의 차트(비트코인)
   const initialData = async () => {
     try {
-      const response = await axios.get('http://127.0.0.1:8000/get_data/')
-      dispatch(setCr_selected(response.data));
-      dispatch(setCr_name_selected(response.data.name[0]))
-      dispatch(setCr_market_selected(response.data.market[0]))
-      dispatch(setCr_price_selected((response.data.price[0]).toLocaleString()))
-      dispatch(setCr_change_selected(response.data.change[0]))
-      dispatch(setCr_trade_volume_selected(response.data.trade_volume[0]))
-      dispatch(setCr_trade_volume_selected(Number(String(Math.floor(response.data.trade_volume[0]))).toLocaleString()));
-      dispatch(setCr_trade_price_selected(Number(String(Math.floor(response.data.trade_price[0]))).toLocaleString()));
-      dispatch(setCr_change_rate_selected((response.data.change_rate[0] * 100).toFixed(2)))
-      dispatch(setCr_change_price_selected((response.data.change_price[0]).toLocaleString()))
-      dispatch(setCr_open_price_selected((response.data.open_price[0]).toLocaleString()))
-      dispatch(setCr_low_price_selected((response.data.low_price[0]).toLocaleString()))
-      dispatch(setCr_high_price_selected((response.data.high_price[0]).toLocaleString()))
-      dispatch(setCandle_per_date_BTC(response.data.candle_btc_date))
-      dispatch(setClosed_data(response.data.closed_price_btc))
-      dispatch(setAsking_data(response.data.asking_price_btc[0].orderbook_units))
-      dispatch(setAsking_dateTime(response.data.asking_price_btc[0].timestamp))
-      dispatch(setAsking_totalAskSize(response.data.asking_price_btc[0].total_ask_size))
-      dispatch(setAsking_totalBidSize(response.data.asking_price_btc[0].total_bid_size))
-      // dispatch(setAsking_buySize(response.data.asking_price_btc[0].orderbook_units.ask_size))
+      const response = await axios.get('http://127.0.0.1:8000/get_data/');
+      dispatch(setCandle_per_date_BTC(response.data.candle_btc_date));
+      dispatch(setCr_market_selected(response.data.market[0]));
+      // dispatch(setCr_name_selected(response.data.name[0]));
     } catch (error) {
       console.error(error);
     }
@@ -145,15 +130,11 @@ const CryptoList = () => {
   const updatedData = cr_name.map((name, i) => ({
     name,
     price: cr_price[i],
-    // f_price: cr_price[i].toLocaleString(),
     market: cr_market[i],
     change: cr_change[i],
     change_rate: cr_change_rate[i],
-    // f_change_rate: (cr_change_rate[i] * 100).toFixed(2),
     change_price: cr_change_price[i],
-    // f_change_price: cr_change_price[i].toLocaleString(),
     trade_price: cr_trade_price[i],
-    // f_trade_price: Number(String(Math.floor(cr_trade_price[i])).slice(0, -6)).toLocaleString(),
     trade_volume: cr_trade_volume[i],
     open_price: cr_open_price[i],
     high_price: cr_high_price[i],
@@ -164,11 +145,11 @@ const CryptoList = () => {
     item.name.toLowerCase().includes(search_cr.toLowerCase())
   ));
 
-  useEffect(() => {
-    if (filteredData.length === 0 && updatedData.length > 0) {
-      dispatch(setFilteredData(updatedData));
-    }
-  });
+  // useEffect(() => {
+  //   if (filteredData.length === 0 && updatedData.length > 0) {
+  //     dispatch(setFilteredData(updatedData));
+  //   }
+  // });
 
   // 화폐 가격의 변화를 감지하고 이전 값과 비교하여 변화가 생긴 값을 상태에 업데이트
   useEffect(() => {
@@ -180,6 +161,7 @@ const CryptoList = () => {
       newValue: number,
     }[] = [];
 
+    // 화폐 리스트가 변할 때마다 변화 이전 값과 현재 값을 비교
     if (prevData !== undefined) {
       prevData.forEach((value, index) => {
         if (value !== cr_price[index]) {
@@ -187,15 +169,42 @@ const CryptoList = () => {
         }
       })
     }
+    setDifferences(newDifferences);
 
-    setDifferences(newDifferences)
+    // 별도로 선택한 화폐가 있을 때
+    if (selectedCrypto) {
+      const newSelectedCrypto = filteredData.find(crypto => crypto.name === selectedCrypto.name);
+      if (newSelectedCrypto) {
+        setSelectedCrypto(newSelectedCrypto);
+        setUserSelectedCrypto(newSelectedCrypto);
+        dispatch(setCr_selected(newSelectedCrypto));
+      }
+      // 호가 및 체결내역 호출
+      selectClosedPrice(selectedCrypto.market);
+      selectAskingPrice(selectedCrypto.market);
+    }
+    // 선택한 화폐가 없을 때(비트코인의 정보 출력)
+    else {
+      if (filteredData.length > 0) {
+        const initial_newSelectedCrypto = filteredData[0];
+        if (initial_newSelectedCrypto) {
+          setSelectedCrypto(initial_newSelectedCrypto);  // 해당 코드 때문에 '비트코인'이 강제 선택됨. 즉, if문 조건 성립
+          dispatch(setCr_selected(initial_newSelectedCrypto));
+        }
+      }
+    }
+    // 차트에 실시간 데이터를 전달(시간당)
+    if (filteredData.length > 0 && selectedCrypto) {
+      if (selectedCrypto.name && selectedCrypto.market === 'KRW-BTC') {
+        selectMarket_time(cr_market_selected, chartSortTime)
+      }
+      else {
+        selectMarket_time(cr_market_selected, chartSortTime)
+      }
+    }
   }, [filteredData])
 
-  // console.log("차이 : ", differences);
-
-  useEffect(() => {
-    initialData();
-  }, [])
+  console.log("선택 : ", cr_selected)
 
   // 리스트에 있는 화폐 검색시 업데이트
   useEffect(() => {
@@ -206,45 +215,9 @@ const CryptoList = () => {
   useEffect(() => {
     if (cr_market_selected) {
       selectMarket_date(cr_market_selected);
-      selectMarket_time(cr_market_selected, chartSortTime);
+      // selectMarket_time(cr_market_selected, chartSortTime);
     }
   }, [cr_market_selected, chartSortDate, chartSortTime]);
-
-  // 화폐 리스트에 변화가 있을 때마다 TradingView에 있는 정보 업데이트
-  useEffect(() => {
-
-    // 별도로 선택한 화폐가 있을 때
-    if (selectedCrypto) {
-      const newSelectedCrypto = filteredData.find(crypto => crypto.name === selectedCrypto.name);
-      if (newSelectedCrypto) {
-        setSelectedCrypto(newSelectedCrypto);
-        dispatch(setCr_selected(newSelectedCrypto));
-      }
-    }
-    // 선택한 화폐가 없을 때(비트코인의 정보 출력)
-    else {
-      if (filteredData.length > 0) {
-        const initial_newSelectedCrypto = filteredData[0];
-        if (initial_newSelectedCrypto) {
-          setSelectedCrypto(initial_newSelectedCrypto);
-          dispatch(setCr_selected);
-        }
-      }
-    }
-
-    // 차트에 실시간 데이터를 전달(시간당)
-    if (filteredData.length > 0 && selectedCrypto) {
-      if (selectedCrypto.name && selectedCrypto.market === 'KRW-BTC') {
-        selectMarket_time(filteredData[0].market, chartSortTime)
-      }
-      else {
-        selectMarket_time(selectedCrypto.market, chartSortTime)
-      }
-    }
-
-    selectClosedPrice(cr_market_selected);
-    selectAskingPrice(cr_market_selected);
-  }, [filteredData]);
 
   // 선택된 화폐에 대한 체결내역 호출
   const selectClosedPrice = (market: string) => {
@@ -604,7 +577,7 @@ const CryptoList = () => {
                 let priceClass_fall = isChanged ? 'change-price-fall' : '';
                 return (
                   <tr key={i} onClick={() => {
-                    // nameSelect(filteredData[i].name);
+                    nameSelect(filteredData[i].name);
                     marketSelect(filteredData[i].market);
                     // priceSelect(filteredData[i].price);
                     // // setTempPrice(filteredData[i].price);
