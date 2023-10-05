@@ -204,7 +204,7 @@ const CryptoList = () => {
     }
   }, [filteredData])
 
-  console.log("선택 : ", cr_selected)
+  // console.log("선택 : ", cr_selected)
 
   // 리스트에 있는 화폐 검색시 업데이트
   useEffect(() => {

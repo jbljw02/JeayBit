@@ -41,7 +41,7 @@ const Chart = () => {
             },
             orientation: 'horizontal',
             offsetY: 7,
-            text: 'Annotation Test'
+            // text: 'Annotation Test'
           }
         }
       ]

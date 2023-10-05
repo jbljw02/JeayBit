@@ -37,9 +37,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'crypto_django.app.apps.MyappConfig',
+    'app',
     'corsheaders',
     'rest_framework',
+    'crypto_app',
 ]
 
 CORS_ALLOWED_ORIGINS = [

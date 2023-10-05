@@ -1,11 +1,31 @@
 import { useDispatch, useSelector } from 'react-redux';
 import title from '../assets/images/title.png';
 import { RootState, setTheme } from '../store';
+import { useState } from 'react';
+import axios from 'axios';
 
 const Header = () => {
 
   const dispatch = useDispatch();
   const theme = useSelector((state: RootState) => state.theme);
+
+  const [userName, setUserName] = useState<string>("ada");
+  const [password, setPassword] = useState("0917");
+
+
+  const signUp = (userName: string, password: string) => {
+    (async (userName, password) => {
+      try {
+        await axios.post('http://127.0.0.1:8000/sign_up/', {
+          username: userName,
+          password: password,
+        });
+        console.log("아아");
+      } catch (error) {
+        console.log("회원가입 에러 : ", error)
+      }
+    })(userName, password);
+  }
 
   const themeChange = () => {
 
@@ -74,7 +94,7 @@ const Header = () => {
       </style>
       <div className="div-title">
         <img src={title} className="title-img-light" alt='제목'></img>
-        <span className="title-name">J TradingView</span>
+        <span onClick={() => signUp(userName, password)} className="title-name">J TradingView</span>
         {/* {
           theme === true ?
             <svg onClick={() => themeChange()} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" className="changeTheme">
