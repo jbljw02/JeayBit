@@ -22,6 +22,14 @@
   margin-left: 10px;
 }
 
+.header-nav {
+  height: 70px;
+  /* border-bottom: 1px solid #E3E8EC; */
+  /* border-bottom-width: 1px;
+  border-bottom-style: solid; */
+  margin-left: 10px;
+}
+
 /* 차트, 호가 및 체결내역, 화폐 리스트 영역 CSS */
 .content-container {
   width: 100%;
@@ -58,6 +66,27 @@
 .title-name {
   font-size: 23px;
   margin-left: -5px;
+  cursor: pointer;
+}
+
+.member-nav {
+  position: absolute;
+  left: 92%;
+  font-size: 13px;
+}
+
+.logIn {
+  margin-right: 23px;
+  cursor: pointer;
+}
+
+.signUp {
+  margin-right: 23px;
+  cursor: pointer;
+}
+
+.favorite-crypto {
+  cursor: pointer;
 }
 
 .changeTheme {

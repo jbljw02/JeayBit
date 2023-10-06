@@ -8,6 +8,9 @@ import { CryptoList } from './CryptoList'
 import { Footer } from './Footer'
 import { PriceDetail } from './PriceDetail';
 import '../assets/App.css';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { LogIn } from './LogIn';
+import { SignUp } from './SignUp';
 
 const App = () => {
 
@@ -17,23 +20,34 @@ const App = () => {
     <Provider store={store}>
       <div className="App">
         <div className="container lightMode">
-          <Header></Header>
-          <div className='content-container'>
-            <div className='main'>
-              <article className='TradingView'>
-                <TradingView></TradingView>
-              </article>
-              <article className='PriceDetail lightMode'>
-                <PriceDetail></PriceDetail>
-              </article> 
-            </div>
-            <aside className='aside'>
-              <article className="CryptoList">
-                <CryptoList></CryptoList>
-              </article>
-            </aside>
-          </div>
-          <Footer></Footer>
+          <BrowserRouter>
+            <Routes>
+              <Route path="/" element={
+                <>
+                  <Header></Header>
+                  <div className='content-container'>
+                    <div className='main'>
+                      <article className='TradingView'>
+                        <TradingView></TradingView>
+                      </article>
+                      <article className='PriceDetail lightMode'>
+                        <PriceDetail></PriceDetail>
+                      </article>
+                    </div>
+                    <aside className='aside'>
+                      <article className="CryptoList">
+                        <CryptoList></CryptoList>
+                      </article>
+                    </aside>
+                  </div>
+                  <Footer></Footer>
+                </>
+              } />
+              <Route path="/logIn" element={<LogIn />} />
+              <Route path="/signUp" element={<SignUp />} />
+            </Routes>
+          </BrowserRouter>
+
         </div>
       </div>
     </Provider>
