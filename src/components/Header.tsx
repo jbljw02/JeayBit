@@ -3,8 +3,6 @@ import title from '../assets/images/title.png';
 import { RootState, setTheme } from '../store';
 import { useState } from 'react';
 import axios from 'axios';
-import { LogIn } from './LogIn';
-import { SignUp } from './SignUp';
 import { Routes, Route, Link, useNavigate, Outlet } from 'react-router-dom'
 
 const Header = () => {
@@ -34,6 +32,7 @@ const Header = () => {
   const themeChange = () => {
 
     dispatch(setTheme(!theme));
+    
     let generalTheme = document.querySelectorAll('.lightMode, .darkMode');
     let titleTheme = document.querySelectorAll('.lightMode-title, .darkMode-title');
     let titleImgTheme = document.querySelectorAll('.title-img-light, .title-img-dark');
@@ -138,20 +137,6 @@ const HeaderNav = () => {
   const [password, setPassword] = useState("0917");
 
 
-  const signUp = (userName: string, password: string) => {
-    (async (userName, password) => {
-      try {
-        await axios.post('http://127.0.0.1:8000/sign_up/', {
-          username: userName,
-          password: password,
-        });
-        console.log("아아");
-      } catch (error) {
-        console.log("회원가입 에러 : ", error)
-      }
-    })(userName, password);
-  }
-
   const themeChange = () => {
 
     dispatch(setTheme(!theme));
@@ -220,6 +205,16 @@ const HeaderNav = () => {
       <div className="div-title">
         <img src={title} className="title-img-light" alt='제목'></img>
         <span onClick={() => navigate('/')} className="title-name">J TradingView</span>
+        {/* </span> */}
+        {
+          theme === true ?
+            <svg onClick={() => themeChange()} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" className="changeTheme">
+              <path d="M20.968 12.768a7 7 0 01-9.735-9.735 9 9 0 109.735 9.735z" fill="currentColor"></path>
+            </svg> :
+            <svg onClick={() => themeChange()} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" className="changeTheme">
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M10.5 2h3v3h-3V2zM16 12a4 4 0 11-8 0 4 4 0 018 0zM5.99 3.869L3.867 5.99 5.99 8.112 8.111 5.99 5.989 3.87zM2 13.5v-3h3v3H2zm1.868 4.51l2.121 2.12 2.122-2.12-2.122-2.122-2.121 2.121zM13.5 19v3h-3v-3h3zm4.51-3.112l-2.121 2.122 2.121 2.121 2.121-2.121-2.121-2.122zM19 10.5h3v3h-3v-3zm-3.11-4.51l2.12 2.121 2.122-2.121-2.121-2.121-2.122 2.121z" fill="currentColor"></path>
+            </svg>
+        }
       </div>
     </header>
   );

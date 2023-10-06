@@ -719,11 +719,26 @@ dd span {
 
 /* footer CSS */
 .footer {
-  height: 60px;
+  height: 90px;
   border-top: 1px solid #E3E8EC;
   margin: 0 10px;
 }
 
+.footer div {
+  font-size: 16px;
+  line-height: 90px;
+  text-align: center;
+}
+
+.custom-input {
+  border: none;
+}
+
+.footer span {
+  color: blue;
+  font-weight: bold;
+  cursor: pointer;
+}
 .lightMode {  
   border-color: #E3E8EC;
 }
@@ -751,4 +766,110 @@ dd span {
   border-color: rgb(156, 153, 153, 0.2);
   background-color: #161A1E;
   color: #e1e1e1;
+}
+
+.div-signUp {
+  display: flex;
+  /* background-color: red; */
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100vw;
+}
+
+.title-signUp {
+  align-items: center;
+  font-size: 27px;
+  font-weight: bold;
+  margin-top: 100px;
+}
+
+.view-signUp {
+  display: flex;
+  flex-direction: column;
+  /* border: 1px solid #000000; */
+  margin-top: 45px;
+  width: 350px;
+  height: 50%;
+  /* background-color: red; */
+}
+
+.container-input-nonClick {
+  border: 1px solid #c7c6c6;
+  border-radius: 7px;
+}
+
+.container-input-click {
+  border: 1px solid #08c0a2;
+  border-radius: 7px;
+}
+
+.section-name,
+.section-email,
+.section-password {
+  margin-bottom: 20px;
+  width: 100%;
+}
+
+.signUp-name,
+.signUp-email,
+.signUp-password {
+  margin-bottom: 8px;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.icon-email,
+.icon-password {
+  position: relative;
+  top: 10px;
+  left: 10px;
+}
+
+.icon-password {
+  cursor: pointer;
+  left: 22px;
+}
+
+.view-signUp input:nth-child(1) {
+  border: none;
+  width: 80%;
+  height: 45px;
+  margin-left: 10px;
+  font-size: 14px;
+}
+
+.view-signUp input:nth-child(2) {
+  border: none;
+  width: 80%;
+  height: 45px;
+  margin-left: 13px;
+  font-size: 14px;
+}
+
+.view-signUp input:nth-child(3) {
+  border: none;
+  width: 80%;
+  height: 45px;
+  margin-left: 10px;
+  font-size: 14px;
+}
+
+.view-signUp input:focus {
+  outline: none;
+}
+
+.signUp-submit {
+  width: 100%;
+  margin-top: 20px;
+  height: 50px;
+  line-height: 50px;
+  font-size: 18px;
+  color: #ffffff;
+  text-align: center;
+  background-color: #22ab94;
+  cursor: pointer;
+  border: 1px solid #22ab94;
+  border-radius: 7px;
 }
