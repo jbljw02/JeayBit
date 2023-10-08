@@ -14,7 +14,6 @@ const Header = () => {
   const [userName, setUserName] = useState<string>("ada");
   const [password, setPassword] = useState("0917");
 
-
   const signUp = (userName: string, password: string) => {
     (async (userName, password) => {
       try {
@@ -32,7 +31,7 @@ const Header = () => {
   const themeChange = () => {
 
     dispatch(setTheme(!theme));
-    
+
     let generalTheme = document.querySelectorAll('.lightMode, .darkMode');
     let titleTheme = document.querySelectorAll('.lightMode-title, .darkMode-title');
     let titleImgTheme = document.querySelectorAll('.title-img-light, .title-img-dark');
@@ -96,8 +95,10 @@ const Header = () => {
         url('https://fonts.googleapis.com/css2?family=Asap+Condensed:wght@300&family=Barlow:ital@1&family=Fira+Sans:ital,wght@1,300&family=Gowun+Batang&family=Roboto+Flex&display=swap');
       </style>
       <div className="div-title">
-        <img src={title} className="title-img-light" alt='제목'></img>
-        <span onClick={() => signUp(userName, password)} className="title-name">J TradingView</span>
+        <span className='title'>
+          <img src={title} className="title-img-light" alt='제목'></img>
+          <span onClick={() => signUp(userName, password)} className="title-name">J TradingView</span>
+        </span>
         <div className='member-nav'>
           <span onClick={() => { navigate('/logIn') }} className="logIn">로그인</span>
           <span onClick={() => { navigate('/signUp') }} className="signUp">회원가입</span>
@@ -202,19 +203,20 @@ const HeaderNav = () => {
         @import
         url('https://fonts.googleapis.com/css2?family=Asap+Condensed:wght@300&family=Barlow:ital@1&family=Fira+Sans:ital,wght@1,300&family=Gowun+Batang&family=Roboto+Flex&display=swap');
       </style>
-      <div className="div-title">
-        <img src={title} className="title-img-light" alt='제목'></img>
-        <span onClick={() => navigate('/')} className="title-name">J TradingView</span>
-        {/* </span> */}
-        {
-          theme === true ?
-            <svg onClick={() => themeChange()} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" className="changeTheme">
-              <path d="M20.968 12.768a7 7 0 01-9.735-9.735 9 9 0 109.735 9.735z" fill="currentColor"></path>
-            </svg> :
-            <svg onClick={() => themeChange()} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" className="changeTheme">
-              <path fill-rule="evenodd" clip-rule="evenodd" d="M10.5 2h3v3h-3V2zM16 12a4 4 0 11-8 0 4 4 0 018 0zM5.99 3.869L3.867 5.99 5.99 8.112 8.111 5.99 5.989 3.87zM2 13.5v-3h3v3H2zm1.868 4.51l2.121 2.12 2.122-2.12-2.122-2.122-2.121 2.121zM13.5 19v3h-3v-3h3zm4.51-3.112l-2.121 2.122 2.121 2.121 2.121-2.121-2.121-2.122zM19 10.5h3v3h-3v-3zm-3.11-4.51l2.12 2.121 2.122-2.121-2.121-2.121-2.122 2.121z" fill="currentColor"></path>
-            </svg>
-        }
+      <div className="div-title-nav">
+
+        {/* 이전 페이지로 이동 */}
+        <svg onClick={() => navigate(-1)} className='backButton' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 25 25" width="25" height="25" fill="none"><path stroke="currentColor" stroke-linecap="round" stroke-width="1.2" d="M17 22.5 6.85 12.35a.5.5 0 0 1 0-.7L17 1.5"></path>
+        </svg>
+
+        <span className='title' onClick={() => navigate('/')}>
+          <img src={title} className="title-img-light" alt='제목'></img>
+          <span className="title-name">J TradingView</span>
+        </span>
+
+        {/* 홈 화면으로 이동 */}
+        <svg onClick={() => navigate('/')} className='closeButton' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 25 25" width="25" height="25"><path stroke="currentColor" stroke-width="1.2" d="m1.5 1.5 21 21m0-21-21 21"></path>
+        </svg>
       </div>
     </header>
   );

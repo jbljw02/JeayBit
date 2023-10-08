@@ -23,10 +23,9 @@
 }
 
 .header-nav {
-  height: 70px;
-  /* border-bottom: 1px solid #E3E8EC; */
-  /* border-bottom-width: 1px;
-  border-bottom-style: solid; */
+  height: 50px;
+  display: flex;
+  justify-content: center;
   margin-left: 10px;
 }
 
@@ -52,6 +51,32 @@
   margin-top: 5px;
 }
 
+.div-title-nav {
+  display: flex;
+  align-items: center;
+  font-weight: bold;
+  margin-left: 5px;
+  margin-top: 55px;
+}
+
+.backButton {
+  position: absolute;
+  left: 45px;
+  cursor: pointer;
+}
+
+.closeButton {
+  position: absolute;
+  right: 45px;
+  cursor: pointer;
+}
+
+.title {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
 .title-img-light {
   padding: 15px;
   width: 23px;
@@ -66,7 +91,6 @@
 .title-name {
   font-size: 23px;
   margin-left: -5px;
-  cursor: pointer;
 }
 
 .member-nav {
@@ -776,13 +800,14 @@ dd span {
   align-items: center;
   height: 100vh;
   width: 100vw;
+  margin-top: 4%;
 }
 
 .title-signUp {
   align-items: center;
-  font-size: 27px;
+  font-size: 26px;
   font-weight: bold;
-  margin-top: 100px;
+  margin-top: 160px;  
 }
 
 .view-signUp {
@@ -808,7 +833,7 @@ dd span {
 .section-name,
 .section-email,
 .section-password {
-  margin-bottom: 20px;
+  margin-bottom: 15px;
   width: 100%;
 }
 
@@ -816,8 +841,17 @@ dd span {
 .signUp-email,
 .signUp-password {
   margin-bottom: 8px;
-  font-size: 16px;
+  font-size: 15px;
   font-weight: bold;
+}
+
+.input-inValid {
+  border-color: red;
+}
+
+.inValid-alert {
+  font-size: 13px;
+  color: red;
 }
 
 .icon-email,
@@ -835,7 +869,7 @@ dd span {
 .view-signUp input:nth-child(1) {
   border: none;
   width: 80%;
-  height: 45px;
+  height: 43px;
   margin-left: 10px;
   font-size: 14px;
 }
@@ -843,7 +877,7 @@ dd span {
 .view-signUp input:nth-child(2) {
   border: none;
   width: 80%;
-  height: 45px;
+  height: 43px;
   margin-left: 13px;
   font-size: 14px;
 }
@@ -851,7 +885,7 @@ dd span {
 .view-signUp input:nth-child(3) {
   border: none;
   width: 80%;
-  height: 45px;
+  height: 43px;
   margin-left: 10px;
   font-size: 14px;
 }
@@ -872,4 +906,9 @@ dd span {
   cursor: pointer;
   border: 1px solid #22ab94;
   border-radius: 7px;
+}
+
+.aa {
+  display: flex;
+  /* justify-content: center; */
 }
