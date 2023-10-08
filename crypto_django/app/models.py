@@ -1,3 +1,56 @@
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin, Group, Permission
 from django.db import models
+from django.utils.translation import gettext_lazy as _
 
-# Create your models here.
+# 모델과 관련된 DB 작업을 담당하는 매니저 클래스
+class CustomUserManager(BaseUserManager):
+    def create_user(self, username, email, password):
+        if not email:
+            raise ValueError('Users must have an email address')
+
+        # 모델에 사용자 이름과 이메일을 할당
+        user = self.model(
+            username=username,
+            email=self.normalize_email(email),
+        )
+
+        user.set_password(password)  # 패스워드는 set_password 메소드를 쓰기 위해 별도로 선언(비밀번호를 해시화하여 저장해 평문을 알 수 없게 함)
+        user.save(using=self._db)  # DB에 값을 저장
+        return user
+
+# 실제 사용자 데이터를 표현하는 모델
+# AbstraceBaseUser는 password, last_name을 가지고 있는 모델, PermissionsMixin는 groups 및 user_permissions 제공
+class CustomUser(AbstractBaseUser, PermissionsMixin):
+    # 패스워드는 상속받아 왔기 때문에 선언하지 않음
+    username = models.CharField(max_length=30)
+    email = models.EmailField(unique=True)
+    
+    is_staff = models.BooleanField(default=False)  # 관리자 사이트에 로그인 가능한지 여부
+    is_superuser = models.BooleanField(default=False)  # 슈퍼유저인지 여부
+    is_active = models.BooleanField(default=True)  # 계정 활성화 여부
+
+    groups = models.ManyToManyField(
+        to=Group,
+        verbose_name=_('groups'),
+        blank=True,
+        help_text=_(
+            'The groups this user belongs to. A user will get all permissions '
+            'granted to each of their groups.'
+        ),
+        related_query_name="customuser",
+        related_name="customuser_set",
+     )
+    
+    user_permissions = models.ManyToManyField(
+         to=Permission,
+         verbose_name=_('user permissions'),
+         blank=True,
+         help_text=_('Specific permissions for this user.'),
+         related_query_name="customuser",
+         related_name="customuser_set",
+     )
+
+    objects = CustomUserManager()
+
+    USERNAME_FIELD = 'email'  # 로그인 시 식별자로 사용되는 필드
+    REQUIRED_FIELDS = ['username']  # 관리자 계정 생성 시 반드시 입력해야 하는 필드  

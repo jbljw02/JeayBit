@@ -1,11 +1,15 @@
-# admin.py
-
 from django.contrib import admin
-from django.contrib.auth.models import User
+from django.contrib.auth.admin import UserAdmin
+from .models import CustomUser
 
-class CustomUserAdmin(admin.ModelAdmin):
-    pass  # 원하는 커스텀 설정을 여기에 추가하세요.
+# 기본 User 모델에 대한 관리자 인터페이스를 정의하고 있는 UserAdmin을 상속받아서 클래스 정의
+class CustomUserAdmin(UserAdmin):
+    model = CustomUser
+    # 관리자 사이트에서 보여줄 항목들을 지정(비밀번호는 해시화되어 저장되긴 하지만 해시화 된 값 자체도 예민한 값이기 때문에 지정X)
+    list_display = ['email', 'username', ] 
 
-# 기존의 admin.site.register(User) 코드 대신 아래와 같이 작성하세요.
-admin.site.unregister(User)
-admin.site.register(User, CustomUserAdmin)
+admin.site.register(CustomUser, CustomUserAdmin)
+
+# 기존의 admin.site.register(User) 코드 대신 아래와 같이 작성
+# admin.site.unregister(User)
+# admin.site.register(User, CustomUserAdmin)

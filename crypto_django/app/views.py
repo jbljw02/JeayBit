@@ -1,4 +1,6 @@
 from django.http import JsonResponse
+
+from crypto_django.app.models import CustomUser
 from .crpyto_api import price
 from .crpyto_api import candle_per_date_BTC, candle_per_week_BTC, candle_per_month_BTC, closed_price_BTC, asking_price_BTC
 from rest_framework.decorators import api_view
@@ -172,20 +174,29 @@ def closed_price(request):
     
     except Exception as e:
         print("error : ", e)
+        
 
-
-from django.contrib.auth.models import User
-
+# 회원가입
 @api_view(['POST'])
 def sign_up(request):
     try:
         username = request.data.get('username')
+        email = request.data.get('email')
         password = request.data.get('password')
+        
+        if not username:
+            return Response({"error": "이름을 설정하지 않음"}, status=400)
 
-        if User.objects.filter(username=username).exists():
-            return Response({"error": "A user with this username already exists."}, status=400)
+        if not password:
+            return Response({"error": "비밀번호를 설정하지 않음"}, status=400)
+        
+        if not email:
+            return Response({"error": "이메일을 설정하지 않음"}, status=400)
 
-        user = User.objects.create_user(username=username, password=password)
+        if CustomUser.objects.filter(email=email).exists():
+            return Response({"error": "이미 사용중인 이메일"}, status=400)
+
+        user = CustomUser.objects.create_user(username=username, email=email, password=password)
         print("회원가입 : ", user)
         
     except Exception as e:
@@ -196,22 +207,22 @@ def sign_up(request):
     return Response({"success": "User created successfully."}, status=201)
 
 
-@api_view(['POST'])
-def login_view(request):
-    userName = request.data.get('userName')
-    password = request.data.get('password')
-    user = authenticate(request, userName=userName, password=password)
+# @api_view(['POST'])
+# def login_view(request):
+#     userName = request.data.get('userName')
+#     password = request.data.get('password')
+#     user = authenticate(request, userName=userName, password=password)
     
-    if user is not None:
-        login(request, user)
-        return Response({'detail': 'Success'})
+#     if user is not None:
+#         login(request, user)
+#         return Response({'detail': 'Success'})
     
-    return Response({'detail': 'Invalid credentials'}, status=400)
+#     return Response({'detail': 'Invalid credentials'}, status=400)
 
-@api_view(['POST'])
-def logout_view(request):
-    logout(request)
-    return Response({'detail': 'Success'})
+# @api_view(['POST'])
+# def logout_view(request):
+#     logout(request)
+#     return Response({'detail': 'Success'})
 
 
 def get_data(request):
