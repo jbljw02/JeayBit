@@ -203,8 +203,8 @@ const SignUp = () => {
                 <div className="inValid-alert">비밀번호는 8자 이상, 특수문자를 포함해야 합니다</div>
             }
             {
-              isEmailEmpty ?
-                <div className="inValid-alert">이메일을 입력해주세요</div> :
+              isPasswordEmpty ?
+                <div className="inValid-alert">비밀번호를 입력해주세요</div> :
                 null
             }
           </div>
