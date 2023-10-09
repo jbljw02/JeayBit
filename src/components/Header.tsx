@@ -97,7 +97,7 @@ const Header = () => {
       <div className="div-title">
         <span className='title'>
           <img src={title} className="title-img-light" alt='제목'></img>
-          <span onClick={() => signUp(userName, password)} className="title-name">J TradingView</span>
+          <span onClick={() => signUp(userName, password)} className="title-name">JeayBit</span>
         </span>
         <div className='member-nav'>
           <span onClick={() => { navigate('/logIn') }} className="logIn">로그인</span>

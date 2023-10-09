@@ -90,7 +90,7 @@
 
 .title-name {
   font-size: 23px;
-  margin-left: -7px;
+  margin-left: -10px;
 }
 
 .member-nav {
@@ -792,13 +792,13 @@ dd span {
   color: #e1e1e1;
 }
 
+/* 회원가입 CSS */
 .container-signUp {
   /* font-family: 'Asap Condensed', sans-serif;
   font-family: 'Barlow', sans-serif;
   font-family: 'Fira Sans', sans-serif;
   font-family: 'Gowun Batang', serif;
   font-family: 'Roboto Flex', sans-serif; */
-
 }
 
 .div-signUp {
@@ -811,7 +811,7 @@ dd span {
   /* width: 100vw; */
 }
 
-.sign-title {
+.signUp-title {
   display: flex;
   align-items: center;
   /* cursor: pointer; */
@@ -820,12 +820,12 @@ dd span {
   border-right: 1.5px solid #c7c6c6;
 }
 
-.sign-title-img-light {
+.signUp-title-img-light {
   padding: 15px;
   width: 72px;
 }
 
-.sign-title-name {
+.signUp-title-name {
   font-size: 80px;
   margin-left: -7px;
 }
@@ -943,14 +943,125 @@ dd span {
   justify-content: center;
   font-size: 14.5px;
   font-weight: bold;
+  cursor: pointer;
   /* color: #c7c6c6; */
 }
 
-.signUp-etc span:nth-child(1) {
-  cursor: pointer;
-}
-
+/* 
 .signUp-etc span:nth-child(2) {
   cursor: pointer;
   margin-left: 30px;
+} */
+
+/* 로그인 화면 */
+.container-logIn {
+
+}
+
+.div-logIn {
+  display: flex;
+  /* background-color: red; */
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  height: 85vh;
+  /* width: 100vw; */
+}
+
+.logIn-title {
+  display: flex;
+  align-items: center;
+  /* cursor: pointer; */
+  height: 350px;
+  padding-right: 100px;
+  border-right: 1.5px solid #c7c6c6;
+}
+
+.logIn-title-img-light {
+  padding: 15px;
+  width: 72px;
+}
+
+.logIn-title-name {
+  font-size: 80px;
+  margin-left: -7px;
+}
+
+.view-logIn {
+  display: flex;
+  flex-direction: column;
+  /* border: 1px solid #000000; */
+  /* margin-top: 45px; */
+  width: 370px;
+  padding-left: 100px;
+  /* height: 55%; */
+  /* background-color: red; */
+}
+
+.logIn-email,
+.logIn-password {
+  margin-bottom: 8px;
+  font-size: 15px;
+  font-weight: bold;
+}
+
+
+.view-logIn input:nth-child(1) {
+  border: none;
+  width: 80%;
+  height: 45px;
+  margin-left: 10px;
+  font-size: 15px;
+}
+
+.view-logIn input:nth-child(2) {
+  border: none;
+  width: 80%;
+  height: 43px;
+  margin-left: 13px;
+  font-size: 15px;
+}
+
+.view-logIn input:nth-child(3) {
+  border: none;
+  width: 80%;
+  height: 43px;
+  margin-left: 10px;
+  font-size: 15px;
+}
+
+.view-logIn input:focus {
+  outline: none;
+}
+
+.logIn-submit {
+  width: 100%;
+  margin-top: 30px;
+  height: 50px;
+  line-height: 50px;
+  font-size: 18px;
+  color: #ffffff;
+  text-align: center;
+  background-color: #22ab94;
+  cursor: pointer;
+  border: 1px solid #22ab94;
+  border-radius: 7px;
+}
+
+.logIn-etc {
+  display: flex;
+  flex-direction: row;
+  margin-top: 25px;
+  justify-content: center;
+  font-size: 14.5px;
+  font-weight: bold;
+}
+
+.logIn-etc span:nth-child(1) {
+  cursor: pointer;
+}
+
+.logIn-etc span:nth-child(2) {
+  margin-left: 25px;
+  cursor: pointer;
 }
