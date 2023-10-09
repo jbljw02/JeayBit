@@ -90,7 +90,7 @@
 
 .title-name {
   font-size: 23px;
-  margin-left: -5px;
+  margin-left: -7px;
 }
 
 .member-nav {
@@ -792,20 +792,47 @@ dd span {
   color: #e1e1e1;
 }
 
+.container-signUp {
+  /* font-family: 'Asap Condensed', sans-serif;
+  font-family: 'Barlow', sans-serif;
+  font-family: 'Fira Sans', sans-serif;
+  font-family: 'Gowun Batang', serif;
+  font-family: 'Roboto Flex', sans-serif; */
+
+}
+
 .div-signUp {
   display: flex;
   /* background-color: red; */
-  flex-direction: column;
+  flex-direction: row;
   justify-content: center;
   align-items: center;
-  height: 100vh;
-  width: 100vw;
-  margin-top: 4%;
+  height: 85vh;
+  /* width: 100vw; */
+}
+
+.sign-title {
+  display: flex;
+  align-items: center;
+  /* cursor: pointer; */
+  height: 350px;
+  padding-right: 100px;
+  border-right: 1.5px solid #c7c6c6;
+}
+
+.sign-title-img-light {
+  padding: 15px;
+  width: 72px;
+}
+
+.sign-title-name {
+  font-size: 80px;
+  margin-left: -7px;
 }
 
 .title-signUp {
   align-items: center;
-  font-size: 26px;
+  font-size: 23px;
   font-weight: bold;
   margin-top: 160px;  
 }
@@ -814,9 +841,10 @@ dd span {
   display: flex;
   flex-direction: column;
   /* border: 1px solid #000000; */
-  margin-top: 45px;
-  width: 350px;
-  height: 50%;
+  /* margin-top: 45px; */
+  width: 370px;
+  padding-left: 100px;
+  /* height: 55%; */
   /* background-color: red; */
 }
 
@@ -869,9 +897,9 @@ dd span {
 .view-signUp input:nth-child(1) {
   border: none;
   width: 80%;
-  height: 43px;
+  height: 45px;
   margin-left: 10px;
-  font-size: 14px;
+  font-size: 15px;
 }
 
 .view-signUp input:nth-child(2) {
@@ -879,7 +907,7 @@ dd span {
   width: 80%;
   height: 43px;
   margin-left: 13px;
-  font-size: 14px;
+  font-size: 15px;
 }
 
 .view-signUp input:nth-child(3) {
@@ -887,7 +915,7 @@ dd span {
   width: 80%;
   height: 43px;
   margin-left: 10px;
-  font-size: 14px;
+  font-size: 15px;
 }
 
 .view-signUp input:focus {
@@ -896,7 +924,7 @@ dd span {
 
 .signUp-submit {
   width: 100%;
-  margin-top: 20px;
+  margin-top: 30px;
   height: 50px;
   line-height: 50px;
   font-size: 18px;
@@ -908,7 +936,21 @@ dd span {
   border-radius: 7px;
 }
 
-.aa {
+.signUp-etc {
   display: flex;
-  /* justify-content: center; */
+  flex-direction: row;
+  margin-top: 25px;
+  justify-content: center;
+  font-size: 14.5px;
+  font-weight: bold;
+  /* color: #c7c6c6; */
+}
+
+.signUp-etc span:nth-child(1) {
+  cursor: pointer;
+}
+
+.signUp-etc span:nth-child(2) {
+  cursor: pointer;
+  margin-left: 30px;
 }

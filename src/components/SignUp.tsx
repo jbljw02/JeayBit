@@ -4,11 +4,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState, setTheme } from "../store";
 import { SetStateAction, useState } from "react";
 import axios, { AxiosError } from "axios";
+import { useNavigate } from "react-router-dom";
+import title from '../assets/images/title.png';
 
 const SignUp = () => {
 
   const dispatch = useDispatch();
-
+  const navigate = useNavigate();
 
   const [activeInput, setActiveInput] = useState<string>('');
   const [visiblePassword, setVisiblePassword] = useState<boolean>(false);
@@ -135,16 +137,20 @@ const SignUp = () => {
   }
 
   return (
-    <>
+    <div className="container-signUp">
       <HeaderNav />
       <div className="div-signUp">
-        <span className="title-signUp">회원가입</span>
+        <span className='sign-title'>
+          <img src={title} className="sign-title-img-light" alt='제목'></img>
+          <span className="sign-title-name">JeayBit</span>
+        </span>
+        {/* <span className="title-signUp">회원가입</span> */}
         <div className="view-signUp">
           {/* 이름 영역 */}
           <div className="section-name">
-            <div className="signUp-name">이름</div>
+            {/* <div className="signUp-name">이름</div> */}
             <div onClick={() => inputClick('name')} className={`signUp-name ${activeInput === 'name' ? 'container-input-click' : 'container-input-nonClick'} ${isNameEmpty ? 'input-inValid' : ''}`}>
-              <input type="text" value={name} onChange={nameSetting} onFocus={() => { inputClick('name') }} className="input-signUp "></input>
+              <input type="text" value={name} onChange={nameSetting} onFocus={() => { inputClick('name') }} className="input-signUp" placeholder="이름"></input>
             </div>
             {
               isNameEmpty ?
@@ -155,12 +161,12 @@ const SignUp = () => {
 
           {/* 이메일 영역 */}
           <div className="section-email">
-            <div className="signUp-email">이메일</div>
+            {/* <div className="signUp-email">이메일</div> */}
             <div onClick={() => inputClick('email')} className={`signUp-name ${activeInput === 'email' ? 'container-input-click' : 'container-input-nonClick'} ${emailValid ? '' : 'input-inValid'} ${isEmailDuplicate ? 'input-inValid' : ''} ${isEmailEmpty ? 'input-inValid' : ''}`}>
               <svg className="icon-email" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 29" width="30" height="29">
                 <path fill="currentColor" fill-rule="evenodd" d="M7 7a2.5 2.5 0 0 0-2.5 2.5v9A2.5 2.5 0 0 0 7 21h15a2.5 2.5 0 0 0 2.5-2.5v-9A2.5 2.5 0 0 0 22 7H7ZM5.5 9.5C5.5 8.67 6.17 8 7 8h15c.83 0 1.5.67 1.5 1.5v.17l-9 3.79-9-3.8V9.5Zm0 1.25v7.75c0 .83.67 1.5 1.5 1.5h15c.83 0 1.5-.67 1.5-1.5v-7.75l-8.8 3.71-.2.08-.2-.08-8.8-3.7Z"></path>
               </svg>
-              <input type="text" value={email} onChange={emailChange} onFocus={() => { inputClick('email') }} onBlur={emailBlur} className="input-signUp"></input>
+              <input type="text" value={email} onChange={emailChange} onFocus={() => { inputClick('email') }} onBlur={emailBlur} className="input-signUp" placeholder="이메일"></input>
             </div>
             {
               emailValid ?
@@ -181,9 +187,9 @@ const SignUp = () => {
 
           {/* 비밀번호 영역 */}
           <div className="section-password">
-            <div className="signUp-password">비밀번호</div>
+            {/* <div className="signUp-password">비밀번호</div> */}
             <div onClick={() => inputClick('password')} className={`signUp-name ${activeInput === 'password' ? 'container-input-click' : 'container-input-nonClick'} ${passwordValid ? '' : 'input-inValid'} ${isPasswordEmpty ? 'input-inValid' : ''}`}>
-              <input type={visiblePassword ? "text" : "password"} value={password} onChange={passwordChange} onFocus={() => { inputClick('password') }} onBlur={passwordBlur} className="input-signUp"></input>
+              <input type={visiblePassword ? "text" : "password"} value={password} onChange={passwordChange} onFocus={() => { inputClick('password') }} onBlur={passwordBlur} className="input-signUp" placeholder="비밀번호"></input>
               {
                 visiblePassword ?
                   <svg onClick={() => passwordClick()} className="icon-password" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 29 29" width="29" height="29"><path fill="currentColor" d="M22.2 6.5 6.5 22.2l-.7-.7L21.5 5.8l.7.7ZM14 6c1.54 0 2.9.4 4.1 1l-.74.75A8 8 0 0 0 14 7c-3.05 0-5.42 1.76-7.07 3.59A17.13 17.13 0 0 0 4.56 14a17.13 17.13 0 0 0 2.77 3.84l-.7.7-.44-.45c-1.1-1.24-2-2.61-2.74-4.09a17.7 17.7 0 0 1 2.74-4.08C7.92 7.99 10.55 6 14 6ZM21.8 9.92l-.41-.45-.7.7.38.42c1.29 1.43 2.1 2.88 2.37 3.41-.27.53-1.08 1.98-2.37 3.42C19.42 19.24 17.05 21 14 21a7.99 7.99 0 0 1-3.35-.75L9.9 21c1.2.6 2.57 1 4.1 1 3.45 0 6.08-2 7.8-3.91 1.11-1.23 2.03-2.6 2.75-4.09a17.82 17.82 0 0 0-2.74-4.08Z"></path><path fill="currentColor" d="M13.01 17.88A4 4 0 0 0 17.87 13l-.87.87V14a3 3 0 0 1-3.11 3l-.88.88ZM10.13 15.02l.87-.88V14a3 3 0 0 1 3.13-3l.87-.87a4 4 0 0 0-4.87 4.89Z"></path></svg>
@@ -202,11 +208,14 @@ const SignUp = () => {
                 null
             }
           </div>
-          <span onClick={() => { signUp(name, email, password) }} className="signUp-submit">완료</span>
+          <span onClick={() => { signUp(name, email, password) }} className="signUp-submit">회원가입</span>
+          <div className="signUp-etc">
+            <span onClick={() => { navigate('/logIn') }}>로그인</span>
+            <span>비밀번호를 잊으셨나요?</span>
+          </div>
         </div>
       </div >
-      <Footer />
-    </>
+    </div>
   )
 }
 
