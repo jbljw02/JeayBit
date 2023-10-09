@@ -9,7 +9,3 @@ class CustomUserAdmin(UserAdmin):
     list_display = ['email', 'username', ] 
 
 admin.site.register(CustomUser, CustomUserAdmin)
-
-# 기존의 admin.site.register(User) 코드 대신 아래와 같이 작성
-# admin.site.unregister(User)
-# admin.site.register(User, CustomUserAdmin)

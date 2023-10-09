@@ -11,23 +11,6 @@ const Header = () => {
   const navigate = useNavigate();
   const theme = useSelector((state: RootState) => state.theme);
 
-  const [userName, setUserName] = useState<string>("ada");
-  const [password, setPassword] = useState("0917");
-
-  const signUp = (userName: string, password: string) => {
-    (async (userName, password) => {
-      try {
-        await axios.post('http://127.0.0.1:8000/sign_up/', {
-          username: userName,
-          password: password,
-        });
-        console.log("아아");
-      } catch (error) {
-        console.log("회원가입 에러 : ", error)
-      }
-    })(userName, password);
-  }
-
   const themeChange = () => {
 
     dispatch(setTheme(!theme));
@@ -97,7 +80,7 @@ const Header = () => {
       <div className="div-title">
         <span className='title'>
           <img src={title} className="title-img-light" alt='제목'></img>
-          <span onClick={() => signUp(userName, password)} className="title-name">JeayBit</span>
+          <span onClick={() => { navigate('/') }} className="title-name">JeayBit</span>
         </span>
         <div className='member-nav'>
           <span onClick={() => { navigate('/logIn') }} className="logIn">로그인</span>
@@ -133,10 +116,6 @@ const HeaderNav = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const theme = useSelector((state: RootState) => state.theme);
-
-  const [userName, setUserName] = useState<string>("ada");
-  const [password, setPassword] = useState("0917");
-
 
   const themeChange = () => {
 
@@ -208,8 +187,6 @@ const HeaderNav = () => {
         {/* 이전 페이지로 이동 */}
         <svg onClick={() => navigate(-1)} className='backButton' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 25 25" width="25" height="25" fill="none"><path stroke="currentColor" stroke-linecap="round" stroke-width="1.2" d="M17 22.5 6.85 12.35a.5.5 0 0 1 0-.7L17 1.5"></path>
         </svg>
-
-
 
         {/* 홈 화면으로 이동 */}
         <svg onClick={() => navigate('/')} className='closeButton' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 25 25" width="25" height="25"><path stroke="currentColor" stroke-width="1.2" d="m1.5 1.5 21 21m0-21-21 21"></path>

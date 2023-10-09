@@ -815,7 +815,7 @@ dd span {
   display: flex;
   align-items: center;
   /* cursor: pointer; */
-  height: 350px;
+  height: 370px;
   padding-right: 100px;
   border-right: 1.5px solid #c7c6c6;
 }
@@ -972,7 +972,7 @@ dd span {
   display: flex;
   align-items: center;
   /* cursor: pointer; */
-  height: 350px;
+  height: 370px;
   padding-right: 100px;
   border-right: 1.5px solid #c7c6c6;
 }
@@ -1004,7 +1004,6 @@ dd span {
   font-size: 15px;
   font-weight: bold;
 }
-
 
 .view-logIn input:nth-child(1) {
   border: none;
