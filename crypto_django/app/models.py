@@ -4,6 +4,8 @@ from django.utils.translation import gettext_lazy as _
 
 # 모델과 관련된 DB 작업을 담당하는 매니저 클래스
 class CustomUserManager(BaseUserManager):
+    
+    # 회원가입 기능은 DB와 밀접하게 관련이 있기 때문에 해당 위치에 정의
     def create_user(self, username, email, password):
         if not email:
             raise ValueError('Users must have an email address')

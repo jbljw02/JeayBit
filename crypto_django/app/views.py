@@ -1,13 +1,11 @@
 from django.http import JsonResponse
-
 from crypto_django.app.models import CustomUser
 from .crpyto_api import price
 from .crpyto_api import candle_per_date_BTC, candle_per_week_BTC, candle_per_month_BTC, closed_price_BTC, asking_price_BTC
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from requests import get
-from django.contrib.auth.models import User
-from django.contrib.auth import authenticate, login, logout
+
 
 # 1분 기준 차트
 @api_view(['GET', 'POST'])
@@ -176,6 +174,9 @@ def closed_price(request):
         print("error : ", e)
         
 
+from django.contrib.auth.models import User
+from django.contrib.auth import authenticate, login, logout
+
 # 회원가입
 @api_view(['POST'])
 def sign_up(request):
@@ -204,25 +205,32 @@ def sign_up(request):
         return Response({"error": str(e)}, status=500)  # 클라이언트에게 에러 메시지 반환
 
     # 사용자 생성 후 성공 메시지 반환
-    return Response({"success": "User created successfully."}, status=201)
+    return Response({"success": "회원가입 성공"}, status=201)
 
+# 로그인
+@api_view(['POST'])
+def log_in(request):
+    try:
+        print(request.data)
+        email = request.data.get('email')
+        password = request.data.get('password')
+        
+        user = authenticate(request, email=email, password=password)  # CusomterUser.authenticate로 작성하지 않아도 지정해놓은 모델에 대해 인증을 수행
+        
+        if user is not None:
+            login(request, user)
+            return Response({'detail': '로그인 성공'})
+        else:
+            return Response({'detail': '이메일 혹은 비밀번호가 잘못되었습니다.'}, status=400)
 
-# @api_view(['POST'])
-# def login_view(request):
-#     userName = request.data.get('userName')
-#     password = request.data.get('password')
-#     user = authenticate(request, userName=userName, password=password)
-    
-#     if user is not None:
-#         login(request, user)
-#         return Response({'detail': 'Success'})
-    
-#     return Response({'detail': 'Invalid credentials'}, status=400)
+    except Exception as e:
+        print("에러 : ", e) 
+        return Response({'detail': f'서버 내부 에러: {str(e)}'}, status=500)
 
-# @api_view(['POST'])
-# def logout_view(request):
-#     logout(request)
-#     return Response({'detail': 'Success'})
+@api_view(['POST'])
+def logout_view(request):
+    logout(request)
+    return Response({'detail': 'Success'})
 
 
 def get_data(request):

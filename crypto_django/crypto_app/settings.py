@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-dp2dyhvazi=*3q459+8exg^8lzs3l3&k(5(p(ndl415eu(r)@9
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -60,6 +60,13 @@ MIDDLEWARE = [
 
 CORS_ALLOW_ALL_ORIGINS = True
 ROOT_URLCONF = 'crypto_app.urls'
+
+AUTHENTICATION_BACKENDS = [
+    'app.backends.EmailLogin',  # 커스텀 인증 방식을 사용
+    'django.contrib.auth.backends.ModelBackend',  # User 모델의 기본 인증 방식도 가능하도록 사용
+    ]
+
+AUTH_USER_MODEL = 'app.CustomUser'  # 기본적으로 User 모델이 아닌 CustomUser 모델을 참고하도록 설정
 
 TEMPLATES = [
     {

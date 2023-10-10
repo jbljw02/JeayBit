@@ -77,16 +77,30 @@ const LogIn = () => {
   //   })(userName, email, password);
   // } 
 
-  console.log("이메일 : ", email)
-  console.log("비밀번호 : ", password)
-
+  
   const logIn = (email: string, password: string) => {
     setIsEmailEmpty(false);
     setIsPasswordEmpty(false);
-
+    
     // 이메일 및 비밀번호가 모두 입력돼야 서버로 데이터 전송
     if (email !== '' && password !== '') {
-
+      (async (email, password) => {
+        console.log(email)
+        console.log(password)
+        try {
+          await axios.post('http://127.0.0.1:8000/log_in/', {
+            email: email,
+            password: password,
+          }, {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          });
+          console.log("로그인 정보 전송 성공")
+        } catch (error) {
+          console.log("로그인 정보 전송 실패", error)
+        }
+      })(email, password)
     }
     else if (email === '' && password === '') {
       setIsEmailEmpty(true);
