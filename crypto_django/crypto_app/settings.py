@@ -27,7 +27,6 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -43,23 +42,31 @@ INSTALLED_APPS = [
     'crypto_app',
 ]
 
-CORS_ALLOWED_ORIGINS = [
-    'http://localhost:3000',
-]
-
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    # 'django.middleware.csrf.CsrfViewMiddleware',  # 클라이언트 실행할 때 임시 해제
+    'django.middleware.csrf.CsrfViewMiddleware',  # 클라이언트 실행할 때 임시 해제
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware'
 ]
 
-CORS_ALLOW_ALL_ORIGINS = True
+CORS_ORIGIN_WHITELIST = [
+   "http://localhost:3000",
+]
+
+CORS_ALLOW_CREDENTIALS = True  # 서버가 클라이언트의 자격증명(예: 쿠키)를 받을 준비가 됨 - 클라이언트는 서버에 쿠키를 보낼 수 있음을 뜻함
+# CORS_ALLOW_ALL_ORIGINS = True  # 모든 출처에서 오는 요청을 허용 - 어떤 웹사이트에서 오든 상관없이 서버 리소스에 접근 가능
 ROOT_URLCONF = 'crypto_app.urls'
+
+CSRF_TRUSTED_ORIGINS = [
+   "http://localhost:3000",
+]
+
+SESSION_COOKIE_SAMESITE = 'None'  # 'None': 모든 컨텍스트(다른 사이트)에서 쿠키 전송 가능
+SESSION_COOKIE_SECURE = False  # 'True': HTTPS 연결시에만 쿠키 전송
 
 AUTHENTICATION_BACKENDS = [
     'app.backends.EmailLogin',  # 커스텀 인증 방식을 사용

@@ -84,6 +84,7 @@ export type RootState = {
   chartSortTime: string,
   chartSortDate: string,
   theme: boolean,
+  logInUser: string,
 }
 
 const cr_name = createSlice({
@@ -509,6 +510,16 @@ const theme = createSlice({
   }
 })
 
+const logInUser = createSlice({
+  name: 'logInUser',
+  initialState: '',
+  reducers: {
+    setLogInUser: (state, action) => {
+      return action.payload;
+    }
+  }
+})
+
 export default configureStore({
   reducer: {
     cr_name: cr_name.reducer,
@@ -553,6 +564,7 @@ export default configureStore({
     asking_totalAskSize: asking_totalAskSize.reducer,
     asking_totalBidSize: asking_totalBidSize.reducer,
     theme: theme.reducer,
+    logInUser: logInUser.reducer,
   }
 })
 
@@ -614,5 +626,6 @@ export const { setChartSortDate } = chartSortDate.actions;
 export const { setAsking_totalAskSize } = asking_totalAskSize.actions;
 export const { setAsking_totalBidSize } = asking_totalBidSize.actions;
 export const { setTheme } = theme.actions;
+export const { setLogInUser } = logInUser.actions;
 
 // export default store;

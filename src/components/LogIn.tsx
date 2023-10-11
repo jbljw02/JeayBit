@@ -3,6 +3,8 @@ import title from '../assets/images/title.png';
 import { useNavigate } from "react-router-dom";
 import { SetStateAction, useState } from "react";
 import axios, { AxiosError } from "axios";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState, setLogInUser } from "../store";
 
 const LogIn = () => {
 
@@ -10,74 +12,16 @@ const LogIn = () => {
 
   const [activeInput, setActiveInput] = useState<string>('');
   const [visiblePassword, setVisiblePassword] = useState<boolean>(false);
-  const [name, setName] = useState<string>('');
-  const [isNameEmpty, setIsNameEmpty] = useState<boolean>(false);
   const [email, setEmail] = useState<string>('');
-  const [emailValid, setEmailValid] = useState<boolean>(true);  // 이메일 유효여부
-  const [isEmailDuplicate, setIsEmailDuplicate] = useState<boolean>(false);  // 이메일 중복여부
   const [isEmailEmpty, setIsEmailEmpty] = useState<boolean>(false);
   const [password, setPassword] = useState<string>('');
-  const [passwordValid, setPasswordValid] = useState<boolean>(true);  // 비밀번호 유효여부
   const [isPasswordEmpty, setIsPasswordEmpty] = useState<boolean>(false);
-  const [isFieldEmpty, setIsFieldEmpty] = useState<boolean>(false);
 
-  type DataError = {
-    error: string,
-  }
+  const logInUser = useSelector((state: RootState) => state.logInUser);
 
-  // 회원가입 완료 후 서버로 데이터 전송
-  // const signUp = (userName: string, email: string, password: string) => {
-  //   setIsNameEmpty(false);
-  //   setIsEmailEmpty(false);
-  //   setIsEmailDuplicate(false);
-  //   setIsPasswordEmpty(false);
+  const dispatch = useDispatch();
+  console.log("유저 : ", logInUser)
 
-  //   (async (userName, email, password) => {
-  //     try {
-  //       if (emailValid === true && passwordValid === true) {
-  //         await axios.post('http://127.0.0.1:8000/sign_up/', {
-  //           username: userName,
-  //           email: email,
-  //           password: password,
-  //         });
-  //         console.log("회원가입 정보 전송 성공");
-  //       }
-  //       else {
-  //         console.log("유효하지 않은 비밀번호 혹은 이메일")
-  //       }
-  //     } catch (error) {
-  //       const axiosError = error as AxiosError<DataError>;
-  //       console.log("회원가입 에러 : ", axiosError.response);
-
-  //       if (axiosError.response) {
-  //         const axiosError_responseData: DataError = axiosError.response.data;
-
-  //         // 400 에러(이름, 이메일, 비밀번호값 오류)
-  //         if (axiosError.response !== undefined && axiosError.response.status === 400) {
-  //           if (axiosError_responseData.error === '이미 사용중인 이메일') {
-  //             setIsEmailDuplicate(true);
-  //             console.log("사유 : ", axiosError_responseData.error)
-  //           }
-  //           if (axiosError_responseData.error === '이메일을 설정하지 않음') {
-  //             setIsEmailEmpty(true);
-  //             console.log("사유 : ", axiosError_responseData.error)
-  //           }
-  //           if (axiosError_responseData.error === '비밀번호를 설정하지 않음') {
-  //             setIsPasswordEmpty(true);
-  //             console.log("사유 : ", axiosError_responseData.error)
-  //           }
-  //           if (axiosError_responseData.error === '이름을 설정하지 않음') {
-  //             setIsNameEmpty(true);
-  //             console.log("사유 : ", axiosError_responseData.error)
-  //           }
-  //         }
-  //       }
-
-  //     }
-  //   })(userName, email, password);
-  // } 
-
-  
   const logIn = (email: string, password: string) => {
     setIsEmailEmpty(false);
     setIsPasswordEmpty(false);
@@ -88,15 +32,18 @@ const LogIn = () => {
         console.log(email)
         console.log(password)
         try {
-          await axios.post('http://127.0.0.1:8000/log_in/', {
+          const response = await axios.post('http://127.0.0.1:8000/logIn/', {
             email: email,
             password: password,
           }, {
             headers: {
               'Content-Type': 'application/json',
             },
+            withCredentials: true,
           });
-          console.log("로그인 정보 전송 성공")
+          console.log("로그인 정보 전송 성공", response.data.detail)
+          dispatch(setLogInUser((response.data.detail).slice(9)))
+          navigate('/')
         } catch (error) {
           console.log("로그인 정보 전송 실패", error)
         }

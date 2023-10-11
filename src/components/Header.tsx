@@ -11,6 +11,40 @@ const Header = () => {
   const navigate = useNavigate();
   const theme = useSelector((state: RootState) => state.theme);
 
+  const logInUser = useSelector((state: RootState) => state.logInUser);
+
+  const logOut = () => {
+    (async () => {
+      try {
+        const response = await axios.post('http://127.0.0.1:8000/logOut/')
+        
+        if(response.status === 200) {
+          console.log("로그아웃 성공 : ", response)
+        }
+        else {
+          console.log("로그아웃 실패")
+        }
+      } catch (error) {
+        console.log("로그아웃 정보 전송 실패")
+      }
+    })();
+  }
+
+  const checkLogin = async () => {
+    try {
+      const response = await axios.get('http://127.0.0.1:8000/check_login/', {withCredentials: true});
+      
+      if (response.data.is_logged_in) {
+        console.log("로그인 중");
+      } else {
+        console.log("로그아웃 상태");
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
+  
+
   const themeChange = () => {
 
     dispatch(setTheme(!theme));
@@ -82,10 +116,19 @@ const Header = () => {
           <img src={title} className="title-img-light" alt='제목'></img>
           <span onClick={() => { navigate('/') }} className="title-name">JeayBit</span>
         </span>
-        <div className='member-nav'>
-          <span onClick={() => { navigate('/logIn') }} className="logIn">로그인</span>
-          <span onClick={() => { navigate('/signUp') }} className="signUp">회원가입</span>
-        </div>
+        <span onClick={() => checkLogin()}>확인항</span>
+        {
+          logInUser === '' ?
+            <div className='member-nav-unLogIn'>
+              <span onClick={() => { navigate('/logIn') }} className="logIn">로그인</span>
+              <span onClick={() => { navigate('/signUp') }} className="signUp">회원가입</span>
+            </div> :
+            <div className='member-nav-LogIn'>
+              <span className="logInUser"><u>{logInUser}</u>님</span>
+              <span onClick={() => { logOut() }} className="logOut">로그아웃</span>
+              <span className="user-favorite-crypto">관심화폐</span>
+            </div>
+        }
         {
           theme === true ?
             <svg onClick={() => themeChange()} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" className="changeTheme">

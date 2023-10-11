@@ -40,7 +40,7 @@ const App = () => {
                       </article>
                     </aside>
                   </div>
-                  <Footer></Footer>
+                  {/* <Footer></Footer> */}
                 </>
               } />
               <Route path="/logIn" element={<LogIn />} />

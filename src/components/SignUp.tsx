@@ -47,6 +47,7 @@ const SignUp = () => {
             password: password,
           });
           console.log("회원가입 정보 전송 성공");
+          navigate('/logIn')
         }
         else {
           console.log("유효하지 않은 비밀번호 혹은 이메일")

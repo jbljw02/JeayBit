@@ -209,7 +209,7 @@ def sign_up(request):
 
 # 로그인
 @api_view(['POST'])
-def log_in(request):
+def logIn(request):
     try:
         print(request.data)
         email = request.data.get('email')
@@ -219,18 +219,29 @@ def log_in(request):
         
         if user is not None:
             login(request, user)
-            return Response({'detail': '로그인 성공'})
+            print("로그인 상태 : ", request.user)
+            return Response({'detail': f'로그인 성공 : {request.user.username}'})
         else:
-            return Response({'detail': '이메일 혹은 비밀번호가 잘못되었습니다.'}, status=400)
+            return Response({'detail': '이메일 혹은 비밀번호가 잘못되었습니다.'}, status=400)    
 
     except Exception as e:
         print("에러 : ", e) 
         return Response({'detail': f'서버 내부 에러: {str(e)}'}, status=500)
 
+# 로그아웃
 @api_view(['POST'])
-def logout_view(request):
+def logOut(request):
+    request.session.flush()  # 세션 데이터 삭제
     logout(request)
-    return Response({'detail': 'Success'})
+    try:
+        return Response({'detail': '로그아웃 성공'})
+    except Exception as e:
+        print("에러 : ", e)
+        return Response({'detail': '로그아웃 실패'})
+
+@api_view(['GET'])
+def check_login(request):
+    return Response({'is_logged_in': request.user.is_authenticated})
 
 
 def get_data(request):

@@ -93,23 +93,20 @@
   margin-left: -10px;
 }
 
-.member-nav {
+.member-nav-unLogIn {
   position: absolute;
-  left: 92%;
+  left: 92.3%;
   font-size: 13px;
 }
 
-.logIn {
-  margin-right: 23px;
-  cursor: pointer;
+.member-nav-LogIn {
+  position: absolute;
+  left: 89%;
+  font-size: 13px;
 }
 
-.signUp {
-  margin-right: 23px;
-  cursor: pointer;
-}
-
-.favorite-crypto {
+.logIn, .signUp, .logInUser, .logOut, .user-favorite-crypto {
+  margin-right: 22px;
   cursor: pointer;
 }
 

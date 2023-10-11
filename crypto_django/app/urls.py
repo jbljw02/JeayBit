@@ -1,6 +1,7 @@
 from django.urls import path
 from django.contrib import admin
-from .views import get_data, candle_per_date, candle_per_week, candle_per_month, candle_per_minute, asking_price, closed_price, sign_up, log_in
+from .views import get_data, candle_per_date, candle_per_week, candle_per_month, candle_per_minute, asking_price, closed_price, sign_up, logIn, logOut, check_login
+from django.views.decorators.csrf import csrf_exempt
 
 urlpatterns = [
     path('get_data/', get_data),
@@ -11,6 +12,8 @@ urlpatterns = [
     path('asking_price/', asking_price),
     path('closed_price/', closed_price),
     path('sign_up/', sign_up),
-    path('log_in/', log_in),
+    path('logIn/', csrf_exempt(logIn)), 
+    path('logOut/', logOut),
+    path('check_login/', check_login)
     # path('admin/', admin.site.urls)
 ]
