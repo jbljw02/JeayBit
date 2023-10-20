@@ -16,7 +16,7 @@ const Header = () => {
   const logOut = () => {
     (async () => {
       try {
-        const response = await axios.post('http://127.0.0.1:8000/logOut/')
+        const response = await axios.post('http://127.0.0.1:8000/logOut/', {withCredentials: true});
         
         if(response.status === 200) {
           console.log("로그아웃 성공 : ", response)

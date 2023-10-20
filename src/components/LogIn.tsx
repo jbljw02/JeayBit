@@ -5,6 +5,8 @@ import { SetStateAction, useState } from "react";
 import axios, { AxiosError } from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState, setLogInUser } from "../store";
+import { csrftoken } from './csrftoken';
+
 
 const LogIn = () => {
 
@@ -23,6 +25,8 @@ const LogIn = () => {
   console.log("유저 : ", logInUser)
 
   const logIn = (email: string, password: string) => {
+
+    console.log("토큰 : ", csrftoken)
     setIsEmailEmpty(false);
     setIsPasswordEmpty(false);
     
@@ -38,6 +42,7 @@ const LogIn = () => {
           }, {
             headers: {
               'Content-Type': 'application/json',
+              'X-CSRFToken': csrftoken,
             },
             withCredentials: true,
           });
