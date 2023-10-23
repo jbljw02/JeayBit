@@ -5,13 +5,38 @@ import SimpleBar from 'simplebar-react';
 import 'simplebar/dist/simplebar.min.css';
 
 const PriceDetail = () => {
+
+  const [sectionChange, setSectionChange] = useState<string>('매수');
+
   return (
     <div className="lightMode">
       <div className="priceDetail-title askingTitle lightMode">호가내역</div>
       <AskingPrice />
       <div className="priceDetail-title closedTitle lightMode">체결내역</div>
       <ClosedPrice />
-      <TradingSection />
+      <div className="trading-section lightMode-title">
+        <span className={`${sectionChange === '매수' ?
+          'buyingSection' :
+          ''
+          }`} onClick={() => (setSectionChange('매수'))}>매수</span>
+        <span className={`${sectionChange === '매도' ?
+          'sellingSection' :
+          ''
+          }`} onClick={() => (setSectionChange('매도'))}>매도</span>
+        {/* <span className={`${sectionChange === '거래내역' ?
+          'tradingHistorySection' :
+          ''
+          }`} onClick={() => (setSectionChange('거래내역'))}>거래내역</span> */}
+      </div>
+      {
+        sectionChange === '매수' ?
+          <BuyingSection /> :
+          (
+            sectionChange === '매도' ?
+              <SellingSection /> :
+              null
+          )
+      }
     </div>
   );
 }
@@ -192,21 +217,21 @@ const ClosedPrice = () => {
   )
 }
 
-const TradingSection = () => {
+const BuyingSection = () => {
 
-  const [buyingPrice, setBuyingPrice] = useState(20);
+  const [buyingPrice, setBuyingPrice] = useState<number>(0);
+  const [selectedPercentage, setSelectedPercentage] = useState<string>('');
 
   const buyingPriceChange = (event: { target: { value: SetStateAction<number>; }; }) => {
     setBuyingPrice(event.target.value)
   }
 
+  const selectPercentage = (percentage: string) => {
+    setSelectedPercentage(percentage)
+  }
+
   return (
     <>
-      <div className="trading-section lightMode-title">
-        <span>매수</span>
-        <span>매도</span>
-        <span>거래내역</span>
-      </div>
       <table className="trading-headTable">
         <tr className="trading-choice">
           <td className="radio">
@@ -234,6 +259,12 @@ const TradingSection = () => {
       </table>
       <table className="trading-table">
         <tr>
+          <td className="trading-category">주문가능</td>
+          <td className="trading-availableTrade">0
+            <span>KRW</span>
+          </td>
+        </tr>
+        <tr>
           <td className="trading-category">매수가격</td>
           <td className="td-input">
             <input onChange={(e) => setBuyingPrice(Number(e.target.value))} value={buyingPrice}>
@@ -243,7 +274,7 @@ const TradingSection = () => {
         <tr>
           <td></td>
           <td>
-            <input type="range" min="0" max="9999999" step={1} value={buyingPrice} className="slider" onChange={(e) => setBuyingPrice(Number(e.target.value))} />
+            <input type="range" min="0" max="50000000" step={1} value={buyingPrice} className="slider buy" onChange={(e) => setBuyingPrice(Number(e.target.value))} />
           </td>
         </tr>
         <tr>
@@ -256,21 +287,31 @@ const TradingSection = () => {
         <tr>
           <td></td>
           <td className="count-percentage">
-            <span>
-              0%
-            </span>
-            <span>
-              25%
-            </span>
-            <span>
-              50%
-            </span>
-            <span>
-              75%
-            </span>
-            <span>
-              100%
-            </span>
+            <span className={
+              selectedPercentage === '0%' ?
+                'buy-percentage' :
+                'nonSelected-percentage'
+            } onClick={() => (selectPercentage('0%'))}>0%</span>
+            <span className={
+              selectedPercentage === '25%' ?
+                'buy-percentage' :
+                'nonSelected-percentage'
+            } onClick={() => (selectPercentage('25%'))}>25%</span>
+            <span className={
+              selectedPercentage === '50%' ?
+                'buy-percentage' :
+                'nonSelected-percentage'
+            } onClick={() => (selectPercentage('50%'))}>50%</span>
+            <span className={
+              selectedPercentage === '75%' ?
+                'buy-percentage' :
+                'nonSelected-percentage'
+            } onClick={() => (selectPercentage('75%'))}>75%</span>
+            <span className={
+              selectedPercentage === '100%' ?
+                'buy-percentage' :
+                'nonSelected-percentage'
+            } onClick={() => (selectPercentage('100%'))}>100%</span>
           </td>
         </tr>
         <tr>
@@ -281,9 +322,120 @@ const TradingSection = () => {
           </td>
         </tr>
       </table>
-      <div className="trading-submit">
+      <div className="trading-submit-buy">
         <span>매수</span>
-        <span>초기화</span>
+      </div>
+    </>
+  )
+}
+
+const SellingSection = () => {
+
+  const [sellingPrice, setSellingPrice] = useState<number>(0);
+  const [selectedPercentage, setSelectedPercentage] = useState<string>('');
+
+  const buyingPriceChange = (event: { target: { value: SetStateAction<number>; }; }) => {
+    setSellingPrice(event.target.value)
+  }
+
+  const selectPercentage = (percentage: string) => {
+    setSelectedPercentage(percentage)
+  }
+
+  return (
+    <>
+      <table className="trading-headTable">
+        <tr className="trading-choice">
+          <td className="radio">
+            주문구분
+          </td>
+          <td className="radio">
+            <input type="radio" name="radio" id="radio1" className="radio-input"></input>
+            <label className="radio-designate radio-label" htmlFor="radio1">
+              지정가
+            </label>
+          </td>
+          <td className="radio">
+            <input type="radio" name="radio" id="radio2" className="radio-input"></input>
+            <label className="radio-market radio-label" htmlFor="radio2">
+              시장가
+            </label>
+          </td>
+          <td className="radio">
+            <input type="radio" name="radio" id="radio3" className="radio-input"></input>
+            <label className="radio-reserve radio-label" htmlFor="radio3">
+              예약/지정가
+            </label>
+          </td>
+        </tr>
+      </table>
+      <table className="trading-table">
+        <tr>
+          <td className="trading-category">주문가능</td>
+          <td className="trading-availableTrade">0
+            <span>BTC</span>
+          </td>
+        </tr>
+        <tr>
+          <td className="trading-category">매수가격</td>
+          <td className="td-input">
+            <input onChange={(e) => setSellingPrice(Number(e.target.value))} value={sellingPrice}>
+            </input>
+          </td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>
+            <input type="range" min="0" max="50000000" step={1} value={sellingPrice} className="slider sell" onChange={(e) => setSellingPrice(Number(e.target.value))} />
+          </td>
+        </tr>
+        <tr>
+          <td className="trading-category">주문수량</td>
+          <td className="td-input">
+            <input>
+            </input>
+          </td>
+        </tr>
+        <tr>
+          <td></td>
+          <td className="count-percentage">
+            <span className={
+              selectedPercentage === '0%' ?
+                'sell-percentage' :
+                'nonSelected-percentage'
+            } onClick={() => (selectPercentage('0%'))}>0%</span>
+            <span className={
+              selectedPercentage === '25%' ?
+                'sell-percentage' :
+                'nonSelected-percentage'
+            } onClick={() => (selectPercentage('25%'))}>25%</span>
+            <span className={
+              selectedPercentage === '50%' ?
+                'sell-percentage' :
+                'nonSelected-percentage'
+            } onClick={() => (selectPercentage('50%'))}>50%</span>
+            <span className={
+              selectedPercentage === '75%' ?
+                'sell-percentage' :
+                'nonSelected-percentage'
+            } onClick={() => (selectPercentage('75%'))}>75%</span>
+            <span className={
+              selectedPercentage === '100%' ?
+                'sell-percentage' :
+                'nonSelected-percentage'
+            } onClick={() => (selectPercentage('100%'))}>100%</span>
+          </td>
+        </tr>
+        <tr>
+          <td className="trading-category">주문총액</td>
+          <td className="td-input">
+            <input>
+            </input>
+          </td>
+        </tr>
+      </table>
+      <div className="trading-submit-sell">
+        <span>매도</span>
       </div>
     </>
   )
