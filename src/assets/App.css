@@ -446,6 +446,10 @@ dd span {
   font-size: 16px;
 }
 
+.closedTitle {
+  border-top-width: 1px;
+  border-top-style: solid;
+}
 .closedPrice-table,
 .askingPrice-table {
   table-layout: fixed;
@@ -485,11 +489,6 @@ dd span {
 .closedPrice-table th:nth-child(3),
 .closedPrice-table td:nth-child(3) {
   text-align: right;
-}
-
-.askingPrice-table {
-  border-bottom-width: 1px;
-  border-bottom-style: solid;
 }
 
 .askingPrice-table thead th {
@@ -565,6 +564,176 @@ dd span {
 
 .asking-sell {
   color: #f23645;
+}
+
+.trading-section {
+  display: flex;
+  flex-direction: row;
+  font-size: 16px;
+  border-top-width: 1px;
+  border-top-style: solid;
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
+}
+
+.trading-section span {
+  padding-top: 16px;
+  padding-bottom: 16px;
+  margin-left: 59px;
+}
+
+.trading-headTable {
+  padding-top: 4px;
+}
+
+.trading-headTable,
+.trading-table {
+  padding-left: 11px;
+  padding-right: 15px;
+  font-size: 15px;
+  border-spacing: 0 10px;
+}
+
+.trading-choice {
+  width: 100%;
+}
+
+.trading-choice td {
+  padding-left: 10px;
+  font-size: 13.5px;
+}
+
+.trading-choice td:nth-child(1) {
+  padding-left: 0px;
+}
+
+.trading-choice td:nth-child(2) {
+  padding-left: 17px;
+}
+
+.radio-input {
+  width: 13px;
+  height: 13px;
+}
+
+.radio-label {
+  cursor: pointer;
+}
+
+.trading-choice td:nth-child(1) {
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.trading-table tr,
+.trading-headTable tr {
+  width: 100%;
+}
+
+.trading-table td {
+  /* margin-top: 200px; */
+}
+
+.trading-category {
+  color: #000000;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.td-input {
+  border: 1px solid #c7c6c6;
+  border-radius: 2px;
+  width: 74%;
+  height: 28px;
+}
+
+.trading-table input {
+  border: none;
+  width: 95%;
+  height: 20px;
+  font-size: 13.5px;
+  padding-left: 9px;
+}
+
+.count-percentage span {
+  margin-left: 23px;
+  font-size: 13.5px;
+  cursor: pointer;
+  color: #727272;
+  /* border: 1px solid #e2e2e2;
+  border-radius: 2px;
+  padding: 3.5px 8px; */
+}
+
+.count-percentage span:nth-child(1) {
+  margin-left: 0px;
+}
+
+.slider {
+  width: 100%;
+  margin-bottom: 7px;
+}
+
+/* 매수가격 하단 슬라이드바 */
+input[type=range] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 95%;
+  height: 1.5px;
+  background: #d3d3d3;
+}
+
+input[type=range]:hover::-webkit-slider-thumb {
+  background-color: #2962FF;
+}
+
+input[type=range]::-webkit-slider-thumb {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: #22ab94;
+}
+
+/* input[type=range]::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    border-radius :50%;
+    background-color :#22ab94 ;
+} */
+
+/* input[type=range]::-moz-range-track {
+  width:100%;
+  height :1.5px ;
+  background:#d3d3d3 ;
+} */
+
+.trading-table input:focus {
+  outline: none;
+}
+
+.trading-submit {
+  align-items: center;
+  text-align: center;
+  font-size: 16px;
+  margin-top: 20px;
+  color: #ffffff;
+}
+
+.trading-submit span {
+  border-radius: 2px;
+}
+
+.trading-submit span:nth-child(1) {
+  background-color: #22ab94;
+  padding: 10px 91px;
+}
+
+.trading-submit span:nth-child(2) {
+  background-color: #22ab94;
+  margin-left: 12px;
+  padding: 10px 12px;
 }
 
 /* 화폐 리스트 영역 css */
@@ -694,9 +863,17 @@ dd span {
   overflow-x: hidden;
 }
 
+.scrollBar-askingPriceTable {
+  width: 100%;
+  max-height: calc(100vh - 1025px);
+  /* max-height: 415px; */
+  overflow-x: hidden;
+}
+
 .scrollBar-closedPriceTable {
   width: 100%;
-  max-height: calc(100vh - 1035px);
+  max-height: calc(100vh - 1028px);
+  /* max-height: 415px; */
   overflow-x: hidden;
 }
 

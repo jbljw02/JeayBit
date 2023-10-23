@@ -1,16 +1,17 @@
 import { useDispatch, useSelector } from "react-redux";
 import { AskingData, RootState, setAsking_data, setAsking_dateTime } from "../store";
-import { useEffect, useState } from "react";
+import { SetStateAction, useEffect, useState } from "react";
 import SimpleBar from 'simplebar-react';
 import 'simplebar/dist/simplebar.min.css';
 
 const PriceDetail = () => {
   return (
     <div className="lightMode">
-      <div className="priceDetail-title lightMode">호가내역</div>
+      <div className="priceDetail-title askingTitle lightMode">호가내역</div>
       <AskingPrice />
-      <div className="priceDetail-title lightMode">체결내역</div>
+      <div className="priceDetail-title closedTitle lightMode">체결내역</div>
       <ClosedPrice />
+      <TradingSection />
     </div>
   );
 }
@@ -79,59 +80,66 @@ const AskingPrice = () => {
   }
 
   return (
-    <table className="askingPrice-table lightMode">
-      <thead className="lightMode-title">
-        <tr>
-          <th>등록시간</th>
-          <th>호가</th>
-          <th>
-            수량<span>({(cr_market_selected).slice(4)})</span>
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        {
-          asking_data.map((item, i) => {
-            // 이전 호가와 현재 호가를 비교한 값을 이용 - 변경된 호가가 현재 state를 순회하면서 일치하는 값에 대해서 스타일 지정
-            let isChanged_bid = differences_bid.some((value, index) => {
-              return value.new_bid_size === item.bid_size;
-            })
-            let bidClass = isChanged_bid ? 'change-bid' : '';
-            const percentage = (item.bid_size / asking_totalBidSize) * 100;  // 전체호가를 각각 호가로 나누어 비울을 환산한 후 해당 비율만큼 스타일 설정
-            return (
-              <tr style={{ background: `linear-gradient(270deg, rgba(34,171,148, .2) ${percentage}%, transparent ${percentage}%)` }}>
-                <td>{asking_dateTime}</td>
-                <td>{(item.bid_price).toLocaleString()}</td>
-                <td className={bidClass}>{(item.bid_size).toFixed(5)}
-                </td>
-              </tr>
-            )
-          })
-        }
-        {
-          asking_data.map((item, i) => {
-            // 이전 호가와 현재 호가를 비교한 값을 이용 - 변경된 호가가 현재 state를 순회하면서 일치하는 값에 대해서 스타일 지정
-            let isChange_ask = differences_ask.some((value, index) => {
-              return value.new_ask_size === item.ask_size;
-            })
-            let askClass = isChange_ask ? 'change-ask' : '';
-            const percentage = (item.ask_size / asking_totalAskSize) * 100;  // 전체호가를 각각 호가로 나누어 비울을 환산한 후 해당 비율만큼 스타일 설정
-            return (
-              <tr style={{ background: `linear-gradient(270deg, rgba(242,54,69, .2) ${percentage}%, transparent ${percentage}%)` }}>
-                <td>{asking_dateTime}</td>
-                <td>{(item.ask_price).toLocaleString()}</td>
-                <td className={askClass}>{(item.ask_size).toFixed(5)}
-                </td>
-              </tr>
-            )
-          })
-        }
-      </tbody>
-    </table>
+    <>
+      <table className="askingPrice-table lightMode">
+        <thead className="lightMode-title">
+          <tr>
+            <th>등록시간</th>
+            <th>호가</th>
+            <th>
+              수량<span>({(cr_market_selected).slice(4)})</span>
+            </th>
+          </tr>
+        </thead>
+      </table>
+      <SimpleBar className="scrollBar-askingPriceTable">
+        <table className="askingPrice-table lightMode">
+          <tbody>
+            {
+              asking_data.map((item, i) => {
+                // 이전 호가와 현재 호가를 비교한 값을 이용 - 변경된 호가가 현재 state를 순회하면서 일치하는 값에 대해서 스타일 지정
+                let isChanged_bid = differences_bid.some((value, index) => {
+                  return value.new_bid_size === item.bid_size;
+                })
+                let bidClass = isChanged_bid ? 'change-bid' : '';
+                const percentage = (item.bid_size / asking_totalBidSize) * 100;  // 전체호가를 각각 호가로 나누어 비울을 환산한 후 해당 비율만큼 스타일 설정
+                return (
+                  <tr style={{ background: `linear-gradient(270deg, rgba(34,171,148, .2) ${percentage}%, transparent ${percentage}%)` }}>
+                    <td>{asking_dateTime}</td>
+                    <td>{(item.bid_price).toLocaleString()}</td>
+                    <td className={bidClass}>{(item.bid_size).toFixed(5)}
+                    </td>
+                  </tr>
+                )
+              })
+            }
+            {
+              asking_data.map((item, i) => {
+                // 이전 호가와 현재 호가를 비교한 값을 이용 - 변경된 호가가 현재 state를 순회하면서 일치하는 값에 대해서 스타일 지정
+                let isChange_ask = differences_ask.some((value, index) => {
+                  return value.new_ask_size === item.ask_size;
+                })
+                let askClass = isChange_ask ? 'change-ask' : '';
+                const percentage = (item.ask_size / asking_totalAskSize) * 100;  // 전체호가를 각각 호가로 나누어 비울을 환산한 후 해당 비율만큼 스타일 설정
+                return (
+                  <tr style={{ background: `linear-gradient(270deg, rgba(242,54,69, .2) ${percentage}%, transparent ${percentage}%)` }}>
+                    <td>{asking_dateTime}</td>
+                    <td>{(item.ask_price).toLocaleString()}</td>
+                    <td className={askClass}>{(item.ask_size).toFixed(5)}
+                    </td>
+                  </tr>
+                )
+              })
+            }
+          </tbody>
+        </table>
+      </SimpleBar>
+    </>
   )
 }
 
 const ClosedPrice = () => {
+
   const closed_data = useSelector((state: RootState) => state.closed_data);
   const cr_market_selected = useSelector((state: RootState) => state.cr_market_selected);
   const cr_selected = useSelector((state: RootState) => state.cr_selected);
@@ -180,6 +188,103 @@ const ClosedPrice = () => {
           </tbody>
         </table>
       </SimpleBar>
+    </>
+  )
+}
+
+const TradingSection = () => {
+
+  const [buyingPrice, setBuyingPrice] = useState(20);
+
+  const buyingPriceChange = (event: { target: { value: SetStateAction<number>; }; }) => {
+    setBuyingPrice(event.target.value)
+  }
+
+  return (
+    <>
+      <div className="trading-section lightMode-title">
+        <span>매수</span>
+        <span>매도</span>
+        <span>거래내역</span>
+      </div>
+      <table className="trading-headTable">
+        <tr className="trading-choice">
+          <td className="radio">
+            주문구분
+          </td>
+          <td className="radio">
+            <input type="radio" name="radio" id="radio1" className="radio-input"></input>
+            <label className="radio-designate radio-label" htmlFor="radio1">
+              지정가
+            </label>
+          </td>
+          <td className="radio">
+            <input type="radio" name="radio" id="radio2" className="radio-input"></input>
+            <label className="radio-market radio-label" htmlFor="radio2">
+              시장가
+            </label>
+          </td>
+          <td className="radio">
+            <input type="radio" name="radio" id="radio3" className="radio-input"></input>
+            <label className="radio-reserve radio-label" htmlFor="radio3">
+              예약/지정가
+            </label>
+          </td>
+        </tr>
+      </table>
+      <table className="trading-table">
+        <tr>
+          <td className="trading-category">매수가격</td>
+          <td className="td-input">
+            <input onChange={(e) => setBuyingPrice(Number(e.target.value))} value={buyingPrice}>
+            </input>
+          </td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>
+            <input type="range" min="0" max="9999999" step={1} value={buyingPrice} className="slider" onChange={(e) => setBuyingPrice(Number(e.target.value))} />
+          </td>
+        </tr>
+        <tr>
+          <td className="trading-category">주문수량</td>
+          <td className="td-input">
+            <input>
+            </input>
+          </td>
+        </tr>
+        <tr>
+          <td></td>
+          <td className="count-percentage">
+            <span>
+              0%
+            </span>
+            <span>
+              25%
+            </span>
+            <span>
+              50%
+            </span>
+            <span>
+              75%
+            </span>
+            <span>
+              100%
+            </span>
+          </td>
+        </tr>
+        <tr>
+          <td className="trading-category">주문총액</td>
+          <td className="td-input">
+            <input>
+            </input>
+          </td>
+        </tr>
+      </table>
+      <div className="trading-submit">
+        <span>매수</span>
+        <span>초기화</span>
+      </div>
     </>
   )
 }
