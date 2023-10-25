@@ -676,19 +676,35 @@ dd span {
   padding-left: 2.5px;
 }
 
+.buyingPrice span {
+  font-size: 11.5px;
+  color: rgba(0, 0, 0, 0.3);
+  font-weight: bold;
+  padding-left: 2.5px;
+}
+
 .td-input {
   border: 1px solid #c7c6c6;
   border-radius: 2px;
-  width: 74%;
+  width: 30%;
   height: 28px;
+  padding-left: 15px;
+}
+
+.td-input span {
+  font-size: 11.5px;
+  color: rgba(0, 0, 0, 0.3);
+  font-weight: bold;
+  padding-left: 2px;
 }
 
 .trading-table input {
   border: none;
-  width: 95%;
+  width: 80%;
   height: 20px;
   font-size: 13.5px;
   padding-left: 9px;
+  text-align: end;
 }
 
 .count-percentage span {
@@ -775,7 +791,7 @@ input[type=range]::-webkit-slider-thumb {
   align-items: center;
   text-align: center;
   font-size: 16px;
-  margin-top: 33px;
+  margin-top: 27px;
   color: #ffffff;
 }
 
@@ -786,15 +802,27 @@ input[type=range]::-webkit-slider-thumb {
 
 .trading-submit-buy span {
   background-color: #22ab94;
-  padding: 13px 140px;
-  margin-right: 11px;
+  padding: 13px 145px;
+  /* padding: 13px 128px; */
 }
 
 .trading-submit-sell span {
   background-color: #f23645;
-  padding: 13px 140px;
-  margin-right: 11px;
+  padding: 13px 145px;
 }
+
+.designate {
+  margin-top: 102px;
+}
+
+.market {
+  margin-top: 219px;
+}
+
+.reserve span {
+  padding: 13px 128px;
+}
+
 
 /* 화폐 리스트 영역 css */
 .aside {
@@ -925,14 +953,14 @@ input[type=range]::-webkit-slider-thumb {
 
 .scrollBar-askingPriceTable {
   width: 100%;
-  max-height: calc(100vh - 1061px);
+  max-height: calc(100vh - 1090px);
   /* max-height: 415px; */
   overflow-x: hidden;
 }
 
 .scrollBar-closedPriceTable {
   width: 100%;
-  max-height: calc(100vh - 1058px);
+  max-height: calc(100vh - 1090px);
   /* max-height: 415px; */
   overflow-x: hidden;
 }
