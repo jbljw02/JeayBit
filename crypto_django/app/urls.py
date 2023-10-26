@@ -13,6 +13,7 @@ from .views import (
     logOut,
     check_login,
 )
+
 from django.views.decorators.csrf import csrf_exempt
 
 urlpatterns = [

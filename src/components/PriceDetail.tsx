@@ -223,6 +223,8 @@ const BuyingSection = () => {
   const [selectedPercentage, setSelectedPercentage] = useState<string>('');
   const [bidSort, setBidSort] = useState<string>('지정가');
 
+  const cr_selected = useSelector((state: RootState) => state.cr_selected);
+
   const buyingPriceChange = (event: { target: { value: SetStateAction<number>; }; }) => {
     setBuyingPrice(event.target.value)
   }
@@ -288,7 +290,13 @@ const BuyingSection = () => {
                 <td className="td-input">
                   <input>
                   </input>
-                  <span>BTC</span>
+                  <span>
+                    {
+                      cr_selected && cr_selected.market ?
+                        (cr_selected.market).slice(4) :
+                        null
+                    }
+                  </span>
                 </td>
               </tr>
               <tr>
@@ -431,7 +439,12 @@ const BuyingSection = () => {
                     <td className="td-input">
                       <input>
                       </input>
-                      <span>BTC</span>
+                      <span>
+                        {
+                          cr_selected && cr_selected.market ?
+                            (cr_selected.market).slice(4) :
+                            null
+                        }</span>
                     </td>
                   </tr>
                   <tr>
@@ -488,6 +501,8 @@ const SellingSection = () => {
   const [sellingPrice, setSellingPrice] = useState<number>(0);
   const [selectedPercentage, setSelectedPercentage] = useState<string>('');
   const [bidSort, setBidSort] = useState<string>('지정가');
+
+  const cr_selected = useSelector((state: RootState) => state.cr_selected);
 
   const buyingPriceChange = (event: { target: { value: SetStateAction<number>; }; }) => {
     setSellingPrice(event.target.value)
@@ -554,7 +569,12 @@ const SellingSection = () => {
                 <td className="td-input">
                   <input>
                   </input>
-                  <span>BTC</span>
+                  <span>
+                    {
+                      cr_selected && cr_selected.market ?
+                        (cr_selected.market).slice(4) :
+                        null
+                    }</span>
                 </td>
               </tr>
               <tr>
@@ -608,7 +628,13 @@ const SellingSection = () => {
                   <tr>
                     <td className="trading-category">주문가능</td>
                     <td className="trading-availableTrade">0
-                      <span>BTC</span>
+                      <span>
+                        {
+                          cr_selected && cr_selected.market ?
+                            (cr_selected.market).slice(4) :
+                            null
+                        }
+                      </span>
                     </td>
                   </tr>
                   <tr>
@@ -616,7 +642,13 @@ const SellingSection = () => {
                     <td className="td-input">
                       <input>
                       </input>
-                      <span>BTC</span>
+                      <span>
+                        {
+                          cr_selected && cr_selected.market ?
+                            (cr_selected.market).slice(4) :
+                            null
+                        }
+                      </span>
                     </td>
                   </tr>
                   <tr>
@@ -660,7 +692,12 @@ const SellingSection = () => {
                   <tr>
                     <td className="trading-category">주문가능</td>
                     <td className="trading-availableTrade">0
-                      <span>BTC</span>
+                      <span>
+                        {
+                          cr_selected && cr_selected.market ?
+                            (cr_selected.market).slice(4) :
+                            null
+                        }</span>
                     </td>
                   </tr>
                   <tr>
@@ -696,7 +733,12 @@ const SellingSection = () => {
                     <td className="td-input">
                       <input>
                       </input>
-                      <span>BTC</span>
+                      <span>
+                        {
+                          cr_selected && cr_selected.market ?
+                            (cr_selected.market).slice(4) :
+                            null
+                        }</span>
                     </td>
                   </tr>
                   <tr>

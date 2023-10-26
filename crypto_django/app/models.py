@@ -19,6 +19,13 @@ class CustomUserManager(BaseUserManager):
         user.set_password(password)  # 패스워드는 set_password 메소드를 쓰기 위해 별도로 선언(비밀번호를 해시화하여 저장해 평문을 알 수 없게 함)
         user.save(using=self._db)  # DB에 값을 저장
         return user
+    
+    def create_superuser(self, username, email, password):
+        user = self.create_user(username, email, password)
+        user.is_staff = True
+        user.is_superuser = True
+        user.save(using=self._db)
+        return user    
 
 # 실제 사용자 데이터를 표현하는 모델
 # AbstraceBaseUser는 password, last_name을 가지고 있는 모델, PermissionsMixin는 groups 및 user_permissions 제공

@@ -227,7 +227,6 @@ def sign_up(request):
 def logIn(request):
     try:
         print(request.data)
-        print("키:", request.session.session_key)
         email = request.data.get("email")
         password = request.data.get("password")
 
@@ -237,6 +236,7 @@ def logIn(request):
 
         if user is not None:
             login(request, user)
+            print("키:", request.session.session_key)
             print("로그인 상태 : ", request.user)
             return Response({"detail": f"로그인 성공 : {request.user.username}"})
         else:
@@ -246,22 +246,25 @@ def logIn(request):
         print("에러 : ", e)
         return Response({"detail": f"서버 내부 에러: {str(e)}"}, status=500)
 
+import pdb;
 
 # 로그아웃
 @api_view(["POST"])
 def logOut(request):
+    print("로그아웃 리퀘스트 : ", request.data)
     print("로그아웃 전 : ", request.session.session_key)
 
     try:
-        if request.session.session_key is not None:
-            request.session.flush()  # 세션 데이터 삭제
-            logout(request)
-            return Response({"detail": "로그아웃 성공"})
-        else:
-            return Response({"detail": "세션 키가 존재하지 않습니다."}, status=400)
+        # if request.session.session_key is not None:
+        request.session.flush()  # 세션 데이터 삭제
+        logout(request)
+        return Response({"detail": "로그아웃 성공"})
+        # else:
+            # return Response({"detail": "세션 키가 존재하지 않습니다."}, status=400)
     except Exception as e:
         print("에러 : ", e)
         return Response({"detail": "로그아웃 실패"})
+
 
 
 @api_view(["GET"])

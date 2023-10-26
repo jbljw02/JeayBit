@@ -4,8 +4,12 @@ import { RootState, setTheme } from '../store';
 import { useState } from 'react';
 import axios from 'axios';
 import { Routes, Route, Link, useNavigate, Outlet } from 'react-router-dom'
+import { csrftoken } from './csrftoken';
 
 const Header = () => {
+
+  axios.defaults.xsrfCookieName = 'csrftoken';
+  axios.defaults.xsrfHeaderName = 'X-CSRFToken';
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -16,19 +20,26 @@ const Header = () => {
   const logOut = () => {
     (async () => {
       try {
-        const response = await axios.post('http://127.0.0.1:8000/logOut/', {withCredentials: true});
-        
-        if(response.status === 200) {
-          console.log("로그아웃 성공 : ", response)
-        }
-        else {
-          console.log("로그아웃 실패")
+        const response = await axios.post('http://127.0.0.1:8000/logOut/', {
+
+        }, {
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrftoken,
+          },
+          withCredentials: true,
+        });
+
+        if (response.status === 200) {
+          console.log("로그아웃 성공 : ", response);
+        } else {
+          console.log("로그아웃 실패");
         }
       } catch (error) {
-        console.log("로그아웃 정보 전송 실패")
+        console.log("로그아웃 정보 전송 실패");
       }
     })();
-  }
+  };
 
   const checkLogin = async () => {
     try {
