@@ -20,6 +20,7 @@ class CustomUserManager(BaseUserManager):
         user.save(using=self._db)  # DB에 값을 저장
         return user
     
+    # 관리자 계정 생성 메소드
     def create_superuser(self, username, email, password):
         user = self.create_user(username, email, password)
         user.is_staff = True
@@ -63,3 +64,14 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     USERNAME_FIELD = 'email'  # 로그인 시 식별자로 사용되는 필드
     REQUIRED_FIELDS = ['username']  # 관리자 계정 생성 시 반드시 입력해야 하는 필드  
+    
+    
+class Crypto(models.Model):
+    name = models.CharField(max_length=200)
+    price = models.FloatField()
+
+class UserCrypto(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    cryptocurrency = models.ForeignKey(Crypto, on_delete=models.CASCADE)
+    is_interested = models.BooleanField(default=False)
+    is_owned = models.BooleanField(default=False)

@@ -520,8 +520,6 @@ const logInUser = createSlice({
   }
 })
 
-
-
 export default configureStore({
   reducer: {
     cr_name: cr_name.reducer,

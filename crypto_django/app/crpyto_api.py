@@ -1,4 +1,5 @@
 from requests import get
+from .models import Crypto
 
 def price():
     headers = {"accept" : "application/json"}
@@ -56,6 +57,22 @@ def price():
     return name, cur_price, unJoin_market, change, change_rate, change_price, acc_trade_price_24h, acc_trade_volume_24h, open_price, high_price, low_price
 
 price()
+
+def update_crypto():
+    name, cur_price, _, _, _, _, _, _, _, _, _ = price()
+
+    for i in range(len(name)):
+        # 이미 존재하는 암호화폐인지 확인
+        crypto = Crypto.objects.filter(name=name[i]).first()
+
+        # 존재한다면 가격 업데이트, 없다면 새로 생성
+        if crypto:
+            crypto.price = cur_price[i]
+            crypto.save()
+        else:
+            Crypto.objects.create(name=name[i], price=cur_price[i])
+            
+update_crypto()
 
 def candle_per_date_BTC():
     headers = {"accept" : "application/json"}

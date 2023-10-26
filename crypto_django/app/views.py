@@ -246,8 +246,6 @@ def logIn(request):
         print("에러 : ", e)
         return Response({"detail": f"서버 내부 에러: {str(e)}"}, status=500)
 
-import pdb;
-
 # 로그아웃
 @api_view(["POST"])
 def logOut(request):
@@ -264,7 +262,6 @@ def logOut(request):
     except Exception as e:
         print("에러 : ", e)
         return Response({"detail": "로그아웃 실패"})
-
 
 
 @api_view(["GET"])
