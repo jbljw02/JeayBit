@@ -1,6 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import { AskingData, RootState, setAsking_data, setAsking_dateTime } from "../store";
 import { SetStateAction, useEffect, useState } from "react";
+import { Routes, Route, Link, useNavigate, Outlet } from 'react-router-dom'
 import SimpleBar from 'simplebar-react';
 import 'simplebar/dist/simplebar.min.css';
 
@@ -219,11 +220,14 @@ const ClosedPrice = () => {
 
 const BuyingSection = () => {
 
+  const navigate = useNavigate();
+
   const [buyingPrice, setBuyingPrice] = useState<number>(0);
   const [selectedPercentage, setSelectedPercentage] = useState<string>('');
   const [bidSort, setBidSort] = useState<string>('지정가');
 
   const cr_selected = useSelector((state: RootState) => state.cr_selected);
+  const logInEmail = useSelector((state: RootState) => state.logInEmail);
 
   const buyingPriceChange = (event: { target: { value: SetStateAction<number>; }; }) => {
     setBuyingPrice(event.target.value)
@@ -338,9 +342,16 @@ const BuyingSection = () => {
                 </td>
               </tr>
             </table>
-            <div className="trading-submit-buy designate">
-              <span>매수</span>
-            </div>
+            {
+              logInEmail !== '' ?
+                <div className="trading-submit-buy designate">
+                  <span>매수</span>
+                </div> :
+                <div className="trading-submit-nonLogIn-buy designate">
+                  <span onClick={() => { navigate('/logIn') }}>로그인</span>
+                  <span onClick={() => { navigate('/signUp') }} >회원가입</span>
+                </div>
+            }
           </> :
           (
             // 매수 - 시장가 영역
@@ -392,9 +403,16 @@ const BuyingSection = () => {
                     </td>
                   </tr>
                 </table>
-                <div className="trading-submit-buy market">
-                  <span>매수</span>
-                </div>
+                {
+                  logInEmail !== '' ?
+                    <div className="trading-submit-buy market">
+                      <span>매수</span>
+                    </div> :
+                    <div className="trading-submit-nonLogIn-buy market">
+                      <span onClick={() => { navigate('/logIn') }}>로그인</span>
+                      <span onClick={() => { navigate('/signUp') }}>회원가입</span>
+                    </div>
+                }
               </> :
               // 매수 - 예약가 영역
               <>
@@ -486,9 +504,16 @@ const BuyingSection = () => {
                     </td>
                   </tr>
                 </table>
-                <div className="trading-submit-buy reserve">
-                  <span>예약매수</span>
-                </div>
+                {
+                  logInEmail !== '' ?
+                    <div className="trading-submit-buy reserve">
+                      <span>예약매수</span>
+                    </div> :
+                    <div className="trading-submit-nonLogIn-buy reserve">
+                      <span onClick={() => { navigate('/logIn') }}>로그인</span>
+                      <span onClick={() => { navigate('/signUp') }}>회원가입</span>
+                    </div>
+                }
               </>
           )
       }
@@ -498,11 +523,14 @@ const BuyingSection = () => {
 
 const SellingSection = () => {
 
+  const navigate = useNavigate();
+
   const [sellingPrice, setSellingPrice] = useState<number>(0);
   const [selectedPercentage, setSelectedPercentage] = useState<string>('');
   const [bidSort, setBidSort] = useState<string>('지정가');
 
   const cr_selected = useSelector((state: RootState) => state.cr_selected);
+  const logInEmail = useSelector((state: RootState) => state.logInEmail);
 
   const buyingPriceChange = (event: { target: { value: SetStateAction<number>; }; }) => {
     setSellingPrice(event.target.value)
@@ -616,9 +644,16 @@ const SellingSection = () => {
                 </td>
               </tr>
             </table>
-            <div className="trading-submit-sell designate">
-              <span>매도</span>
-            </div>
+            {
+              logInEmail !== '' ?
+                <div className="trading-submit-sell designate">
+                  <span>매도</span>
+                </div> :
+                <div className="trading-submit-nonLogIn-sell designate">
+                  <span onClick={() => { navigate('/logIn') }}>로그인</span>
+                  <span onClick={() => { navigate('/signUp') }}>회원가입</span>
+                </div>
+            }
           </> :
           (
             // 매도 - 시장가 영역
@@ -682,9 +717,16 @@ const SellingSection = () => {
                     </td>
                   </tr>
                 </table>
-                <div className="trading-submit-sell market">
-                  <span>매도</span>
-                </div>
+                {
+                  logInEmail !== '' ?
+                    <div className="trading-submit-sell market">
+                      <span>매도</span>
+                    </div> :
+                    <div className="trading-submit-nonLogIn-sell market">
+                      <span onClick={() => { navigate('/logIn') }}>로그인</span>
+                      <span onClick={() => { navigate('/signUp') }}>회원가입</span>
+                    </div>
+                }
               </> :
               // 매도 - 예약가 영역
               <>
@@ -780,9 +822,16 @@ const SellingSection = () => {
                     </td>
                   </tr>
                 </table>
-                <div className="trading-submit-sell reserve">
-                  <span>예약매도</span>
-                </div>
+                {
+                  logInEmail !== '' ?
+                    <div className="trading-submit-sell reserve">
+                      <span>예약매도</span>
+                    </div> :
+                    <div className="trading-submit-nonLogIn-sell reserve">
+                      <span onClick={() => { navigate('/logIn') }}>로그인</span>
+                      <span onClick={() => { navigate('/signUp') }}>회원가입</span>
+                    </div>
+                }
               </>
 
           )

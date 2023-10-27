@@ -56,6 +56,12 @@ const CryptoList = () => {
   const [userSelectedCrypto, setUserSelectedCrypto] = useState<any>();
   const cr_selected = useSelector((state: RootState) => state.cr_selected);
 
+  const logInUser = useSelector((state: RootState) => state.logInUser);
+  const logInEmail = useSelector((state: RootState) => state.logInEmail);
+  const favoriteCrypto = useSelector((state: RootState) => state.favoriteCrypto);
+  const [isFavorited, setIsFavorited] = useState<boolean>(false);
+
+
   // 체결 내역을 담을 state
   const closedData = useSelector((state: RootState) => state.closed_data);
 
@@ -90,7 +96,6 @@ const CryptoList = () => {
     return () => clearInterval(interval);
   }, []);
 
-  const [isFavorited, setIsFavorited] = useState<boolean>(false);
 
   // 별 이미지를 클릭할 때마다 서버로부터 관심 화폐에 대한 정보 받아옴
   useEffect(() => {
@@ -287,6 +292,8 @@ const CryptoList = () => {
     })(market, minute);
   }
 
+  console.log("로그인 이메일 : ", logInEmail)
+
   // 리스트에서 화폐를 선택하면 해당 화폐에 대한 캔들 호출(차트의 일자에 따라)
   const selectMarket_date = (market: string) => {
     if (chartSortDate === '1일') {
@@ -346,9 +353,6 @@ const CryptoList = () => {
     }
   }
 
-  const logInUser = useSelector((state: RootState) => state.logInUser);
-  const logInEmail = useSelector((state: RootState) => state.logInEmail);
-  const favoriteCrypto = useSelector((state: RootState) => state.favoriteCrypto);
 
   // 별 이미지를 클릭하면 on off
   const starClick = (index: number) => {
@@ -607,8 +611,8 @@ const CryptoList = () => {
                           <span className="span-star">
                             <img
                               onClick={() => {
-                                starClick(i)
-                                addCryptoToUser(logInEmail, filteredData[i].name)
+                                starClick(i);
+                                addCryptoToUser(logInEmail, filteredData[i].name);
                               }}
                               // 최초 star[i]의 상태는 'starOn'일 수가 없으므로 반드시 starOff 출력
                               // src={star[i] === 'starOn' ? starOn : starOff}
@@ -668,104 +672,114 @@ const CryptoList = () => {
           </SimpleBar> :
           (
             listCategory === '보유' ?
+            (
+              logInEmail !== '' ?
               <div>보유</div> :
-              // <SimpleBar className="scrollBar-listTable">
-                <table className="list-table">
-                  <tbody className='scrollable-tbody'>
-                    {/* 검색값을 반환한 filteredData 함수를 다시 반복문을 이용하여 출력 */}
-                    {
-                      filteredData.map((item, i) => {
-                        // 가격의 변화가 생긴 state를 테이블에서 찾아 해당 td 시각화
-                        let isChanged = differences.some((diff, index) => {
-                          return diff.index === i && diff.newValue === item.price
-                        });
-                        // DB에서 가져온 관심화폐 목록과 일치하는 행을 찾음
-                        let isFavorited = Array.isArray(favoriteCrypto) && favoriteCrypto.some((diff, index) => {
-                          return item.name === diff.crypto_name
-                        });
-                        let priceClass_rise = isChanged ? 'change-price-rise' : '';
-                        let priceClass_fall = isChanged ? 'change-price-fall' : '';
-                        return (
-                          // 관심화폐만 출력
-                          isFavorited && (
-                            <tr key={i} onClick={() => {
-                              nameSelect(filteredData[i].name);
-                              marketSelect(filteredData[i].market);
-                              setSelectedCrypto(filteredData[i]);
-                              selectMarket_date(filteredData[i].market);
-                              selectMarket_time(filteredData[i].market, selectedChartSort);
-                              selectAskingPrice(filteredData[i].market);
-                              selectClosedPrice(filteredData[i].market);
-                            }}>
-                              <td className='td-name lightMode'>
-                                <span className="span-star">
-                                  <img
-                                    onClick={() => {
-                                      starClick(i)
-                                      addCryptoToUser(logInEmail, filteredData[i].name)
-                                    }}
-                                    // 최초 star[i]의 상태는 'starOn'일 수가 없으므로 반드시 starOff 출력
-                                    // src={star[i] === 'starOn' ? starOn : starOff}
-                                    src={isFavorited ? starOn : starOff}
-                                    alt="star" />
-                                </span>
-                                <div className="div-name">
-                                  <div>
-                                    {item.name}
-                                  </div>
-                                  <div>
-                                    {item.market}
-                                  </div>
-                                </div>
-                              </td>
+              <div className="crypto-notice">보유 화폐를 확인하시려면 로그인 해주세요.</div>
+            ) :
+              (
+                logInEmail !== '' ?
+                  <SimpleBar className="scrollBar-listTable">
+                    <table className="list-table">
+                      <tbody className='scrollable-tbody'>
+                        {/* 검색값을 반환한 filteredData 함수를 다시 반복문을 이용하여 출력 */}
+                        {
+                          filteredData.map((item, i) => {
+                            // 가격의 변화가 생긴 state를 테이블에서 찾아 해당 td 시각화
+                            let isChanged = differences.some((diff, index) => {
+                              return diff.index === i && diff.newValue === item.price
+                            });
+                            // DB에서 가져온 관심화폐 목록과 일치하는 행을 찾음
+                            let isFavorited = Array.isArray(favoriteCrypto) && favoriteCrypto.some((diff, index) => {
+                              return item.name === diff.crypto_name
+                            });
+                            let priceClass_rise = isChanged ? 'change-price-rise' : '';
+                            let priceClass_fall = isChanged ? 'change-price-fall' : '';
+                            return (
+                              // 관심화폐만 출력
+                              isFavorited && (
+                                <tr key={i} onClick={() => {
+                                  nameSelect(filteredData[i].name);
+                                  marketSelect(filteredData[i].market);
+                                  setSelectedCrypto(filteredData[i]);
+                                  selectMarket_date(filteredData[i].market);
+                                  selectMarket_time(filteredData[i].market, selectedChartSort);
+                                  selectAskingPrice(filteredData[i].market);
+                                  selectClosedPrice(filteredData[i].market);
+                                }}>
+                                  <td className='td-name lightMode'>
+                                    <span className="span-star">
+                                      <img
+                                        onClick={() => {
+                                          starClick(i)
+                                          addCryptoToUser(logInEmail, filteredData[i].name)
+                                        }}
+                                        // 최초 star[i]의 상태는 'starOn'일 수가 없으므로 반드시 starOff 출력
+                                        // src={star[i] === 'starOn' ? starOn : starOff}
+                                        src={isFavorited ? starOn : starOff}
+                                        alt="star" />
+                                    </span>
+                                    <div className="div-name">
+                                      <div>
+                                        {item.name}
+                                      </div>
+                                      <div>
+                                        {item.market}
+                                      </div>
+                                    </div>
+                                  </td>
 
-                              {/* 전일 대비 가격이 상승했다면 청색, 하락했다면 적색, 동일하다면 검정색 */}
-                              {
-                                item.change === 'RISE' ?
-                                  <td className='lightMode'>
-                                    <span className={`td-rise ${priceClass_rise}`}>{(item.price).toLocaleString()}</span>
-                                  </td> :
-                                  (
-                                    item.change === 'FALL' ?
+                                  {/* 전일 대비 가격이 상승했다면 청색, 하락했다면 적색, 동일하다면 검정색 */}
+                                  {
+                                    item.change === 'RISE' ?
                                       <td className='lightMode'>
-                                        <span className={`td-fall ${priceClass_fall}`}>{(item.price).toLocaleString()}</span>
+                                        <span className={`td-rise ${priceClass_rise}`}>{(item.price).toLocaleString()}</span>
                                       </td> :
+                                      (
+                                        item.change === 'FALL' ?
+                                          <td className='lightMode'>
+                                            <span className={`td-fall ${priceClass_fall}`}>{(item.price).toLocaleString()}</span>
+                                          </td> :
+                                          <td className='lightMode'>
+                                            <span>{(item.price).toLocaleString()}</span>
+                                          </td>
+                                      )
+                                  }
+                                  {
+                                    item.change === 'RISE' ?
                                       <td className='lightMode'>
-                                        <span>{(item.price).toLocaleString()}</span>
-                                      </td>
-                                  )
-                              }
-                              {
-                                item.change === 'RISE' ?
-                                  <td className='lightMode'>
-                                    <span className='td-rise'>+{(item.change_rate * 100).toFixed(2)}% <br /> {(item.change_price).toLocaleString()}</span>
-                                  </td> :
-                                  (
-                                    item.change === 'FALL' ?
-                                      <td className='lightMode'>
-                                        <span className='td-fall'>-{(item.change_rate * 100).toFixed(2)}% <br /> {(item.change_price).toLocaleString()}</span>
+                                        <span className='td-rise'>+{(item.change_rate * 100).toFixed(2)}% <br /> {(item.change_price).toLocaleString()}</span>
                                       </td> :
-                                      <td className='lightMode'>
-                                        <span>{(item.change_rate * 100).toFixed(2)}% <br /> {(item.change_price).toLocaleString()}</span>
-                                      </td>
-                                  )
-                              }
-                              <td className='lightMode'>
-                                <span className="td-volume">{Number(String(Math.floor(item.trade_price)).slice(0, -6)).toLocaleString()}백만</span>
-                              </td>
-                            </tr>
-                          )
-                        )
-                      })
-                    }
-                  </tbody>
-                </table>
-              // </SimpleBar>
+                                      (
+                                        item.change === 'FALL' ?
+                                          <td className='lightMode'>
+                                            <span className='td-fall'>-{(item.change_rate * 100).toFixed(2)}% <br /> {(item.change_price).toLocaleString()}</span>
+                                          </td> :
+                                          <td className='lightMode'>
+                                            <span>{(item.change_rate * 100).toFixed(2)}% <br /> {(item.change_price).toLocaleString()}</span>
+                                          </td>
+                                      )
+                                  }
+                                  <td className='lightMode'>
+                                    <span className="td-volume">{Number(String(Math.floor(item.trade_price)).slice(0, -6)).toLocaleString()}백만</span>
+                                  </td>
+                                </tr>
+                              )
+                            )
+                          })
+                        }
+                      </tbody>
+                    </table>
+                  </SimpleBar> :
+                  <div className="crypto-notice">관심 화폐를 확인하시려면 로그인 해주세요.</div>
+              )
           )
       }
 
     </div>
   );
 }
+
+
 
 export { CryptoList };

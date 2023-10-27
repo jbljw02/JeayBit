@@ -815,6 +815,35 @@ input[type=range]::-webkit-slider-thumb {
   padding: 13px 145px;
 }
 
+.trading-submit-nonLogIn-buy, .trading-submit-nonLogIn-sell {
+  align-items: center;
+  text-align: center;
+  font-size: 16px;
+  margin-top: 27px;
+  color: #ffffff;
+}
+
+.trading-submit-nonLogIn-buy span {
+  background-color: #22ab94;
+  border-radius: 2px;
+  cursor: pointer;
+}
+
+.trading-submit-nonLogIn-sell span {
+  background-color: #f23645;
+  border-radius: 2px;
+  cursor: pointer;
+}
+
+.trading-submit-nonLogIn-buy span:nth-child(1), .trading-submit-nonLogIn-sell span:nth-child(1) {
+  padding: 13px 79px;
+  margin-right: 12px;
+}
+
+.trading-submit-nonLogIn-buy span:nth-child(2), .trading-submit-nonLogIn-sell span:nth-child(2) {
+  padding: 13px 20px;
+}
+
 .designate {
   margin-top: 102px;
 }
@@ -1029,6 +1058,13 @@ input[type=range]::-webkit-slider-thumb {
   position: relative;
   top: 1px;
   left: 1px;
+}
+
+.crypto-notice {
+  margin-top: 140px;
+  text-align: center;
+  font-size: 13px;
+  color: rgba(0, 0, 0, 0.6);
 }
 
 /* footer CSS */
