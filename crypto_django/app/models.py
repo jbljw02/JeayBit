@@ -34,6 +34,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     # 패스워드는 상속받아 왔기 때문에 선언하지 않음
     username = models.CharField(max_length=30)
     email = models.EmailField(unique=True)
+    balance = models.DecimalField(max_digits=10, decimal_places=0, default=0) 
     
     is_staff = models.BooleanField(default=False)  # 관리자 사이트에 로그인 가능한지 여부
     is_superuser = models.BooleanField(default=False)  # 슈퍼유저인지 여부

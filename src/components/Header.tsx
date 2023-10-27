@@ -137,7 +137,6 @@ const Header = () => {
             <div className='member-nav-LogIn'>
               <span className="logInUser"><u>{logInUser}</u>님</span>
               <span onClick={() => { logOut() }} className="logOut">로그아웃</span>
-              <span className="user-favorite-crypto">관심화폐</span>
             </div>
         }
         {

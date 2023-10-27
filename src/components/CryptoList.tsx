@@ -669,7 +669,7 @@ const CryptoList = () => {
           (
             listCategory === '보유' ?
               <div>보유</div> :
-              <SimpleBar className="scrollBar-listTable">
+              // <SimpleBar className="scrollBar-listTable">
                 <table className="list-table">
                   <tbody className='scrollable-tbody'>
                     {/* 검색값을 반환한 filteredData 함수를 다시 반복문을 이용하여 출력 */}
@@ -685,9 +685,8 @@ const CryptoList = () => {
                         });
                         let priceClass_rise = isChanged ? 'change-price-rise' : '';
                         let priceClass_fall = isChanged ? 'change-price-fall' : '';
-
-                        console.log(i, "번째 : ", isFavorited)
                         return (
+                          // 관심화폐만 출력
                           isFavorited && (
                             <tr key={i} onClick={() => {
                               nameSelect(filteredData[i].name);
@@ -761,8 +760,7 @@ const CryptoList = () => {
                     }
                   </tbody>
                 </table>
-
-              </SimpleBar>
+              // </SimpleBar>
           )
       }
 
