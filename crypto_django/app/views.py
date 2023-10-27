@@ -1,5 +1,6 @@
+import json
 from django.http import JsonResponse
-from app.models import CustomUser
+from app.models import Crypto, CustomUser, UserCrypto
 from .crpyto_api import price
 from .crpyto_api import (
     candle_per_date_BTC,
@@ -238,7 +239,9 @@ def logIn(request):
             login(request, user)
             print("키:", request.session.session_key)
             print("로그인 상태 : ", request.user)
-            return Response({"detail": f"로그인 성공 : {request.user.username}"})
+            print("이메일 : ", email)
+            print("이름 : ", request.user.username)
+            return Response({"username": request.user.username, "email": email})
         else:
             return Response({"detail": "이메일 혹은 비밀번호가 잘못되었습니다."}, status=400)
 
@@ -263,13 +266,48 @@ def logOut(request):
         print("에러 : ", e)
         return Response({"detail": "로그아웃 실패"})
 
+# UserCrypto 테이블에 사용자에 따른 화폐 관심 여부 추가
+@api_view(["POST"])
+def add_favoriteCrypto_to_user(request):
+    data = json.loads(request.body)
+    print("받은 데이터 : ", data)
+    
+    email = data.get('email')
+    crypto_name = data.get('crypto_name')
+
+    # 유저 테이블, 화폐 테이블과 연결하기 위한 외래키
+    user = CustomUser.objects.get(email=email)  
+    crypto = Crypto.objects.get(name=crypto_name)
+    
+    # get_or_create는 두 개의 값(조회 혹은 생성된 객체/객체가 새로 생성되었는지 여부)을 반환
+    user_crypto, created = UserCrypto.objects.get_or_create(user=user, crypto=crypto)  
+    
+    # 해당 화폐에 대한 객체가 이미 생성되어 있다면 관심여부 True
+    if created:
+        user_crypto.is_favorited = True
+    # 해당 화폐에 대한 객체가 생성되어 있지 않다면 관심여부를 반전 
+    else:
+        user_crypto.is_favorited = not user_crypto.is_favorited
+
+    user_crypto.save()
+    
+    return JsonResponse({"is_favorited": "화폐-유저 정보 저장 완료"})
+
+# 클라이언트에게 UserCrypto 테이블에 있는 사용자에 따른 화폐의 관심 여부를 전달
+@api_view(["GET"])
+def get_user_favoriteCrypto(request, email):
+    user = CustomUser.objects.get(email=email)
+    user_cryptos = UserCrypto.objects.filter(user=user, is_favorited=True)
+
+    data = [{"crypto_name": user_crypto.crypto.name, "is_favorited": user_crypto.is_favorited} for user_crypto in user_cryptos]
+
+    return JsonResponse(data, safe=False)
 
 @api_view(["GET"])
 def check_login(request):
     session_id = request.session.session_key
     print(session_id)
     return Response({"is_logged_in": request.user.is_authenticated})
-
 
 def get_data(request):
     (

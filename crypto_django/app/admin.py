@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from .models import CustomUser
 from .models import Crypto
+from .models import UserCrypto
 
 # 기본 User 모델에 대한 관리자 인터페이스를 정의하고 있는 UserAdmin을 상속받아서 클래스 정의
 class CustomUserAdmin(UserAdmin):
@@ -11,3 +12,4 @@ class CustomUserAdmin(UserAdmin):
 
 admin.site.register(CustomUser, CustomUserAdmin)
 admin.site.register(Crypto)
+admin.site.register(UserCrypto)

@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { RootState, setFilteredData, setStar, Crypto, setCr_name_selected, setCr_market_selected, setCr_price_selected, setCr_change_selected, setCr_change_rate_selected, setCr_change_price_selected, setSortedData, setCr_trade_price_selected, setCr_trade_volume_selected, setCr_open_price_selected, setCr_high_price_selected, setCr_low_price_selected, Market, setCandle_per_date, setCandle_per_week, setCandle_per_month, setSelectedChartSort, setCandle_per_minute, setCr_name, setCr_price, setCr_market, setCr_change, setCr_change_rate, setCr_change_price, setCr_trade_price, setCr_trade_volume, setCr_open_price, setCr_high_price, setCr_low_price, setCandle_per_date_BTC, setClosed_data, setAsking_data, setAsking_dateTime, setAsking_totalAskSize, setAsking_totalBidSize, setCr_selected } from "../store";
+import { RootState, setFilteredData, setStar, Crypto, setCr_name_selected, setCr_market_selected, setCr_price_selected, setCr_change_selected, setCr_change_rate_selected, setCr_change_price_selected, setSortedData, setCr_trade_price_selected, setCr_trade_volume_selected, setCr_open_price_selected, setCr_high_price_selected, setCr_low_price_selected, Market, setCandle_per_date, setCandle_per_week, setCandle_per_month, setSelectedChartSort, setCandle_per_minute, setCr_name, setCr_price, setCr_market, setCr_change, setCr_change_rate, setCr_change_price, setCr_trade_price, setCr_trade_volume, setCr_open_price, setCr_high_price, setCr_low_price, setCandle_per_date_BTC, setClosed_data, setAsking_data, setAsking_dateTime, setAsking_totalAskSize, setAsking_totalBidSize, setCr_selected, FavoriteCrypto, setFavoriteCrypto } from "../store";
 import { useEffect, useState } from "react";
 import img_sort from '../assets/images/sort.png';
 import img_sort_up from '../assets/images/sort-up.png';
@@ -46,7 +46,6 @@ const CryptoList = () => {
   // 정렬하려는 목적에 따라 이미지를 변경하기 위해 배열로 생성
   const sort_images = [img_sort, img_sort_down, img_sort_up];
 
-
   const delimitedDate = useSelector((state: RootState) => state.delimitedDate);
   const delimitedTime = useSelector((state: RootState) => state.delimitedTime);
   const selectedChartSort = useSelector((state: RootState) => state.selectedChartSort);
@@ -74,15 +73,12 @@ const CryptoList = () => {
     newValue: number,
   }[]>([]);
 
-  const theme = useSelector((state: RootState) => state.theme);
-
-  // console.log("길이 : ", filteredData.length)
-
   useEffect(() => {
     // const 변수 = setInterval(() => { 콜백함수, 시간 })
     // fetchData 함수를 1초마다 실행 - 서버에서 받아오는 값을 1초마다 갱신시킴
     const interval = setInterval(() => {
       fetchData();
+      // getFavoriteCrypto(logInEmail);
     }, 1000);
 
     initialData();  // 초기 렌더링시 1회만 실행
@@ -91,6 +87,13 @@ const CryptoList = () => {
     // setInterval이 반환하는 interval ID를 clearInterval 함수로 제거
     return () => clearInterval(interval);
   }, []);
+
+  const [isFavorited, setIsFavorited] = useState<boolean>(false);
+
+  // 별 이미지를 클릭할 때마다 서버로부터 관심 화폐에 대한 정보 받아옴
+  useEffect(() => {
+    getFavoriteCrypto(logInEmail);
+  }, [isFavorited])
 
   // 화면에 보여질 초기 화폐의 차트(비트코인)
   const initialData = async () => {
@@ -341,10 +344,42 @@ const CryptoList = () => {
     }
   }
 
+  const logInUser = useSelector((state: RootState) => state.logInUser);
+  const logInEmail = useSelector((state: RootState) => state.logInEmail);
+  const favoriteCrypto = useSelector((state: RootState) => state.favoriteCrypto);
+
   // 별 이미지를 클릭하면 on off
   const starClick = (index: number) => {
     dispatch(setStar(index));
+    setIsFavorited(!isFavorited);
   };
+
+  // 로그인한 사용자에 대해 관심 화폐를 업데이트
+  const addCryptoToUser = (email: string, cryptoName: string) => {
+    (async (email, cryptoName) => {
+      try {
+        axios.post('http://127.0.0.1:8000/add_favoriteCrypto_to_user/', {
+          email: email,
+          crypto_name: cryptoName,
+        });
+      } catch (error) {
+        console.log("관심 화폐 정보 전송 실패")
+      }
+    })(email, cryptoName);
+  }
+
+  // 로그인한 사용자에 대한 관심 화폐 정보를 받아옴
+  const getFavoriteCrypto = (logInEmail: string) => {
+    (async () => {
+      try {
+        const response = await axios.get(`http://127.0.0.1:8000/get_user_favoriteCrypto/${logInEmail}/`);
+        console.log("반환값 : ", response.data)
+        dispatch(setFavoriteCrypto(response.data))
+      } catch (error) {
+        console.log(error)
+      }
+    })()
+  }
 
   // 정렬 이미지 클릭 이벤트
   const sortClick = (index: number) => {
@@ -562,7 +597,6 @@ const CryptoList = () => {
         </thead>
       </table>
 
-      {/* 첫 화면에서 비트코인 값 안 바뀌는 버그 수정해야함 */}
       <SimpleBar className="scrollBar-listTable">
         <table className="list-table">
           <tbody className='scrollable-tbody'>
@@ -572,6 +606,9 @@ const CryptoList = () => {
                 // 가격의 변화가 생긴 state를 테이블에서 찾아 해당 td 시각화
                 let isChanged = differences.some((diff, index) => {
                   return diff.index === i && diff.newValue === item.price
+                });
+                let isFavorited = Array.isArray(favoriteCrypto) && favoriteCrypto.some((diff, index) => {
+                  return item.name === diff.crypto_name
                 });
                 let priceClass_rise = isChanged ? 'change-price-rise' : '';
                 let priceClass_fall = isChanged ? 'change-price-fall' : '';
@@ -598,9 +635,13 @@ const CryptoList = () => {
                     <td className='td-name lightMode'>
                       <span className="span-star">
                         <img
-                          onClick={() => starClick(i)}
+                          onClick={() => {
+                            starClick(i)
+                            addCryptoToUser(logInEmail, filteredData[i].name)
+                          }}
                           // 최초 star[i]의 상태는 'starOn'일 수가 없으므로 반드시 starOff 출력
-                          src={star[i] === 'starOn' ? starOn : starOff}
+                          // src={star[i] === 'starOn' ? starOn : starOff}
+                          src={isFavorited ? starOn : starOff}
                           alt="star" />
                       </span>
                       <div className="div-name">

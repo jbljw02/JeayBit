@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { SetStateAction, useState } from "react";
 import axios, { AxiosError } from "axios";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState, setLogInUser } from "../store";
+import { RootState, setLogInEmail, setLogInUser } from "../store";
 import { csrftoken } from './csrftoken';
 
 
@@ -20,9 +20,9 @@ const LogIn = () => {
   const [isPasswordEmpty, setIsPasswordEmpty] = useState<boolean>(false);
 
   const logInUser = useSelector((state: RootState) => state.logInUser);
+  const logInEmail = useSelector((state: RootState) => state.logInEmail);
 
   const dispatch = useDispatch();
-  console.log("유저 : ", logInUser)
 
   const logIn = (email: string, password: string) => {
 
@@ -46,8 +46,9 @@ const LogIn = () => {
             },
             withCredentials: true,
           });
-          console.log("로그인 정보 전송 성공", response.data.detail)
-          dispatch(setLogInUser((response.data.detail).slice(9)))
+          console.log("로그인 정보 전송 성공", response.data)
+          dispatch(setLogInUser(response.data.username))
+          dispatch(setLogInEmail(response.data.email))
           navigate('/')
         } catch (error) {
           console.log("로그인 정보 전송 실패", error)

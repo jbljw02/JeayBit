@@ -58,6 +58,7 @@ def price():
 
 price()
 
+# Crypto 테이블에 api로부터 받아온 화폐 정보를 업데이트
 def update_crypto():
     name, cur_price, _, _, _, _, _, _, _, _, _ = price()
 

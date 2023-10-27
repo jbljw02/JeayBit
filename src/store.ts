@@ -13,6 +13,7 @@ export type Crypto = {
   high_price: number,
   low_price: number,
   star: string,
+  isFavorited: boolean,
 }
 
 export type ClosedData = {
@@ -39,6 +40,11 @@ export type Market = {
   high_price: number,
   low_price: number,
   trade_price: number,
+}
+
+export type FavoriteCrypto = {
+  crypto_name: string,
+  isFavorited: boolean
 }
 
 export type RootState = {
@@ -85,6 +91,9 @@ export type RootState = {
   chartSortDate: string,
   theme: boolean,
   logInUser: string,
+  logInEmail: string,
+  favoriteCrypto: FavoriteCrypto[],
+  isFavorited: boolean,
 }
 
 const cr_name = createSlice({
@@ -136,6 +145,7 @@ const cr_change_rate = createSlice({
     }
   }
 })
+
 const cr_change_price = createSlice({
   name: 'cr_change_price',
   initialState: [],
@@ -520,6 +530,36 @@ const logInUser = createSlice({
   }
 })
 
+const logInEmail = createSlice({
+  name: 'logInEmail',
+  initialState: '',
+  reducers: {
+    setLogInEmail: (state, action) => {
+      return action.payload;
+    }
+  }
+})
+
+const favoriteCrypto = createSlice({
+  name: 'favoriteCrypto',
+  initialState: '',
+  reducers: {
+    setFavoriteCrypto: (state, action) => {
+      return action.payload;
+    }
+  }
+})
+
+const isFavorited = createSlice({
+  name: 'isFavorited',
+  initialState: false,
+  reducers: {
+    setIsFavorited: (state, action) => {
+      return action.payload;
+    }
+  }
+})
+
 export default configureStore({
   reducer: {
     cr_name: cr_name.reducer,
@@ -565,6 +605,9 @@ export default configureStore({
     asking_totalBidSize: asking_totalBidSize.reducer,
     theme: theme.reducer,
     logInUser: logInUser.reducer,
+    logInEmail: logInEmail.reducer,
+    favoriteCrypto: favoriteCrypto.reducer,
+    isFavorited: isFavorited.reducer,
   }
 })
 
@@ -627,5 +670,8 @@ export const { setAsking_totalAskSize } = asking_totalAskSize.actions;
 export const { setAsking_totalBidSize } = asking_totalBidSize.actions;
 export const { setTheme } = theme.actions;
 export const { setLogInUser } = logInUser.actions;
+export const { setLogInEmail } = logInEmail.actions;
+export const { setFavoriteCrypto } = favoriteCrypto.actions;
+export const { setIsFavorited } = isFavorited.actions;
 
 // export default store;

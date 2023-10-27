@@ -66,12 +66,15 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     REQUIRED_FIELDS = ['username']  # 관리자 계정 생성 시 반드시 입력해야 하는 필드  
     
     
+# 화폐의 이름과 가격을 담는 테이블
 class Crypto(models.Model):
     name = models.CharField(max_length=200)
     price = models.FloatField()
 
+# 화폐의 관심 여부와 소유 여부를 담는 테이블
+# user, crypto는 각각 외래키로서 각각 CustomerUser, Crypto 테이블을 참조
 class UserCrypto(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-    cryptocurrency = models.ForeignKey(Crypto, on_delete=models.CASCADE)
-    is_interested = models.BooleanField(default=False)
+    crypto = models.ForeignKey(Crypto, on_delete=models.CASCADE)
+    is_favorited = models.BooleanField(default=False)
     is_owned = models.BooleanField(default=False)
