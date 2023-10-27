@@ -591,6 +591,10 @@ dd span {
   cursor: pointer;
 }
 
+.trading-section span:hover {
+  text-decoration: underline;
+}
+
 .buyingSection {
   font-weight: bold;
   color: #22ab94;
@@ -861,6 +865,30 @@ input[type=range]::-webkit-slider-thumb {
   outline: none;
   height: 17px;
   line-height: 17px;
+}
+
+.list-category {
+  font-size: 15px;
+  /* font-weight: bold; */
+  display: flex;
+  border-bottom: 1px solid #E3E8EC;
+}
+
+.list-category span {
+  flex: 1;
+  text-align: center;
+  cursor: pointer;
+  padding: 12px 0px;
+}
+
+.list-category span:hover {
+  text-decoration: underline;
+}
+
+.list-category-clicked {
+  font-weight: bold;
+  color: #22ab94;
+  border-bottom: 3px solid #22ab94;
 }
 
 .list-table {

@@ -296,11 +296,22 @@ def add_favoriteCrypto_to_user(request):
 # 클라이언트에게 UserCrypto 테이블에 있는 사용자에 따른 화폐의 관심 여부를 전달
 @api_view(["GET"])
 def get_user_favoriteCrypto(request, email):
+    
+    # 매개변수로 받은 이메일과 일치하는 값을 테이블에서 찾음
     user = CustomUser.objects.get(email=email)
+    # 이메일이 일치하고 관심여부가 True인 행을 찾음
     user_cryptos = UserCrypto.objects.filter(user=user, is_favorited=True)
 
     data = [{"crypto_name": user_crypto.crypto.name, "is_favorited": user_crypto.is_favorited} for user_crypto in user_cryptos]
+    # ==
+    # data = []
+    # for user_crypto in user_cryptos:
+    #     data.append({
+    #         "crypto_name": user_crypto.crypto.name,
+    #         "is_favorited": user_crypto.is_favorited
+    #     })
 
+    # safe=False => 딕셔너리가 아닌 다른 형태도 JSON으로 변환 가능
     return JsonResponse(data, safe=False)
 
 @api_view(["GET"])
