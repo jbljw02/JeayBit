@@ -11,6 +11,7 @@ import '../assets/App.css';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { LogIn } from './LogIn';
 import { SignUp } from './SignUp';
+import { Wallet } from './Wallet';
 
 const App = () => {
 
@@ -45,6 +46,7 @@ const App = () => {
               } />
               <Route path="/logIn" element={<LogIn />} />
               <Route path="/signUp" element={<SignUp />} />
+              <Route path="/Wallet" element={<Wallet />} />
             </Routes>
           </BrowserRouter>
 

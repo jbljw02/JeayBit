@@ -14,8 +14,13 @@ const Header = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const theme = useSelector((state: RootState) => state.theme);
-
+  const cr_selected = useSelector((state: RootState) => state.cr_selected);
   const logInUser = useSelector((state: RootState) => state.logInUser);
+
+  const [walletHover, setWalletHover] = useState<boolean>(false);
+  const [transferSort, setTransferSort] = useState<string>('입금');
+
+  console.log("어어 : ", transferSort)
 
   const logOut = () => {
     (async () => {
@@ -43,8 +48,8 @@ const Header = () => {
 
   const checkLogin = async () => {
     try {
-      const response = await axios.get('http://127.0.0.1:8000/check_login/', {withCredentials: true});
-      
+      const response = await axios.get('http://127.0.0.1:8000/check_login/', { withCredentials: true });
+
       if (response.data.is_logged_in) {
         console.log("로그인 중");
       } else {
@@ -54,7 +59,7 @@ const Header = () => {
       console.error(error);
     }
   }
-  
+
 
   const themeChange = () => {
 
@@ -110,6 +115,7 @@ const Header = () => {
       }
     })
   }
+  console.log("결과 : ", transferSort)
 
   return (
     <header className="header lightMode-title">
@@ -127,7 +133,7 @@ const Header = () => {
           <img src={title} className="title-img-light" alt='제목'></img>
           <span onClick={() => { navigate('/') }} className="title-name">JeayBit</span>
         </span>
-        <span onClick={() => checkLogin()}>확인항</span>
+        {/* <span onClick={() => checkLogin()}>확인항</span> */}
         {
           logInUser === '' ?
             <div className='member-nav-unLogIn'>
@@ -137,6 +143,87 @@ const Header = () => {
             <div className='member-nav-LogIn'>
               <span className="logInUser"><u>{logInUser}</u>님</span>
               <span onClick={() => { logOut() }} className="logOut">로그아웃</span>
+              <span
+                onMouseEnter={() => setWalletHover(true)}
+                onMouseLeave={() => setWalletHover(false)}
+                // onClick={() => navigate('/Wallet')}
+                className='wallet'>
+                지갑관리
+                {
+                  walletHover === true ?
+                    <div className='walletHover'>
+
+                      <div className='transfer-section'>
+                        <span onClick={() => setTransferSort('입금')} id={`${transferSort === '입금' ? 'depositSection' : ''}`}>입금</span>
+                        <span onClick={() => setTransferSort('출금')} id={`${transferSort === '출금' ? 'withdrawSection' : ''}`}>출금</span>
+                      </div>
+                      {
+                        // 입금 영역
+                        transferSort === '입금' ?
+                          <>
+                            <div className="transfer-input">
+                              <div>입금금액</div>
+                              <input>
+                              </input>
+                              <span>KRW</span>
+                            </div>
+                            <div className="change-input">
+                              <div>전환량</div>
+                              <input>
+                              </input>
+                              <span className='change-input-span'>
+                                <img className='img-transfer-crypto' src={
+                                  cr_selected && cr_selected.market ?
+                                    (
+                                      Array.isArray(cr_selected.market) ?
+                                        `https://static.upbit.com/logos/${(cr_selected.market[0]).slice(4)}.png` :
+                                        `https://static.upbit.com/logos/${(cr_selected.market).slice(4)}.png`) : undefined
+                                } alt="화폐사진" />
+                                <span>BTC</span>
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" className="img-crypto-sort"><path fill-rule="evenodd" clip-rule="evenodd" d="M12.11 12.178L16 8.287l1.768 1.768-5.657 5.657-1.768-1.768-3.889-3.889 1.768-1.768 3.889 3.89z" fill="currentColor"></path>
+                                </svg>
+                              </span>
+                            </div>
+                            <div className='trasfer-submit deposit'>
+                              <span>입금</span>
+                            </div>
+                          </> :
+                          
+                          // 출금영역
+                          <>
+                            <div className="transfer-input">
+                              <div>출금금액</div>
+                              <input>
+                              </input>
+                              <span>KRW</span>
+                            </div>
+                            <div className="change-input">
+                              <div>전환량</div>
+                              <input>
+                              </input>
+                              <span className='change-input-span'>
+                                <img className='img-transfer-crypto' src={
+                                  cr_selected && cr_selected.market ?
+                                    (
+                                      Array.isArray(cr_selected.market) ?
+                                        `https://static.upbit.com/logos/${(cr_selected.market[0]).slice(4)}.png` :
+                                        `https://static.upbit.com/logos/${(cr_selected.market).slice(4)}.png`) : undefined
+                                } alt="화폐사진" />
+                                <span>BTC</span>
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" className="img-crypto-sort"><path fill-rule="evenodd" clip-rule="evenodd" d="M12.11 12.178L16 8.287l1.768 1.768-5.657 5.657-1.768-1.768-3.889-3.889 1.768-1.768 3.889 3.89z" fill="currentColor"></path>
+                                </svg>
+                              </span>
+                            </div>
+                            <div className='trasfer-submit withdraw'>
+                              <span>출금</span>
+                            </div>
+                          </>
+                      }
+                    </div>
+                    :
+                    null
+                }
+              </span>
             </div>
         }
         {

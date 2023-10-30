@@ -15,11 +15,11 @@
 
 /* header CSS */
 .header {
-  height: 70px;
+  height: 60px;
   /* border-bottom: 1px solid #E3E8EC; */
   border-bottom-width: 1px;
   border-bottom-style: solid;
-  margin-left: 10px;
+  padding-left: 10px;
 }
 
 .header-nav {
@@ -48,7 +48,8 @@
   align-items: center;
   font-weight: bold;
   margin-left: 5px;
-  margin-top: 5px;
+  margin-top: 16px;
+  margin-bottom: 16px;
 }
 
 .div-title-nav {
@@ -78,7 +79,7 @@
 }
 
 .title-img-light {
-  padding: 15px;
+  padding: 0px 15px;
   width: 23px;
 }
 
@@ -95,13 +96,13 @@
 
 .member-nav-unLogIn {
   position: absolute;
-  left: 92.3%;
+  left: 2378px;
   font-size: 13px;
 }
 
 .member-nav-LogIn {
   position: absolute;
-  left: 91.8%;
+  left: 2297px;
   font-size: 13px;
 }
 
@@ -109,9 +110,160 @@
 .signUp,
 .logInUser,
 .logOut,
+.wallet,
 .user-favorite-crypto {
-  margin-right: 22px;
+  margin-right: 14px;
   cursor: pointer;
+}
+
+.wallet::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  height: 30px;
+}
+
+.walletHover {
+  position: absolute;
+  top: 30px;
+  right: 10px;
+  width: 430px;
+  height: 380px;
+  /* border: 1px solid #E3E8EC; */
+  background-color: #FFFFFF;
+  border-radius: 2px;
+  box-shadow: 2px 2px 10px rgba(107, 107, 107, 0.3);
+  cursor: auto;
+  z-index: 1;
+}
+
+.transfer-section {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  border-bottom: 1px solid #E3E8EC;
+}
+
+.transfer-section span {
+  font-size: 16px;
+  font-weight: lighter;
+  flex: 1;
+  text-align: center;
+  padding: 17px 0px;
+  cursor: pointer;
+}
+
+#depositSection {
+  font-weight: bold;
+  color: #22ab94;
+  border-bottom: 4px solid #22ab94;
+}
+
+#withdrawSection {
+  font-weight: bold;
+  color: #f23645;
+  border-bottom: 4px solid #f23645;
+}
+
+.transfer-input,
+.change-input {
+  background-color: #F5F5F5;
+  border-radius: 4px;
+  margin-top: 20px;
+  margin-left: 10px;
+  width: 91%;
+  height: 95px;
+  padding-left: 12px;
+}
+
+.transfer-input div,
+.change-input div {
+  padding-top: 10px;
+  font-size: 13.5px;
+  font-weight: lighter;
+}
+
+.transfer-input input {
+  width: 82.5%;
+  height: 60%;
+  border: none;
+  font-size: 19px;
+  background-color: #F5F5F5;
+}
+
+.change-input input {
+  width: 68%;
+  height: 60%;
+  border: none;
+  font-size: 19px;
+  background-color: #F5F5F5;
+}
+
+.change-input-span {
+  background-color: #ffffff;
+  border-radius: 15px;
+  padding: 12px 7px;
+  margin-left: 6px;
+}
+
+.change-input-span span {
+  font-size: 17px;
+  color: rgba(0, 0, 0, 0.8);
+  margin-left: 6px;
+}
+
+.img-transfer-crypto {
+  position: relative;
+  width: 24px;
+  top: 6px;
+}
+
+.img-crypto-sort {
+  position: relative;
+  width: 24px;
+  top: 7px;
+  margin-left: 7px;
+  color: rgba(0, 0, 0, 0.8);
+}
+
+.transfer-input span {
+  font-size: 17px;
+  color: rgba(0, 0, 0, 0.4);
+  margin-left: 6px;
+}
+
+.trasfer-submit {
+  align-items: center;
+  text-align: center;
+  font-size: 16px;
+  color: #ffffff;
+  margin-top: 41px;
+  width: 100%;
+}
+
+.trasfer-submit.deposit span {
+  background-color: #22ab94;
+  border-radius: 2px;
+  padding: 13px 186px;
+  margin-right: 3px;
+}
+
+.trasfer-submit.withdraw span {
+  background-color: #f23645;
+  border-radius: 2px;
+  padding: 13px 186px;
+  margin-right: 3px;
+}
+
+.transfer-input input::placeholder {
+  color: rgba(0, 0, 0, 0.4);
+}
+
+.transfer-input input:focus,
+.change-input input:focus {
+  outline: none;
 }
 
 .changeTheme {
@@ -127,7 +279,7 @@
 
 /* TradingView 컴포넌트 CSS */
 .TradingView {
-  height: 100%;
+  height: 97%;
   /* height: 1422.98px; */
   /* width: 65%; */
   /* flex: 0 0 75%; */
@@ -141,7 +293,6 @@
   font-size: 26px;
   /* color: rgba(0, 0, 0, 0.8); */
   border-bottom: 1px solid rgb(228, 229, 230);
-
 }
 
 .crypto-img {
@@ -815,7 +966,8 @@ input[type=range]::-webkit-slider-thumb {
   padding: 13px 145px;
 }
 
-.trading-submit-nonLogIn-buy, .trading-submit-nonLogIn-sell {
+.trading-submit-nonLogIn-buy,
+.trading-submit-nonLogIn-sell {
   align-items: center;
   text-align: center;
   font-size: 16px;
@@ -835,12 +987,14 @@ input[type=range]::-webkit-slider-thumb {
   cursor: pointer;
 }
 
-.trading-submit-nonLogIn-buy span:nth-child(1), .trading-submit-nonLogIn-sell span:nth-child(1) {
+.trading-submit-nonLogIn-buy span:nth-child(1),
+.trading-submit-nonLogIn-sell span:nth-child(1) {
   padding: 13px 79px;
   margin-right: 12px;
 }
 
-.trading-submit-nonLogIn-buy span:nth-child(2), .trading-submit-nonLogIn-sell span:nth-child(2) {
+.trading-submit-nonLogIn-buy span:nth-child(2),
+.trading-submit-nonLogIn-sell span:nth-child(2) {
   padding: 13px 20px;
 }
 

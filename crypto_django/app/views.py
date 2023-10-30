@@ -256,12 +256,12 @@ def logOut(request):
     print("로그아웃 전 : ", request.session.session_key)
 
     try:
-        # if request.session.session_key is not None:
-        request.session.flush()  # 세션 데이터 삭제
-        logout(request)
-        return Response({"detail": "로그아웃 성공"})
-        # else:
-            # return Response({"detail": "세션 키가 존재하지 않습니다."}, status=400)
+        if request.session.session_key is not None:
+            request.session.flush()  # 세션 데이터 삭제
+            logout(request)
+            return Response({"detail": "로그아웃 성공"})
+        else:
+            return Response({"detail": "세션 키가 존재하지 않습니다."}, status=400)
     except Exception as e:
         print("에러 : ", e)
         return Response({"detail": "로그아웃 실패"})
