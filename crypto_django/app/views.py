@@ -314,6 +314,28 @@ def get_user_favoriteCrypto(request, email):
     # safe=False => 딕셔너리가 아닌 다른 형태도 JSON으로 변환 가능
     return JsonResponse(data, safe=False)
 
+# 사용자의 잔고 컬럼에 데이터를 추가    
+@api_view(["POST"])
+def add_balance_to_user(request):
+    email = request.data.get('email')
+    balance = request.data.get('balance')
+    
+    if email is None:
+        return JsonResponse({"error": "이메일이 존재하지 않습니다"})
+    if balance is None:
+        return JsonResponse({"error": "입금량이 누락되었습니다"})
+
+    try:
+        user = CustomUser.objects.get(email=email)
+        if user.balance is None:
+            user.balance = balance
+        else: 
+            user.balance += balance
+        user.save()
+        return JsonResponse({"detail": "잔고 업데이트 완료"})    
+    except CustomUser.DoesNotExist:
+        return JsonResponse({"error": "해당 이메일의 사용자가 존재하지 않습ㄴ다"})
+
 @api_view(["GET"])
 def check_login(request):
     session_id = request.session.session_key

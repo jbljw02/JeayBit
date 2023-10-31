@@ -375,7 +375,7 @@ const CryptoList = () => {
       })(email, cryptoName);
     }
     else {
-      alert("아아")
+      alert("사용자 존재X")
     }
 
   }

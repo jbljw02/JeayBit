@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux';
 import title from '../assets/images/title.png';
 import { RootState, setTheme } from '../store';
-import { useState } from 'react';
+import { SetStateAction, useState } from 'react';
 import axios from 'axios';
 import { Routes, Route, Link, useNavigate, Outlet } from 'react-router-dom'
 import { csrftoken } from './csrftoken';
@@ -20,46 +20,15 @@ const Header = () => {
   const [walletHover, setWalletHover] = useState<boolean>(false);
   const [transferSort, setTransferSort] = useState<string>('입금');
 
-  console.log("어어 : ", transferSort)
+  // 입금량, 입금 -> 화폐 전환량
+  const [depositAmount, setDepositAmount] = useState<number>();
+  const [depositChangeAmount, setDepositChangeAmount] = useState<number>(0);
+  const [depositLimit, setDepositLimit] = useState<boolean>(false);
 
-  const logOut = () => {
-    (async () => {
-      try {
-        const response = await axios.post('http://127.0.0.1:8000/logOut/', {
-
-        }, {
-          headers: {
-            'Content-Type': 'application/json',
-            'X-CSRFToken': csrftoken,
-          },
-          withCredentials: true,
-        });
-
-        if (response.status === 200) {
-          console.log("로그아웃 성공 : ", response);
-        } else {
-          console.log("로그아웃 실패");
-        }
-      } catch (error) {
-        console.log("로그아웃 정보 전송 실패");
-      }
-    })();
-  };
-
-  const checkLogin = async () => {
-    try {
-      const response = await axios.get('http://127.0.0.1:8000/check_login/', { withCredentials: true });
-
-      if (response.data.is_logged_in) {
-        console.log("로그인 중");
-      } else {
-        console.log("로그아웃 상태");
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
+  // 출금량, 출금 -> 화폐 전환량
+  const [withdrawAmount, setWithdrawAmount] = useState<number>();
+  const [withdrawChangeAmount, setWithdrawChangeAmount] = useState<number>(0);
+  const [withdrawLimit, setWithdrawLimit] = useState<boolean>(false);
 
   const themeChange = () => {
 
@@ -115,7 +84,86 @@ const Header = () => {
       }
     })
   }
-  console.log("결과 : ", transferSort)
+
+  const logOut = () => {
+    (async () => {
+      try {
+        const response = await axios.post('http://127.0.0.1:8000/logOut/', {
+
+        }, {
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrftoken,
+          },
+          withCredentials: true,
+        });
+
+        if (response.status === 200) {
+          console.log("로그아웃 성공 : ", response);
+        } else {
+          console.log("로그아웃 실패");
+        }
+      } catch (error) {
+        console.log("로그아웃 정보 전송 실패");
+      }
+    })();
+  };
+
+  const checkLogin = async () => {
+    try {
+      const response = await axios.get('http://127.0.0.1:8000/check_login/', { withCredentials: true });
+
+      if (response.data.is_logged_in) {
+        console.log("로그인 중");
+      } else {
+        console.log("로그아웃 상태");
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  const logInEmail = useSelector((state: RootState) => state.logInEmail);
+
+  const addBalanceToUser = (email: string, balance: number) => {
+    if (logInEmail !== '') {
+      (async (email, balance) => {
+        try {
+          axios.post('http://127.0.0.1:8000/add_balance_to_user/', {
+            email: email,
+            balance: balance,
+          });
+        } catch (error) {
+          console.log("입금량 전송 실패")
+        }
+      })(email, balance)
+    }
+    else {
+      alert("사용자 존재X")
+    }
+  }
+
+  const depositChange = (event: { target: { value: string; }; }) => {
+    if (Number(event.target.value) <= 10000000) {
+      setDepositLimit(false);
+      setDepositAmount(Number(event.target.value));
+      setDepositChangeAmount(Number(event.target.value));
+    }
+    else {
+      setDepositLimit(true);
+    }
+  }
+
+  const withdrawChange = (event: { target: { value: string; }; }) => {
+    if (Number(event.target.value) <= 10000000) {
+      setWithdrawLimit(false);
+      setWithdrawAmount(Number(event.target.value));
+      setWithdrawChangeAmount(Number(event.target.value));
+    }
+    else {
+      setWithdrawLimit(true);
+    }
+  }
 
   return (
     <header className="header lightMode-title">
@@ -152,7 +200,6 @@ const Header = () => {
                 {
                   walletHover === true ?
                     <div className='walletHover'>
-
                       <div className='transfer-section'>
                         <span onClick={() => setTransferSort('입금')} id={`${transferSort === '입금' ? 'depositSection' : ''}`}>입금</span>
                         <span onClick={() => setTransferSort('출금')} id={`${transferSort === '출금' ? 'withdrawSection' : ''}`}>출금</span>
@@ -161,15 +208,23 @@ const Header = () => {
                         // 입금 영역
                         transferSort === '입금' ?
                           <>
-                            <div className="transfer-input">
+                            <div className={`transfer-input ${depositLimit === true ?
+                              'alert-border' :
+                              ''
+                              }`}>
                               <div>입금금액</div>
-                              <input>
+                              <input onChange={depositChange} value={depositAmount} placeholder='1,000 ~ 10,000,000'>
                               </input>
                               <span>KRW</span>
                             </div>
+                            {
+                              depositLimit === true ?
+                                <div className='alert-KRW'>한화로 1000만원 이하만 입금 가능합니다</div> :
+                                null
+                            }
                             <div className="change-input">
                               <div>전환량</div>
-                              <input>
+                              <input value={depositChangeAmount}>
                               </input>
                               <span className='change-input-span'>
                                 <img className='img-transfer-crypto' src={
@@ -184,22 +239,29 @@ const Header = () => {
                                 </svg>
                               </span>
                             </div>
-                            <div className='trasfer-submit deposit'>
-                              <span>입금</span>
+                            <div className='transfer-submit deposit'>
+                              <span onClick={() => {
+                                if (depositAmount !== undefined) {
+                                  addBalanceToUser(logInEmail, depositAmount)
+                                }
+                                else {
+                                  alert("입금량 존재X")
+                                }
+                              }}>입금</span>
                             </div>
                           </> :
-                          
+
                           // 출금영역
                           <>
                             <div className="transfer-input">
                               <div>출금금액</div>
-                              <input>
+                              <input onChange={withdrawChange} value={withdrawAmount} placeholder='1,000 ~ 10,000,000'>
                               </input>
                               <span>KRW</span>
                             </div>
                             <div className="change-input">
                               <div>전환량</div>
-                              <input>
+                              <input value={withdrawChangeAmount}>
                               </input>
                               <span className='change-input-span'>
                                 <img className='img-transfer-crypto' src={
@@ -214,7 +276,7 @@ const Header = () => {
                                 </svg>
                               </span>
                             </div>
-                            <div className='trasfer-submit withdraw'>
+                            <div className='transfer-submit withdraw'>
                               <span>출금</span>
                             </div>
                           </>

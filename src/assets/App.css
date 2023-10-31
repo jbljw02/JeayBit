@@ -130,7 +130,8 @@
   top: 30px;
   right: 10px;
   width: 430px;
-  height: 380px;
+  /* height: 380px; */
+  height: 410px;
   /* border: 1px solid #E3E8EC; */
   background-color: #FFFFFF;
   border-radius: 2px;
@@ -178,6 +179,18 @@
   padding-left: 12px;
 }
 
+.alert-border {
+  border: 1px solid red;
+}
+
+.alert-KRW {
+  margin-top: 10px;
+  margin-left: 16px;
+  font-size: 14px;
+  font-weight: lighter;
+  color: red;
+}
+
 .transfer-input div,
 .change-input div {
   padding-top: 10px;
@@ -189,7 +202,7 @@
   width: 82.5%;
   height: 60%;
   border: none;
-  font-size: 19px;
+  font-size: 20px;
   background-color: #F5F5F5;
 }
 
@@ -197,8 +210,20 @@
   width: 68%;
   height: 60%;
   border: none;
-  font-size: 19px;
+  font-size: 20px;
   background-color: #F5F5F5;
+}
+
+.transfer-input input::placeholder, 
+.change-input input::placeholder {
+  color: rgba(0, 0, 0, 0.4);
+  font-weight: bold;
+  font-size: 22.5px;
+}
+
+.transfer-input input:focus,
+.change-input input:focus {
+  outline: none;
 }
 
 .change-input-span {
@@ -234,36 +259,31 @@
   margin-left: 6px;
 }
 
-.trasfer-submit {
+.transfer-submit {
+  position: absolute;
   align-items: center;
   text-align: center;
   font-size: 16px;
   color: #ffffff;
-  margin-top: 41px;
+  /* margin-top: 41px; */
+  top: 360px;
   width: 100%;
 }
 
-.trasfer-submit.deposit span {
+.transfer-submit.deposit span {
   background-color: #22ab94;
   border-radius: 2px;
   padding: 13px 186px;
   margin-right: 3px;
+  cursor: pointer;
 }
 
-.trasfer-submit.withdraw span {
+.transfer-submit.withdraw span {
   background-color: #f23645;
   border-radius: 2px;
   padding: 13px 186px;
   margin-right: 3px;
-}
-
-.transfer-input input::placeholder {
-  color: rgba(0, 0, 0, 0.4);
-}
-
-.transfer-input input:focus,
-.change-input input:focus {
-  outline: none;
+  cursor: pointer;
 }
 
 .changeTheme {

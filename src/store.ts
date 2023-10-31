@@ -94,6 +94,7 @@ export type RootState = {
   logInEmail: string,
   favoriteCrypto: FavoriteCrypto[],
   isFavorited: boolean,
+  userWallet: number,
 }
 
 const cr_name = createSlice({
@@ -560,6 +561,16 @@ const isFavorited = createSlice({
   }
 })
 
+const userWallet = createSlice({
+  name: 'userWallet',
+  initialState: 0,
+  reducers: {
+    setUserWallet: (state, action) => {
+      return action.payload;
+    }
+  }
+})
+
 export default configureStore({
   reducer: {
     cr_name: cr_name.reducer,
@@ -608,6 +619,7 @@ export default configureStore({
     logInEmail: logInEmail.reducer,
     favoriteCrypto: favoriteCrypto.reducer,
     isFavorited: isFavorited.reducer,
+    userWallet: userWallet.reducer,
   }
 })
 
@@ -673,5 +685,6 @@ export const { setLogInUser } = logInUser.actions;
 export const { setLogInEmail } = logInEmail.actions;
 export const { setFavoriteCrypto } = favoriteCrypto.actions;
 export const { setIsFavorited } = isFavorited.actions;
+export const { setUserWallet } = userWallet.actions;
 
 // export default store;

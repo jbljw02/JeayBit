@@ -14,6 +14,7 @@ from .views import (
     check_login,
     add_favoriteCrypto_to_user,
     get_user_favoriteCrypto,
+    add_balance_to_user,
 )
 
 from django.views.decorators.csrf import csrf_exempt
@@ -31,6 +32,7 @@ urlpatterns = [
     path("logOut/", logOut),
     path("check_login/", check_login),
     path("add_favoriteCrypto_to_user/", add_favoriteCrypto_to_user),
-    path("get_user_favoriteCrypto/<str:email>/", get_user_favoriteCrypto)
+    path("get_user_favoriteCrypto/<str:email>/", get_user_favoriteCrypto),
+    path("add_balance_to_user/", add_balance_to_user),
     # path('admin/', admin.site.urls)
 ]
