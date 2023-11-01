@@ -292,8 +292,6 @@ const CryptoList = () => {
     })(market, minute);
   }
 
-  // console.log("로그인 이메일 : ", logInEmail)
-
   // 리스트에서 화폐를 선택하면 해당 화폐에 대한 캔들 호출(차트의 일자에 따라)
   const selectMarket_date = (market: string) => {
     if (chartSortDate === '1일') {
@@ -352,7 +350,6 @@ const CryptoList = () => {
       })(market);
     }
   }
-
 
   // 별 이미지를 클릭하면 on off
   const starClick = (index: number) => {

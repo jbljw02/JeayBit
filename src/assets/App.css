@@ -140,6 +140,10 @@
   z-index: 1;
 }
 
+.balance {
+  height: 177px;
+}
+
 .transfer-section {
   display: flex;
   flex-direction: row;
@@ -170,6 +174,12 @@
   font-weight: bold;
   color: #f23645;
   border-bottom: 4px solid #f23645;
+}
+
+#balanceSection {
+  font-weight: bold;
+  color: #000000;
+  border-bottom: 4px solid #000000;
 }
 
 .transfer-input,
@@ -288,6 +298,48 @@
   padding: 13px 186px;
   margin-right: 3px;
   cursor: pointer;
+}
+
+.balance-section {
+  /* display: flex;
+  flex-direction: column; */
+}
+
+.balance-content {
+  display: flex;
+  flex-direction: row;
+  margin-top: 26px;
+  font-weight: lighter;
+}
+
+.balance-title {
+  flex: 1;
+  margin-left: 30px;
+  font-size: 16px;
+}
+
+.balance-title span {
+  font-weight: bold;
+  /* text-decoration: underline; */
+}
+
+.balance-amount {
+  text-align: end;
+  margin-right: 20px;
+  font-size: 16px;
+  border-bottom: 1px solid #dddddd;
+}
+
+.balance-amount span {
+  color: rgba(0, 0, 0, 0.3);
+  font-weight: bold;
+}
+
+.balance-notice {
+  margin-top: 21px;
+  margin-left: -10px;
+  font-weight: lighter;
+  color: #6d6d6d;
 }
 
 .changeTheme {

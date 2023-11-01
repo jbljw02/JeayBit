@@ -42,7 +42,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
-    'django.middleware.csrf.CsrfViewMiddleware',  # 클라이언트 실행할 때 임시 해제
+    # 'django.middleware.csrf.CsrfViewMiddleware',  # 클라이언트 실행할 때 임시 해제
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',

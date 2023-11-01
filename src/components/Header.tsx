@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux';
 import title from '../assets/images/title.png';
-import { RootState, setTheme } from '../store';
+import { RootState, setTheme, setUserWallet } from '../store';
 import { SetStateAction, useState } from 'react';
 import axios from 'axios';
 import { Routes, Route, Link, useNavigate, Outlet } from 'react-router-dom'
@@ -31,6 +31,9 @@ const Header = () => {
   const [withdrawChangeAmount, setWithdrawChangeAmount] = useState<number>(0);
   const [withdrawLimit, setWithdrawLimit] = useState<boolean>(false);
   const [withdrawOverflow, setWithdrawOverflow] = useState<boolean>(false);
+
+  // 로그인 중인 사용자의 잔고량
+  const userWallet = useSelector((state: RootState) => state.userWallet);
 
   const themeChange = () => {
 
@@ -125,6 +128,19 @@ const Header = () => {
     }
   }
 
+  // DB에서 사용자의 잔고량을 받아옴
+  const getBalance = (logInEmail: string) => {
+    (async () => {
+      try {
+        const response = await axios.get(`http://127.0.0.1:8000/get_user_balance/${logInEmail}/`)
+        dispatch(setUserWallet(response.data.user_balance))
+        console.log(logInUser, "의 잔고 : ", response.data.user_balance)
+      } catch (error) {
+        console.log(error)
+      }
+    })()
+  }
+
   // 입금량을 서버로 전송
   const addBalanceToUser = (email: string, depositAmount: number) => {
     if (logInEmail !== '') {
@@ -168,14 +184,17 @@ const Header = () => {
 
   // 입금량의 변화를 감지하고 한계량을 지정
   const depositChange = (event: { target: { value: string; }; }) => {
-    if (Number(event.target.value) < 10000000 && Number(event.target.value) >= 1000) {
+    let value = event.target.value.replace(/,/g, ""); // 콤마 제거(숫자만으로 이루어진 문자열을 얻기 위함)
+    const numberValue = Number(value);
+
+    if (numberValue <= 10000000 && numberValue >= 1000) {
       setDepositLimit(false);
-      setDepositAmount(Number(event.target.value));
-      setDepositChangeAmount(parseFloat((Number(event.target.value) / cr_selected.price).toFixed(7)));
+      setDepositAmount(numberValue);
+      setDepositChangeAmount(parseFloat((numberValue / cr_selected.price).toFixed(7)));
     }
     else {
-      if(Number(event.target.value) < 10000000) {
-        setDepositAmount(Number(event.target.value));
+      if (numberValue <= 10000000) {
+        setDepositAmount(numberValue);
       }
       setDepositLimit(true);
     }
@@ -183,14 +202,17 @@ const Header = () => {
 
   // 출금량의 변화를 감지하고 한계량을 지정
   const withdrawChange = (event: { target: { value: string; }; }) => {
-    if (Number(event.target.value) < 10000000 && Number(event.target.value) >= 1000) {
+    let value = event.target.value.replace(/,/g, ""); // 콤마 제거(숫자만으로 이루어진 문자열을 얻기 위함)
+    const numberValue = Number(value);
+
+    if (numberValue <= 10000000 && numberValue >= 1000) {
       setWithdrawLimit(false);
-      setWithdrawAmount(Number(event.target.value));
-      setWithdrawChangeAmount(parseFloat((Number(event.target.value) / cr_selected.price).toFixed(7)));
+      setWithdrawAmount(numberValue);
+      setWithdrawChangeAmount(parseFloat((numberValue / cr_selected.price).toFixed(7)));
     }
     else {
-      if(Number(event.target.value) < 10000000) {
-        setWithdrawAmount(Number(event.target.value));
+      if (numberValue <= 10000000) {
+        setWithdrawAmount(numberValue);
       }
       setWithdrawLimit(true);
     }
@@ -230,10 +252,14 @@ const Header = () => {
                 지갑관리
                 {
                   walletHover === true ?
-                    <div className='walletHover'>
+                    <div className={`walletHover ${transferSort === '잔고' ? 'balance' : ''}`}>
                       <div className='transfer-section'>
                         <span onClick={() => setTransferSort('입금')} id={`${transferSort === '입금' ? 'depositSection' : ''}`}>입금</span>
                         <span onClick={() => setTransferSort('출금')} id={`${transferSort === '출금' ? 'withdrawSection' : ''}`}>출금</span>
+                        <span onClick={() => {
+                          setTransferSort('잔고')
+                          getBalance(logInEmail);
+                        }} id={`${transferSort === '잔고' ? 'balanceSection' : ''}`}>잔고</span>
                       </div>
                       {
                         // 입금 영역
@@ -244,7 +270,7 @@ const Header = () => {
                               ''
                               }`}>
                               <div>입금금액</div>
-                              <input onChange={depositChange} value={depositAmount} placeholder='1,000 ~ 10,000,000'>
+                              <input onChange={depositChange} value={depositAmount && depositAmount.toLocaleString()} placeholder='1,000 ~ 10,000,000'>
                               </input>
                               <span>KRW</span>
                             </div>
@@ -290,62 +316,89 @@ const Header = () => {
                               }}>입금</span>
                             </div>
                           </> :
-
-                          // 출금영역
-                          <>
-                            <div className={`transfer-input ${withdrawOverflow || withdrawLimit === true ?
-                              'alert-border' :
-                              ''
-                              }`}>
-                              <div>출금금액</div>
-                              <input onChange={withdrawChange} value={withdrawAmount} placeholder='1,000 ~ 10,000,000'>
-                              </input>
-                              <span>KRW</span>
-                            </div>
-                            {
-                              withdrawOverflow === true ?
-                                <div className='alert-KRW'>출금량이 잔고보다 많습니다</div> :
-                                null
-                            }
-                            {
-                              withdrawLimit === true ?
-                                <div className='alert-KRW'>출금액은 1,000원 이상 1000만원 이하만 가능합니다</div> :
-                                null
-                            }
-                            <div className="change-input">
-                              <div>전환량</div>
-                              <input value={withdrawChangeAmount}>
-                              </input>
-                              <span className='change-input-span'>
-                                <img className='img-transfer-crypto' src={
-                                  cr_selected && cr_selected.market ?
-                                    (
-                                      Array.isArray(cr_selected.market) ?
-                                        `https://static.upbit.com/logos/${(cr_selected.market[0]).slice(4)}.png` :
-                                        `https://static.upbit.com/logos/${(cr_selected.market).slice(4)}.png`) : undefined
-                                } alt="화폐사진" />
-                                <span>
-                                  {
-                                    cr_selected && cr_selected.market ?
-                                      (
-                                        Array.isArray(cr_selected.market) ?
-                                          (cr_selected.market[0]).slice(4) :
-                                          (cr_selected.market).slice(4)
-                                      ) : undefined
-                                  }
-                                </span>
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" className="img-crypto-sort"><path fill-rule="evenodd" clip-rule="evenodd" d="M12.11 12.178L16 8.287l1.768 1.768-5.657 5.657-1.768-1.768-3.889-3.889 1.768-1.768 3.889 3.89z" fill="currentColor"></path>
-                                </svg>
-                              </span>
-                            </div>
-                            <div className='transfer-submit withdraw'>
-                              <span onClick={() => {
-                                if (withdrawAmount !== undefined) {
-                                  minusBalanceFromUser(logInEmail, withdrawAmount)
+                          (
+                            transferSort === '출금' ?
+                              // 출금영역
+                              <>
+                                <div className={`transfer-input ${withdrawOverflow || withdrawLimit === true ?
+                                  'alert-border' :
+                                  ''
+                                  }`}>
+                                  <div>출금금액</div>
+                                  <input onChange={withdrawChange} value={withdrawAmount && withdrawAmount.toLocaleString()} placeholder='1,000 ~ 10,000,000'>
+                                  </input>
+                                  <span>KRW</span>
+                                </div>
+                                {
+                                  withdrawOverflow === true ?
+                                    <div className='alert-KRW'>출금량이 잔고보다 많습니다</div> :
+                                    null
                                 }
-                              }}>출금</span>
-                            </div>
-                          </>
+                                {
+                                  withdrawLimit === true ?
+                                    <div className='alert-KRW'>출금액은 1,000원 이상 1000만원 이하만 가능합니다</div> :
+                                    null
+                                }
+                                <div className="change-input">
+                                  <div>전환량</div>
+                                  <input value={withdrawChangeAmount}>
+                                  </input>
+                                  <span className='change-input-span'>
+                                    <img className='img-transfer-crypto' src={
+                                      cr_selected && cr_selected.market ?
+                                        (
+                                          Array.isArray(cr_selected.market) ?
+                                            `https://static.upbit.com/logos/${(cr_selected.market[0]).slice(4)}.png` :
+                                            `https://static.upbit.com/logos/${(cr_selected.market).slice(4)}.png`) : undefined
+                                    } alt="화폐사진" />
+                                    <span>
+                                      {
+                                        cr_selected && cr_selected.market ?
+                                          (
+                                            Array.isArray(cr_selected.market) ?
+                                              (cr_selected.market[0]).slice(4) :
+                                              (cr_selected.market).slice(4)
+                                          ) : undefined
+                                      }
+                                    </span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" className="img-crypto-sort"><path fill-rule="evenodd" clip-rule="evenodd" d="M12.11 12.178L16 8.287l1.768 1.768-5.657 5.657-1.768-1.768-3.889-3.889 1.768-1.768 3.889 3.89z" fill="currentColor"></path>
+                                    </svg>
+                                  </span>
+                                </div>
+                                <div className='transfer-submit withdraw'>
+                                  <span onClick={() => {
+                                    if (withdrawAmount !== undefined) {
+                                      minusBalanceFromUser(logInEmail, withdrawAmount)
+                                    }
+                                  }}>출금</span>
+                                </div>
+                              </>
+                              :
+                              <>
+                                <div className='balance-section'>
+                                  <div className='balance-content'>
+                                    <span className='balance-title'>
+                                      <span>{logInUser}</span>님의 출금가능 금액</span>
+                                    <span className='balance-amount'>{
+                                      userWallet !== undefined ?
+                                    userWallet.toLocaleString() :
+                                    null
+                                    }<span>&nbsp;KRW</span>
+                                    </span>
+                                  </div>
+                                  <div className='balance-notice'>
+                                    <ul>
+                                      <li>
+                                        잔고에 보유할 수 있는 금액의 제한은 없습니다.
+                                      </li>
+                                      <li>
+                                        입금 및 출금 할 수 있는 금액의 상한선은 1회당 10,000,000원입니다.
+                                      </li>
+                                    </ul>
+                                  </div>
+                                </div>
+                              </>
+                          )
                       }
                     </div>
                     :
