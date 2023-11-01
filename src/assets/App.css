@@ -156,6 +156,10 @@
   cursor: pointer;
 }
 
+.transfer-section span:hover {
+  text-decoration: underline;
+}
+
 #depositSection {
   font-weight: bold;
   color: #22ab94;

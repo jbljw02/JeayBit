@@ -16,6 +16,7 @@ const Header = () => {
   const theme = useSelector((state: RootState) => state.theme);
   const cr_selected = useSelector((state: RootState) => state.cr_selected);
   const logInUser = useSelector((state: RootState) => state.logInUser);
+  const logInEmail = useSelector((state: RootState) => state.logInEmail);
 
   const [walletHover, setWalletHover] = useState<boolean>(false);
   const [transferSort, setTransferSort] = useState<string>('입금');
@@ -29,6 +30,7 @@ const Header = () => {
   const [withdrawAmount, setWithdrawAmount] = useState<number>();
   const [withdrawChangeAmount, setWithdrawChangeAmount] = useState<number>(0);
   const [withdrawLimit, setWithdrawLimit] = useState<boolean>(false);
+  const [withdrawOverflow, setWithdrawOverflow] = useState<boolean>(false);
 
   const themeChange = () => {
 
@@ -123,8 +125,6 @@ const Header = () => {
     }
   }
 
-  const logInEmail = useSelector((state: RootState) => state.logInEmail);
-
   // 입금량을 서버로 전송
   const addBalanceToUser = (email: string, depositAmount: number) => {
     if (logInEmail !== '') {
@@ -147,11 +147,18 @@ const Header = () => {
     if (logInEmail !== '') {
       (async (email, withdrawAmount) => {
         try {
-          axios.post('http://127.0.0.1:8000/minus_balance_from_user/', {
+          const response = await axios.post('http://127.0.0.1:8000/minus_balance_from_user/', {
             email: email,
             withdrawAmount: withdrawAmount,
           });
-          console.log("출금량 전송 성공")
+          if (response.data.error) {
+            setWithdrawOverflow(true);
+            console.log("출금량이 잔고보다 많습니다 : ", response.data)
+          }
+          else {
+            setWithdrawOverflow(false);
+            console.log("출금량 전송 성공")
+          }
         } catch (error) {
           console.log("출금량 전송 실패")
         }
@@ -159,24 +166,32 @@ const Header = () => {
     }
   }
 
+  // 입금량의 변화를 감지하고 한계량을 지정
   const depositChange = (event: { target: { value: string; }; }) => {
-    if (Number(event.target.value) <= 10000000) {
+    if (Number(event.target.value) < 10000000 && Number(event.target.value) >= 1000) {
       setDepositLimit(false);
       setDepositAmount(Number(event.target.value));
-      setDepositChangeAmount(Number(event.target.value));
+      setDepositChangeAmount(parseFloat((Number(event.target.value) / cr_selected.price).toFixed(7)));
     }
     else {
+      if(Number(event.target.value) < 10000000) {
+        setDepositAmount(Number(event.target.value));
+      }
       setDepositLimit(true);
     }
   }
 
+  // 출금량의 변화를 감지하고 한계량을 지정
   const withdrawChange = (event: { target: { value: string; }; }) => {
-    if (Number(event.target.value) <= 10000000) {
+    if (Number(event.target.value) < 10000000 && Number(event.target.value) >= 1000) {
       setWithdrawLimit(false);
       setWithdrawAmount(Number(event.target.value));
-      setWithdrawChangeAmount(Number(event.target.value));
+      setWithdrawChangeAmount(parseFloat((Number(event.target.value) / cr_selected.price).toFixed(7)));
     }
     else {
+      if(Number(event.target.value) < 10000000) {
+        setWithdrawAmount(Number(event.target.value));
+      }
       setWithdrawLimit(true);
     }
   }
@@ -235,7 +250,7 @@ const Header = () => {
                             </div>
                             {
                               depositLimit === true ?
-                                <div className='alert-KRW'>한화로 1000만원 이하만 입금 가능합니다</div> :
+                                <div className='alert-KRW'>한화로 1,000원 이상 1000만원 이하만 입금 가능합니다</div> :
                                 null
                             }
                             <div className="change-input">
@@ -250,7 +265,16 @@ const Header = () => {
                                         `https://static.upbit.com/logos/${(cr_selected.market[0]).slice(4)}.png` :
                                         `https://static.upbit.com/logos/${(cr_selected.market).slice(4)}.png`) : undefined
                                 } alt="화폐사진" />
-                                <span>BTC</span>
+                                <span>
+                                  {
+                                    cr_selected && cr_selected.market ?
+                                      (
+                                        Array.isArray(cr_selected.market) ?
+                                          (cr_selected.market[0]).slice(4) :
+                                          (cr_selected.market).slice(4)
+                                      ) : undefined
+                                  }
+                                </span>
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" className="img-crypto-sort"><path fill-rule="evenodd" clip-rule="evenodd" d="M12.11 12.178L16 8.287l1.768 1.768-5.657 5.657-1.768-1.768-3.889-3.889 1.768-1.768 3.889 3.89z" fill="currentColor"></path>
                                 </svg>
                               </span>
@@ -269,12 +293,25 @@ const Header = () => {
 
                           // 출금영역
                           <>
-                            <div className="transfer-input">
+                            <div className={`transfer-input ${withdrawOverflow || withdrawLimit === true ?
+                              'alert-border' :
+                              ''
+                              }`}>
                               <div>출금금액</div>
                               <input onChange={withdrawChange} value={withdrawAmount} placeholder='1,000 ~ 10,000,000'>
                               </input>
                               <span>KRW</span>
                             </div>
+                            {
+                              withdrawOverflow === true ?
+                                <div className='alert-KRW'>출금량이 잔고보다 많습니다</div> :
+                                null
+                            }
+                            {
+                              withdrawLimit === true ?
+                                <div className='alert-KRW'>출금액은 1,000원 이상 1000만원 이하만 가능합니다</div> :
+                                null
+                            }
                             <div className="change-input">
                               <div>전환량</div>
                               <input value={withdrawChangeAmount}>
@@ -287,14 +324,23 @@ const Header = () => {
                                         `https://static.upbit.com/logos/${(cr_selected.market[0]).slice(4)}.png` :
                                         `https://static.upbit.com/logos/${(cr_selected.market).slice(4)}.png`) : undefined
                                 } alt="화폐사진" />
-                                <span>BTC</span>
+                                <span>
+                                  {
+                                    cr_selected && cr_selected.market ?
+                                      (
+                                        Array.isArray(cr_selected.market) ?
+                                          (cr_selected.market[0]).slice(4) :
+                                          (cr_selected.market).slice(4)
+                                      ) : undefined
+                                  }
+                                </span>
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" className="img-crypto-sort"><path fill-rule="evenodd" clip-rule="evenodd" d="M12.11 12.178L16 8.287l1.768 1.768-5.657 5.657-1.768-1.768-3.889-3.889 1.768-1.768 3.889 3.89z" fill="currentColor"></path>
                                 </svg>
                               </span>
                             </div>
                             <div className='transfer-submit withdraw'>
                               <span onClick={() => {
-                                if(withdrawAmount !== undefined) {
+                                if (withdrawAmount !== undefined) {
                                   minusBalanceFromUser(logInEmail, withdrawAmount)
                                 }
                               }}>출금</span>
