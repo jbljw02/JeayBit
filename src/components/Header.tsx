@@ -125,21 +125,37 @@ const Header = () => {
 
   const logInEmail = useSelector((state: RootState) => state.logInEmail);
 
-  const addBalanceToUser = (email: string, balance: number) => {
+  // 입금량을 서버로 전송
+  const addBalanceToUser = (email: string, depositAmount: number) => {
     if (logInEmail !== '') {
-      (async (email, balance) => {
+      (async (email, depositAmount) => {
         try {
           axios.post('http://127.0.0.1:8000/add_balance_to_user/', {
             email: email,
-            balance: balance,
+            depositAmount: depositAmount,
           });
+          console.log("입금량 전송 성공")
         } catch (error) {
           console.log("입금량 전송 실패")
         }
-      })(email, balance)
+      })(email, depositAmount)
     }
-    else {
-      alert("사용자 존재X")
+  }
+
+  // 출금량을 서버로 전송
+  const minusBalanceFromUser = (email: string, withdrawAmount: number) => {
+    if (logInEmail !== '') {
+      (async (email, withdrawAmount) => {
+        try {
+          axios.post('http://127.0.0.1:8000/minus_balance_from_user/', {
+            email: email,
+            withdrawAmount: withdrawAmount,
+          });
+          console.log("출금량 전송 성공")
+        } catch (error) {
+          console.log("출금량 전송 실패")
+        }
+      })(email, withdrawAmount)
     }
   }
 
@@ -277,7 +293,11 @@ const Header = () => {
                               </span>
                             </div>
                             <div className='transfer-submit withdraw'>
-                              <span>출금</span>
+                              <span onClick={() => {
+                                if(withdrawAmount !== undefined) {
+                                  minusBalanceFromUser(logInEmail, withdrawAmount)
+                                }
+                              }}>출금</span>
                             </div>
                           </>
                       }
