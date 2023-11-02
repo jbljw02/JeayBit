@@ -95,6 +95,8 @@ export type RootState = {
   favoriteCrypto: FavoriteCrypto[],
   isFavorited: boolean,
   userWallet: number,
+  cr_clickedIndex: number,
+  buyingPrice: number,
 }
 
 const cr_name = createSlice({
@@ -571,6 +573,26 @@ const userWallet = createSlice({
   }
 })
 
+const cr_clickedIndex = createSlice({
+  name: 'cr_clickedIndex',
+  initialState: 0,
+  reducers: {
+    setCr_clickedIndex: (state, action) => {
+      return action.payload;
+    }
+  }
+})
+
+const buyingPrice = createSlice({
+  name: 'buyingPrice',
+  initialState: 0,
+  reducers: {
+    setBuyingPrice: (state, action) => {
+      return action.payload;
+    }
+  }
+})
+
 export default configureStore({
   reducer: {
     cr_name: cr_name.reducer,
@@ -620,6 +642,8 @@ export default configureStore({
     favoriteCrypto: favoriteCrypto.reducer,
     isFavorited: isFavorited.reducer,
     userWallet: userWallet.reducer,
+    cr_clickedIndex: cr_clickedIndex.reducer,
+    buyingPrice: buyingPrice.reducer,
   }
 })
 
@@ -686,5 +710,7 @@ export const { setLogInEmail } = logInEmail.actions;
 export const { setFavoriteCrypto } = favoriteCrypto.actions;
 export const { setIsFavorited } = isFavorited.actions;
 export const { setUserWallet } = userWallet.actions;
+export const { setCr_clickedIndex } = cr_clickedIndex.actions;
+export const { setBuyingPrice } = buyingPrice.actions;
 
 // export default store;

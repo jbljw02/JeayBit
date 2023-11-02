@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux';
 import title from '../assets/images/title.png';
 import { RootState, setTheme, setUserWallet } from '../store';
-import { SetStateAction, useState } from 'react';
+import { SetStateAction, useEffect, useState } from 'react';
 import axios from 'axios';
 import { Routes, Route, Link, useNavigate, Outlet } from 'react-router-dom'
 import { csrftoken } from './csrftoken';
@@ -13,6 +13,7 @@ const Header = () => {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
   const theme = useSelector((state: RootState) => state.theme);
   const cr_selected = useSelector((state: RootState) => state.cr_selected);
   const logInUser = useSelector((state: RootState) => state.logInUser);
@@ -90,6 +91,11 @@ const Header = () => {
     })
   }
 
+  // 입금/출금/잔고 영역을 클릭할 때마다 서버로부터 잔고 데이터 받아옴
+  useEffect(() => {
+    getBalance(logInEmail)
+  }, [transferSort])
+
   const logOut = () => {
     (async () => {
       try {
@@ -128,7 +134,7 @@ const Header = () => {
     }
   }
 
-  // DB에서 사용자의 잔고량을 받아옴
+  // 서버로부터 사용자의 잔고량을 받아옴
   const getBalance = (logInEmail: string) => {
     (async () => {
       try {
@@ -258,7 +264,7 @@ const Header = () => {
                         <span onClick={() => setTransferSort('출금')} id={`${transferSort === '출금' ? 'withdrawSection' : ''}`}>출금</span>
                         <span onClick={() => {
                           setTransferSort('잔고')
-                          getBalance(logInEmail);
+                          // getBalance(logInEmail);
                         }} id={`${transferSort === '잔고' ? 'balanceSection' : ''}`}>잔고</span>
                       </div>
                       {

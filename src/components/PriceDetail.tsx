@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { AskingData, RootState, setAsking_data, setAsking_dateTime } from "../store";
+import { AskingData, RootState, setAsking_data, setAsking_dateTime, setBuyingPrice } from "../store";
 import { SetStateAction, useEffect, useState } from "react";
 import { Routes, Route, Link, useNavigate, Outlet } from 'react-router-dom'
 import SimpleBar from 'simplebar-react';
@@ -221,20 +221,70 @@ const ClosedPrice = () => {
 const BuyingSection = () => {
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  const [buyingPrice, setBuyingPrice] = useState<number>(0);
+  const cr_selected = useSelector((state: RootState) => state.cr_selected);
+  const cr_clickedIndex = useSelector((state: RootState) => state.cr_clickedIndex);
+  const logInEmail = useSelector((state: RootState) => state.logInEmail);
+  const userWallet = useSelector((state: RootState) => state.userWallet);
+
+  const buyingPrice = useSelector((state: RootState) => state.buyingPrice);
   const [selectedPercentage, setSelectedPercentage] = useState<string>('');
   const [bidSort, setBidSort] = useState<string>('지정가');
 
-  const cr_selected = useSelector((state: RootState) => state.cr_selected);
-  const logInEmail = useSelector((state: RootState) => state.logInEmail);
+  const [buyTotal, setBuyTotal] = useState<number>(0);
+  const [buyQuantity, setBuyQuantity] = useState<number>(0);
+
+  const [inputValue, setInputValue] = useState('0');
 
   const buyingPriceChange = (event: { target: { value: SetStateAction<number>; }; }) => {
-    setBuyingPrice(event.target.value)
+    dispatch(setBuyingPrice(event.target.value))
   }
 
   const selectPercentage = (percentage: string) => {
     setSelectedPercentage(percentage)
+
+    // 현재 잔고 기준 퍼센테이지를 '주문총액'에 할당하고, 주문총액이 구매하려는 화폐 가격에 대해 어느 정도의 비율을 가지는지 계산
+    if (percentage === '10%') {
+      let dividedTotal = userWallet * 0.1;
+      setBuyTotal(dividedTotal);
+      let dividedQuantity = dividedTotal / buyingPrice;
+      setBuyQuantity(dividedQuantity);
+      setInputValue(dividedQuantity.toString());
+      console.log("값 : ", buyQuantity);
+    }
+    if (percentage === '25%') {
+      let dividedTotal = userWallet * 0.25;
+      setBuyTotal(dividedTotal);
+      let dividedQuantity = dividedTotal / buyingPrice;
+      setBuyQuantity(dividedQuantity);
+      setInputValue(dividedQuantity.toString());
+      console.log("값 : ", buyQuantity);
+    }
+    if (percentage === '50%') {
+      let dividedTotal = userWallet * 0.50;
+      setBuyTotal(dividedTotal);
+      let dividedQuantity = dividedTotal / buyingPrice;
+      setBuyQuantity(dividedQuantity);
+      setInputValue(dividedQuantity.toString());
+      console.log("값 : ", buyQuantity);
+    }
+    if (percentage === '75%') {
+      let dividedTotal = userWallet * 0.75;
+      setBuyTotal(dividedTotal);
+      let dividedQuantity = dividedTotal / buyingPrice;
+      setBuyQuantity(dividedQuantity);
+      setInputValue(dividedQuantity.toString());
+      console.log("값 : ", buyQuantity);
+    }
+    if (percentage === '100%') {
+      let dividedTotal = userWallet;
+      setBuyTotal(dividedTotal);
+      let dividedQuantity = dividedTotal / buyingPrice;
+      setBuyQuantity(dividedQuantity);
+      setInputValue(dividedQuantity.toString());
+      console.log("값 : ", buyQuantity);
+    }
   }
 
   return (
@@ -271,14 +321,14 @@ const BuyingSection = () => {
             <table className="trading-table">
               <tr>
                 <td className="trading-category">주문가능</td>
-                <td className="trading-availableTrade">0
+                <td className="trading-availableTrade">{userWallet}
                   <span>KRW</span>
                 </td>
               </tr>
               <tr>
                 <td className="trading-category">매수가격</td>
                 <td className="td-input">
-                  <input onChange={(e) => setBuyingPrice(Number(e.target.value))} value={buyingPrice}>
+                  <input onChange={(e) => dispatch(setBuyingPrice(Number(e.target.value)))} value={buyingPrice}>
                   </input>
                   <span>KRW</span>
                 </td>
@@ -286,13 +336,22 @@ const BuyingSection = () => {
               <tr>
                 <td></td>
                 <td>
-                  <input type="range" min="0" max="50000000" step={1} value={buyingPrice} className="slider buy" onChange={(e) => setBuyingPrice(Number(e.target.value))} />
+                  <input type="range" min="0" max="50000000" step={1} value={buyingPrice} className="slider buy" onChange={(e) => dispatch(setBuyingPrice(Number(e.target.value)))} />
                 </td>
               </tr>
               <tr>
                 <td className="trading-category">주문수량</td>
                 <td className="td-input">
-                  <input>
+                  <input type="text" value={inputValue} onChange={(e) => {
+                    const inputValue = e.target.value;
+                    const decimalPart = (inputValue.split('.')[1] || '').length;
+                    if (decimalPart <= 8) {
+                      setInputValue(inputValue);
+                      if (inputValue !== '') {
+                        setBuyQuantity(parseFloat(inputValue));
+                      }
+                    }
+                  }}>
                   </input>
                   <span>
                     {
@@ -336,7 +395,7 @@ const BuyingSection = () => {
               <tr>
                 <td className="trading-category">주문총액</td>
                 <td className="td-input">
-                  <input>
+                  <input value={buyTotal}>
                   </input>
                   <span>KRW</span>
                 </td>
@@ -360,14 +419,14 @@ const BuyingSection = () => {
                 <table className="trading-table">
                   <tr>
                     <td className="trading-category">주문가능</td>
-                    <td className="trading-availableTrade">0
+                    <td className="trading-availableTrade">{userWallet}
                       <span>KRW</span>
                     </td>
                   </tr>
                   <tr>
                     <td className="trading-category">주문총액</td>
                     <td className="td-input">
-                      <input>
+                      <input value={buyTotal}>
                       </input>
                       <span>KRW</span>
                     </td>
@@ -419,7 +478,7 @@ const BuyingSection = () => {
                 <table className="trading-table">
                   <tr>
                     <td className="trading-category">주문가능</td>
-                    <td className="trading-availableTrade">0
+                    <td className="trading-availableTrade">{userWallet}
                       <span>KRW</span>
                     </td>
                   </tr>
@@ -427,7 +486,7 @@ const BuyingSection = () => {
                   <tr>
                     <td className="trading-category">감시가격</td>
                     <td className="td-input">
-                      <input onChange={(e) => setBuyingPrice(Number(e.target.value))} value={buyingPrice}>
+                      <input onChange={(e) => dispatch(setBuyingPrice(Number(e.target.value)))} value={buyingPrice}>
                       </input>
                       <span>KRW</span>
                     </td>
@@ -435,13 +494,13 @@ const BuyingSection = () => {
                   <tr>
                     <td></td>
                     <td>
-                      <input type="range" min="0" max="50000000" step={1} value={buyingPrice} className="slider buy" onChange={(e) => setBuyingPrice(Number(e.target.value))} />
+                      <input type="range" min="0" max="50000000" step={1} value={buyingPrice} className="slider buy" onChange={(e) => dispatch(setBuyingPrice(Number(e.target.value)))} />
                     </td>
                   </tr>
                   <tr>
                     <td className="trading-category">매수가격</td>
                     <td className="td-input">
-                      <input onChange={(e) => setBuyingPrice(Number(e.target.value))} value={buyingPrice}>
+                      <input onChange={(e) => dispatch(setBuyingPrice(Number(e.target.value)))} value={buyingPrice}>
                       </input>
                       <span>KRW</span>
                     </td>
@@ -449,7 +508,7 @@ const BuyingSection = () => {
                   <tr>
                     <td></td>
                     <td>
-                      <input type="range" min="0" max="50000000" step={1} value={buyingPrice} className="slider buy" onChange={(e) => setBuyingPrice(Number(e.target.value))} />
+                      <input type="range" min="0" max="50000000" step={1} value={buyingPrice} className="slider buy" onChange={(e) => dispatch(setBuyingPrice(Number(e.target.value)))} />
                     </td>
                   </tr>
                   <tr>

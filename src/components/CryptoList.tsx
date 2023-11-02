@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { RootState, setFilteredData, setStar, Crypto, setCr_name_selected, setCr_market_selected, setCr_price_selected, setCr_change_selected, setCr_change_rate_selected, setCr_change_price_selected, setSortedData, setCr_trade_price_selected, setCr_trade_volume_selected, setCr_open_price_selected, setCr_high_price_selected, setCr_low_price_selected, Market, setCandle_per_date, setCandle_per_week, setCandle_per_month, setSelectedChartSort, setCandle_per_minute, setCr_name, setCr_price, setCr_market, setCr_change, setCr_change_rate, setCr_change_price, setCr_trade_price, setCr_trade_volume, setCr_open_price, setCr_high_price, setCr_low_price, setCandle_per_date_BTC, setClosed_data, setAsking_data, setAsking_dateTime, setAsking_totalAskSize, setAsking_totalBidSize, setCr_selected, FavoriteCrypto, setFavoriteCrypto } from "../store";
+import { RootState, setFilteredData, setStar, Crypto, setCr_name_selected, setCr_market_selected, setCr_price_selected, setCr_change_selected, setCr_change_rate_selected, setCr_change_price_selected, setSortedData, setCr_trade_price_selected, setCr_trade_volume_selected, setCr_open_price_selected, setCr_high_price_selected, setCr_low_price_selected, Market, setCandle_per_date, setCandle_per_week, setCandle_per_month, setSelectedChartSort, setCandle_per_minute, setCr_name, setCr_price, setCr_market, setCr_change, setCr_change_rate, setCr_change_price, setCr_trade_price, setCr_trade_volume, setCr_open_price, setCr_high_price, setCr_low_price, setCandle_per_date_BTC, setClosed_data, setAsking_data, setAsking_dateTime, setAsking_totalAskSize, setAsking_totalBidSize, setCr_selected, FavoriteCrypto, setFavoriteCrypto, setCr_clickedIndex, setBuyingPrice } from "../store";
 import { useEffect, useState } from "react";
 import img_sort from '../assets/images/sort.png';
 import img_sort_up from '../assets/images/sort-up.png';
@@ -46,6 +46,7 @@ const CryptoList = () => {
   // 정렬하려는 목적에 따라 이미지를 변경하기 위해 배열로 생성
   const sort_images = [img_sort, img_sort_down, img_sort_up];
 
+  const cr_clickedIndex = useSelector((state: RootState) => state.cr_clickedIndex);
   const delimitedDate = useSelector((state: RootState) => state.delimitedDate);
   const delimitedTime = useSelector((state: RootState) => state.delimitedTime);
   const selectedChartSort = useSelector((state: RootState) => state.selectedChartSort);
@@ -596,6 +597,7 @@ const CryptoList = () => {
                     let priceClass_fall = isChanged ? 'change-price-fall' : '';
                     return (
                       <tr key={i} onClick={() => {
+                        dispatch(setBuyingPrice(filteredData[i].price)); // 특정 화폐를 클릭하면 해당 화폐의 값으로 '매수가격'이 업데이트 됨 
                         nameSelect(filteredData[i].name);
                         marketSelect(filteredData[i].market);
                         setSelectedCrypto(filteredData[i]);
