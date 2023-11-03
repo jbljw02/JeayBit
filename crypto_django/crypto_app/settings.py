@@ -99,10 +99,15 @@ ROOT_URLCONF = 'crypto_app.urls'
 SESSION_COOKIE_SAMESITE = 'None'  # 'None': 모든 컨텍스트(다른 사이트)에서 쿠키 전송 가능
 SESSION_COOKIE_SECURE = True  # 'True': HTTPS 연결시에만 쿠키 전송
 
+from crypto_app.authmiddleware import CsrfExemptSessionAuthentication
 AUTHENTICATION_BACKENDS = [
-    'app.backends.EmailLogin',  # 커스텀 인증 방식을 사용
+    # 'app.backends.EmailLogin',  # 커스텀 인증 방식을 사용
     'django.contrib.auth.backends.ModelBackend',  # User 모델의 기본 인증 방식도 가능하도록 사용
-    ]
+    # 'rest_framework.authentication.SessionAuthentication',
+    # 'rest_framework.authentication.BasicAuthentication',
+    # 'rest_framework.authentication.TokenAuthentication',
+    # "crypto_app.authmiddleware.CsrfExemptSessionAuthentication"
+]
 
 AUTH_USER_MODEL = 'app.CustomUser'  # 기본적으로 User 모델이 아닌 CustomUser 모델을 참고하도록 설정
 

@@ -1,7 +1,7 @@
 import { HeaderNav } from "./Header";
 import title from '../assets/images/title.png';
 import { useNavigate } from "react-router-dom";
-import { SetStateAction, useState } from "react";
+import { SetStateAction, useEffect, useState } from "react";
 import axios, { AxiosError } from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState, setLogInEmail, setLogInUser } from "../store";
@@ -49,6 +49,9 @@ const LogIn = () => {
           console.log("로그인 정보 전송 성공", response.data)
           dispatch(setLogInUser(response.data.username))
           dispatch(setLogInEmail(response.data.email))
+
+          localStorage.setItem('user', JSON.stringify(response.data));
+
           navigate('/')
         } catch (error) {
           console.log("로그인 정보 전송 실패", error)

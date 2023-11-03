@@ -222,14 +222,56 @@ def sign_up(request):
     # 사용자 생성 후 성공 메시지 반환
     return Response({"success": "회원가입 성공"}, status=201)
 
+from django.http import JsonResponse
+from django.views import View
+
+class LoginView(View):
+    def post(self,request):
+        try:
+            data = json.loads(request.body)
+            email = data.get("email")
+            password = data.get("password")
+
+            user = authenticate(
+                request, email=email, password=password
+            )  # CusomterUser.authenticate로 작성하지 않아도 지정해놓은 모델에 대해 인증을 수행
+
+            if user is not None:
+                login(request, user)
+                print("키:", request.session.session_key)
+                print("로그인 상태 : ", request.user)
+                print("이메일 : ", email)
+                print("이름 : ", request.user.username)
+                return JsonResponse({"username": request.user.username, "email": email}, status=200)
+            else:
+                return JsonResponse({"detail": "이메일 혹은 비밀번호가 잘못되었습니다."}, status=400)
+
+        except Exception as e:
+            print("에러 : ", e)
+            return JsonResponse({"detail": f"서버 내부 에러: {str(e)}"}, status=500)
+        
+class LogoutView(View):
+    def post(self,request):
+        print("로그아웃 전 : ", request.session.session_key)
+
+        try:
+            if request.session.session_key is not None:
+                request.session.flush()  # 세션 데이터 삭제
+                logout(request)
+                return JsonResponse({"detail": "로그아웃 성공"},status=200)
+            else:
+                return JsonResponse({"detail": "세션 키가 존재하지 않습니다."}, status=400)
+        except Exception as e:
+            print("에러 : ", e)
+            return JsonResponse({"detail": "로그아웃 실패"}, status=500)
 
 # 로그인
 @api_view(["POST"])
 def logIn(request):
     try:
-        print(request.data)
-        email = request.data.get("email")
-        password = request.data.get("password")
+        data = request.data
+        email = data.get("email")
+        password = data.get("password")
 
         user = authenticate(
             request, email=email, password=password
@@ -241,30 +283,29 @@ def logIn(request):
             print("로그인 상태 : ", request.user)
             print("이메일 : ", email)
             print("이름 : ", request.user.username)
-            return Response({"username": request.user.username, "email": email})
+            return JsonResponse({"username": request.user.username, "email": email})
         else:
-            return Response({"detail": "이메일 혹은 비밀번호가 잘못되었습니다."}, status=400)
+            return JsonResponse({"detail": "이메일 혹은 비밀번호가 잘못되었습니다."}, status=400)
 
     except Exception as e:
         print("에러 : ", e)
-        return Response({"detail": f"서버 내부 에러: {str(e)}"}, status=500)
+        return JsonResponse({"detail": f"서버 내부 에러: {str(e)}"}, status=500)
 
 # 로그아웃
 @api_view(["POST"])
 def logOut(request):
-    print("로그아웃 리퀘스트 : ", request.data)
     print("로그아웃 전 : ", request.session.session_key)
 
     try:
         if request.session.session_key is not None:
             request.session.flush()  # 세션 데이터 삭제
             logout(request)
-            return Response({"detail": "로그아웃 성공"})
+            return JsonResponse({"detail": "로그아웃 성공"})
         else:
-            return Response({"detail": "세션 키가 존재하지 않습니다."}, status=400)
+            return JsonResponse({"detail": "세션 키가 존재하지 않습니다."}, status=400)
     except Exception as e:
         print("에러 : ", e)
-        return Response({"detail": "로그아웃 실패"})
+        return JsonResponse({"detail": "로그아웃 실패"})
 
 # UserCrypto 테이블에 사용자에 따른 화폐 관심 여부 추가
 @api_view(["POST"])

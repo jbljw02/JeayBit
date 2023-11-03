@@ -17,6 +17,8 @@ from .views import (
     add_balance_to_user,
     minus_balance_from_user,
     get_user_balance,
+    LoginView,
+    LogoutView
 )
 
 urlpatterns = [
@@ -28,8 +30,8 @@ urlpatterns = [
     path("asking_price/", asking_price),
     path("closed_price/", closed_price),
     path("sign_up/", sign_up),
-    path("logIn/", logIn),
-    path("logOut/", logOut),
+    path("logIn/", LoginView.as_view()),
+    path("logOut/", LogoutView.as_view()),
     path("check_login/", check_login),
     path("add_favoriteCrypto_to_user/", add_favoriteCrypto_to_user),
     path("get_user_favoriteCrypto/<str:email>/", get_user_favoriteCrypto),

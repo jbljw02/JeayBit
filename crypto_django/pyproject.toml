@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "crypto-django"
+version = "0.1.0"
+description = ""
+authors = ["Jisu Park <wltn8223@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+django-cors-headers = "^4.3.0"
+django = "^4.2.7"
+requests = "^2.31.0"
+djangorestframework = "^3.14.0"
+djangorestframework-jwt = "^1.11.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
