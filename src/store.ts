@@ -97,6 +97,7 @@ export type RootState = {
   userWallet: number,
   cr_clickedIndex: number,
   buyingPrice: number,
+  balanceUpdate: boolean,
 }
 
 const cr_name = createSlice({
@@ -593,6 +594,16 @@ const buyingPrice = createSlice({
   }
 })
 
+const balanceUpdate = createSlice({
+  name: 'balanceUpdate',
+  initialState: false,
+  reducers: {
+    setBalanceUpdate: (state, action) => {
+      return action.payload;
+    }
+  }
+})
+
 export default configureStore({
   reducer: {
     cr_name: cr_name.reducer,
@@ -644,6 +655,7 @@ export default configureStore({
     userWallet: userWallet.reducer,
     cr_clickedIndex: cr_clickedIndex.reducer,
     buyingPrice: buyingPrice.reducer,
+    balanceUpdate: balanceUpdate.reducer,
   }
 })
 
@@ -712,5 +724,6 @@ export const { setIsFavorited } = isFavorited.actions;
 export const { setUserWallet } = userWallet.actions;
 export const { setCr_clickedIndex } = cr_clickedIndex.actions;
 export const { setBuyingPrice } = buyingPrice.actions;
+export const { setBalanceUpdate } = balanceUpdate.actions;
 
 // export default store;

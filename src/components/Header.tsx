@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import title from "../assets/images/title.png";
-import { RootState, setLogInEmail, setLogInUser, setTheme, setUserWallet } from "../store";
+import { RootState, setBalanceUpdate, setLogInEmail, setLogInUser, setTheme, setUserWallet } from "../store";
 import { SetStateAction, useEffect, useState } from "react";
 import axios from "axios";
 import { Routes, Route, Link, useNavigate, Outlet } from "react-router-dom";
@@ -17,6 +17,7 @@ const Header = () => {
   const cr_selected = useSelector((state: RootState) => state.cr_selected);
   const logInUser = useSelector((state: RootState) => state.logInUser);
   const logInEmail = useSelector((state: RootState) => state.logInEmail);
+  const balanceUpdate = useSelector((state: RootState) => state.balanceUpdate);
 
   const [walletHover, setWalletHover] = useState<boolean>(false);
   const [transferSort, setTransferSort] = useState<string>("입금");
@@ -91,10 +92,18 @@ const Header = () => {
     });
   };
 
-  // 입금/출금/잔고 영역을 클릭할 때마다 서버로부터 잔고 데이터 받아옴
+  // 화면 첫 랜더링 시, 사용자 변경 시, 입출금 할 때마다 잔고 데이터 받아옴
   useEffect(() => {
-    getBalance(logInEmail);
-  }, [transferSort]);
+    console.log("고고")
+    if (logInEmail !== '') {
+      getBalance(logInEmail);
+    }
+  }, [logInEmail, balanceUpdate])
+
+  // 입금/출금/잔고 영역을 클릭할 때마다 서버로부터 잔고 데이터 받아옴
+  // useEffect(() => {
+  //   getBalance(logInEmail);
+  // }, [transferSort]);
 
   const logOut = () => {
     (async () => {
@@ -159,9 +168,9 @@ const Header = () => {
   // 입금량을 서버로 전송
   const addBalanceToUser = (email: string, depositAmount: number) => {
     if (logInEmail !== "") {
-      (async (email, depositAmount) => {
+      return (async (email, depositAmount) => {  // 여기에서 return을 추가합니다
         try {
-          axios.post("http://127.0.0.1:8000/add_balance_to_user/", {
+          await axios.post("http://127.0.0.1:8000/add_balance_to_user/", {
             email: email,
             depositAmount: depositAmount,
           });
@@ -176,7 +185,7 @@ const Header = () => {
   // 출금량을 서버로 전송
   const minusBalanceFromUser = (email: string, withdrawAmount: number) => {
     if (logInEmail !== "") {
-      (async (email, withdrawAmount) => {
+      return (async (email, withdrawAmount) => {
         try {
           const response = await axios.post(
             "http://127.0.0.1:8000/minus_balance_from_user/",
@@ -394,13 +403,17 @@ const Header = () => {
                         </div>
                         <div className="transfer-submit deposit">
                           <span
-                            onClick={() => {
-                              if (depositAmount !== undefined) {
-                                addBalanceToUser(logInEmail, depositAmount);
-                              } else {
-                                alert("입금량 존재X");
+                            onClick={
+                              // async를 사용하여 입금이 완료될 때까지 dispatch를 실행하지 않음
+                              async () => {
+                                if (depositAmount !== undefined) {
+                                  await addBalanceToUser(logInEmail, depositAmount);
+                                } else {
+                                  alert("입금량 존재X");
+                                }
+                                dispatch(setBalanceUpdate(!balanceUpdate))
                               }
-                            }}
+                            }
                           >
                             입금
                           </span>
@@ -411,8 +424,8 @@ const Header = () => {
                       <>
                         <div
                           className={`transfer-input ${withdrawOverflow || withdrawLimit === true
-                              ? "alert-border"
-                              : ""
+                            ? "alert-border"
+                            : ""
                             }`}
                         >
                           <div>출금금액</div>
@@ -478,14 +491,13 @@ const Header = () => {
                         </div>
                         <div className="transfer-submit withdraw">
                           <span
-                            onClick={() => {
-                              if (withdrawAmount !== undefined) {
-                                minusBalanceFromUser(
-                                  logInEmail,
-                                  withdrawAmount
-                                );
-                              }
-                            }}
+                            onClick={
+                              async () => {
+                                if (withdrawAmount !== undefined) {
+                                  await minusBalanceFromUser(logInEmail, withdrawAmount);
+                                }
+                                dispatch(setBalanceUpdate(!balanceUpdate))
+                              }}
                           >
                             출금
                           </span>

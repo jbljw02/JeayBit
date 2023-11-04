@@ -241,7 +241,6 @@ const BuyingSection = () => {
   const buyingPriceChange = (event: { target: { value: SetStateAction<number>; }; }) => {
     dispatch(setBuyingPrice(event.target.value))
   }
-  console.log("값: ", buyTotal)
 
   const selectPercentage = (percentage: string) => {
     setSelectedPercentage(percentage)
@@ -370,7 +369,7 @@ const BuyingSection = () => {
                     dispatch(setBuyingPrice(value))
                     setBuyTotal(Math.floor(value * buyQuantity))
                     setTotalInputvalue((Math.floor(value * buyQuantity)).toString())
-                  }} value={buyingPrice}>
+                  }} value={buyingPrice.toLocaleString()}>
                   </input>
                   <span>KRW</span>
                 </td>
@@ -460,7 +459,7 @@ const BuyingSection = () => {
               <tr>
                 <td className="trading-category">주문총액</td>
                 <td className="td-input">
-                  <input type="text" value={totalInputValue} onChange={(e) => {
+                  <input type="text" value={Number(totalInputValue).toLocaleString()} onChange={(e) => {
                     let value = e.target.value;
 
                     // 첫 번째 숫자가 0인데 그 뒤에 수가 온다면, 그 수로 0을 대체하거나 삭제
