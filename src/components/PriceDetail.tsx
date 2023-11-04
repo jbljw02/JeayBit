@@ -235,11 +235,13 @@ const BuyingSection = () => {
   const [buyTotal, setBuyTotal] = useState<number>(0);
   const [buyQuantity, setBuyQuantity] = useState<number>(0);
 
-  const [inputValue, setInputValue] = useState('0');
+  const [quantityInputValue, setQuantityInputValue] = useState('0');
+  const [totalInputValue, setTotalInputvalue] = useState('0');
 
   const buyingPriceChange = (event: { target: { value: SetStateAction<number>; }; }) => {
     dispatch(setBuyingPrice(event.target.value))
   }
+  console.log("값: ", buyTotal)
 
   const selectPercentage = (percentage: string) => {
     setSelectedPercentage(percentage)
@@ -248,41 +250,76 @@ const BuyingSection = () => {
     if (percentage === '10%') {
       let dividedTotal = userWallet * 0.1;
       setBuyTotal(dividedTotal);
+      setTotalInputvalue(dividedTotal.toString())
       let dividedQuantity = dividedTotal / buyingPrice;
+
+      // 소수점 아래 8자리로 제한
+      if ((dividedQuantity.toString().split('.')[1] || '').length > 8) {
+        dividedQuantity = parseFloat(dividedQuantity.toFixed(8));
+      }
+
       setBuyQuantity(dividedQuantity);
-      setInputValue(dividedQuantity.toString());
+      setQuantityInputValue(dividedQuantity.toString());
       console.log("값 : ", buyQuantity);
     }
     if (percentage === '25%') {
       let dividedTotal = userWallet * 0.25;
       setBuyTotal(dividedTotal);
+      setTotalInputvalue(dividedTotal.toString())
       let dividedQuantity = dividedTotal / buyingPrice;
+
+      // 소수점 아래 8자리로 제한
+      if ((dividedQuantity.toString().split('.')[1] || '').length > 8) {
+        dividedQuantity = parseFloat(dividedQuantity.toFixed(8));
+      }
+
       setBuyQuantity(dividedQuantity);
-      setInputValue(dividedQuantity.toString());
+      setQuantityInputValue(dividedQuantity.toString());
       console.log("값 : ", buyQuantity);
     }
     if (percentage === '50%') {
       let dividedTotal = userWallet * 0.50;
       setBuyTotal(dividedTotal);
+      setTotalInputvalue(dividedTotal.toString())
       let dividedQuantity = dividedTotal / buyingPrice;
+
+      // 소수점 아래 8자리로 제한
+      if ((dividedQuantity.toString().split('.')[1] || '').length > 8) {
+        dividedQuantity = parseFloat(dividedQuantity.toFixed(8));
+      }
+
       setBuyQuantity(dividedQuantity);
-      setInputValue(dividedQuantity.toString());
+      setQuantityInputValue(dividedQuantity.toString());
       console.log("값 : ", buyQuantity);
     }
     if (percentage === '75%') {
       let dividedTotal = userWallet * 0.75;
       setBuyTotal(dividedTotal);
+      setTotalInputvalue(dividedTotal.toString())
       let dividedQuantity = dividedTotal / buyingPrice;
+
+      // 소수점 아래 8자리로 제한
+      if ((dividedQuantity.toString().split('.')[1] || '').length > 8) {
+        dividedQuantity = parseFloat(dividedQuantity.toFixed(8));
+      }
+
       setBuyQuantity(dividedQuantity);
-      setInputValue(dividedQuantity.toString());
+      setQuantityInputValue(dividedQuantity.toString());
       console.log("값 : ", buyQuantity);
     }
     if (percentage === '100%') {
       let dividedTotal = userWallet;
       setBuyTotal(dividedTotal);
+      setTotalInputvalue(dividedTotal.toString())
       let dividedQuantity = dividedTotal / buyingPrice;
+
+      // 소수점 아래 8자리로 제한
+      if ((dividedQuantity.toString().split('.')[1] || '').length > 8) {
+        dividedQuantity = parseFloat(dividedQuantity.toFixed(8));
+      }
+
       setBuyQuantity(dividedQuantity);
-      setInputValue(dividedQuantity.toString());
+      setQuantityInputValue(dividedQuantity.toString());
       console.log("값 : ", buyQuantity);
     }
   }
@@ -328,7 +365,12 @@ const BuyingSection = () => {
               <tr>
                 <td className="trading-category">매수가격</td>
                 <td className="td-input">
-                  <input onChange={(e) => dispatch(setBuyingPrice(Number(e.target.value)))} value={buyingPrice}>
+                  <input onChange={(e) => {
+                    let value = Number(e.target.value)
+                    dispatch(setBuyingPrice(value))
+                    setBuyTotal(Math.floor(value * buyQuantity))
+                    setTotalInputvalue((Math.floor(value * buyQuantity)).toString())
+                  }} value={buyingPrice}>
                   </input>
                   <span>KRW</span>
                 </td>
@@ -342,17 +384,40 @@ const BuyingSection = () => {
               <tr>
                 <td className="trading-category">주문수량</td>
                 <td className="td-input">
-                  <input type="text" value={inputValue} onChange={(e) => {
-                    const inputValue = e.target.value;
-                    const decimalPart = (inputValue.split('.')[1] || '').length;
-                    if (decimalPart <= 8) {
-                      setInputValue(inputValue);
-                      if (inputValue !== '') {
-                        setBuyQuantity(parseFloat(inputValue));
+                  <input type="text"
+                    value={quantityInputValue}
+                    onChange={(e) => {
+                      let value = e.target.value;
+
+                      // 00, 01, 02, ... 등등 첫번째 숫자가 0인데 그 뒤에 수가 온다면, 그 수로 0을 대체하거나 삭제
+                      if (value[0] === '0' && value.length > 1) {
+                        if (value[1] === '0' || (value[1] >= '1' && value[1] <= '9')) {
+                          value = value.substring(1);
+                        }
                       }
-                    }
-                  }}>
-                  </input>
+
+                      // 0..2, 0..4, ... 등등 "."이 두 번 이상 나오지 않도록 함
+                      value = value.replace(/(\..*)\./g, "$1");
+
+                      const decimalPart = (value.split('.')[1] || '').length;
+
+                      // 소수점 자릿수가 8자리 이하인 경우만
+                      if (decimalPart <= 8) {
+                        setQuantityInputValue(value);
+                        if (value !== '') {
+                          setBuyQuantity(parseFloat(value));
+                        }
+                      }
+                      if (value !== '') {
+                        setBuyTotal(Math.floor(buyingPrice * parseFloat(value)))
+                        setTotalInputvalue((Math.floor(buyingPrice * parseFloat(value))).toString())
+                      }
+                      else {
+                        setBuyTotal(0)
+                      }
+                    }}
+                  />
+
                   <span>
                     {
                       cr_selected && cr_selected.market ?
@@ -395,8 +460,35 @@ const BuyingSection = () => {
               <tr>
                 <td className="trading-category">주문총액</td>
                 <td className="td-input">
-                  <input value={buyTotal}>
-                  </input>
+                  <input type="text" value={totalInputValue} onChange={(e) => {
+                    let value = e.target.value;
+
+                    // 첫 번째 숫자가 0인데 그 뒤에 수가 온다면, 그 수로 0을 대체하거나 삭제
+                    if (value[0] === '0' && value.length > 1) {
+                      if (value[1] === '0' || (value[1] >= '1' && value[1] <= '9')) {
+                        value = value.substring(1);
+                      }
+                    }
+
+                    // 입력값이 숫자인지 확인하고, 숫자 이외의 문자가 포함되어 있는지 확인
+                    const isNumber = /^[0-9]*$/.test(value);
+
+                    if (isNumber) {
+                      setTotalInputvalue(value);
+                      setBuyTotal(parseFloat(value));
+
+                      let dividiedQuantity = Number(value) / buyingPrice;
+
+                      // 소수점 아래 8자리로 제한
+                      if ((dividiedQuantity.toString().split('.')[1] || '').length > 8) {
+                        dividiedQuantity = parseFloat(dividiedQuantity.toFixed(8));
+                      }
+
+                      setBuyQuantity(dividiedQuantity);
+                      setQuantityInputValue(dividiedQuantity.toString());
+                    }
+
+                  }} />
                   <span>KRW</span>
                 </td>
               </tr>
