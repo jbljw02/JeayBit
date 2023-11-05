@@ -1213,6 +1213,12 @@ input[type=range]::-webkit-slider-thumb {
   padding-right: 15px;
 }
 
+#owned-name {
+  padding-right: 100px;
+}
+
+
+
 .list-table tbody tr {
   cursor: pointer;
 }
@@ -1296,6 +1302,18 @@ input[type=range]::-webkit-slider-thumb {
   text-align: center;
   font-size: 13px;
   color: rgba(0, 0, 0, 0.6);
+}
+
+#owned-td-name {
+  padding-right: 0px;
+}
+
+#owned-td-price {
+  padding-right: 8px;
+}
+
+#owned-td-changeRate {
+  padding-right: 20px;
 }
 
 /* footer CSS */

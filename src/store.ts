@@ -47,6 +47,12 @@ export type FavoriteCrypto = {
   isFavorited: boolean
 }
 
+export type OwnedCrypto = {
+  crypto_name: string,
+  isOwned: boolean,
+  quantity: number,
+}
+
 export type RootState = {
   cr_name: string[],
   cr_price: number[],
@@ -93,6 +99,7 @@ export type RootState = {
   logInUser: string,
   logInEmail: string,
   favoriteCrypto: FavoriteCrypto[],
+  ownedCrypto: OwnedCrypto[],
   isFavorited: boolean,
   userWallet: number,
   cr_clickedIndex: number,
@@ -565,6 +572,26 @@ const isFavorited = createSlice({
   }
 })
 
+const ownedCrypto = createSlice({
+  name: 'ownedCrypto',
+  initialState: '',
+  reducers: {
+    setOwnedCrypto: (state, action) => {
+      return action.payload;
+    }
+  }
+})
+
+const isOwned = createSlice({
+  name: 'isOwned',
+  initialState: false,
+  reducers: {
+    setIsOwned: (state, action) => {
+      return action.payload;
+    }
+  }
+})
+
 const userWallet = createSlice({
   name: 'userWallet',
   initialState: 0,
@@ -663,6 +690,8 @@ export default configureStore({
     logInEmail: logInEmail.reducer,
     favoriteCrypto: favoriteCrypto.reducer,
     isFavorited: isFavorited.reducer,
+    ownedCrypto: ownedCrypto.reducer,
+    isOwned: isOwned.reducer,
     userWallet: userWallet.reducer,
     cr_clickedIndex: cr_clickedIndex.reducer,
     buyingPrice: buyingPrice.reducer,
@@ -733,6 +762,8 @@ export const { setLogInUser } = logInUser.actions;
 export const { setLogInEmail } = logInEmail.actions;
 export const { setFavoriteCrypto } = favoriteCrypto.actions;
 export const { setIsFavorited } = isFavorited.actions;
+export const { setOwnedCrypto } = ownedCrypto.actions;
+export const { setIsOwned } = isOwned.actions;
 export const { setUserWallet } = userWallet.actions;
 export const { setCr_clickedIndex } = cr_clickedIndex.actions;
 export const { setBuyingPrice } = buyingPrice.actions;

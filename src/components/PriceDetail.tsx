@@ -5,8 +5,7 @@ import { Routes, Route, Link, useNavigate, Outlet } from 'react-router-dom'
 import SimpleBar from 'simplebar-react';
 import 'simplebar/dist/simplebar.min.css';
 import axios from "axios";
-import getBalance from "./useFuction";
-import getFuntion from "./useFuction";
+import useFunction from "./useFuction";
 
 const PriceDetail = () => {
 
@@ -244,16 +243,14 @@ const BuyingSection = () => {
   const [totalInputValue, setTotalInputvalue] = useState('0');
   const [buyingInputValue, setBuyingInputValue] = useState('0');
 
-  const getBalance = getFuntion();
+  const { getBalance, getOwnedCrypto } = useFunction();
 
   useEffect(() => {
     setBuyingInputValue(buyingPrice.toString())
   }, [buyingPrice])
 
-
   const buyCrypto = (email: string, cryptoName: string, cryptoQuantity: number, buyTotal: number) => {
 
-    console.log("함수-주문총액: ", buyTotal)
     // 호가중에서 구매하려는 가격과 일치하는 값이 있는지 찾음
     let matchedItem = asking_data.find(item => item.ask_price === buyingPrice);
     console.log("매치여부 : ", matchedItem)
@@ -270,6 +267,7 @@ const BuyingSection = () => {
           });
           console.log("구매 화폐 전송 성공", response.data)
           getBalance(logInEmail);  // 매수에 사용한 금액만큼 차감되기 때문에 잔고 업데이트
+          getOwnedCrypto(logInEmail);  // 소유 화폐가 새로 추가될 수 있으니 업데이트
         }
         catch (error) {
           console.log("구매 화폐 전송 실패: ", error)

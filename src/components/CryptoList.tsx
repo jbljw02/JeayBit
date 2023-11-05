@@ -56,72 +56,33 @@ import starOff from "../assets/images/star-off.png";
 import SimpleBar from "simplebar-react";
 import "simplebar/dist/simplebar.min.css";
 import axios from "axios";
+import useFunction from "./useFuction";
 
 const CryptoList = () => {
-  // dispatch 함수를 사용하기 위한 선언
+
   const dispatch = useDispatch();
 
-  // useSelector훅을 이용해 store에서 state를 가져옴
-  const cr_name = useSelector((state: RootState) => {
-    return state.cr_name;
-  });
-  const cr_price = useSelector((state: RootState) => {
-    return state.cr_price;
-  });
-  const cr_market = useSelector((state: RootState) => {
-    return state.cr_market;
-  });
-  const cr_change = useSelector((state: RootState) => {
-    return state.cr_change;
-  });
-  const cr_change_rate = useSelector((state: RootState) => {
-    return state.cr_change_rate;
-  });
-  const cr_change_price = useSelector((state: RootState) => {
-    return state.cr_change_price;
-  });
-  const cr_trade_price = useSelector((state: RootState) => {
-    return state.cr_trade_price;
-  });
-  const cr_trade_volume = useSelector((state: RootState) => {
-    return state.cr_trade_volume;
-  });
-  const cr_open_price = useSelector((state: RootState) => {
-    return state.cr_open_price;
-  });
-  const cr_high_price = useSelector((state: RootState) => {
-    return state.cr_high_price;
-  });
-  const cr_low_price = useSelector((state: RootState) => {
-    return state.cr_low_price;
-  });
-  const star = useSelector((state: RootState) => {
-    return state.star;
-  });
-  const filteredData = useSelector((state: RootState) => {
-    return state.filteredData;
-  });
-  let sortedData = useSelector((state: RootState) => {
-    return state.sortedData;
-  });
-  const cr_trade_price_selected = useSelector((state: RootState) => {
-    return state.cr_trade_price_selected;
-  });
-  const cr_market_selected = useSelector((state: RootState) => {
-    return state.cr_market_selected;
-  });
-  const candle_per_date = useSelector(
-    (state: RootState) => state.candle_per_date
-  );
-  const candle_per_date_BTC = useSelector(
-    (state: RootState) => state.candle_per_date_BTC
-  );
-  const candle_per_minute = useSelector(
-    (state: RootState) => state.candle_per_minute
-  );
-  const cr_price_selected = useSelector(
-    (state: RootState) => state.cr_price_selected
-  );
+  const cr_name = useSelector((state: RootState) => state.cr_name);
+  const cr_price = useSelector((state: RootState) => state.cr_price);
+  const cr_market = useSelector((state: RootState) => state.cr_market);
+  const cr_change = useSelector((state: RootState) => state.cr_change);
+  const cr_change_rate = useSelector((state: RootState) => state.cr_change_rate);
+  const cr_change_price = useSelector((state: RootState) => state.cr_change_price);
+  const cr_trade_price = useSelector((state: RootState) => state.cr_trade_price);
+  const cr_trade_volume = useSelector((state: RootState) => state.cr_trade_volume);
+  const cr_open_price = useSelector((state: RootState) => state.cr_open_price);
+  const cr_high_price = useSelector((state: RootState) => state.cr_high_price);
+  const cr_low_price = useSelector((state: RootState) => state.cr_low_price);
+  const star = useSelector((state: RootState) => state.star);
+  const filteredData = useSelector((state: RootState) => state.filteredData);
+  const sortedData = useSelector((state: RootState) => state.sortedData);
+  const cr_trade_price_selected = useSelector((state: RootState) => state.cr_trade_price_selected);
+  const cr_market_selected = useSelector((state: RootState) => state.cr_market_selected);
+  const candle_per_date = useSelector((state: RootState) => state.candle_per_date);
+  const candle_per_date_BTC = useSelector((state: RootState) => state.candle_per_date_BTC);
+  const candle_per_minute = useSelector((state: RootState) => state.candle_per_minute);
+  const cr_price_selected = useSelector((state: RootState) => state.cr_price_selected);
+
 
   // 검색값을 관리하기 위한 state
   const [search_cr, setSearch_cr] = useState<string>("");
@@ -132,14 +93,10 @@ const CryptoList = () => {
   // 정렬하려는 목적에 따라 이미지를 변경하기 위해 배열로 생성
   const sort_images = [img_sort, img_sort_down, img_sort_up];
 
-  const cr_clickedIndex = useSelector(
-    (state: RootState) => state.cr_clickedIndex
-  );
+  const cr_clickedIndex = useSelector((state: RootState) => state.cr_clickedIndex);
   const delimitedDate = useSelector((state: RootState) => state.delimitedDate);
   const delimitedTime = useSelector((state: RootState) => state.delimitedTime);
-  const selectedChartSort = useSelector(
-    (state: RootState) => state.selectedChartSort
-  );
+  const selectedChartSort = useSelector((state: RootState) => state.selectedChartSort);
   const chartSortTime = useSelector((state: RootState) => state.chartSortTime);
   const chartSortDate = useSelector((state: RootState) => state.chartSortDate);
 
@@ -147,12 +104,13 @@ const CryptoList = () => {
   const [userSelectedCrypto, setUserSelectedCrypto] = useState<any>();
   const cr_selected = useSelector((state: RootState) => state.cr_selected);
 
-  const logInUser = useSelector((state: RootState) => state.logInUser);
   const logInEmail = useSelector((state: RootState) => state.logInEmail);
-  const favoriteCrypto = useSelector(
-    (state: RootState) => state.favoriteCrypto
-  );
+
+  const favoriteCrypto = useSelector((state: RootState) => state.favoriteCrypto);
   const [isFavorited, setIsFavorited] = useState<boolean>(false);
+
+  const ownedCrypto = useSelector((state: RootState) => state.ownedCrypto);
+  const [isOwned, setIsOwned] = useState<boolean>(false);
 
   // 체결 내역을 담을 state
   const closedData = useSelector((state: RootState) => state.closed_data);
@@ -176,6 +134,8 @@ const CryptoList = () => {
       newValue: number;
     }[]
   >([]);
+
+  const { getOwnedCrypto } = useFunction();
 
   useEffect(() => {
     // const 변수 = setInterval(() => { 콜백함수, 시간 })
@@ -336,12 +296,12 @@ const CryptoList = () => {
     if (userItem !== null) {
       const user = JSON.parse(userItem);
       if (user) {
-        dispatch(setLogInUser(user.username))
-        dispatch(setLogInEmail(user.email))
-        getFavoriteCrypto(user.email)
+        dispatch(setLogInUser(user.username));
+        dispatch(setLogInEmail(user.email));
+        getFavoriteCrypto(user.email);
+        getOwnedCrypto(user.email);
       }
     }
-    console.log("사용자 : ", logInEmail);
   }, [])
 
   // 선택된 화폐에 대한 체결내역 호출
@@ -515,12 +475,11 @@ const CryptoList = () => {
   // 로그인한 사용자에 대한 관심 화폐 정보를 받아옴
   const getFavoriteCrypto = (logInEmail: string) => {
     (async () => {
-      console.log("함수동작")
       try {
         const response = await axios.get(
           `http://127.0.0.1:8000/get_user_favoriteCrypto/${logInEmail}/`
         );
-        console.log("반환값 : ", response.data);
+        console.log("반환값-관심화폐 : ", response.data);
         dispatch(setFavoriteCrypto(response.data));
       } catch (error) {
         console.log(error);
@@ -724,182 +683,109 @@ const CryptoList = () => {
       <table className="list-table">
         <thead className="list-thead lightMode">
           <tr className="lightMode-title">
-            <th className="name" onClick={() => sortClick(0)}>
-              화폐명&nbsp;
-              <img
-                className="sort"
-                src={sort_images[sort_states[0]]}
-                alt="화폐명"
-              ></img>
-            </th>
-            <th className="price" onClick={() => sortClick(1)}>
-              현재가&nbsp;
-              <img
-                className="sort"
-                src={sort_images[sort_states[1]]}
-                alt="현재가"
-              ></img>
-            </th>
-            <th className="compare" onClick={() => sortClick(2)}>
-              전일대비&nbsp;
-              <img
-                className="sort"
-                src={sort_images[sort_states[2]]}
-                alt="전일대비"
-              ></img>
-            </th>
-            <th className="volume" onClick={() => sortClick(3)}>
-              거래대금&nbsp;
-              <img
-                className="sort"
-                src={sort_images[sort_states[3]]}
-                alt="거래대금"
-              ></img>
-            </th>
+
+            {
+              listCategory !== '보유' ?
+                <>
+                  <th className="name" onClick={() => sortClick(0)}>
+                    화폐명&nbsp;
+                    <img
+                      className="sort"
+                      src={sort_images[sort_states[0]]}
+                      alt="화폐명"
+                    ></img>
+                  </th>
+                  <th className="price" onClick={() => sortClick(1)}>
+                    현재가&nbsp;
+                    <img
+                      className="sort"
+                      src={sort_images[sort_states[1]]}
+                      alt="현재가"
+                    ></img>
+                  </th>
+                  <th className="compare" onClick={() => sortClick(2)}>
+                    전일대비&nbsp;
+                    <img
+                      className="sort"
+                      src={sort_images[sort_states[2]]}
+                      alt="전일대비"
+                    ></img>
+                  </th>
+                  <th className="volume" onClick={() => sortClick(3)}>
+                    거래대금&nbsp;
+                    <img
+                      className="sort"
+                      src={sort_images[sort_states[3]]}
+                      alt="거래대금"
+                    ></img>
+                  </th>
+                </> :
+                <>
+                  <th className="name" id="owned-name" onClick={() => sortClick(0)}>
+                    화폐명&nbsp;
+                    <img
+                      className="sort"
+                      src={sort_images[sort_states[0]]}
+                      alt="화폐명"
+                    ></img>
+                  </th>
+                  <th className="price" id="owned-price" onClick={() => sortClick(1)}>
+                    현재가&nbsp;
+                    <img
+                      className="sort"
+                      src={sort_images[sort_states[1]]}
+                      alt="현재가"
+                    ></img>
+                  </th>
+                  <th className="compare" id="owned-compare" onClick={() => sortClick(2)}>
+                    전일대비&nbsp;
+                    <img
+                      className="sort"
+                      src={sort_images[sort_states[2]]}
+                      alt="전일대비"
+                    ></img>
+                  </th>
+                  <th className="volume" id="owned-volume" onClick={() => sortClick(2)}>
+                    보유수량&nbsp;
+                    <img
+                      className="sort"
+                      src={sort_images[sort_states[2]]}
+                      alt="보유수량"
+                    ></img>
+                  </th>
+                </>
+            }
           </tr>
         </thead>
       </table>
 
-      {listCategory === "원화" ? (
-        <SimpleBar className="scrollBar-listTable">
-          <table className="list-table">
-            <tbody className="scrollable-tbody">
-              {/* 검색값을 반환한 filteredData 함수를 다시 반복문을 이용하여 출력 */}
-              {filteredData.map((item, i) => {
-                // 가격의 변화가 생긴 state를 테이블에서 찾아 해당 td 시각화
-                let isChanged = differences.some((diff, index) => {
-                  return diff.index === i && diff.newValue === item.price;
-                });
-                // DB에서 가져온 관심화폐 목록과 일치하는 행을 찾음
-                let isFavorited =
-                  Array.isArray(favoriteCrypto) &&
-                  favoriteCrypto.some((diff, index) => {
-                    return item.name === diff.crypto_name;
-                  });
-                let priceClass_rise = isChanged ? "change-price-rise" : "";
-                let priceClass_fall = isChanged ? "change-price-fall" : "";
-                return (
-                  <tr
-                    key={i}
-                    onClick={() => {
-                      dispatch(setBuyingPrice(filteredData[i].price)); // 특정 화폐를 클릭하면 해당 화폐의 값으로 '매수가격'이 업데이트 됨
-                      nameSelect(filteredData[i].name);
-                      marketSelect(filteredData[i].market);
-                      setSelectedCrypto(filteredData[i]);
-                      selectMarket_date(filteredData[i].market);
-                      selectMarket_time(
-                        filteredData[i].market,
-                        selectedChartSort
-                      );
-                      selectAskingPrice(filteredData[i].market);
-                      selectClosedPrice(filteredData[i].market);
-                    }}
-                  >
-                    <td className="td-name lightMode">
-                      <span className="span-star">
-                        <img
-                          onClick={() => {
-                            starClick(i);
-                            addCryptoToUser(logInEmail, filteredData[i].name);
-                          }}
-                          // 최초 star[i]의 상태는 'starOn'일 수가 없으므로 반드시 starOff 출력
-                          // src={star[i] === 'starOn' ? starOn : starOff}
-                          src={isFavorited ? starOn : starOff}
-                          alt="star"
-                        />
-                      </span>
-                      <div className="div-name">
-                        <div>{item.name}</div>
-                        <div>{item.market}</div>
-                      </div>
-                    </td>
+      {
+        listCategory === "원화" ? (
+          <SimpleBar className="scrollBar-listTable">
+            <table className="list-table">
+              <tbody className="scrollable-tbody">
+                {/* 검색값을 반환한 filteredData 함수를 다시 반복문을 이용하여 출력 */}
+                {filteredData.map((item, i) => {
 
-                    {/* 전일 대비 가격이 상승했다면 청색, 하락했다면 적색, 동일하다면 검정색 */}
-                    {item.change === "RISE" ? (
-                      <td className="lightMode">
-                        <span className={`td-rise ${priceClass_rise}`}>
-                          {item.price.toLocaleString()}
-                        </span>
-                      </td>
-                    ) : item.change === "FALL" ? (
-                      <td className="lightMode">
-                        <span className={`td-fall ${priceClass_fall}`}>
-                          {item.price.toLocaleString()}
-                        </span>
-                      </td>
-                    ) : (
-                      <td className="lightMode">
-                        <span>{item.price.toLocaleString()}</span>
-                      </td>
-                    )}
-                    {item.change === "RISE" ? (
-                      <td className="lightMode">
-                        <span className="td-rise">
-                          +{(item.change_rate * 100).toFixed(2)}% <br />{" "}
-                          {item.change_price.toLocaleString()}
-                        </span>
-                      </td>
-                    ) : item.change === "FALL" ? (
-                      <td className="lightMode">
-                        <span className="td-fall">
-                          -{(item.change_rate * 100).toFixed(2)}% <br />{" "}
-                          {item.change_price.toLocaleString()}
-                        </span>
-                      </td>
-                    ) : (
-                      <td className="lightMode">
-                        <span>
-                          {(item.change_rate * 100).toFixed(2)}% <br />{" "}
-                          {item.change_price.toLocaleString()}
-                        </span>
-                      </td>
-                    )}
-                    <td className="lightMode">
-                      <span className="td-volume">
-                        {Number(
-                          String(Math.floor(item.trade_price)).slice(0, -6)
-                        ).toLocaleString()}
-                        백만
-                      </span>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </SimpleBar>
-      ) : listCategory === "보유" ? (
-        logInEmail !== "" ? (
-          <div>보유</div>
-        ) : (
-          <div className="crypto-notice">
-            보유 화폐를 확인하시려면 로그인 해주세요.
-          </div>
-        )
-      ) : logInEmail !== "" ? (
-        <SimpleBar className="scrollBar-listTable">
-          <table className="list-table">
-            <tbody className="scrollable-tbody">
-              {/* 검색값을 반환한 filteredData 함수를 다시 반복문을 이용하여 출력 */}
-              {filteredData.map((item, i) => {
-                // 가격의 변화가 생긴 state를 테이블에서 찾아 해당 td 시각화
-                let isChanged = differences.some((diff, index) => {
-                  return diff.index === i && diff.newValue === item.price;
-                });
-                // DB에서 가져온 관심화폐 목록과 일치하는 행을 찾음
-                let isFavorited =
-                  Array.isArray(favoriteCrypto) &&
-                  favoriteCrypto.some((diff, index) => {
-                    return item.name === diff.crypto_name;
+                  // 가격의 변화가 생긴 state를 테이블에서 찾아 해당 td 시각화
+                  let isChanged = differences.some((diff, index) => {
+                    return diff.index === i && diff.newValue === item.price;
                   });
-                let priceClass_rise = isChanged ? "change-price-rise" : "";
-                let priceClass_fall = isChanged ? "change-price-fall" : "";
-                return (
-                  // 관심화폐만 출력
-                  isFavorited && (
+                  let priceClass_rise = isChanged ? "change-price-rise" : "";
+                  let priceClass_fall = isChanged ? "change-price-fall" : "";
+
+                  // DB에서 가져온 관심화폐 목록과 일치하는 행을 찾음
+                  let isFavorited =
+                    Array.isArray(favoriteCrypto) &&
+                    favoriteCrypto.some((diff, index) => {
+                      return item.name === diff.crypto_name;
+                    });
+
+                  return (
                     <tr
                       key={i}
                       onClick={() => {
+                        dispatch(setBuyingPrice(filteredData[i].price)); // 특정 화폐를 클릭하면 해당 화폐의 값으로 '매수가격'이 업데이트 됨
                         nameSelect(filteredData[i].name);
                         marketSelect(filteredData[i].market);
                         setSelectedCrypto(filteredData[i]);
@@ -980,18 +866,265 @@ const CryptoList = () => {
                         </span>
                       </td>
                     </tr>
-                  )
-                );
-              })}
-            </tbody>
-          </table>
-        </SimpleBar>
-      ) : (
-        <div className="crypto-notice">
-          관심 화폐를 확인하시려면 로그인 해주세요.
-        </div>
-      )}
-    </div>
+                  );
+                })}
+              </tbody>
+            </table>
+          </SimpleBar>
+        ) : listCategory === "보유" ? (
+          logInEmail !== "" ? (
+            // 보유 화폐 영역
+            <SimpleBar className="scrollBar-listTable">
+              <table className="list-table">
+                <tbody className="scrollable-tbody">
+                  {/* 검색값을 반환한 filteredData 함수를 다시 반복문을 이용하여 출력 */}
+                  {filteredData.map((item, i) => {
+
+                    // 가격의 변화가 생긴 state를 테이블에서 찾아 해당 td 시각화
+                    let isChanged = differences.some((diff, index) => {
+                      return diff.index === i && diff.newValue === item.price;
+                    });
+                    let priceClass_rise = isChanged ? "change-price-rise" : "";
+                    let priceClass_fall = isChanged ? "change-price-fall" : "";
+
+                    // DB에서 가져온 보유화폐 목록과 일치하는 행을 찾음
+                    let isOwned =
+                      Array.isArray(ownedCrypto) &&
+                      ownedCrypto.some((diff, index) => {
+                        return item.name === diff.crypto_name;
+                      });
+
+                    // 관심화폐는 시각화 해주기 위해 구분
+                    let isFavorited =
+                      Array.isArray(favoriteCrypto) &&
+                      favoriteCrypto.some((diff, index) => {
+                        return item.name === diff.crypto_name;
+                      });
+
+                    return (
+                      // 보유화폐만 출력
+                      isOwned && (
+                        <tr
+                          key={i}
+                          onClick={() => {
+                            dispatch(setBuyingPrice(filteredData[i].price)); // 특정 화폐를 클릭하면 해당 화폐의 값으로 '매수가격'이 업데이트 됨
+                            nameSelect(filteredData[i].name);
+                            marketSelect(filteredData[i].market);
+                            setSelectedCrypto(filteredData[i]);
+                            selectMarket_date(filteredData[i].market);
+                            selectMarket_time(
+                              filteredData[i].market,
+                              selectedChartSort
+                            );
+                            selectAskingPrice(filteredData[i].market);
+                            selectClosedPrice(filteredData[i].market);
+                          }}
+                        >
+                          <td className="td-name lightMode" id="owned-td-name">
+                            <span className="span-star">
+                              <img
+                                onClick={() => {
+                                  starClick(i);
+                                  addCryptoToUser(logInEmail, filteredData[i].name);
+                                }}
+                                // 최초 star[i]의 상태는 'starOn'일 수가 없으므로 반드시 starOff 출력
+                                // src={star[i] === 'starOn' ? starOn : starOff}
+                                src={isFavorited ? starOn : starOff}
+                                alt="star"
+                              />
+                            </span>
+                            <div className="div-name">
+                              <div>{item.name}</div>
+                              <div>{item.market}</div>
+                            </div>
+                          </td>
+
+                          {/* 전일 대비 가격이 상승했다면 청색, 하락했다면 적색, 동일하다면 검정색 */}
+                          {item.change === "RISE" ? (
+                            <td className="lightMode" id="owned-td-price">
+                              <span className={`td-rise ${priceClass_rise}`}>
+                                {item.price.toLocaleString()}
+                              </span>
+                            </td>
+                          ) : item.change === "FALL" ? (
+                            <td className="lightMode" id="owned-td-price">
+                              <span className={`td-fall ${priceClass_fall}`}>
+                                {item.price.toLocaleString()}
+                              </span>
+                            </td>
+                          ) : (
+                            <td className="lightMode" id="owned-td-price">
+                              <span>{item.price.toLocaleString()}</span>
+                            </td>
+                          )}
+                          {item.change === "RISE" ? (
+                            <td className="lightMode" id="owned-td-changeRate">
+                              <span className="td-rise">
+                                +{(item.change_rate * 100).toFixed(2)}% <br />{" "}
+                                {item.change_price.toLocaleString()}
+                              </span>
+                            </td>
+                          ) : item.change === "FALL" ? (
+                            <td className="lightMode" id="owned-td-changeRate">
+                              <span className="td-fall">
+                                -{(item.change_rate * 100).toFixed(2)}% <br />{" "}
+                                {item.change_price.toLocaleString()}
+                              </span>
+                            </td>
+                          ) : (
+                            <td className="lightMode" id="owned-td-changeRate">
+                              <span>
+                                {(item.change_rate * 100).toFixed(2)}% <br />{" "}
+                                {item.change_price.toLocaleString()}
+                              </span>
+                            </td>
+                          )}
+                          <td className="lightMode" id="owned-td-quantity">
+                            <span className="td-volume">
+                              {
+                                // 인덱스 한 번당 소유화폐를 순회시켜서 일치하는 요소를 찾고, 찾지 못한다면 ?를 이용해서 undefined를 반환
+                                Number(ownedCrypto.find((crypto) => item.name === crypto.crypto_name)?.quantity)?.toFixed(2)
+                              }
+                              &nbsp;
+                              {
+                                (item.market).slice(4)
+                              }
+                            </span>
+                          </td>
+                        </tr>
+                      )
+                    );
+                  })}
+                </tbody>
+              </table>
+            </SimpleBar>
+          ) : (
+            <div className="crypto-notice">
+              보유 화폐를 확인하시려면 로그인 해주세요.
+            </div>
+          )
+        ) : logInEmail !== "" ? (
+          // 관심 화폐 영역
+          <SimpleBar className="scrollBar-listTable">
+            <table className="list-table">
+              <tbody className="scrollable-tbody">
+                {/* 검색값을 반환한 filteredData 함수를 다시 반복문을 이용하여 출력 */}
+                {filteredData.map((item, i) => {
+
+                  // 가격의 변화가 생긴 state를 테이블에서 찾아 해당 td 시각화
+                  let isChanged = differences.some((diff, index) => {
+                    return diff.index === i && diff.newValue === item.price;
+                  });
+                  let priceClass_rise = isChanged ? "change-price-rise" : "";
+                  let priceClass_fall = isChanged ? "change-price-fall" : "";
+
+                  // DB에서 가져온 관심화폐 목록과 일치하는 행을 찾음
+                  let isFavorited =
+                    Array.isArray(favoriteCrypto) &&
+                    favoriteCrypto.some((diff, index) => {
+                      return item.name === diff.crypto_name;
+                    });
+
+                  return (
+                    // 관심화폐만 출력
+                    isFavorited && (
+                      <tr
+                        key={i}
+                        onClick={() => {
+                          dispatch(setBuyingPrice(filteredData[i].price)); // 특정 화폐를 클릭하면 해당 화폐의 값으로 '매수가격'이 업데이트 됨
+                          nameSelect(filteredData[i].name);
+                          marketSelect(filteredData[i].market);
+                          setSelectedCrypto(filteredData[i]);
+                          selectMarket_date(filteredData[i].market);
+                          selectMarket_time(
+                            filteredData[i].market,
+                            selectedChartSort
+                          );
+                          selectAskingPrice(filteredData[i].market);
+                          selectClosedPrice(filteredData[i].market);
+                        }}
+                      >
+                        <td className="td-name lightMode">
+                          <span className="span-star">
+                            <img
+                              onClick={() => {
+                                starClick(i);
+                                addCryptoToUser(logInEmail, filteredData[i].name);
+                              }}
+                              // 최초 star[i]의 상태는 'starOn'일 수가 없으므로 반드시 starOff 출력
+                              // src={star[i] === 'starOn' ? starOn : starOff}
+                              src={isFavorited ? starOn : starOff}
+                              alt="star"
+                            />
+                          </span>
+                          <div className="div-name">
+                            <div>{item.name}</div>
+                            <div>{item.market}</div>
+                          </div>
+                        </td>
+
+                        {/* 전일 대비 가격이 상승했다면 청색, 하락했다면 적색, 동일하다면 검정색 */}
+                        {item.change === "RISE" ? (
+                          <td className="lightMode">
+                            <span className={`td-rise ${priceClass_rise}`}>
+                              {item.price.toLocaleString()}
+                            </span>
+                          </td>
+                        ) : item.change === "FALL" ? (
+                          <td className="lightMode">
+                            <span className={`td-fall ${priceClass_fall}`}>
+                              {item.price.toLocaleString()}
+                            </span>
+                          </td>
+                        ) : (
+                          <td className="lightMode">
+                            <span>{item.price.toLocaleString()}</span>
+                          </td>
+                        )}
+                        {item.change === "RISE" ? (
+                          <td className="lightMode">
+                            <span className="td-rise">
+                              +{(item.change_rate * 100).toFixed(2)}% <br />{" "}
+                              {item.change_price.toLocaleString()}
+                            </span>
+                          </td>
+                        ) : item.change === "FALL" ? (
+                          <td className="lightMode">
+                            <span className="td-fall">
+                              -{(item.change_rate * 100).toFixed(2)}% <br />{" "}
+                              {item.change_price.toLocaleString()}
+                            </span>
+                          </td>
+                        ) : (
+                          <td className="lightMode">
+                            <span>
+                              {(item.change_rate * 100).toFixed(2)}% <br />{" "}
+                              {item.change_price.toLocaleString()}
+                            </span>
+                          </td>
+                        )}
+                        <td className="lightMode">
+                          <span className="td-volume">
+                            {Number(
+                              String(Math.floor(item.trade_price)).slice(0, -6)
+                            ).toLocaleString()}
+                            백만
+                          </span>
+                        </td>
+                      </tr>
+                    )
+                  );
+                })}
+              </tbody>
+            </table>
+          </SimpleBar>
+        ) : (
+          <div className="crypto-notice">
+            관심 화폐를 확인하시려면 로그인 해주세요.
+          </div>
+        )
+      }
+    </div >
   );
 };
 

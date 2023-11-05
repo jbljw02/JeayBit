@@ -6,6 +6,7 @@ import axios from "axios";
 import { Routes, Route, Link, useNavigate, Outlet } from "react-router-dom";
 import { csrftoken } from "./csrftoken";
 import getFuntion from "./useFuction";
+import useFunction from "./useFuction";
 
 const Header = () => {
   axios.defaults.xsrfCookieName = "csrftoken";
@@ -37,7 +38,7 @@ const Header = () => {
   // 로그인 중인 사용자의 잔고량
   const userWallet = useSelector((state: RootState) => state.userWallet);
 
-  const getBalance = getFuntion();
+  const { getBalance } = useFunction();
 
   const themeChange = () => {
     dispatch(setTheme(!theme));

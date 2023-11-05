@@ -366,6 +366,18 @@ def get_user_favoriteCrypto(request, email):
     return JsonResponse(data, safe=False)
 
 
+# 클라이언트에게 UserCrypto 테이블에 있는 사용자에 따른 화폐의 소유 여부를 전달
+@api_view(["GET"])
+def get_user_ownedCrypto(request, email):
+    
+    user = CustomUser.objects.get(email=email)
+    user_cryptos = UserCrypto.objects.filter(user=user, is_owned=True)
+    
+    data = [{"crypto_name": user_crypto.crypto.name, "is_owned": user_crypto.is_owned, "quantity": user_crypto.owned_quantity} for user_crypto in user_cryptos]
+    
+    return JsonResponse(data, safe=False)
+
+
 # 사용자의 balance 컬럼에 입금량을 추가    
 @api_view(["POST"])
 def add_balance_to_user(request):
