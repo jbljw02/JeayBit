@@ -303,6 +303,7 @@ const CryptoList = () => {
         if (initial_newSelectedCrypto) {
           setSelectedCrypto(initial_newSelectedCrypto); // 해당 코드 때문에 '비트코인'이 강제 선택됨. 즉, if문 조건 성립
           dispatch(setCr_selected(initial_newSelectedCrypto));
+          dispatch(setBuyingPrice(initial_newSelectedCrypto.price))
         }
       }
     }
@@ -315,8 +316,6 @@ const CryptoList = () => {
       }
     }
   }, [filteredData]);
-
-  // console.log("선택 : ", cr_selected)
 
   // 리스트에 있는 화폐 검색시 업데이트
   useEffect(() => {
@@ -333,15 +332,16 @@ const CryptoList = () => {
 
   // 화면이 첫 렌더링 될 때마다 
   useEffect(() => {
-    console.log("아아아")
     const userItem = localStorage.getItem('user');
     if (userItem !== null) {
       const user = JSON.parse(userItem);
       if (user) {
         dispatch(setLogInUser(user.username))
         dispatch(setLogInEmail(user.email))
+        getFavoriteCrypto(user.email)
       }
     }
+    console.log("사용자 : ", logInEmail);
   }, [])
 
   // 선택된 화폐에 대한 체결내역 호출
@@ -515,6 +515,7 @@ const CryptoList = () => {
   // 로그인한 사용자에 대한 관심 화폐 정보를 받아옴
   const getFavoriteCrypto = (logInEmail: string) => {
     (async () => {
+      console.log("함수동작")
       try {
         const response = await axios.get(
           `http://127.0.0.1:8000/get_user_favoriteCrypto/${logInEmail}/`

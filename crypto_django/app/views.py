@@ -12,7 +12,11 @@ from .crpyto_api import (
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from requests import get
-
+from decimal import Decimal
+from django.contrib.auth.models import User
+from django.contrib.auth import authenticate, login, logout
+from django.http import JsonResponse
+from django.views import View
 
 # 1분 기준 차트
 @api_view(["GET", "POST"])
@@ -185,11 +189,6 @@ def closed_price(request):
     except Exception as e:
         print("error : ", e)
 
-
-from django.contrib.auth.models import User
-from django.contrib.auth import authenticate, login, logout
-
-
 # 회원가입
 @api_view(["POST"])
 def sign_up(request):
@@ -222,8 +221,6 @@ def sign_up(request):
     # 사용자 생성 후 성공 메시지 반환
     return Response({"success": "회원가입 성공"}, status=201)
 
-from django.http import JsonResponse
-from django.views import View
 
 class LoginView(View):
     def post(self,request):
@@ -307,32 +304,45 @@ def logOut(request):
         print("에러 : ", e)
         return JsonResponse({"detail": "로그아웃 실패"})
 
+
 # UserCrypto 테이블에 사용자에 따른 화폐 관심 여부 추가
 @api_view(["POST"])
 def add_favoriteCrypto_to_user(request):
     data = json.loads(request.body)
-    print("받은 데이터 : ", data)
+    print("관심여부 - 받은 데이터 : ", data)
     
     email = data.get('email')
     crypto_name = data.get('crypto_name')
+    
+    if not email:
+        return JsonResponse({"error": "요청에 이메일이 포함되어야 합니다"})
+    if not crypto_name:
+        return JsonResponse({"error": "요청에 화폐명이 포함되어야 합니다"})
 
-    # 유저 테이블, 화폐 테이블과 연결하기 위한 외래키
-    user = CustomUser.objects.get(email=email)  
-    crypto = Crypto.objects.get(name=crypto_name)
-    
-    # get_or_create는 두 개의 값(조회 혹은 생성된 객체/객체가 새로 생성되었는지 여부)을 반환
-    user_crypto, created = UserCrypto.objects.get_or_create(user=user, crypto=crypto)  
-    
-    # 해당 화폐에 대한 객체가 이미 생성되어 있다면 관심여부 True
-    if created:
-        user_crypto.is_favorited = True
-    # 해당 화폐에 대한 객체가 생성되어 있지 않다면 관심여부를 반전 
-    else:
-        user_crypto.is_favorited = not user_crypto.is_favorited
+    try:
+        # 유저 테이블, 화폐 테이블과 연결하기 위한 외래키
+        user = CustomUser.objects.get(email=email)  
+        crypto = Crypto.objects.get(name=crypto_name)
+        
+        # get_or_create는 두 개의 값(조회 혹은 생성된 객체/객체가 새로 생성되었는지 여부)을 반환
+        user_crypto, created = UserCrypto.objects.get_or_create(user=user, crypto=crypto)  
+        
+        print(user_crypto)
+        print(created)
+        
+        # 해당 화폐에 대한 객체가 이미 생성되어 있다면 관심여부 True
+        if created:
+            user_crypto.is_favorited = True
+        # 해당 화폐에 대한 객체가 생성되어 있지 않다면 관심여부를 반전 
+        else:
+            user_crypto.is_favorited = not user_crypto.is_favorited
 
-    user_crypto.save()
-    
-    return JsonResponse({"is_favorited": "화폐-유저 정보 저장 완료"})
+        user_crypto.save()
+        
+        return JsonResponse({"is_favorited": "화폐-유저 정보 저장 완료"})
+    except CustomUser.DoesNotExist:
+        return JsonResponse({"error": "해당 이메일의 사용자가 존재하지 않습니다"})
+        
 
 # 클라이언트에게 UserCrypto 테이블에 있는 사용자에 따른 화폐의 관심 여부를 전달
 @api_view(["GET"])
@@ -354,6 +364,7 @@ def get_user_favoriteCrypto(request, email):
 
     # safe=False => 딕셔너리가 아닌 다른 형태도 JSON으로 변환 가능
     return JsonResponse(data, safe=False)
+
 
 # 사용자의 balance 컬럼에 입금량을 추가    
 @api_view(["POST"])
@@ -378,6 +389,7 @@ def add_balance_to_user(request):
     except CustomUser.DoesNotExist:
         return JsonResponse({"error": "해당 이메일의 사용자가 존재하지 않습니다"})
 
+
 # 클라이언트로부터 받은 출금량만큼 잔고 줄이기
 @api_view(["POST"])     
 def minus_balance_from_user(request):
@@ -401,6 +413,7 @@ def minus_balance_from_user(request):
     except CustomUser.DoesNotExist:
         return JsonResponse({"error": "해당 이메일의 사용자가 존재하지 않습니다"})    
 
+
 # 클라이언트에게 잔고량을 제공
 @api_view(["GET"])
 def get_user_balance(request, email):
@@ -408,6 +421,58 @@ def get_user_balance(request, email):
     data = {"user_balance": user.balance}
     
     return JsonResponse(data)
+
+
+# 화폐 매수 및 소유 여부 추가
+@api_view(["POST"])
+def buy_crypto(request):
+    data = json.loads(request.body)
+    print("매수 - 받은 데이터: ", data)
+
+    email = data.get('email')
+    crypto_name = data.get('crypto_name')
+    crypto_quantity = data.get('crypto_quantity')
+    buy_total = data.get('buy_total')
+    
+    if not email:
+        return JsonResponse({"error": "요청에 이메일이 포함되어야 합니다"}, status=400)
+    if not crypto_name:
+        return JsonResponse({"error": "요청에 화폐명이 포함되어야 합니다"}, status=400)
+    if not crypto_quantity:
+        return JsonResponse({"error": "요청된 화폐 수량은 0이 아니어야 합니다"}, status=400)
+    if not buy_total:
+        return JsonResponse({"error": "요청에 구매 금액이 포함되어야 합니다"}, status=400)
+
+    try:
+        user = CustomUser.objects.get(email=email)
+        crypto = Crypto.objects.get(name=crypto_name)
+        
+        # 객체가 없어서 새로 생성해야 할 경우 초기 수량을 0, 소유 여부는 False로 지정함으로써 DoseNotExist 방지
+        user_crypto, created = UserCrypto.objects.get_or_create(
+            user=user, 
+            crypto=crypto, 
+            defaults={'owned_quantity': Decimal(0), 'is_owned': False}
+        )
+
+        crypto_quantity = Decimal(str(crypto_quantity))
+        buy_total = Decimal(str(buy_total))
+
+        # 잔고량보다 주문 총액이 큰 경우
+        if user.balance < buy_total:
+            return JsonResponse({"error": "잔액이 부족합니다"}, status=400)
+
+        # 잔고량 업데이트
+        user.balance -= buy_total
+        user.save()
+        
+        user_crypto.owned_quantity += crypto_quantity  # 기존 화폐 수량에 구매한 수량 추가
+        user_crypto.is_owned = True  # 소유 여부를 True로 전환
+        
+        user_crypto.save()
+            
+        return JsonResponse({"buy_crypto": "화폐 매수 및 소유 여부 업데이트 완료"})
+    except CustomUser.DoesNotExist:
+        return JsonResponse({"error": "해당 이메일의 사용자가 존재하지 않습니다"})
 
 @api_view(["GET"])
 def check_login(request):

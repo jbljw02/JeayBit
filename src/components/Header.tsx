@@ -5,6 +5,7 @@ import { SetStateAction, useEffect, useState } from "react";
 import axios from "axios";
 import { Routes, Route, Link, useNavigate, Outlet } from "react-router-dom";
 import { csrftoken } from "./csrftoken";
+import getFuntion from "./useFuction";
 
 const Header = () => {
   axios.defaults.xsrfCookieName = "csrftoken";
@@ -35,6 +36,8 @@ const Header = () => {
 
   // 로그인 중인 사용자의 잔고량
   const userWallet = useSelector((state: RootState) => state.userWallet);
+
+  const getBalance = getFuntion();
 
   const themeChange = () => {
     dispatch(setTheme(!theme));
@@ -94,16 +97,10 @@ const Header = () => {
 
   // 화면 첫 랜더링 시, 사용자 변경 시, 입출금 할 때마다 잔고 데이터 받아옴
   useEffect(() => {
-    console.log("고고")
     if (logInEmail !== '') {
       getBalance(logInEmail);
     }
   }, [logInEmail, balanceUpdate])
-
-  // 입금/출금/잔고 영역을 클릭할 때마다 서버로부터 잔고 데이터 받아옴
-  // useEffect(() => {
-  //   getBalance(logInEmail);
-  // }, [transferSort]);
 
   const logOut = () => {
     (async () => {
@@ -150,25 +147,10 @@ const Header = () => {
     }
   };
 
-  // 서버로부터 사용자의 잔고량을 받아옴
-  const getBalance = (logInEmail: string) => {
-    (async () => {
-      try {
-        const response = await axios.get(
-          `http://127.0.0.1:8000/get_user_balance/${logInEmail}/`
-        );
-        dispatch(setUserWallet(response.data.user_balance));
-        console.log(logInUser, "의 잔고 : ", response.data.user_balance);
-      } catch (error) {
-        console.log(error);
-      }
-    })();
-  };
-
   // 입금량을 서버로 전송
   const addBalanceToUser = (email: string, depositAmount: number) => {
     if (logInEmail !== "") {
-      return (async (email, depositAmount) => {  // 여기에서 return을 추가합니다
+      return (async (email, depositAmount) => {
         try {
           await axios.post("http://127.0.0.1:8000/add_balance_to_user/", {
             email: email,

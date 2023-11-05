@@ -18,7 +18,8 @@ from .views import (
     minus_balance_from_user,
     get_user_balance,
     LoginView,
-    LogoutView
+    LogoutView,
+    buy_crypto,
 )
 
 urlpatterns = [
@@ -37,6 +38,7 @@ urlpatterns = [
     path("get_user_favoriteCrypto/<str:email>/", get_user_favoriteCrypto),
     path("add_balance_to_user/", add_balance_to_user),
     path("minus_balance_from_user/", minus_balance_from_user),
-    path("get_user_balance/<str:email>/", get_user_balance)
+    path("get_user_balance/<str:email>/", get_user_balance),
+    path("buy_crypto/", buy_crypto),
     # path('admin/', admin.site.urls)
 ]

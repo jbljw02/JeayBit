@@ -79,3 +79,4 @@ class UserCrypto(models.Model):
     crypto = models.ForeignKey(Crypto, on_delete=models.CASCADE)
     is_favorited = models.BooleanField(default=False)
     is_owned = models.BooleanField(default=False)
+    owned_quantity = models.DecimalField(max_digits=30, decimal_places=8, default=0.00)
