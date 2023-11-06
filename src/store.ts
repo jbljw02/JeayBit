@@ -106,6 +106,7 @@ export type RootState = {
   buyingPrice: number,
   balanceUpdate: boolean,
   buyingCrypto: string,
+  sellingPrice: number,
 }
 
 const cr_name = createSlice({
@@ -642,6 +643,16 @@ const buyingCrypto = createSlice({
   }
 })
 
+const sellingPrice = createSlice({
+  name: 'sellingPrice',
+  initialState: 0,
+  reducers: {
+    setSellingPrice: (state, action) => {
+      return action.payload;
+    }
+  }
+})
+
 export default configureStore({
   reducer: {
     cr_name: cr_name.reducer,
@@ -697,6 +708,7 @@ export default configureStore({
     buyingPrice: buyingPrice.reducer,
     balanceUpdate: balanceUpdate.reducer,
     buyingCrypto: buyingCrypto.reducer,
+    sellingPrice: sellingPrice.reducer,
   }
 })
 
@@ -769,5 +781,6 @@ export const { setCr_clickedIndex } = cr_clickedIndex.actions;
 export const { setBuyingPrice } = buyingPrice.actions;
 export const { setBalanceUpdate } = balanceUpdate.actions;
 export const { setBuyingCrypto } = buyingCrypto.actions;
+export const { setSellingPrice } = sellingPrice.actions;
 
 // export default store;

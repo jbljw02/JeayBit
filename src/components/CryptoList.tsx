@@ -46,6 +46,7 @@ import {
   setBuyingPrice,
   setLogInEmail,
   setLogInUser,
+  setSellingPrice,
 } from "../store";
 import { useEffect, useState } from "react";
 import img_sort from "../assets/images/sort.png";
@@ -263,7 +264,8 @@ const CryptoList = () => {
         if (initial_newSelectedCrypto) {
           setSelectedCrypto(initial_newSelectedCrypto); // 해당 코드 때문에 '비트코인'이 강제 선택됨. 즉, if문 조건 성립
           dispatch(setCr_selected(initial_newSelectedCrypto));
-          dispatch(setBuyingPrice(initial_newSelectedCrypto.price))
+          dispatch(setBuyingPrice(initial_newSelectedCrypto.price));
+          dispatch(setSellingPrice(initial_newSelectedCrypto.price));
         }
       }
     }
@@ -786,6 +788,7 @@ const CryptoList = () => {
                       key={i}
                       onClick={() => {
                         dispatch(setBuyingPrice(filteredData[i].price)); // 특정 화폐를 클릭하면 해당 화폐의 값으로 '매수가격'이 업데이트 됨
+                        dispatch(setSellingPrice(filteredData[i].price)); // 특정 화폐르 클릭하면 해당 화폐의 값으로 '매도가격'이 업데이트 됨  
                         nameSelect(filteredData[i].name);
                         marketSelect(filteredData[i].market);
                         setSelectedCrypto(filteredData[i]);
