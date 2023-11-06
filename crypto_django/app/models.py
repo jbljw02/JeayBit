@@ -71,6 +71,9 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 class Crypto(models.Model):
     name = models.CharField(max_length=200)
     price = models.FloatField()
+    
+    def __str__(self):
+        return self.name
 
 # 화폐의 관심 여부와 소유 여부를 담는 테이블
 # user, crypto는 각각 외래키로서 각각 CustomerUser, Crypto 테이블을 참조
@@ -80,3 +83,6 @@ class UserCrypto(models.Model):
     is_favorited = models.BooleanField(default=False)
     is_owned = models.BooleanField(default=False)
     owned_quantity = models.DecimalField(max_digits=30, decimal_places=8, default=0.00)
+    
+    def __str__(self):
+        return f"{self.user.email} - {self.crypto.name} - {self.owned_quantity}"
