@@ -1041,6 +1041,7 @@ input[type=range]::-webkit-slider-thumb {
 .trading-submit-sell span {
   background-color: #f23645;
   padding: 13px 145px;
+  cursor: pointer;
 }
 
 .trading-submit-nonLogIn-buy,

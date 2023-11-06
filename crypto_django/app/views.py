@@ -373,7 +373,7 @@ def get_user_ownedCrypto(request, email):
     user = CustomUser.objects.get(email=email)
     user_cryptos = UserCrypto.objects.filter(user=user, is_owned=True)
     
-    data = [{"crypto_name": user_crypto.crypto.name, "is_owned": user_crypto.is_owned, "quantity": user_crypto.owned_quantity} for user_crypto in user_cryptos]
+    data = [{"crypto_name": user_crypto.crypto.name, "is_owned": user_crypto.is_owned, "quantity": float(user_crypto.owned_quantity)} for user_crypto in user_cryptos]
     
     return JsonResponse(data, safe=False)
 
@@ -466,6 +466,7 @@ def buy_crypto(request):
             defaults={'owned_quantity': Decimal(0), 'is_owned': False}
         )
 
+        # 보다 정밀한 계산을 위해선 Decimal 타입이 권장됨 / 효율이 보다 중요하다면 flaot
         crypto_quantity = Decimal(str(crypto_quantity))
         buy_total = Decimal(str(buy_total))
 
@@ -486,6 +487,57 @@ def buy_crypto(request):
     except CustomUser.DoesNotExist:
         return JsonResponse({"error": "해당 이메일의 사용자가 존재하지 않습니다"})
 
+
+# 화폐 매도 및 잔고 업데이트
+@api_view(["POST"])
+def sell_crypto(request):
+    data = json.loads(request.body)
+    print("매도 - 받은 데이터: ", data)
+    
+    email = data.get('email')
+    crypto_name = data.get('crypto_name')
+    crypto_quantity = data.get('crypto_quantity')
+    sell_total = data.get('sell_total')
+
+    if not email:
+        return JsonResponse({"error": "요청에 이메일이 포함되어야 합니다"}, status=400)
+    if not crypto_name:
+        return JsonResponse({"error": "요청에 화폐명이 포함되어야 합니다"}, status=400)
+    if not crypto_quantity:
+        return JsonResponse({"error": "요청된 화폐 수량은 0이 아니어야 합니다"}, status=400)
+    if not sell_total:
+        return JsonResponse({"error": "요청에 구매 금액이 포함되어야 합니다"}, status=400)
+
+    try:
+        user = CustomUser.objects.get(email=email)
+        crypto = Crypto.objects.get(name=crypto_name)
+        
+        user_crypto = UserCrypto.objects.get(user=user, crypto=crypto)
+        
+        crypto_quantity = Decimal(str(crypto_quantity))
+        sell_total = Decimal(str(sell_total))
+
+        # 잔고량 업데이트
+        user.balance += sell_total
+        user.save()
+        
+        # 사용자가 보유한 화폐의 수량보다 매도하려는 수량이 클 경우
+        if user_crypto.owned_quantity < crypto_quantity:
+            return JsonResponse({"error": "보유한 수량보다 매도수량이 큽니다"}, status=400)
+
+        user_crypto.owned_quantity -= crypto_quantity
+
+        # 사용자의 화폐 보유량이 0이 될 경우에는 보유량을 False로 변경
+        if user_crypto.owned_quantity == 0:
+            user_crypto.is_owned = False
+
+        user_crypto.save()
+        
+        return JsonResponse({"sell_crypto": "화폐 매도 및 소유랑 업데이트 완료"})
+    except CustomUser.DoesNotExist:
+        return JsonResponse({"error": "해당 이메일의 사용자가 존재하지 않습니다"})
+    
+    
 @api_view(["GET"])
 def check_login(request):
     session_id = request.session.session_key

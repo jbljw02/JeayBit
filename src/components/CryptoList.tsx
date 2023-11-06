@@ -164,7 +164,7 @@ const CryptoList = () => {
       const response = await axios.get("http://127.0.0.1:8000/get_data/");
       dispatch(setCandle_per_date_BTC(response.data.candle_btc_date));
       dispatch(setCr_market_selected(response.data.market[0]));
-      // dispatch(setCr_name_selected(response.data.name[0]));
+      dispatch(setCr_name_selected(response.data.name[0]));
     } catch (error) {
       console.error(error);
     }
@@ -193,25 +193,23 @@ const CryptoList = () => {
 
   // 필터링 및 정렬된 데이터를 새로운 배열로 생성 -> setFilteredData로 상태를 업데이트
   // price = 숫자형, f_price = 문자형 / 숫자형으로 정렬, 문자형으로 출력
-  const updatedData = cr_name
-    .map((name, i) => ({
-      name,
-      price: cr_price[i],
-      market: cr_market[i],
-      change: cr_change[i],
-      change_rate: cr_change_rate[i],
-      change_price: cr_change_price[i],
-      trade_price: cr_trade_price[i],
-      trade_volume: cr_trade_volume[i],
-      open_price: cr_open_price[i],
-      high_price: cr_high_price[i],
-      low_price: cr_low_price[i],
-      star: star[i],
-      // 검색어에 해당하는 데이터를 비교하여 배열을 재생성
-    }))
-    .filter((item) =>
-      item.name.toLowerCase().includes(search_cr.toLowerCase())
-    );
+  const updatedData = cr_name.map((name, i) => ({
+    name,
+    price: cr_price[i],
+    market: cr_market[i],
+    change: cr_change[i],
+    change_rate: cr_change_rate[i],
+    change_price: cr_change_price[i],
+    trade_price: cr_trade_price[i],
+    trade_volume: cr_trade_volume[i],
+    open_price: cr_open_price[i],
+    high_price: cr_high_price[i],
+    low_price: cr_low_price[i],
+    star: star[i],
+    // 검색어에 해당하는 데이터를 비교하여 배열을 재생성
+  })).filter((item) =>
+    item.name.toLowerCase().includes(search_cr.toLowerCase())
+  );
 
   // useEffect(() => {
   //   if (filteredData.length === 0 && updatedData.length > 0) {
@@ -892,15 +890,13 @@ const CryptoList = () => {
 
                     // DB에서 가져온 보유화폐 목록과 일치하는 행을 찾음
                     let isOwned =
-                      Array.isArray(ownedCrypto) &&
-                      ownedCrypto.some((diff, index) => {
+                      Array.isArray(ownedCrypto) && ownedCrypto.some((diff, index) => {
                         return item.name === diff.crypto_name;
                       });
 
                     // 관심화폐는 시각화 해주기 위해 구분
                     let isFavorited =
-                      Array.isArray(favoriteCrypto) &&
-                      favoriteCrypto.some((diff, index) => {
+                      Array.isArray(favoriteCrypto) && favoriteCrypto.some((diff, index) => {
                         return item.name === diff.crypto_name;
                       });
 
@@ -911,6 +907,7 @@ const CryptoList = () => {
                           key={i}
                           onClick={() => {
                             dispatch(setBuyingPrice(filteredData[i].price)); // 특정 화폐를 클릭하면 해당 화폐의 값으로 '매수가격'이 업데이트 됨
+                            dispatch(setSellingPrice(filteredData[i].price)); // 특정 화폐를 클릭하면 해당 화폐의 값으로 '매더가격'이 업데이트 됨
                             nameSelect(filteredData[i].name);
                             marketSelect(filteredData[i].market);
                             setSelectedCrypto(filteredData[i]);
@@ -1035,6 +1032,7 @@ const CryptoList = () => {
                         key={i}
                         onClick={() => {
                           dispatch(setBuyingPrice(filteredData[i].price)); // 특정 화폐를 클릭하면 해당 화폐의 값으로 '매수가격'이 업데이트 됨
+                          dispatch(setSellingPrice(filteredData[i].price)); // 특정 화폐를 클릭하면 해당 화폐의 값으로 '매도가격'이 업데이트 됨
                           nameSelect(filteredData[i].name);
                           marketSelect(filteredData[i].market);
                           setSelectedCrypto(filteredData[i]);

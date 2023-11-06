@@ -245,8 +245,17 @@ const BuyingSection = () => {
 
   const { getBalance, getOwnedCrypto } = useFunction();
 
+  // 선택 화폐가 바뀔 때마다 매수 가격을 해당 화폐의 가격으로 변경하고, 주문 수량 및 총액을 초기화
   useEffect(() => {
     setBuyingInputValue(buyingPrice.toString())
+
+    // 주문 수량
+    setBuyQuantity(0);
+    setQuantityInputValue('0');
+
+    // 주문 총액
+    setBuyTotal(0);
+    setTotalInputvalue('0');
   }, [buyingPrice])
 
   const buyCrypto = (email: string, cryptoName: string, cryptoQuantity: number, buyTotal: number) => {
@@ -265,7 +274,7 @@ const BuyingSection = () => {
             crypto_quantity: cryptoQuantity,
             buy_total: buyTotal,
           });
-          console.log("구매 화폐 전송 성공", response.data)
+          console.log("구매 화폐 전송 성공", response.data);
           getBalance(logInEmail);  // 매수에 사용한 금액만큼 차감되기 때문에 잔고 업데이트
           getOwnedCrypto(logInEmail);  // 소유 화폐가 새로 추가될 수 있으니 업데이트
         }
@@ -296,7 +305,6 @@ const BuyingSection = () => {
 
         setBuyQuantity(dividedQuantity);
         setQuantityInputValue(dividedQuantity.toString());
-        console.log("값 : ", buyQuantity);
       }
       if (percentage === '25%') {
         let dividedTotal = userWallet * 0.25;
@@ -311,7 +319,6 @@ const BuyingSection = () => {
 
         setBuyQuantity(dividedQuantity);
         setQuantityInputValue(dividedQuantity.toString());
-        console.log("값 : ", buyQuantity);
       }
       if (percentage === '50%') {
         let dividedTotal = userWallet * 0.50;
@@ -326,7 +333,6 @@ const BuyingSection = () => {
 
         setBuyQuantity(dividedQuantity);
         setQuantityInputValue(dividedQuantity.toString());
-        console.log("값 : ", buyQuantity);
       }
       if (percentage === '75%') {
         let dividedTotal = userWallet * 0.75;
@@ -341,7 +347,6 @@ const BuyingSection = () => {
 
         setBuyQuantity(dividedQuantity);
         setQuantityInputValue(dividedQuantity.toString());
-        console.log("값 : ", buyQuantity);
       }
       if (percentage === '100%') {
         let dividedTotal = userWallet;
@@ -356,7 +361,6 @@ const BuyingSection = () => {
 
         setBuyQuantity(dividedQuantity);
         setQuantityInputValue(dividedQuantity.toString());
-        console.log("값 : ", buyQuantity);
       }
 
     }
@@ -757,12 +761,15 @@ const SellingSection = () => {
 
   const cr_selected = useSelector((state: RootState) => state.cr_selected);
   const cr_market_selected = useSelector((state: RootState) => state.cr_market_selected);
+  const cr_name_selected = useSelector((state: RootState) => state.cr_name_selected);
   const logInEmail = useSelector((state: RootState) => state.logInEmail);
   const userWallet = useSelector((state: RootState) => state.userWallet);
   const asking_data = useSelector((state: RootState) => state.asking_data);  // bid = 매수, ask = 매도
+  const ownedCrypto = useSelector((state: RootState) => state.ownedCrypto);
 
   const [selectedPercentage, setSelectedPercentage] = useState<string>('');
   const [bidSort, setBidSort] = useState<string>('지정가');
+  // const [availableQuantity, setAvailableQuantity] = useState<any>(0);
 
   const sellingPrice = useSelector((state: RootState) => state.sellingPrice);
   const [sellTotal, setSellTotal] = useState<number>(0);
@@ -772,12 +779,170 @@ const SellingSection = () => {
   const [totalInputValue, setTotalInputvalue] = useState('0');
   const [sellingInputValue, setSellingInputValue] = useState('0');
 
+  const { getBalance, getOwnedCrypto } = useFunction();
+
   useEffect(() => {
     setSellingInputValue(sellingPrice.toString());
   }, [sellingPrice])
 
+  // 선택 화폐가 바뀔 때마다 주문 가능한 보유 화폐량을 변경하고, 주문 수량 및 총액을 초기화
+  useEffect(() => {
+    // 주문 수량
+    setSellQuantity(0);
+    setQuantityInputValue('0');
+
+    // 주문 총액
+    setSellTotal(0);
+    setTotalInputvalue('0');
+  }, [cr_name_selected])
+
+  const sellCrypto = (email: string, cryptoName: string, cryptoQuantity: number, sellTotal: number) => {
+
+    if (asking_data !== undefined) {
+      asking_data.map((item, i) => {
+        console.log(item.bid_price);
+      });
+    }
+
+    // 호가중에서 판매하려는 가격과 일치하는 값이 있는지 찾음
+    let matchedItem = asking_data.find(item => item.bid_price === sellingPrice);
+    console.log("매치여부 : ", matchedItem);
+
+    if (matchedItem !== undefined) {
+      (async (email, cryptoName, cryptoQuantity, sellTotal) => {
+        try {
+          const response = await axios.post("http://127.0.0.1:8000/sell_crypto/", {
+            email: email,
+            crypto_name: cryptoName,
+            crypto_quantity: cryptoQuantity,
+            sell_total: sellTotal,
+          });
+          console.log("매도 화폐 전송 성공", response.data);
+          getBalance(logInEmail);  // 매수에 사용한 금액만큼 차감되기 때문에 잔고 업데이트
+          getOwnedCrypto(logInEmail);  // 소유 화폐가 새로 추가될 수 있으니 업데이트
+        } catch (error) {
+          console.log("매도 화폐 전송 실패: ", error);
+        }
+      })(email, cryptoName, cryptoQuantity, sellTotal)
+    }
+
+  }
+
   const selectPercentage = (percentage: string) => {
     setSelectedPercentage(percentage)
+
+    // 선택된 화폐의 보유 수량
+    let availableQuantity = ownedCrypto.find((item) => item.crypto_name === cr_name_selected)?.quantity
+
+    // 매수가격이 0이면 주문수량/주문총액은 의미가 없고, 보유 화폐량이 undefined이면 연산이 불가능 
+    if (sellingInputValue !== '0' && availableQuantity !== undefined) {
+
+      // 현재 화폐 보유량 기준 퍼센테이지를 '주문수량'에 할당하고, 주문수량이 매도 가격의 어느 정도 비율을 차지하는지를 계산하여 '주문총액'에 할당
+      if (percentage === '10%') {
+        let dividedQuantity = availableQuantity * 0.10;
+
+        // 소수점 아래 8자리로 제한
+        if ((dividedQuantity.toString().split('.')[1] || '').length > 8) {
+          dividedQuantity = parseFloat(dividedQuantity.toFixed(8));
+        }
+
+        let dividedTotal = sellingPrice * dividedQuantity
+        dividedTotal = Math.ceil(dividedTotal);
+
+        // 주문 수량
+        setSellQuantity(dividedQuantity);
+        setQuantityInputValue(dividedQuantity.toString());
+
+        // 주문 총액
+        setSellTotal(dividedTotal);
+        setTotalInputvalue(dividedTotal.toString())
+      }
+      if (percentage === '25%') {
+        let dividedQuantity = availableQuantity * 0.25;
+
+        // 소수점 아래 8자리로 제한
+        if ((dividedQuantity.toString().split('.')[1] || '').length > 8) {
+          dividedQuantity = parseFloat(dividedQuantity.toFixed(8));
+        }
+
+        let dividedTotal = sellingPrice * dividedQuantity
+        dividedTotal = Math.ceil(dividedTotal);
+
+        // 주문 수량
+        setSellQuantity(dividedQuantity);
+        setQuantityInputValue(dividedQuantity.toString());
+
+        // 주문 총액
+        setSellTotal(dividedTotal);
+        setTotalInputvalue(dividedTotal.toString())
+      }
+      if (percentage === '50%') {
+        let dividedQuantity = availableQuantity * 0.50;
+
+        // 소수점 아래 8자리로 제한
+        if ((dividedQuantity.toString().split('.')[1] || '').length > 8) {
+          dividedQuantity = parseFloat(dividedQuantity.toFixed(8));
+        }
+
+        let dividedTotal = sellingPrice * dividedQuantity
+        dividedTotal = Math.ceil(dividedTotal);
+
+        // 주문 수량
+        setSellQuantity(dividedQuantity);
+        setQuantityInputValue(dividedQuantity.toString());
+
+        // 주문 총액
+        setSellTotal(dividedTotal);
+        setTotalInputvalue(dividedTotal.toString())
+      }
+      if (percentage === '75%') {
+        let dividedQuantity = availableQuantity * 0.75;
+
+        // 소수점 아래 8자리로 제한
+        if ((dividedQuantity.toString().split('.')[1] || '').length > 8) {
+          dividedQuantity = parseFloat(dividedQuantity.toFixed(8));
+        }
+
+        let dividedTotal = sellingPrice * dividedQuantity
+        dividedTotal = Math.ceil(dividedTotal);
+
+        // 주문 수량
+        setSellQuantity(dividedQuantity);
+        setQuantityInputValue(dividedQuantity.toString());
+
+        // 주문 총액
+        setSellTotal(dividedTotal);
+        setTotalInputvalue(dividedTotal.toString())
+      }
+      if (percentage === '100%') {
+        let dividedQuantity = availableQuantity;
+
+        // 소수점 아래 8자리로 제한
+        if ((dividedQuantity.toString().split('.')[1] || '').length > 8) {
+          dividedQuantity = parseFloat(dividedQuantity.toFixed(8));
+        }
+
+        let dividedTotal = sellingPrice * dividedQuantity
+        dividedTotal = Math.ceil(dividedTotal);
+
+        // 주문 수량
+        setSellQuantity(dividedQuantity);
+        setQuantityInputValue(dividedQuantity.toString());
+
+        // 주문 총액
+        setSellTotal(dividedTotal);
+        setTotalInputvalue(dividedTotal.toString())
+      }
+    }
+    else if (availableQuantity === undefined) {
+      // 주문 수량
+      setSellQuantity(0);
+      setQuantityInputValue('0');
+
+      // 주문 총액
+      setSellTotal(0);
+      setTotalInputvalue('0');
+    }
   }
 
   return (
@@ -814,7 +979,12 @@ const SellingSection = () => {
             <table className="trading-table">
               <tr>
                 <td className="trading-category">주문가능</td>
-                <td className="trading-availableTrade">0
+                <td className="trading-availableTrade">
+                  {
+                    // 보유수량이 undefined 또는 null일 때 0 반환
+                    ownedCrypto.find((item) => item.crypto_name === cr_name_selected)?.quantity ??
+                    0
+                  }
                   <span>{(cr_market_selected).slice(4)}</span>
                 </td>
               </tr>
@@ -994,7 +1164,7 @@ const SellingSection = () => {
             {
               logInEmail !== '' ?
                 <div className="trading-submit-sell designate">
-                  <span>매도</span>
+                  <span onClick={() => sellCrypto(logInEmail, cr_selected.name, sellQuantity, sellTotal)}>매도</span>
                 </div> :
                 <div className="trading-submit-nonLogIn-sell designate">
                   <span onClick={() => { navigate('/logIn') }}>로그인</span>
