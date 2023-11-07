@@ -6,6 +6,7 @@ import SimpleBar from 'simplebar-react';
 import 'simplebar/dist/simplebar.min.css';
 import axios from "axios";
 import useFunction from "./useFuction";
+import { Dialog, DialogTitle, DialogContent, DialogActions, Button, makeStyles } from '@material-ui/core';
 
 const PriceDetail = () => {
 
@@ -243,6 +244,31 @@ const BuyingSection = () => {
   const [totalInputValue, setTotalInputvalue] = useState('0');
   const [buyingInputValue, setBuyingInputValue] = useState('0');
 
+  // 구매하려는 화폐의 가격과 호가 사이의 일치 여부
+  const [matchedItem, setMatchedItem] = useState<AskingData | null>(null);
+
+  // 화폐를 구매하기 위한 대기중인지 여부
+  const [isBuying, setIsBuying] = useState<boolean>(false);
+
+  const [modalOpen, setModalOpen] = useState<boolean>(false);
+  const [completeModalOpen, setCompleteModalOpen] = useState<boolean>(false);
+
+  const toggleModal = () => {
+    setModalOpen(!modalOpen);
+  }
+
+  const completeToggleModal = () => {
+    setCompleteModalOpen(!completeModalOpen);
+  }
+
+  // console.log("구매대기여부 : ", isBuying)
+
+  // console.log("주문수량 : ", buyQuantity)
+  // console.log("주문총액 : ", buyTotal)
+
+  console.log("입력: ", buyingInputValue)
+  console.log("값 : ", buyingPrice);
+
   const { getBalance, getOwnedCrypto } = useFunction();
 
   // 선택 화폐가 바뀔 때마다 매수 가격을 해당 화폐의 가격으로 변경하고, 주문 수량 및 총액을 초기화
@@ -258,30 +284,44 @@ const BuyingSection = () => {
     setTotalInputvalue('0');
   }, [buyingPrice])
 
+  // 호가가 변화할 때마다 실행하지만, 사용자의 구매 대기 여부가 true일 때만 로직을 동작
+  useEffect(() => {
+    // 사용자의 구매 대기 여부가 true일 때만 호가와 구매가격이 일치하는지 검사 
+    if (isBuying) {
+      let item = asking_data.find(item => item.ask_price === buyingPrice);
+      if (item !== undefined) {
+        setMatchedItem(item);
+      }
+    }
+  }, [asking_data, isBuying])
+
+  // 호가와 구매가격이 일치하면 서버로 요청 전송
+  useEffect(() => {
+    if (matchedItem !== null) {
+      buyCrypto(logInEmail, cr_selected.name, buyQuantity, buyTotal);
+    }
+  }, [matchedItem])
+
   const buyCrypto = (email: string, cryptoName: string, cryptoQuantity: number, buyTotal: number) => {
-
-    // 호가중에서 구매하려는 가격과 일치하는 값이 있는지 찾음
-    let matchedItem = asking_data.find(item => item.ask_price === buyingPrice);
-    console.log("매치여부 : ", matchedItem)
-
-    // 일치하는 값이 있을 시에만 서버로 요청 전송
-    if (matchedItem !== undefined) {
-      (async (email, cryptoName, cryptoQuantity, buyTotal) => {
-        try {
-          const response = await axios.post("http://127.0.0.1:8000/buy_crypto/", {
-            email: email,
-            crypto_name: cryptoName,
-            crypto_quantity: cryptoQuantity,
-            buy_total: buyTotal,
-          });
-          console.log("구매 화폐 전송 성공", response.data);
-          getBalance(logInEmail);  // 매수에 사용한 금액만큼 차감되기 때문에 잔고 업데이트
-          getOwnedCrypto(logInEmail);  // 소유 화폐가 새로 추가될 수 있으니 업데이트
-        }
-        catch (error) {
-          console.log("구매 화폐 전송 실패: ", error)
-        }
-      })(email, cryptoName, cryptoQuantity, buyTotal);
+    (async (email, cryptoName, cryptoQuantity, buyTotal) => {
+      try {
+        const response = await axios.post("http://127.0.0.1:8000/buy_crypto/", {
+          email: email,
+          crypto_name: cryptoName,
+          crypto_quantity: cryptoQuantity,
+          buy_total: buyTotal,
+        });
+        console.log("구매 화폐 전송 성공", response.data);
+        getBalance(logInEmail);  // 매수에 사용한 금액만큼 차감되기 때문에 잔고 업데이트
+        getOwnedCrypto(logInEmail);  // 소유 화폐가 새로 추가될 수 있으니 업데이트
+      }
+      catch (error) {
+        console.log("구매 화폐 전송 실패: ", error)
+      }
+    })(email, cryptoName, cryptoQuantity, buyTotal);
+    setIsBuying(false);  // 구매를 마친 후 구매 대기 여부를 다시 false로 변경
+    if (buyQuantity !== 0 && buyTotal) {
+      completeToggleModal()
     }
   }
 
@@ -368,6 +408,8 @@ const BuyingSection = () => {
 
   return (
     <>
+      <ModalSumbit modalOpen={modalOpen} setModalOpen={setModalOpen} toggleModal={toggleModal} />
+      <ModalComplete completeModalOpen={completeModalOpen} setCompleteModalOpen={setCompleteModalOpen} completeToggleModal={completeToggleModal} />
       <table className="trading-headTable">
         <tr className="trading-choice">
           <td className="radio">
@@ -439,8 +481,7 @@ const BuyingSection = () => {
                       setBuyingInputValue(value);
                       setBuyTotal(Math.floor(parseFloat(value) * buyQuantity));
                       setTotalInputvalue((Math.floor(parseFloat(value) * buyQuantity)).toString());
-                    }}>
-                  </input>
+                    }} />
                   <span>KRW</span>
                 </td>
               </tr>
@@ -578,7 +619,12 @@ const BuyingSection = () => {
             {
               logInEmail !== '' ?
                 <div className="trading-submit-buy designate">
-                  <span onClick={() => buyCrypto(logInEmail, cr_selected.name, buyQuantity, buyTotal)}>매수</span>
+                  <span onClick={() => {
+                    setIsBuying(true);
+                    toggleModal();
+                    setModalOpen(!modalOpen)
+                  }
+                  }>매수</span>
                 </div> :
                 <div className="trading-submit-nonLogIn-buy designate">
                   <span onClick={() => { navigate('/logIn') }}>로그인</span>
@@ -784,6 +830,9 @@ const SellingSection = () => {
   useEffect(() => {
     setSellingInputValue(sellingPrice.toString());
   }, [sellingPrice])
+
+  // console.log("매도수량 : ", sellQuantity)
+  // console.log("매도총액 : ", sellTotal);
 
   // 선택 화폐가 바뀔 때마다 주문 가능한 보유 화폐량을 변경하고, 주문 수량 및 총액을 초기화
   useEffect(() => {
@@ -1354,6 +1403,84 @@ const SellingSection = () => {
           )
       }
     </>
+  )
+}
+
+interface ModalProps {
+  modalOpen: boolean;
+  setModalOpen: (open: boolean) => void;
+  toggleModal: () => void;
+}
+
+interface CompleteModalProps {
+  completeModalOpen: boolean;
+  setCompleteModalOpen: (open: boolean) => void;
+  completeToggleModal: () => void;
+}
+
+const useStyles = makeStyles({
+  dialog: {
+    '& .MuiDialog-paper': {
+      width: '600px',
+      height: '200px'
+    },
+    '& .MuiDialogTitle-root .MuiTypography-root': {
+      marginTop: '10px',
+      marginLeft: '10px',
+      fontWeight: 'bold',
+    },
+    '& .MuiDialogContent-root': {
+      marginTop: '-10px',
+      marginLeft: '10px',
+    },
+    '& .MuiDialogActions-root': {
+      marginBottom: '10px',
+    },
+    '& .MuiDialogActions-root .MuiButton-root': {
+      fontWeight: 'bold',
+      fontSize: '14.5px',
+    }
+  },
+});
+
+const ModalSumbit: React.FC<ModalProps> = ({ modalOpen, setModalOpen, toggleModal }) => {
+  const classes = useStyles();
+  return (
+    <div>
+      {/* <Button variant="outlined" color="primary" onClick={toggleModal}>
+        Open dialog
+      </Button> */}
+      <Dialog open={modalOpen} onClose={toggleModal} className={classes.dialog} maxWidth={false}>
+        <DialogTitle>안내</DialogTitle>
+        <DialogContent>
+          매수 요청이 정상적으로 완료되었습니다. <br />
+          요청하신 매수 가격과 일치하는 매도 요청이 발생하면 거래가 완료됩니다.
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={toggleModal} color="primary">확인</Button>
+        </DialogActions>
+      </Dialog>
+    </div>
+  )
+}
+
+const ModalComplete: React.FC<CompleteModalProps> = ({ completeModalOpen, setCompleteModalOpen, completeToggleModal }) => {
+  const classes = useStyles();
+  return (
+    <div>
+      {/* <Button variant="outlined" color="primary" onClick={toggleModal}>
+        Open dialog
+      </Button> */}
+      <Dialog open={completeModalOpen} onClose={completeToggleModal} className={classes.dialog} maxWidth={false}>
+        <DialogTitle>안내</DialogTitle>
+        <DialogContent>
+          성공적으로 화폐를 매수했습니다.
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={completeToggleModal} color="primary">확인</Button>
+        </DialogActions>
+      </Dialog>
+    </div>
   )
 }
 
