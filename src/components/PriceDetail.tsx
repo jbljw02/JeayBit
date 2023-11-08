@@ -262,12 +262,8 @@ const BuyingSection = () => {
   }
 
   // console.log("구매대기여부 : ", isBuying)
-
-  // console.log("주문수량 : ", buyQuantity)
-  // console.log("주문총액 : ", buyTotal)
-
-  console.log("입력: ", buyingInputValue)
-  console.log("값 : ", buyingPrice);
+  console.log("구매총액 : ", buyTotal)
+  console.log("구매총입력 : ", totalInputValue);
 
   const { getBalance, getOwnedCrypto } = useFunction();
 
@@ -282,7 +278,7 @@ const BuyingSection = () => {
     // 주문 총액
     setBuyTotal(0);
     setTotalInputvalue('0');
-  }, [buyingPrice])
+  }, [cr_name_selected])
 
   // 호가가 변화할 때마다 실행하지만, 사용자의 구매 대기 여부가 true일 때만 로직을 동작
   useEffect(() => {
@@ -320,9 +316,7 @@ const BuyingSection = () => {
       }
     })(email, cryptoName, cryptoQuantity, buyTotal);
     setIsBuying(false);  // 구매를 마친 후 구매 대기 여부를 다시 false로 변경
-    if (buyQuantity !== 0 && buyTotal) {
-      completeToggleModal()
-    }
+    completeToggleModal()
   }
 
   const selectPercentage = (percentage: string) => {
@@ -334,8 +328,8 @@ const BuyingSection = () => {
       // 현재 잔고 기준 퍼센테이지를 '주문총액'에 할당하고, 주문총액이 구매하려는 화폐 가격에 대해 어느 정도의 비율을 가지는지 계산
       if (percentage === '10%') {
         let dividedTotal = userWallet * 0.1;
-        setBuyTotal(dividedTotal);
-        setTotalInputvalue(dividedTotal.toString())
+        setBuyTotal(Math.floor(dividedTotal));
+        setTotalInputvalue((Math.floor(dividedTotal)).toString());
         let dividedQuantity = dividedTotal / buyingPrice;
 
         // 소수점 아래 8자리로 제한
@@ -348,8 +342,8 @@ const BuyingSection = () => {
       }
       if (percentage === '25%') {
         let dividedTotal = userWallet * 0.25;
-        setBuyTotal(dividedTotal);
-        setTotalInputvalue(dividedTotal.toString())
+        setBuyTotal(Math.floor(dividedTotal));
+        setTotalInputvalue((Math.floor(dividedTotal)).toString());
         let dividedQuantity = dividedTotal / buyingPrice;
 
         // 소수점 아래 8자리로 제한
@@ -362,8 +356,8 @@ const BuyingSection = () => {
       }
       if (percentage === '50%') {
         let dividedTotal = userWallet * 0.50;
-        setBuyTotal(dividedTotal);
-        setTotalInputvalue(dividedTotal.toString())
+        setBuyTotal(Math.floor(dividedTotal));
+        setTotalInputvalue((Math.floor(dividedTotal)).toString());
         let dividedQuantity = dividedTotal / buyingPrice;
 
         // 소수점 아래 8자리로 제한
@@ -376,8 +370,8 @@ const BuyingSection = () => {
       }
       if (percentage === '75%') {
         let dividedTotal = userWallet * 0.75;
-        setBuyTotal(dividedTotal);
-        setTotalInputvalue(dividedTotal.toString())
+        setBuyTotal(Math.floor(dividedTotal));
+        setTotalInputvalue((Math.floor(dividedTotal)).toString());
         let dividedQuantity = dividedTotal / buyingPrice;
 
         // 소수점 아래 8자리로 제한
@@ -390,8 +384,8 @@ const BuyingSection = () => {
       }
       if (percentage === '100%') {
         let dividedTotal = userWallet;
-        setBuyTotal(dividedTotal);
-        setTotalInputvalue(dividedTotal.toString())
+        setBuyTotal(Math.floor(dividedTotal));
+        setTotalInputvalue((Math.floor(dividedTotal)).toString());
         let dividedQuantity = dividedTotal / buyingPrice;
 
         // 소수점 아래 8자리로 제한
@@ -453,6 +447,9 @@ const BuyingSection = () => {
                     value={buyingInputValue}
                     onChange={(e) => {
                       let value = e.target.value;
+
+                      // 매수가격을 변경했음에도 구매 대기 여부가 true이면 의도치 않게 매수가 완료될 수 있으니, 매수가를 변경했을 때는 구매 대기 여부를 false로 처리
+                      setIsBuying(false);
 
                       // 00, 01, 02, ... 등등 첫번째 숫자가 0인데 그 뒤에 수가 온다면, 그 수로 0을 대체하거나 삭제
                       if (value[0] === '0' && value.length > 1) {
@@ -529,8 +526,8 @@ const BuyingSection = () => {
                         setQuantityInputValue(value);
                         setBuyQuantity(parseFloat(value));
                       }
-                      setBuyTotal(Math.floor(buyingPrice * parseFloat(value)))
-                      setTotalInputvalue((Math.floor(buyingPrice * parseFloat(value))).toString())
+                      setBuyTotal(Math.floor(buyingPrice * parseFloat(value)));
+                      setTotalInputvalue((Math.floor(buyingPrice * parseFloat(value))).toString());
                     }}
                   />
                   <span>
@@ -621,10 +618,19 @@ const BuyingSection = () => {
                 <div className="trading-submit-buy designate">
                   <span onClick={() => {
                     setIsBuying(true);
-                    toggleModal();
-                    setModalOpen(!modalOpen)
-                  }
-                  }>매수</span>
+
+                    // 호가와 구매가가 일치하는지 확인
+                    let item = asking_data.find(item => item.ask_price === buyingPrice);
+                    if (item !== undefined) {
+                      // 일치한다면 바로 매수 요청을 전송
+                      buyCrypto(logInEmail, cr_selected.name, buyQuantity, buyTotal);
+                    }
+                    else {
+                      // 일치하지 않는다면 대기 모달 팝업
+                      toggleModal();
+                      setModalOpen(!modalOpen);
+                    }
+                  }}>매수</span>
                 </div> :
                 <div className="trading-submit-nonLogIn-buy designate">
                   <span onClick={() => { navigate('/logIn') }}>로그인</span>
@@ -903,8 +909,8 @@ const SellingSection = () => {
         setQuantityInputValue(dividedQuantity.toString());
 
         // 주문 총액
-        setSellTotal(dividedTotal);
-        setTotalInputvalue(dividedTotal.toString())
+        setSellTotal(Math.floor(dividedTotal));
+        setTotalInputvalue((Math.floor(dividedTotal)).toString());
       }
       if (percentage === '25%') {
         let dividedQuantity = availableQuantity * 0.25;
@@ -922,8 +928,8 @@ const SellingSection = () => {
         setQuantityInputValue(dividedQuantity.toString());
 
         // 주문 총액
-        setSellTotal(dividedTotal);
-        setTotalInputvalue(dividedTotal.toString())
+        setSellTotal(Math.floor(dividedTotal));
+        setTotalInputvalue((Math.floor(dividedTotal)).toString());
       }
       if (percentage === '50%') {
         let dividedQuantity = availableQuantity * 0.50;
@@ -941,8 +947,8 @@ const SellingSection = () => {
         setQuantityInputValue(dividedQuantity.toString());
 
         // 주문 총액
-        setSellTotal(dividedTotal);
-        setTotalInputvalue(dividedTotal.toString())
+        setSellTotal(Math.floor(dividedTotal));
+        setTotalInputvalue((Math.floor(dividedTotal)).toString());
       }
       if (percentage === '75%') {
         let dividedQuantity = availableQuantity * 0.75;
@@ -960,8 +966,8 @@ const SellingSection = () => {
         setQuantityInputValue(dividedQuantity.toString());
 
         // 주문 총액
-        setSellTotal(dividedTotal);
-        setTotalInputvalue(dividedTotal.toString())
+        setSellTotal(Math.floor(dividedTotal));
+        setTotalInputvalue((Math.floor(dividedTotal)).toString());
       }
       if (percentage === '100%') {
         let dividedQuantity = availableQuantity;
@@ -979,8 +985,8 @@ const SellingSection = () => {
         setQuantityInputValue(dividedQuantity.toString());
 
         // 주문 총액
-        setSellTotal(dividedTotal);
-        setTotalInputvalue(dividedTotal.toString())
+        setSellTotal(Math.floor(dividedTotal));
+        setTotalInputvalue((Math.floor(dividedTotal)).toString());
       }
     }
     else if (availableQuantity === undefined) {
