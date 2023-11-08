@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { AskingData, RootState, setAsking_data, setAsking_dateTime, setBuyingCrypto, setBuyingPrice, setSellingPrice } from "../store";
+import { AskingData, RootState, setAsking_data, setAsking_dateTime, setBuyingCrypto, setBuyingPrice, setSectionChange, setSellingPrice } from "../store";
 import { SetStateAction, useEffect, useState } from "react";
 import { Routes, Route, Link, useNavigate, Outlet } from 'react-router-dom'
 import SimpleBar from 'simplebar-react';
@@ -10,38 +10,42 @@ import { Dialog, DialogTitle, DialogContent, DialogActions, Button, makeStyles }
 
 const PriceDetail = () => {
 
-  const [sectionChange, setSectionChange] = useState<string>('매수');
+  const dispatch = useDispatch();
+
+  const sectionChange = useSelector((state: RootState) => state.sectionChange);
 
   return (
-    <div className="lightMode">
-      <div className="priceDetail-title askingTitle lightMode">호가내역</div>
-      <AskingPrice />
-      <div className="priceDetail-title closedTitle lightMode">체결내역</div>
-      <ClosedPrice />
-      <div className="trading-section lightMode-title">
-        <span className={`${sectionChange === '매수' ?
-          'buyingSection' :
-          ''
-          }`} onClick={() => (setSectionChange('매수'))}>매수</span>
-        <span className={`${sectionChange === '매도' ?
-          'sellingSection' :
-          ''
-          }`} onClick={() => (setSectionChange('매도'))}>매도</span>
-        {/* <span className={`${sectionChange === '거래내역' ?
+    <>
+      <div className="lightMode">
+        <div className="priceDetail-title askingTitle lightMode">호가내역</div>
+        <AskingPrice />
+        <div className="priceDetail-title closedTitle lightMode">체결내역</div>
+        <ClosedPrice />
+        <div className="trading-section lightMode-title">
+          <span className={`${sectionChange === '매수' ?
+            'buyingSection' :
+            ''
+            }`} onClick={() => (dispatch(setSectionChange('매수')))}>매수</span>
+          <span className={`${sectionChange === '매도' ?
+            'sellingSection' :
+            ''
+            }`} onClick={() => (dispatch(setSectionChange('매도')))}>매도</span>
+          {/* <span className={`${sectionChange === '거래내역' ?
           'tradingHistorySection' :
           ''
           }`} onClick={() => (setSectionChange('거래내역'))}>거래내역</span> */}
+        </div>
+        {
+          sectionChange === '매수' ?
+            <BuyingSection /> :
+            (
+              sectionChange === '매도' ?
+                <SellingSection /> :
+                null
+            )
+        }
       </div>
-      {
-        sectionChange === '매수' ?
-          <BuyingSection /> :
-          (
-            sectionChange === '매도' ?
-              <SellingSection /> :
-              null
-          )
-      }
-    </div>
+    </>
   );
 }
 
@@ -247,7 +251,7 @@ const BuyingSection = () => {
   // 구매하려는 화폐의 가격과 호가 사이의 일치 여부
   const [matchedItem, setMatchedItem] = useState<AskingData | null>(null);
 
-  // 화폐를 구매하기 위한 대기중인지 여부
+  // 화폐를 구매하기 위해 대기중인지 여부
   const [isBuying, setIsBuying] = useState<boolean>(false);
 
   const [modalOpen, setModalOpen] = useState<boolean>(false);
@@ -261,16 +265,18 @@ const BuyingSection = () => {
     setCompleteModalOpen(!completeModalOpen);
   }
 
-  // console.log("구매대기여부 : ", isBuying)
-  console.log("구매총액 : ", buyTotal)
-  console.log("구매총입력 : ", totalInputValue);
+  // console.log("매수가: ", buyingPrice);
+  // console.log("매수가 입력: ", buyingInputValue);
 
   const { getBalance, getOwnedCrypto } = useFunction();
 
-  // 선택 화폐가 바뀔 때마다 매수 가격을 해당 화폐의 가격으로 변경하고, 주문 수량 및 총액을 초기화
+  // 매수가가 바뀌면 그에 따라 입력값도 변경
   useEffect(() => {
     setBuyingInputValue(buyingPrice.toString())
+  }, [buyingPrice])
 
+  // 선택 화폐가 바뀔 때마다 매수 가격을 해당 화폐의 가격으로 변경하고, 주문 수량 및 총액을 초기화
+  useEffect(() => {
     // 주문 수량
     setBuyQuantity(0);
     setQuantityInputValue('0');
@@ -316,7 +322,7 @@ const BuyingSection = () => {
       }
     })(email, cryptoName, cryptoQuantity, buyTotal);
     setIsBuying(false);  // 구매를 마친 후 구매 대기 여부를 다시 false로 변경
-    completeToggleModal()
+    completeToggleModal();
   }
 
   const selectPercentage = (percentage: string) => {
@@ -691,7 +697,10 @@ const BuyingSection = () => {
                 {
                   logInEmail !== '' ?
                     <div className="trading-submit-buy market">
-                      <span>매수</span>
+                      <span onClick={
+                        // 호가와의 일치 여부를 확인하지 않음
+                        () => buyCrypto(logInEmail, cr_selected.name, buyQuantity, buyTotal)}>매수
+                      </span>
                     </div> :
                     <div className="trading-submit-nonLogIn-buy market">
                       <span onClick={() => { navigate('/logIn') }}>로그인</span>
@@ -831,14 +840,29 @@ const SellingSection = () => {
   const [totalInputValue, setTotalInputvalue] = useState('0');
   const [sellingInputValue, setSellingInputValue] = useState('0');
 
+  // 매도하려는 화폐의 가격과 호가 사이의 일치 여부
+  const [matchedItem, setMatchedItem] = useState<AskingData | null>(null);
+
+  // 화폐를 매도하기 위해 대기중인지 여부
+  const [isSelling, setIsSelling] = useState<boolean>(false);
+
+  const [modalOpen, setModalOpen] = useState<boolean>(false);
+  const [completeModalOpen, setCompleteModalOpen] = useState<boolean>(false);
+
+  const toggleModal = () => {
+    setModalOpen(!modalOpen);
+  }
+
+  const completeToggleModal = () => {
+    setCompleteModalOpen(!completeModalOpen);
+  }
+
   const { getBalance, getOwnedCrypto } = useFunction();
 
+  // 매도가가 바뀌면 그에 따라 입력값도 변경
   useEffect(() => {
     setSellingInputValue(sellingPrice.toString());
   }, [sellingPrice])
-
-  // console.log("매도수량 : ", sellQuantity)
-  // console.log("매도총액 : ", sellTotal);
 
   // 선택 화폐가 바뀔 때마다 주문 가능한 보유 화폐량을 변경하고, 주문 수량 및 총액을 초기화
   useEffect(() => {
@@ -851,37 +875,45 @@ const SellingSection = () => {
     setTotalInputvalue('0');
   }, [cr_name_selected])
 
+  // 호가가 변화할 대마다 실행하지만, 사용자의 매도 대기 여부가 true일 때만 로직 동작
+  useEffect(() => {
+    // 사용자의 매도 대기 여부가 true일 때만 호가와 매도가격이 일치하는지 검사
+    if (isSelling) {
+      let item = asking_data.find(item => item.bid_price === sellingPrice);
+      if (item !== undefined) {
+        setMatchedItem(item);
+      }
+    }
+
+  }, [asking_data, isSelling])
+
+  useEffect(() => {
+    if (matchedItem !== null) {
+      sellCrypto(logInEmail, cr_selected.name, sellQuantity, sellTotal);
+    }
+  }, [matchedItem])
+
   const sellCrypto = (email: string, cryptoName: string, cryptoQuantity: number, sellTotal: number) => {
-
-    if (asking_data !== undefined) {
-      asking_data.map((item, i) => {
-        console.log(item.bid_price);
-      });
-    }
-
-    // 호가중에서 판매하려는 가격과 일치하는 값이 있는지 찾음
-    let matchedItem = asking_data.find(item => item.bid_price === sellingPrice);
-    console.log("매치여부 : ", matchedItem);
-
-    if (matchedItem !== undefined) {
-      (async (email, cryptoName, cryptoQuantity, sellTotal) => {
-        try {
-          const response = await axios.post("http://127.0.0.1:8000/sell_crypto/", {
-            email: email,
-            crypto_name: cryptoName,
-            crypto_quantity: cryptoQuantity,
-            sell_total: sellTotal,
-          });
-          console.log("매도 화폐 전송 성공", response.data);
-          getBalance(logInEmail);  // 매수에 사용한 금액만큼 차감되기 때문에 잔고 업데이트
-          getOwnedCrypto(logInEmail);  // 소유 화폐가 새로 추가될 수 있으니 업데이트
-        } catch (error) {
-          console.log("매도 화폐 전송 실패: ", error);
-        }
-      })(email, cryptoName, cryptoQuantity, sellTotal)
-    }
-
+    (async (email, cryptoName, cryptoQuantity, sellTotal) => {
+      try {
+        const response = await axios.post("http://127.0.0.1:8000/sell_crypto/", {
+          email: email,
+          crypto_name: cryptoName,
+          crypto_quantity: cryptoQuantity,
+          sell_total: sellTotal,
+        });
+        console.log("매도 화폐 전송 성공", response.data);
+        getBalance(logInEmail);  // 매수에 사용한 금액만큼 차감되기 때문에 잔고 업데이트
+        getOwnedCrypto(logInEmail);  // 소유 화폐가 새로 추가될 수 있으니 업데이트
+      } catch (error) {
+        console.log("매도 화폐 전송 실패: ", error);
+      }
+    })(email, cryptoName, cryptoQuantity, sellTotal);
+    setIsSelling(false);
+    completeToggleModal();
   }
+
+  console.log("매도대기 : ", isSelling);
 
   const selectPercentage = (percentage: string) => {
     setSelectedPercentage(percentage)
@@ -1002,6 +1034,8 @@ const SellingSection = () => {
 
   return (
     <>
+      <ModalSumbit modalOpen={modalOpen} setModalOpen={setModalOpen} toggleModal={toggleModal} />
+      <ModalComplete completeModalOpen={completeModalOpen} setCompleteModalOpen={setCompleteModalOpen} completeToggleModal={completeToggleModal} />
       <table className="trading-headTable">
         <tr className="trading-choice">
           <td className="radio">
@@ -1050,6 +1084,9 @@ const SellingSection = () => {
                     value={sellingInputValue}
                     onChange={(e) => {
                       let value = e.target.value;
+
+                      // 매도가격을 변경했음에도 매도 대기 여부가 true이면 의도치 않게 매도가 완료될 수 있으니, 매도가를 변경했을 때는 매도 대기 여부를 false로 처리
+                      setIsSelling(false);
 
                       // 00, 01, 02, ... 등등 첫번째 숫자가 0인데 그 뒤에 수가 온다면, 그 수로 0을 대체하거나 삭제
                       if (value[0] === '0' && value.length > 1) {
@@ -1219,7 +1256,21 @@ const SellingSection = () => {
             {
               logInEmail !== '' ?
                 <div className="trading-submit-sell designate">
-                  <span onClick={() => sellCrypto(logInEmail, cr_selected.name, sellQuantity, sellTotal)}>매도</span>
+                  <span onClick={() => {
+                    setIsSelling(true);
+
+                    // 호가와 매도가가 일치하는지 확인
+                    let item = asking_data.find(item => item.bid_price === sellingPrice);
+                    if (item !== undefined) {
+                      // 일치한다면 바로 매도 요청을 전송
+                      sellCrypto(logInEmail, cr_selected.name, sellQuantity, sellTotal);
+                    }
+                    else {
+                      // 일치하지 않는다면 대기 모달 팝업
+                      toggleModal();
+                      setModalOpen(!modalOpen);
+                    }
+                  }}>매도</span>
                 </div> :
                 <div className="trading-submit-nonLogIn-sell designate">
                   <span onClick={() => { navigate('/logIn') }}>로그인</span>
@@ -1292,7 +1343,10 @@ const SellingSection = () => {
                 {
                   logInEmail !== '' ?
                     <div className="trading-submit-sell market">
-                      <span>매도</span>
+                      <span onClick={
+                        // 호가와의 일치 여부를 확인하지 않음
+                        () => sellCrypto(logInEmail, cr_selected.name, sellQuantity, sellTotal)}>매도
+                      </span>
                     </div> :
                     <div className="trading-submit-nonLogIn-sell market">
                       <span onClick={() => { navigate('/logIn') }}>로그인</span>
@@ -1450,7 +1504,10 @@ const useStyles = makeStyles({
 });
 
 const ModalSumbit: React.FC<ModalProps> = ({ modalOpen, setModalOpen, toggleModal }) => {
+
   const classes = useStyles();
+  const sectionChange = useSelector((state: RootState) => state.sectionChange);
+
   return (
     <div>
       {/* <Button variant="outlined" color="primary" onClick={toggleModal}>
@@ -1459,8 +1516,14 @@ const ModalSumbit: React.FC<ModalProps> = ({ modalOpen, setModalOpen, toggleModa
       <Dialog open={modalOpen} onClose={toggleModal} className={classes.dialog} maxWidth={false}>
         <DialogTitle>안내</DialogTitle>
         <DialogContent>
-          매수 요청이 정상적으로 완료되었습니다. <br />
-          요청하신 매수 가격과 일치하는 매도 요청이 발생하면 거래가 완료됩니다.
+          {
+            // JSX에서는 +등으로 문자열을 묶을 수 없으므로 하나의 배열로 반환
+            sectionChange === '매수' ?
+              ["매수 요청이 정상적으로 완료되었습니다.", <br />,
+                "요청하신 매수 가격과 일치하는 매수 요청이 발생하면 거래가 완료됩니다."] :
+              ["매도 요청이 정상적으로 완료되었습니다.", <br />,
+                "요청하신 매도 가격과 일치하는 매도 요청이 발생하면 거래가 완료됩니다."]
+          }
         </DialogContent>
         <DialogActions>
           <Button onClick={toggleModal} color="primary">확인</Button>
@@ -1471,7 +1534,10 @@ const ModalSumbit: React.FC<ModalProps> = ({ modalOpen, setModalOpen, toggleModa
 }
 
 const ModalComplete: React.FC<CompleteModalProps> = ({ completeModalOpen, setCompleteModalOpen, completeToggleModal }) => {
+
   const classes = useStyles();
+  const sectionChange = useSelector((state: RootState) => state.sectionChange);
+
   return (
     <div>
       {/* <Button variant="outlined" color="primary" onClick={toggleModal}>
@@ -1480,7 +1546,11 @@ const ModalComplete: React.FC<CompleteModalProps> = ({ completeModalOpen, setCom
       <Dialog open={completeModalOpen} onClose={completeToggleModal} className={classes.dialog} maxWidth={false}>
         <DialogTitle>안내</DialogTitle>
         <DialogContent>
-          성공적으로 화폐를 매수했습니다.
+          {
+            sectionChange === '매수' ?
+              "성공적으로 화폐를 매수했습니다." :
+              "성공적으로 화폐를 매도했습니다."
+          }
         </DialogContent>
         <DialogActions>
           <Button onClick={completeToggleModal} color="primary">확인</Button>
