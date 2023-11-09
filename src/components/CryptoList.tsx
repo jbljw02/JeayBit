@@ -155,7 +155,9 @@ const CryptoList = () => {
 
   // 별 이미지를 클릭할 때마다 서버로부터 관심 화폐에 대한 정보 받아옴
   useEffect(() => {
-    getFavoriteCrypto(logInEmail);
+    if (logInEmail !== '') {
+      getFavoriteCrypto(logInEmail);
+    }
   }, [isFavorited]);
 
   // 화면에 보여질 초기 화폐의 차트(비트코인)
@@ -358,23 +360,25 @@ const CryptoList = () => {
   // 리스트에서 화폐를 선택하면 해당 화폐에 대한 캔들 호출(차트의 분에 따라)
   const selectMarket_time = (market: string, minute: string) => {
     (async (market, minute) => {
-      try {
-        const response = await axios.post(
-          "http://127.0.0.1:8000/candle_per_minute/",
-          {
-            market: market,
-            minute: minute,
-          },
-          {
-            headers: {
-              "Content-Type": "application/json",
+      if (minute !== '') {
+        try {
+          const response = await axios.post(
+            "http://127.0.0.1:8000/candle_per_minute/",
+            {
+              market: market,
+              minute: minute,
             },
-          }
-        );
-        // console.log(chartSortTime, "당 요청값: ", response.data);
-        dispatch(setCandle_per_minute(response.data));
-      } catch (error) {
-        console.error("Failed to send data to Django server", error);
+            {
+              headers: {
+                "Content-Type": "application/json",
+              },
+            }
+          );
+          // console.log(chartSortTime, "당 요청값: ", response.data);
+          dispatch(setCandle_per_minute(response.data));
+        } catch (error) {
+          console.error("Failed to send data to Django server", error);
+        }
       }
     })(market, minute);
   };

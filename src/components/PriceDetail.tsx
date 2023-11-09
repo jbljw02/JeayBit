@@ -138,7 +138,9 @@ const AskingPrice = () => {
                 let bidClass = isChanged_bid ? 'change-bid' : '';
                 const percentage = (item.bid_size / asking_totalBidSize) * 100;  // 전체호가를 각각 호가로 나누어 비울을 환산한 후 해당 비율만큼 스타일 설정
                 return (
-                  <tr style={{ background: `linear-gradient(270deg, rgba(34,171,148, .2) ${percentage}%, transparent ${percentage}%)` }}>
+                  <tr
+                    key={i}
+                    style={{ background: `linear-gradient(270deg, rgba(34,171,148, .2) ${percentage}%, transparent ${percentage}%)` }}>
                     <td>{asking_dateTime}</td>
                     <td>{(item.bid_price).toLocaleString()}</td>
                     <td className={bidClass}>{(item.bid_size).toFixed(5)}
@@ -156,7 +158,9 @@ const AskingPrice = () => {
                 let askClass = isChange_ask ? 'change-ask' : '';
                 const percentage = (item.ask_size / asking_totalAskSize) * 100;  // 전체호가를 각각 호가로 나누어 비울을 환산한 후 해당 비율만큼 스타일 설정
                 return (
-                  <tr style={{ background: `linear-gradient(270deg, rgba(242,54,69, .2) ${percentage}%, transparent ${percentage}%)` }}>
+                  <tr
+                    key={i}
+                    style={{ background: `linear-gradient(270deg, rgba(242,54,69, .2) ${percentage}%, transparent ${percentage}%)` }}>
                     <td>{asking_dateTime}</td>
                     <td>{(item.ask_price).toLocaleString()}</td>
                     <td className={askClass}>{(item.ask_size).toFixed(5)}
@@ -206,7 +210,7 @@ const ClosedPrice = () => {
                 }).format(date);
                 trade_time = trade_time.replace(". ", "/").replace(".", "").replace("오전 ", "").replace("오후 ", "")
                 return (
-                  <tr>
+                  <tr key={i}>
                     <td>{trade_time}</td>
                     <td>{(item.trade_price).toLocaleString()}</td>
                     {
@@ -411,213 +415,217 @@ const BuyingSection = () => {
       <ModalSumbit modalOpen={modalOpen} setModalOpen={setModalOpen} toggleModal={toggleModal} />
       <ModalComplete completeModalOpen={completeModalOpen} setCompleteModalOpen={setCompleteModalOpen} completeToggleModal={completeToggleModal} />
       <table className="trading-headTable">
-        <tr className="trading-choice">
-          <td className="radio">
-            주문구분
-          </td>
-          <td className="radio">
-            <input type="radio" name="radio" id="radio1" className="radio-input" onClick={() => (setBidSort('지정가'))} checked={bidSort === '지정가'}></input>
-            <label className="radio-designate radio-label" htmlFor="radio1">
-              지정가
-            </label>
-          </td>
-          <td className="radio">
-            <input type="radio" name="radio" id="radio2" className="radio-input" onClick={() => (setBidSort('시장가'))} checked={bidSort === '시장가'}></input>
-            <label className="radio-market radio-label" htmlFor="radio2">
-              시장가
-            </label>
-          </td>
-          <td className="radio">
-            <input type="radio" name="radio" id="radio3" className="radio-input" onClick={() => (setBidSort('예약가'))} checked={bidSort === '예약가'}></input>
-            <label className="radio-reserve radio-label" htmlFor="radio3">
-              예약/지정가
-            </label>
-          </td>
-        </tr>
+        <tbody>
+          <tr className="trading-choice">
+            <td className="radio">
+              주문구분
+            </td>
+            <td className="radio">
+              <input type="radio" name="radio" id="radio1" className="radio-input" onChange={() => (setBidSort('지정가'))} checked={bidSort === '지정가'}></input>
+              <label className="radio-designate radio-label" htmlFor="radio1">
+                지정가
+              </label>
+            </td>
+            <td className="radio">
+              <input type="radio" name="radio" id="radio2" className="radio-input" onChange={() => (setBidSort('시장가'))} checked={bidSort === '시장가'}></input>
+              <label className="radio-market radio-label" htmlFor="radio2">
+                시장가
+              </label>
+            </td>
+            <td className="radio">
+              <input type="radio" name="radio" id="radio3" className="radio-input" onChange={() => (setBidSort('예약가'))} checked={bidSort === '예약가'}></input>
+              <label className="radio-reserve radio-label" htmlFor="radio3">
+                예약/지정가
+              </label>
+            </td>
+          </tr>
+        </tbody>
       </table>
       {
         // 매수 - 지정가 영역
         bidSort === '지정가' ?
           <>
             <table className="trading-table">
-              <tr>
-                <td className="trading-category">주문가능</td>
-                <td className="trading-availableTrade">{userWallet}
-                  <span>KRW</span>
-                </td>
-              </tr>
-              <tr>
-                <td className="trading-category">매수가격</td>
-                <td className="td-input">
-                  <input type="text"
-                    value={buyingInputValue}
-                    onChange={(e) => {
-                      let value = e.target.value;
+              <tbody>
+                <tr>
+                  <td className="trading-category">주문가능</td>
+                  <td className="trading-availableTrade">{(Number(userWallet).toLocaleString())}
+                    <span>KRW</span>
+                  </td>
+                </tr>
+                <tr>
+                  <td className="trading-category">매수가격</td>
+                  <td className="td-input">
+                    <input type="text"
+                      value={buyingInputValue}
+                      onChange={(e) => {
+                        let value = e.target.value;
 
-                      // 매수가격을 변경했음에도 구매 대기 여부가 true이면 의도치 않게 매수가 완료될 수 있으니, 매수가를 변경했을 때는 구매 대기 여부를 false로 처리
-                      setIsBuying(false);
+                        // 매수가격을 변경했음에도 구매 대기 여부가 true이면 의도치 않게 매수가 완료될 수 있으니, 매수가를 변경했을 때는 구매 대기 여부를 false로 처리
+                        setIsBuying(false);
 
-                      // 00, 01, 02, ... 등등 첫번째 숫자가 0인데 그 뒤에 수가 온다면, 그 수로 0을 대체하거나 삭제
-                      if (value[0] === '0' && value.length > 1) {
-                        if (value[1] === '0' || (value[1] >= '1' && value[1] <= '9')) {
-                          value = value.substring(1);
-                        }
-                      }
-
-                      // 0..2, 0..4, ... 등등 "."이 두 번 이상 나오지 않도록 함
-                      value = value.replace(/(\..*)\./g, "$1");
-
-                      // 숫자와 "." 외의 문자를 제거
-                      value = value.replace(/[^0-9.]/g, "");
-
-                      // "."이 맨 처음에 오지 않도록 함
-                      if (value[0] === '.') {
-                        value = '0' + value;
-                      }
-
-                      // value값이 비게 되면 '0'으로 설정(NaN값 방지)
-                      if (value === '') {
-                        value = '0';
-                      }
-
-                      dispatch(setBuyingPrice(Number(value)));
-                      setBuyingInputValue(value);
-                      setBuyTotal(Math.floor(parseFloat(value) * buyQuantity));
-                      setTotalInputvalue((Math.floor(parseFloat(value) * buyQuantity)).toString());
-                    }} />
-                  <span>KRW</span>
-                </td>
-              </tr>
-              <tr>
-                <td></td>
-                <td>
-                  <input type="range" min="0" max="50000000" step={1} value={buyingPrice} className="slider buy" onChange={(e) => dispatch(setBuyingPrice(Number(e.target.value)))} />
-                </td>
-              </tr>
-              <tr>
-                <td className="trading-category">주문수량</td>
-                <td className="td-input">
-                  <input type="text"
-                    value={quantityInputValue}
-                    onChange={(e) => {
-                      let value = e.target.value;
-
-                      // 00, 01, 02, ... 등등 첫번째 숫자가 0인데 그 뒤에 수가 온다면, 그 수로 0을 대체하거나 삭제
-                      if (value[0] === '0' && value.length > 1) {
-                        if (value[1] === '0' || (value[1] >= '1' && value[1] <= '9')) {
-                          value = value.substring(1);
-                        }
-                      }
-
-                      // 0..2, 0..4, ... 등등 "."이 두 번 이상 나오지 않도록 함
-                      value = value.replace(/(\..*)\./g, "$1");
-
-                      // 숫자와 "." 외의 문자를 제거
-                      value = value.replace(/[^0-9.]/g, "");
-
-                      // "."이 맨 처음에 오지 않도록 함
-                      if (value[0] === '.') {
-                        value = '0' + value;
-                      }
-
-                      // value값이 비게 되면 '0'으로 설정(NaN값 방지)
-                      if (value === '') {
-                        value = '0';
-                      }
-
-                      const decimalPart = (value.split('.')[1] || '').length;
-
-                      // 소수점 자릿수가 8자리 이하인 경우만
-                      if (decimalPart <= 8) {
-                        setQuantityInputValue(value);
-                        setBuyQuantity(parseFloat(value));
-                      }
-                      setBuyTotal(Math.floor(buyingPrice * parseFloat(value)));
-                      setTotalInputvalue((Math.floor(buyingPrice * parseFloat(value))).toString());
-                    }}
-                  />
-                  <span>
-                    {
-                      cr_selected && cr_selected.market ?
-                        (cr_selected.market).slice(4) :
-                        null
-                    }
-                  </span>
-                </td>
-              </tr>
-              <tr>
-                <td></td>
-                <td className="count-percentage">
-                  <span className={
-                    selectedPercentage === '10%' ?
-                      'buy-percentage' :
-                      'nonSelected-percentage'
-                  } onClick={() => (selectPercentage('10%'))}>10%</span>
-                  <span className={
-                    selectedPercentage === '25%' ?
-                      'buy-percentage' :
-                      'nonSelected-percentage'
-                  } onClick={() => (selectPercentage('25%'))}>25%</span>
-                  <span className={
-                    selectedPercentage === '50%' ?
-                      'buy-percentage' :
-                      'nonSelected-percentage'
-                  } onClick={() => (selectPercentage('50%'))}>50%</span>
-                  <span className={
-                    selectedPercentage === '75%' ?
-                      'buy-percentage' :
-                      'nonSelected-percentage'
-                  } onClick={() => (selectPercentage('75%'))}>75%</span>
-                  <span className={
-                    selectedPercentage === '100%' ?
-                      'buy-percentage' :
-                      'nonSelected-percentage'
-                  } onClick={() => (selectPercentage('100%'))}>100%</span>
-                </td>
-              </tr>
-              <tr>
-                <td className="trading-category">주문총액</td>
-                <td className="td-input">
-                  <input type="text"
-                    value={totalInputValue}
-                    onChange={(e) => {
-                      let value = e.target.value;
-
-                      // 첫 번째 숫자가 0인데 그 뒤에 수가 온다면, 그 수로 0을 대체하거나 삭제
-                      if (value[0] === '0' && value.length > 1) {
-                        if (value[1] === '0' || (value[1] >= '1' && value[1] <= '9')) {
-                          value = value.substring(1);
-                        }
-                      }
-
-                      // 입력값이 숫자인지 확인하고, 숫자 이외의 문자가 포함되어 있는지 확인
-                      const isNumber = /^[0-9]*$/.test(value);
-
-                      if (value === '') {
-                        value = '0';
-                      }
-
-                      if (buyingInputValue !== '0') {
-
-                        if (isNumber) {
-                          setTotalInputvalue(value);
-                          setBuyTotal(parseFloat(value));
-
-                          let dividiedQuantity = Number(value) / buyingPrice;
-
-                          // 소수점 아래 8자리로 제한
-                          if ((dividiedQuantity.toString().split('.')[1] || '').length > 8) {
-                            dividiedQuantity = parseFloat(dividiedQuantity.toFixed(8));
+                        // 00, 01, 02, ... 등등 첫번째 숫자가 0인데 그 뒤에 수가 온다면, 그 수로 0을 대체하거나 삭제
+                        if (value[0] === '0' && value.length > 1) {
+                          if (value[1] === '0' || (value[1] >= '1' && value[1] <= '9')) {
+                            value = value.substring(1);
                           }
-
-                          setBuyQuantity(dividiedQuantity);
-                          setQuantityInputValue(dividiedQuantity.toString());
                         }
+
+                        // 0..2, 0..4, ... 등등 "."이 두 번 이상 나오지 않도록 함
+                        value = value.replace(/(\..*)\./g, "$1");
+
+                        // 숫자와 "." 외의 문자를 제거
+                        value = value.replace(/[^0-9.]/g, "");
+
+                        // "."이 맨 처음에 오지 않도록 함
+                        if (value[0] === '.') {
+                          value = '0' + value;
+                        }
+
+                        // value값이 비게 되면 '0'으로 설정(NaN값 방지)
+                        if (value === '') {
+                          value = '0';
+                        }
+
+                        dispatch(setBuyingPrice(Number(value)));
+                        setBuyingInputValue(value);
+                        setBuyTotal(Math.floor(parseFloat(value) * buyQuantity));
+                        setTotalInputvalue((Math.floor(parseFloat(value) * buyQuantity)).toString());
+                      }} />
+                    <span>KRW</span>
+                  </td>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td>
+                    <input type="range" min="0" max="50000000" step={1} value={buyingPrice} className="slider buy" onChange={(e) => dispatch(setBuyingPrice(Number(e.target.value)))} />
+                  </td>
+                </tr>
+                <tr>
+                  <td className="trading-category">주문수량</td>
+                  <td className="td-input">
+                    <input type="text"
+                      value={quantityInputValue}
+                      onChange={(e) => {
+                        let value = e.target.value;
+
+                        // 00, 01, 02, ... 등등 첫번째 숫자가 0인데 그 뒤에 수가 온다면, 그 수로 0을 대체하거나 삭제
+                        if (value[0] === '0' && value.length > 1) {
+                          if (value[1] === '0' || (value[1] >= '1' && value[1] <= '9')) {
+                            value = value.substring(1);
+                          }
+                        }
+
+                        // 0..2, 0..4, ... 등등 "."이 두 번 이상 나오지 않도록 함
+                        value = value.replace(/(\..*)\./g, "$1");
+
+                        // 숫자와 "." 외의 문자를 제거
+                        value = value.replace(/[^0-9.]/g, "");
+
+                        // "."이 맨 처음에 오지 않도록 함
+                        if (value[0] === '.') {
+                          value = '0' + value;
+                        }
+
+                        // value값이 비게 되면 '0'으로 설정(NaN값 방지)
+                        if (value === '') {
+                          value = '0';
+                        }
+
+                        const decimalPart = (value.split('.')[1] || '').length;
+
+                        // 소수점 자릿수가 8자리 이하인 경우만
+                        if (decimalPart <= 8) {
+                          setQuantityInputValue(value);
+                          setBuyQuantity(parseFloat(value));
+                        }
+                        setBuyTotal(Math.floor(buyingPrice * parseFloat(value)));
+                        setTotalInputvalue((Math.floor(buyingPrice * parseFloat(value))).toString());
+                      }}
+                    />
+                    <span>
+                      {
+                        cr_selected && cr_selected.market ?
+                          (cr_selected.market).slice(4) :
+                          null
                       }
-                    }} />
-                  <span>KRW</span>
-                </td>
-              </tr>
+                    </span>
+                  </td>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td className="count-percentage">
+                    <span className={
+                      selectedPercentage === '10%' ?
+                        'buy-percentage' :
+                        'nonSelected-percentage'
+                    } onClick={() => (selectPercentage('10%'))}>10%</span>
+                    <span className={
+                      selectedPercentage === '25%' ?
+                        'buy-percentage' :
+                        'nonSelected-percentage'
+                    } onClick={() => (selectPercentage('25%'))}>25%</span>
+                    <span className={
+                      selectedPercentage === '50%' ?
+                        'buy-percentage' :
+                        'nonSelected-percentage'
+                    } onClick={() => (selectPercentage('50%'))}>50%</span>
+                    <span className={
+                      selectedPercentage === '75%' ?
+                        'buy-percentage' :
+                        'nonSelected-percentage'
+                    } onClick={() => (selectPercentage('75%'))}>75%</span>
+                    <span className={
+                      selectedPercentage === '100%' ?
+                        'buy-percentage' :
+                        'nonSelected-percentage'
+                    } onClick={() => (selectPercentage('100%'))}>100%</span>
+                  </td>
+                </tr>
+                <tr>
+                  <td className="trading-category">주문총액</td>
+                  <td className="td-input">
+                    <input type="text"
+                      value={totalInputValue}
+                      onChange={(e) => {
+                        let value = e.target.value;
+
+                        // 첫 번째 숫자가 0인데 그 뒤에 수가 온다면, 그 수로 0을 대체하거나 삭제
+                        if (value[0] === '0' && value.length > 1) {
+                          if (value[1] === '0' || (value[1] >= '1' && value[1] <= '9')) {
+                            value = value.substring(1);
+                          }
+                        }
+
+                        // 입력값이 숫자인지 확인하고, 숫자 이외의 문자가 포함되어 있는지 확인
+                        const isNumber = /^[0-9]*$/.test(value);
+
+                        if (value === '') {
+                          value = '0';
+                        }
+
+                        if (buyingInputValue !== '0') {
+
+                          if (isNumber) {
+                            setTotalInputvalue(value);
+                            setBuyTotal(parseFloat(value));
+
+                            let dividiedQuantity = Number(value) / buyingPrice;
+
+                            // 소수점 아래 8자리로 제한
+                            if ((dividiedQuantity.toString().split('.')[1] || '').length > 8) {
+                              dividiedQuantity = parseFloat(dividiedQuantity.toFixed(8));
+                            }
+
+                            setBuyQuantity(dividiedQuantity);
+                            setQuantityInputValue(dividiedQuantity.toString());
+                          }
+                        }
+                      }} />
+                    <span>KRW</span>
+                  </td>
+                </tr>
+              </tbody>
             </table>
             {
               logInEmail !== '' ?
@@ -651,7 +659,7 @@ const BuyingSection = () => {
                 <table className="trading-table">
                   <tr>
                     <td className="trading-category">주문가능</td>
-                    <td className="trading-availableTrade">{userWallet}
+                    <td className="trading-availableTrade">{(Number(userWallet).toLocaleString())}
                       <span>KRW</span>
                     </td>
                   </tr>
@@ -912,8 +920,6 @@ const SellingSection = () => {
     setIsSelling(false);
     completeToggleModal();
   }
-
-  console.log("매도대기 : ", isSelling);
 
   const selectPercentage = (percentage: string) => {
     setSelectedPercentage(percentage)
@@ -1285,7 +1291,12 @@ const SellingSection = () => {
                 <table className="trading-table">
                   <tr>
                     <td className="trading-category">주문가능</td>
-                    <td className="trading-availableTrade">0
+                    <td className="trading-availableTrade">
+                      {
+                        // 보유수량이 undefined 또는 null일 때 0 반환
+                        ownedCrypto.find((item) => item.crypto_name === cr_name_selected)?.quantity ??
+                        0
+                      }
                       <span>
                         {
                           cr_selected && cr_selected.market ?
@@ -1298,8 +1309,46 @@ const SellingSection = () => {
                   <tr>
                     <td className="trading-category">주문수량</td>
                     <td className="td-input">
-                      <input>
-                      </input>
+                      <input type="text"
+                        value={quantityInputValue}
+                        onChange={(e) => {
+                          let value = e.target.value;
+
+                          // 00, 01, 02, ... 등등 첫번째 숫자가 0인데 그 뒤에 수가 온다면, 그 수로 0을 대체하거나 삭제
+                          if (value[0] === '0' && value.length > 1) {
+                            if (value[1] === '0' || (value[1] >= '1' && value[1] <= '9')) {
+                              value = value.substring(1);
+                            }
+                          }
+
+                          // 0..2, 0..4, ... 등등 "."이 두 번 이상 나오지 않도록 함
+                          value = value.replace(/(\..*)\./g, "$1");
+
+                          // 숫자와 "." 외의 문자를 제거
+                          value = value.replace(/[^0-9.]/g, "");
+
+                          // "."이 맨 처음에 오지 않도록 함
+                          if (value[0] === '.') {
+                            value = '0' + value;
+                          }
+
+                          // value값이 비게 되면 '0'으로 설정(NaN값 방지)
+                          if (value === '') {
+                            value = '0';
+                          }
+
+                          const decimalPart = (value.split('.')[1] || '').length;
+
+                          // 소수점 자릿수가 8자리 이하인 경우만
+                          if (decimalPart <= 8) {
+                            setQuantityInputValue(value);
+                            setSellQuantity(parseFloat(value));
+                          }
+
+                          setSellTotal(Math.floor(sellingPrice * parseFloat(value)))
+                          setTotalInputvalue((Math.floor(sellingPrice * parseFloat(value))).toString())
+                        }}
+                      />
                       <span>
                         {
                           cr_selected && cr_selected.market ?
@@ -1519,9 +1568,9 @@ const ModalSumbit: React.FC<ModalProps> = ({ modalOpen, setModalOpen, toggleModa
           {
             // JSX에서는 +등으로 문자열을 묶을 수 없으므로 하나의 배열로 반환
             sectionChange === '매수' ?
-              ["매수 요청이 정상적으로 완료되었습니다.", <br />,
+              ["매수 요청이 정상적으로 완료되었습니다.", <br key="buy" />,
                 "요청하신 매수 가격과 일치하는 매수 요청이 발생하면 거래가 완료됩니다."] :
-              ["매도 요청이 정상적으로 완료되었습니다.", <br />,
+              ["매도 요청이 정상적으로 완료되었습니다.", <br key="sell" />,
                 "요청하신 매도 가격과 일치하는 매도 요청이 발생하면 거래가 완료됩니다."]
           }
         </DialogContent>

@@ -208,47 +208,54 @@ const TradingView = () => {
       </div>
       <div className="trading-header lightMode">
         <table className="table-delimited">
-          <tr className="tr-delimited">
-            {
-              delimitedTime.map((item, i) => {
-                return (
-                  <td
-                    onClick={() => clickChartSortTime(item)}
-                    className={`"td-delimited" ${chartSortTime === item ? 'td-delimited-selected' : 'td-delimited'}`}>{item}</td>
-                )
-              })
-            }
-            <label className="dropDown">
+          <tbody>
+            <tr className="tr-delimited">
               {
-                chartSortTime === '' ?
-                  <span className="chartSortDate-selected">{chartSortDate}</span> :
-                  <span onClick={() => clickChartSortDate(chartSortDate)} className="chartSortDate">{chartSortDate}</span>
+                delimitedTime.map((item, i) => {
+                  return (
+                    <td
+                      key={i}
+                      onClick={() => clickChartSortTime(item)}
+                      className={`"td-delimited" ${chartSortTime === item ? 'td-delimited-selected' : 'td-delimited'}`}>{item}</td>
+                  )
+                })
               }
-              <span className="dd-button">
-                <svg className="img-dd" xmlns='http://www.w3.org/2000/svg' viewBox="0 0 16 8">
-                  <path fill="currentColor" d="M0 1.475l7.396 6.04.596.485.593-.49L16 1.39 14.807 0 7.393 6.122 8.58 6.12 1.186.08z"></path>
-                </svg>
-              </span>
-              <input type="checkbox" className="dd-input" />
-              <ul className="dd-menu lightMode">
+              <td className="dropDown">
                 {
-                  delimitedDate.map((item, i) => {
-                    return (
-                      item === chartSortDate && chartSortTime === '' ?
-                        <li onClick={() => {
-                          clickChartSortDate(item)
-                          setChartSortValue(item)
-                        }} className="dd-menu-li">{item}</li> :
-                        <li onClick={() => {
-                          clickChartSortDate(item)
-                          setChartSortValue(item)
-                        }}>{item}</li>
-                    )
-                  })
+                  chartSortTime === '' ?
+                    <span className="chartSortDate-selected">{chartSortDate}</span> :
+                    <span onClick={() => clickChartSortDate(chartSortDate)} className="chartSortDate">{chartSortDate}</span>
                 }
-              </ul>
-            </label>
-          </tr>
+                <span className="dd-button">
+                  <svg className="img-dd" xmlns='http://www.w3.org/2000/svg' viewBox="0 0 16 8">
+                    <path fill="currentColor" d="M0 1.475l7.396 6.04.596.485.593-.49L16 1.39 14.807 0 7.393 6.122 8.58 6.12 1.186.08z"></path>
+                  </svg>
+                </span>
+                <input type="checkbox" className="dd-input" />
+                <ul className="dd-menu lightMode">
+                  {
+                    delimitedDate.map((item, i) => {
+                      return (
+                        item === chartSortDate && chartSortTime === '' ?
+                          <li
+                            key={i}
+                            onClick={() => {
+                              clickChartSortDate(item)
+                              setChartSortValue(item)
+                            }} className="dd-menu-li">{item}</li> :
+                          <li
+                            key={i}
+                            onClick={() => {
+                              clickChartSortDate(item)
+                              setChartSortValue(item)
+                            }}>{item}</li>
+                      )
+                    })
+                  }
+                </ul>
+              </td>
+            </tr>
+          </tbody>
         </table>
       </div>
       <div className="trading-chart">

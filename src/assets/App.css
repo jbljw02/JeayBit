@@ -852,6 +852,10 @@ dd span {
   border-spacing: 0 10px;
 }
 
+/* .trading-table {
+  padding-right: 0px;
+} */
+
 .trading-choice {
   width: 100%;
 }
@@ -898,6 +902,7 @@ dd span {
   font-size: 16px;
   font-weight: bold;
   text-align: end;
+  /* width: 83%; */
 }
 
 .trading-availableTrade span {
@@ -914,12 +919,14 @@ dd span {
   padding-left: 2.5px;
 }
 
+/* 수정 */
 .td-input {
   border: 1px solid #c7c6c6;
   border-radius: 2px;
   width: 30%;
   height: 28px;
   padding-left: 15px;
+  margin-left: 5px;
 }
 
 .td-input span {
