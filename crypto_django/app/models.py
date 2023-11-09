@@ -86,3 +86,16 @@ class UserCrypto(models.Model):
     
     def __str__(self):
         return f"{self.user.email} - {self.crypto.name} - {self.owned_quantity}"
+
+# 거래내역을 저장하는 테이블
+class TradeHistory(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE) 
+    crypto = models.ForeignKey(Crypto, on_delete=models.CASCADE) 
+    trade_time = models.DateTimeField(auto_now_add=True) 
+    crypto_market = models.CharField(max_length=200)
+    crypto_price = models.FloatField()
+    trade_price = models.DecimalField(max_digits=30, decimal_places=0)
+    trade_amount = models.DecimalField(max_digits=30, decimal_places=8)
+    
+    def __str__(self):
+        return f"{self.trade_time} - {self.user.email} - {self.crypto.name} - {self.crypto_price} - {self.trade_price} - {self.trade_amount}"

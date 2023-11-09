@@ -1,6 +1,7 @@
 import json
+import math
 from django.http import JsonResponse
-from app.models import Crypto, CustomUser, UserCrypto
+from app.models import Crypto, CustomUser, UserCrypto, TradeHistory
 from .crpyto_api import price
 from .crpyto_api import (
     candle_per_date_BTC,
@@ -223,7 +224,7 @@ def sign_up(request):
 
 
 class LoginView(View):
-    def post(self,request):
+    def post(self, request):
         try:
             data = json.loads(request.body)
             email = data.get("email")
@@ -466,7 +467,7 @@ def buy_crypto(request):
             defaults={'owned_quantity': Decimal(0), 'is_owned': False}
         )
 
-        # 보다 정밀한 계산을 위해선 Decimal 타입이 권장됨 / 효율이 보다 중요하다면 flaot
+        # 보다 정밀한 계산을 위해선 Decimal 타입이 권장됨 / 효율이 더 중요하다면 flaot
         crypto_quantity = Decimal(str(crypto_quantity))
         buy_total = Decimal(str(buy_total))
 
@@ -536,7 +537,72 @@ def sell_crypto(request):
         return JsonResponse({"sell_crypto": "화폐 매도 및 소유랑 업데이트 완료"})
     except CustomUser.DoesNotExist:
         return JsonResponse({"error": "해당 이메일의 사용자가 존재하지 않습니다"})
+   
+# 사용자, 화폐별 거래내역을 추가   
+@api_view(["POST"])
+def add_user_tradeHistory(request):
+    data = request.data
+    print("거래내역 요청-받은 값 : ", data)
     
+    email = data.get('email')
+    crypto_name = data.get('crypto_name')
+    trade_time = data.get('trade_time')
+    crypto_market = data.get('crypto_market')
+    crypto_price = data.get('crypto_price')
+    trade_price = data.get('trade_price')
+    trade_amount = data.get('trade_amount')
+    
+    if not email:
+        return JsonResponse({"error": "요청에 이메일이 포함되어야 합니다"}, status=400)
+    if not crypto_name:
+        return JsonResponse({"error": "요청에 화폐명이 포함되어야 합니다"}, status=400)
+    if not trade_time:
+        return JsonResponse({"error": "요청에 현재 시간이 포함되어야 합니다"}, status=400)
+    if not crypto_market:
+        return JsonResponse({"error": "요청에 화폐 마켓이 포함되어야 합니다."}, status=400)
+    if not crypto_price:
+        return JsonResponse({"error": "요청에 화폐 가격이 포함되어야 합니다."}, status=400)
+    if not trade_price:
+        return JsonResponse({"error": "요청에 거래 가격이 포함되어야 합니다."}, status=400)
+    if not trade_amount:
+        return JsonResponse({"error": "요청에 거래 수량이 포함되어야 합니다."}, status=400)
+    
+    try:
+        user = CustomUser.objects.get(email=email)
+        crypto = Crypto.objects.get(name=crypto_name)
+
+        trade_history = TradeHistory.objects.create(
+        user=user, 
+        crypto=crypto,
+        trade_time=trade_time, 
+        crypto_market=crypto_market, 
+        crypto_price=crypto_price,
+        trade_price=math.floor(trade_price), 
+        trade_amount=trade_amount 
+        )
+
+        return JsonResponse({"add_user_tradingHistory": "화폐 거래내역 업데이트 완료"})
+
+    except CustomUser.DoesNotExist:
+        return JsonResponse({"error": "해당 이메일의 사용자가 존재하지 않습니다"})
+    except Crypto.DoesNotExist:
+        return JsonResponse({"error": "해당 화폐명을 가진 화폐가 존재하지 않습니다"})
+
+
+# 거래내역을 클라이언트로 전송
+@api_view(["GET"])
+def get_user_tradeHistory(request, email):
+    try:
+        user = CustomUser.objects.get(email=email)
+    except CustomUser.DoesNotExist:
+        return JsonResponse({"error": "요청에 이메일이 포함되어야 합니다"})
+
+    trade_historys = TradeHistory.objects.filter(user=user)
+    
+    data = [{"trade_time": trade_history.trade_time, "user": user.email, "crypto_name": trade_history.crypto.name, "crypto_market": trade_history.crypto_market, "crypto_price": trade_history.crypto_price, "trade_price": trade_history.trade_price, "trade_amount": trade_history.trade_amount} 
+            for trade_history in trade_historys]
+    
+    return JsonResponse(data, safe=False)
     
 @api_view(["GET"])
 def check_login(request):

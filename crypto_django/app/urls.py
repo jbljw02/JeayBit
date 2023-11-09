@@ -1,6 +1,7 @@
 from django.urls import path
 from django.contrib import admin
 from .views import (
+    add_user_tradeHistory,
     get_data,
     candle_per_date,
     candle_per_week,
@@ -8,6 +9,7 @@ from .views import (
     candle_per_minute,
     asking_price,
     closed_price,
+    get_user_tradeHistory,
     sign_up,
     logIn,
     logOut,
@@ -43,6 +45,8 @@ urlpatterns = [
     path("minus_balance_from_user/", minus_balance_from_user),
     path("get_user_balance/<str:email>/", get_user_balance),
     path("buy_crypto/", buy_crypto),
-    path("sell_crypto/", sell_crypto)
+    path("sell_crypto/", sell_crypto),
+    path("add_user_tradeHistory/", add_user_tradeHistory),
+    path("get_user_tradeHistory/<str:email>/", get_user_tradeHistory),
     # path('admin/', admin.site.urls)
 ]
