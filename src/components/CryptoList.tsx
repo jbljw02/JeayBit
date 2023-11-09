@@ -136,7 +136,7 @@ const CryptoList = () => {
     }[]
   >([]);
 
-  const { getOwnedCrypto } = useFunction();
+  const { getOwnedCrypto, getTradeHistory } = useFunction();
 
   useEffect(() => {
     // const 변수 = setInterval(() => { 콜백함수, 시간 })
@@ -302,6 +302,7 @@ const CryptoList = () => {
         dispatch(setLogInEmail(user.email));
         getFavoriteCrypto(user.email);
         getOwnedCrypto(user.email);
+        getTradeHistory(user.email);
       }
     }
   }, [])

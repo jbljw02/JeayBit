@@ -261,6 +261,9 @@ const BuyingSection = () => {
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [completeModalOpen, setCompleteModalOpen] = useState<boolean>(false);
 
+  // 현재 시간을 저장하는 state
+  const [time, setTime] = useState(new Date());
+
   const toggleModal = () => {
     setModalOpen(!modalOpen);
   }
@@ -272,7 +275,7 @@ const BuyingSection = () => {
   // console.log("매수가: ", buyingPrice);
   // console.log("매수가 입력: ", buyingInputValue);
 
-  const { getBalance, getOwnedCrypto } = useFunction();
+  const { getBalance, getOwnedCrypto, getTradeHistory } = useFunction();
 
   // 매수가가 바뀌면 그에 따라 입력값도 변경
   useEffect(() => {
@@ -301,6 +304,9 @@ const BuyingSection = () => {
     }
   }, [asking_data, isBuying])
 
+  // const formattedTime = `${time.getFullYear()}.${time.getMonth() + 1}.${time.getDate()} ${time.getHours()}:${time.getMinutes()}`;
+  // console.log("현재 시간 : ", formattedTime);
+
   // 호가와 구매가격이 일치하면 서버로 요청 전송
   useEffect(() => {
     if (matchedItem !== null) {
@@ -310,6 +316,10 @@ const BuyingSection = () => {
 
   const buyCrypto = (email: string, cryptoName: string, cryptoQuantity: number, buyTotal: number) => {
     (async (email, cryptoName, cryptoQuantity, buyTotal) => {
+      let currentTime = new Date();
+      currentTime.setHours(currentTime.getHours() + 9);
+      setTime(currentTime);
+      console.log("시간 : ", time)
       try {
         const response = await axios.post("http://127.0.0.1:8000/buy_crypto/", {
           email: email,
@@ -327,6 +337,26 @@ const BuyingSection = () => {
     })(email, cryptoName, cryptoQuantity, buyTotal);
     setIsBuying(false);  // 구매를 마친 후 구매 대기 여부를 다시 false로 변경
     completeToggleModal();
+  }
+
+  // 거래 내역에 저장될 정보를 전송(화폐 매수와 함께)
+  const addTradeHistory = (email: string, cryptoName: string, tradeTime: Date, cryptoMarket: string, cryptoPrice: number, tradePrice: number, tradeAmount: number) => {
+    (async (email, cryptoName, tradeTime, cryptoMarket, cryptoPrice, tradePrice, tradeAmount) => {
+      try {
+        const response = await axios.post("http://127.0.0.1:8000/add_user_tradeHistory/", {
+          email: email,
+          crypto_name: cryptoName,
+          trade_time: tradeTime,
+          crypto_market: cryptoMarket,
+          crypto_price: cryptoPrice,
+          trade_price: tradePrice,
+          trade_amount: tradeAmount,
+        });
+        console.log("거래 내역 전송 성공", response.data)
+      } catch (error) {
+        console.log("거래 내역 전송 실패", error);
+      }
+    })(email, cryptoName, tradeTime, cryptoMarket, cryptoPrice, tradePrice, tradeAmount)
   }
 
   const selectPercentage = (percentage: string) => {
@@ -638,6 +668,7 @@ const BuyingSection = () => {
                     if (item !== undefined) {
                       // 일치한다면 바로 매수 요청을 전송
                       buyCrypto(logInEmail, cr_selected.name, buyQuantity, buyTotal);
+                      addTradeHistory(logInEmail, cr_selected.name, time, cr_selected.market, buyingPrice, buyTotal, buyQuantity);
                     }
                     else {
                       // 일치하지 않는다면 대기 모달 팝업
@@ -865,7 +896,7 @@ const SellingSection = () => {
     setCompleteModalOpen(!completeModalOpen);
   }
 
-  const { getBalance, getOwnedCrypto } = useFunction();
+  const { getBalance, getOwnedCrypto, getTradeHistory } = useFunction();
 
   // 매도가가 바뀌면 그에 따라 입력값도 변경
   useEffect(() => {
