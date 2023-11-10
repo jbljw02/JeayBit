@@ -91,6 +91,10 @@ class UserCrypto(models.Model):
 class TradeHistory(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE) 
     crypto = models.ForeignKey(Crypto, on_delete=models.CASCADE) 
+
+    TRADE_CATEGORIES = [('BUY', '매수'), ('SELL', '매도')]
+
+    trade_category = models.CharField(max_length=200, choices=TRADE_CATEGORIES, default='BUY')
     trade_time = models.DateTimeField(auto_now_add=True) 
     crypto_market = models.CharField(max_length=200)
     crypto_price = models.FloatField()
@@ -98,4 +102,4 @@ class TradeHistory(models.Model):
     trade_amount = models.DecimalField(max_digits=30, decimal_places=8)
     
     def __str__(self):
-        return f"{self.trade_time} - {self.user.email} - {self.crypto.name} - {self.crypto_price} - {self.trade_price} - {self.trade_amount}"
+        return f"{self.trade_category} - {self.trade_time} - {self.user.email} - {self.crypto.name} - {self.crypto_price} - {self.trade_price} - {self.trade_amount}"

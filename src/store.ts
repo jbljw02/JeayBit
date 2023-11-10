@@ -53,6 +53,17 @@ export type OwnedCrypto = {
   quantity: number,
 }
 
+export type UserTradeHistory = {
+  crypto_market: string,
+  crypto_name: string,
+  crypto_price: number,
+  trade_amount: string,
+  trade_category: string,
+  trade_price: string,
+  trade_time: any,
+  user: string,
+}
+
 export type RootState = {
   cr_name: string[],
   cr_price: number[],
@@ -108,6 +119,7 @@ export type RootState = {
   buyingCrypto: string,
   sellingPrice: number,
   sectionChange: string,
+  userTradeHistory: UserTradeHistory[],
 }
 
 const cr_name = createSlice({
@@ -664,6 +676,16 @@ const sectionChange = createSlice({
   }
 })
 
+const userTradeHistory = createSlice({
+  name: 'userTradeHisotry',
+  initialState: '',
+  reducers: {
+    setUserTradeHistory: (state, action) => {
+      return action.payload;
+    }
+  }
+})
+
 export default configureStore({
   reducer: {
     cr_name: cr_name.reducer,
@@ -704,7 +726,7 @@ export default configureStore({
     closed_data: closed_data.reducer,
     asking_data: asking_data.reducer,
     asking_dateTime: asking_dateTime.reducer,
-    chartSortDate: chartSortDate.reducer,    
+    chartSortDate: chartSortDate.reducer,
     asking_totalAskSize: asking_totalAskSize.reducer,
     asking_totalBidSize: asking_totalBidSize.reducer,
     theme: theme.reducer,
@@ -721,6 +743,7 @@ export default configureStore({
     buyingCrypto: buyingCrypto.reducer,
     sellingPrice: sellingPrice.reducer,
     sectionChange: sectionChange.reducer,
+    userTradeHistory: userTradeHistory.reducer,
   }
 })
 
@@ -795,5 +818,6 @@ export const { setBalanceUpdate } = balanceUpdate.actions;
 export const { setBuyingCrypto } = buyingCrypto.actions;
 export const { setSellingPrice } = sellingPrice.actions;
 export const { setSectionChange } = sectionChange.actions;
+export const { setUserTradeHistory } = userTradeHistory.actions;
 
 // export default store;

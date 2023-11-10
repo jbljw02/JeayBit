@@ -546,6 +546,7 @@ def add_user_tradeHistory(request):
     
     email = data.get('email')
     crypto_name = data.get('crypto_name')
+    trade_category = data.get('trade_category')
     trade_time = data.get('trade_time')
     crypto_market = data.get('crypto_market')
     crypto_price = data.get('crypto_price')
@@ -556,6 +557,8 @@ def add_user_tradeHistory(request):
         return JsonResponse({"error": "요청에 이메일이 포함되어야 합니다"}, status=400)
     if not crypto_name:
         return JsonResponse({"error": "요청에 화폐명이 포함되어야 합니다"}, status=400)
+    if not trade_category:
+        return JsonResponse({"error": "요청에 거래가 '매수'인지 '매도'인지 포함되어야 합니다"})
     if not trade_time:
         return JsonResponse({"error": "요청에 현재 시간이 포함되어야 합니다"}, status=400)
     if not crypto_market:
@@ -571,15 +574,19 @@ def add_user_tradeHistory(request):
         user = CustomUser.objects.get(email=email)
         crypto = Crypto.objects.get(name=crypto_name)
 
+
         trade_history = TradeHistory.objects.create(
         user=user, 
         crypto=crypto,
+        trade_category='BUY' if trade_category == '매수' else 'SELL',
         trade_time=trade_time, 
         crypto_market=crypto_market, 
-        crypto_price=crypto_price,
+        crypto_price=float(crypto_price),
         trade_price=math.floor(trade_price), 
-        trade_amount=trade_amount 
+        trade_amount=Decimal(trade_amount) 
         )
+        
+        trade_history.save()
 
         return JsonResponse({"add_user_tradingHistory": "화폐 거래내역 업데이트 완료"})
 
@@ -599,7 +606,7 @@ def get_user_tradeHistory(request, email):
 
     trade_historys = TradeHistory.objects.filter(user=user)
     
-    data = [{"trade_time": trade_history.trade_time, "user": user.email, "crypto_name": trade_history.crypto.name, "crypto_market": trade_history.crypto_market, "crypto_price": trade_history.crypto_price, "trade_price": trade_history.trade_price, "trade_amount": trade_history.trade_amount} 
+    data = [{"trade_category": trade_history.trade_category, "trade_time": trade_history.trade_time, "user": user.email, "crypto_name": trade_history.crypto.name, "crypto_market": trade_history.crypto_market, "crypto_price": trade_history.crypto_price, "trade_price": trade_history.trade_price, "trade_amount": trade_history.trade_amount} 
             for trade_history in trade_historys]
     
     return JsonResponse(data, safe=False)
