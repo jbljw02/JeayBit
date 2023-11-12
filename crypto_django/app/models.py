@@ -34,7 +34,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     # 패스워드는 상속받아 왔기 때문에 선언하지 않음
     username = models.CharField(max_length=30)
     email = models.EmailField(unique=True)
-    balance = models.DecimalField(max_digits=10, decimal_places=0, default=0) 
+    balance = models.DecimalField(max_digits=200, decimal_places=0, default=0) 
     
     is_staff = models.BooleanField(default=False)  # 관리자 사이트에 로그인 가능한지 여부
     is_superuser = models.BooleanField(default=False)  # 슈퍼유저인지 여부
@@ -100,6 +100,7 @@ class TradeHistory(models.Model):
     crypto_price = models.FloatField()
     trade_price = models.DecimalField(max_digits=30, decimal_places=0)
     trade_amount = models.DecimalField(max_digits=30, decimal_places=8)
+    is_signed = models.BooleanField(default=False);
     
     def __str__(self):
-        return f"{self.trade_category} - {self.trade_time} - {self.user.email} - {self.crypto.name} - {self.crypto_price} - {self.trade_price} - {self.trade_amount}"
+        return f"{self.trade_category} - {self.trade_time} - {self.user.email} - {self.crypto.name} - {self.crypto_price} - {self.trade_price} - {self.trade_amount} - {self.is_signed}"

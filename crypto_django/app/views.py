@@ -552,6 +552,7 @@ def add_user_tradeHistory(request):
     crypto_price = data.get('crypto_price')
     trade_price = data.get('trade_price')
     trade_amount = data.get('trade_amount')
+    is_signed = data.get('is_signed')
     
     if not email:
         return JsonResponse({"error": "요청에 이메일이 포함되어야 합니다"}, status=400)
@@ -569,11 +570,12 @@ def add_user_tradeHistory(request):
         return JsonResponse({"error": "요청에 거래 가격이 포함되어야 합니다."}, status=400)
     if not trade_amount:
         return JsonResponse({"error": "요청에 거래 수량이 포함되어야 합니다."}, status=400)
+    # if not is_signed:
+        # return JsonResponse({"error": "요청에 체결 여부가 포함되어야 합니다."}, status=400)
     
     try:
         user = CustomUser.objects.get(email=email)
         crypto = Crypto.objects.get(name=crypto_name)
-
 
         trade_history = TradeHistory.objects.create(
         user=user, 
@@ -583,7 +585,8 @@ def add_user_tradeHistory(request):
         crypto_market=crypto_market, 
         crypto_price=float(crypto_price),
         trade_price=math.floor(trade_price), 
-        trade_amount=Decimal(trade_amount) 
+        trade_amount=Decimal(trade_amount),
+        is_signed=True if is_signed == True else False,
         )
         
         trade_history.save()
@@ -606,7 +609,7 @@ def get_user_tradeHistory(request, email):
 
     trade_historys = TradeHistory.objects.filter(user=user)
     
-    data = [{"trade_category": trade_history.trade_category, "trade_time": trade_history.trade_time, "user": user.email, "crypto_name": trade_history.crypto.name, "crypto_market": trade_history.crypto_market, "crypto_price": trade_history.crypto_price, "trade_price": trade_history.trade_price, "trade_amount": trade_history.trade_amount} 
+    data = [{"trade_category": trade_history.trade_category, "trade_time": trade_history.trade_time, "user": user.email, "crypto_name": trade_history.crypto.name, "crypto_market": trade_history.crypto_market, "crypto_price": trade_history.crypto_price, "trade_price": trade_history.trade_price, "trade_amount": trade_history.trade_amount, "is_signed": trade_history.is_signed} 
             for trade_history in trade_historys]
     
     return JsonResponse(data, safe=False)
