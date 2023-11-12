@@ -30,10 +30,10 @@ const PriceDetail = () => {
             'sellingSection' :
             ''
             }`} onClick={() => (dispatch(setSectionChange('매도')))}>매도</span>
-          {/* <span className={`${sectionChange === '거래내역' ?
-          'tradingHistorySection' :
-          ''
-          }`} onClick={() => (setSectionChange('거래내역'))}>거래내역</span> */}
+          <span className={`${sectionChange === '거래내역' ?
+            'tradingHistorySection' :
+            ''
+            }`} onClick={() => (dispatch(setSectionChange('거래내역')))}>거래내역</span>
         </div>
         {
           sectionChange === '매수' ?
@@ -41,7 +41,7 @@ const PriceDetail = () => {
             (
               sectionChange === '매도' ?
                 <SellingSection /> :
-                null
+                <TradeHistory />
             )
         }
       </div>
@@ -275,9 +275,6 @@ const BuyingSection = () => {
     setCompleteModalOpen(!completeModalOpen);
   }
 
-  // console.log("매수가: ", buyingPrice);
-  // console.log("매수가 입력: ", buyingInputValue);
-
   const { getBalance, getOwnedCrypto, addTradeHistory, getTradeHistory } = useFunction();
 
   // 매수가가 바뀌면 그에 따라 입력값도 변경
@@ -306,9 +303,6 @@ const BuyingSection = () => {
       }
     }
   }, [asking_data, isBuying])
-
-  // const formattedTime = `${time.getFullYear()}.${time.getMonth() + 1}.${time.getDate()} ${time.getHours()}:${time.getMinutes()}`;
-  // console.log("현재 시간 : ", formattedTime);
 
   // 호가와 구매가격이 일치하면 서버로 요청 전송
   useEffect(() => {
@@ -434,6 +428,10 @@ const BuyingSection = () => {
             <td className="radio">
               주문구분
             </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
             <td className="radio">
               <input type="radio" name="radio" id="radio1" className="radio-input" onChange={() => (setBidSort('지정가'))} checked={bidSort === '지정가'}></input>
               <label className="radio-designate radio-label" htmlFor="radio1">
@@ -652,12 +650,14 @@ const BuyingSection = () => {
                     if (item !== undefined) {
                       // 일치한다면 바로 매수 요청을 전송
                       buyCrypto(logInEmail, cr_selected.name, buyQuantity, buyTotal);
-                      addTradeHistory(logInEmail, cr_selected.name, tradeCategory, time, cr_selected.market, buyingPrice, buyTotal, buyQuantity);
+                      addTradeHistory(logInEmail, cr_selected.name, tradeCategory, time, cr_selected.market, buyingPrice, buyTotal, buyQuantity, true);
                     }
                     else {
                       // 일치하지 않는다면 대기 모달 팝업
                       toggleModal();
                       setModalOpen(!modalOpen);
+
+                      addTradeHistory(logInEmail, cr_selected.name, tradeCategory, time, cr_selected.market, buyingPrice, buyTotal, buyQuantity, false);
                     }
                   }}>매수</span>
                 </div> :
@@ -1069,6 +1069,10 @@ const SellingSection = () => {
           <td className="radio">
             주문구분
           </td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
           <td className="radio">
             <input type="radio" name="radio" id="radio1" className="radio-input" onClick={() => (setBidSort('지정가'))} checked={bidSort === '지정가'}></input>
             <label className="radio-designate radio-label" htmlFor="radio1">
@@ -1292,12 +1296,14 @@ const SellingSection = () => {
                     if (item !== undefined) {
                       // 일치한다면 바로 매도 요청을 전송
                       sellCrypto(logInEmail, cr_selected.name, sellQuantity, sellTotal);
-                      addTradeHistory(logInEmail, cr_selected.name, tradeCategory, time, cr_selected.market, sellingPrice, sellTotal, sellQuantity);
+                      addTradeHistory(logInEmail, cr_selected.name, tradeCategory, time, cr_selected.market, sellingPrice, sellTotal, sellQuantity, true);
                     }
                     else {
                       // 일치하지 않는다면 대기 모달 팝업
                       toggleModal();
                       setModalOpen(!modalOpen);
+
+                      addTradeHistory(logInEmail, cr_selected.name, tradeCategory, time, cr_selected.market, sellingPrice, sellTotal, sellQuantity, false);
                     }
                   }}>매도</span>
                 </div> :
@@ -1419,7 +1425,7 @@ const SellingSection = () => {
                         // 호가와의 일치 여부를 확인하지 않음
                         () => {
                           sellCrypto(logInEmail, cr_selected.name, sellQuantity, sellTotal)
-                          addTradeHistory(logInEmail, cr_selected.name, tradeCategory, time, cr_selected.market, sellingPrice, sellTotal, sellQuantity);
+                          addTradeHistory(logInEmail, cr_selected.name, tradeCategory, time, cr_selected.market, sellingPrice, sellTotal, sellQuantity, true);
                         }}>매도
                       </span>
                     </div> :
@@ -1537,6 +1543,193 @@ const SellingSection = () => {
 
           )
       }
+    </>
+  )
+}
+
+const TradeHistory = () => {
+
+  const userTradeHistory = useSelector((state: RootState) => state.userTradeHistory)
+  const userTradeHistory_unSigned = useSelector((state: RootState) => state.userTradeHistory_unSigned)
+
+  const [historySort, setHistorySort] = useState<string>('체결');
+
+  return (
+    <>
+      <table className="trading-headTable">
+        <tbody>
+          <tr className="trading-choice">
+            <td className="radio">
+              체결구분
+            </td>
+            <td className="radio">
+              <input type="radio" name="radio" id="radio1" className="radio-input" onChange={() => (setHistorySort('체결'))} checked={historySort === '체결'}></input>
+              <label className="radio-designate radio-label" htmlFor="radio1">
+                체결
+              </label>
+            </td>
+            <td className="radio">
+              <input type="radio" name="radio" id="radio2" className="radio-input" onChange={() => (setHistorySort('미체결'))} checked={historySort === '미체결'}></input>
+              <label className="radio-market radio-label" htmlFor="radio2">
+                미체결
+              </label>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <table className="table-tradingHistory">
+        <colgroup>
+          <col width={75} />
+          <col width={75} />
+          <col width={80} />
+          <col width={85} />
+        </colgroup>
+        <thead>
+          <tr>
+            <th>주문시간</th>
+            <th>
+              <div>마켓</div>
+              <div>구분</div>
+            </th>
+            <th>
+              <div>체결가격</div>
+              <div>체결금액</div>
+            </th>
+            <th>수량</th>
+          </tr>
+        </thead>
+      </table>
+      <SimpleBar className="scrollBar-tradingHistoryTable">
+        <table className="table-tradingHistory">
+          <colgroup>
+            <col width={75} />
+            <col width={75} />
+            <col width={80} />
+            <col width={85} />
+          </colgroup>
+          <tbody>
+            {
+              // 체결된 화폐들의 거래내역
+              historySort === '체결' ?
+                userTradeHistory.map((item, i) => {
+                  return (
+                    <tr key={i}>
+                      <td>
+                        {(item.trade_time).slice(0, 10)} <br />
+                        {(item.trade_time).slice(10)}
+                      </td>
+                      <td>
+                        <span className="tradingHistory-market">
+                          {item.crypto_market}
+                        </span>
+                        <br />
+                        <span className={`tradingHistory-category ${item.trade_category === 'BUY' ? 'asking-buy' : 'asking-sell'}`}>
+
+                          {
+                            item.trade_category === 'BUY' ?
+                              '매수' :
+                              '매도'
+                          }
+                        </span>
+                      </td>
+                      <td>
+                        {(item.crypto_price).toLocaleString()} <br />
+                        {(Number(item.trade_price)).toLocaleString()}
+                      </td>
+                      <td>
+                        {
+                          (item.trade_amount).length <= 10 ?
+                            item.trade_amount :
+                            (
+                              item.trade_amount[9] === '.' ?
+                                (item.trade_amount).substring(0, 9) :
+                                (item.trade_amount).substring(0, 10)
+                            )
+                        }
+                      </td>
+                    </tr>
+                  )
+                }) :
+                // 체결되지 않은 화폐들의 거래내역
+                userTradeHistory_unSigned !== undefined && Array.isArray(userTradeHistory_unSigned) ?
+                  (
+                    userTradeHistory_unSigned.map((item, i) => {
+                      return (
+                        <tr key={i}>
+                          <td>
+                            {
+                              item.trade_time !== undefined ?
+                                (item.trade_time).slice(0, 10) :
+                                null
+                            }
+                            <br />
+                            {
+                              item.trade_time !== undefined ?
+                                (item.trade_time).slice(10) :
+                                null
+                            }
+                          </td>
+                          <td>
+                            <span className="tradingHistory-market">
+                              {
+                                item.crypto_market !== undefined ?
+                                  item.crypto_market :
+                                  null
+                              }
+                            </span>
+                            <br />
+                            <span className={`tradingHistory-category ${item.trade_category === '매수' ? 'asking-buy' : 'asking-sell'}`}>
+
+                              {
+                                item.trade_category !== undefined ? (
+
+                                  item.trade_category === '매수' ?
+                                    '매수' :
+                                    '매도'
+                                ) :
+                                  null
+                              }
+                            </span>
+                          </td>
+                          <td>
+                            {
+                              item.crypto_price !== undefined ?
+                                (item.crypto_price).toLocaleString() :
+                                null
+                            }
+                            <br />
+                            {
+                              item.trade_price !== undefined ?
+                                (Number(item.trade_price)).toLocaleString() :
+                                null
+                            }
+                          </td>
+                          <td>
+                            {
+                              item.trade_amount !== undefined ?
+                                (
+
+                                  (String(item.trade_amount)).length <= 10 ?
+                                    item.trade_amount :
+                                    (
+                                      String(item.trade_amount)[9] === '.' ?
+                                        (String(item.trade_amount)).substring(0, 9) :
+                                        (String(item.trade_amount)).substring(0, 10)
+                                    )
+                                ) :
+                                null
+                            }
+                          </td>
+                        </tr>
+                      )
+                    })
+                  ) :
+                  null
+            }
+          </tbody>
+        </table>
+      </SimpleBar>
     </>
   )
 }

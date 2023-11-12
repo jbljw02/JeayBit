@@ -62,6 +62,7 @@ export type UserTradeHistory = {
   trade_price: string,
   trade_time: any,
   user: string,
+  is_signed: boolean,
 }
 
 export type RootState = {
@@ -120,6 +121,7 @@ export type RootState = {
   sellingPrice: number,
   sectionChange: string,
   userTradeHistory: UserTradeHistory[],
+  userTradeHistory_unSigned: UserTradeHistory[],
 }
 
 const cr_name = createSlice({
@@ -678,10 +680,22 @@ const sectionChange = createSlice({
 
 const userTradeHistory = createSlice({
   name: 'userTradeHisotry',
-  initialState: '',
+  initialState: [] as UserTradeHistory[],
   reducers: {
     setUserTradeHistory: (state, action) => {
-      return action.payload;
+      // 불변성을 지키며 상태를 직접 변경
+      state.push(action.payload);
+    }
+  }
+})
+
+const userTradeHistory_unSigned = createSlice({
+  name: 'userTradeHistory_unSigned',
+  initialState: [] as UserTradeHistory[],
+  reducers: {
+    setUserTradeHistory_unSigned: (state, action) => {
+      // 불변성을 지키며 상태를 직접 변경
+      state.push(action.payload);
     }
   }
 })
@@ -744,6 +758,7 @@ export default configureStore({
     sellingPrice: sellingPrice.reducer,
     sectionChange: sectionChange.reducer,
     userTradeHistory: userTradeHistory.reducer,
+    userTradeHistory_unSigned: userTradeHistory_unSigned.reducer,
   }
 })
 
@@ -819,5 +834,6 @@ export const { setBuyingCrypto } = buyingCrypto.actions;
 export const { setSellingPrice } = sellingPrice.actions;
 export const { setSectionChange } = sectionChange.actions;
 export const { setUserTradeHistory } = userTradeHistory.actions;
+export const { setUserTradeHistory_unSigned } = userTradeHistory_unSigned.actions;
 
 // export default store;
