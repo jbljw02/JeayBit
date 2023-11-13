@@ -23,7 +23,9 @@ from .views import (
     LoginView,
     LogoutView,
     buy_crypto,
+    buy_crypto_unSigned,
     sell_crypto,
+    get_crypto_name,
 )
 
 urlpatterns = [
@@ -45,8 +47,10 @@ urlpatterns = [
     path("minus_balance_from_user/", minus_balance_from_user),
     path("get_user_balance/<str:email>/", get_user_balance),
     path("buy_crypto/", buy_crypto),
+    path("buy_crypto_unSigned/", buy_crypto_unSigned),
     path("sell_crypto/", sell_crypto),
     path("add_user_tradeHistory/", add_user_tradeHistory),
     path("get_user_tradeHistory/<str:email>/", get_user_tradeHistory),
+    path("get_crypto_name/", get_crypto_name)
     # path('admin/', admin.site.urls)
 ]

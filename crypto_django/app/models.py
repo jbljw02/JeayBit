@@ -1,6 +1,7 @@
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin, Group, Permission
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+import uuid
 
 # 모델과 관련된 DB 작업을 담당하는 매니저 클래스
 class CustomUserManager(BaseUserManager):
@@ -94,6 +95,7 @@ class TradeHistory(models.Model):
 
     TRADE_CATEGORIES = [('BUY', '매수'), ('SELL', '매도')]
 
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     trade_category = models.CharField(max_length=200, choices=TRADE_CATEGORIES, default='BUY')
     trade_time = models.DateTimeField(auto_now_add=True) 
     crypto_market = models.CharField(max_length=200)
@@ -103,4 +105,4 @@ class TradeHistory(models.Model):
     is_signed = models.BooleanField(default=False);
     
     def __str__(self):
-        return f"{self.trade_category} - {self.trade_time} - {self.user.email} - {self.crypto.name} - {self.crypto_price} - {self.trade_price} - {self.trade_amount} - {self.is_signed}"
+        return f"{self.id} - {self.trade_category} - {self.trade_time} - {self.user.email} - {self.crypto.name} - {self.crypto_price} - {self.trade_price} - {self.trade_amount} - {self.is_signed}"

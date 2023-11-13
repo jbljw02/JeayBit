@@ -54,6 +54,7 @@ export type OwnedCrypto = {
 }
 
 export type UserTradeHistory = {
+  id: string,
   crypto_market: string,
   crypto_name: string,
   crypto_price: number,
@@ -122,6 +123,7 @@ export type RootState = {
   sectionChange: string,
   userTradeHistory: UserTradeHistory[],
   userTradeHistory_unSigned: UserTradeHistory[],
+  isBuying: { [key: string]: boolean }
 }
 
 const cr_name = createSlice({
@@ -700,6 +702,16 @@ const userTradeHistory_unSigned = createSlice({
   }
 })
 
+const isBuying = createSlice({
+  name: 'isBuying',
+  initialState: '',
+  reducers: {
+    setIsBuying: (state, action) => {
+      return action.payload;
+    }
+  }
+})
+
 export default configureStore({
   reducer: {
     cr_name: cr_name.reducer,
@@ -759,6 +771,7 @@ export default configureStore({
     sectionChange: sectionChange.reducer,
     userTradeHistory: userTradeHistory.reducer,
     userTradeHistory_unSigned: userTradeHistory_unSigned.reducer,
+    isBuying: isBuying.reducer,
   }
 })
 
@@ -835,5 +848,6 @@ export const { setSellingPrice } = sellingPrice.actions;
 export const { setSectionChange } = sectionChange.actions;
 export const { setUserTradeHistory } = userTradeHistory.actions;
 export const { setUserTradeHistory_unSigned } = userTradeHistory_unSigned.actions;
+export const { setIsBuying } = isBuying.actions;
 
 // export default store;

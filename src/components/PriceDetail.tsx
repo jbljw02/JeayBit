@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { AskingData, RootState, setAsking_data, setAsking_dateTime, setBuyingCrypto, setBuyingPrice, setSectionChange, setSellingPrice } from "../store";
+import { AskingData, RootState, setAsking_data, setAsking_dateTime, setBuyingCrypto, setBuyingPrice, setIsBuying, setSectionChange, setSellingPrice } from "../store";
 import { SetStateAction, useEffect, useState } from "react";
 import { Routes, Route, Link, useNavigate, Outlet } from 'react-router-dom'
 import SimpleBar from 'simplebar-react';
@@ -256,7 +256,8 @@ const BuyingSection = () => {
   const [matchedItem, setMatchedItem] = useState<AskingData | null>(null);
 
   // 화폐를 구매하기 위해 대기중인지 여부
-  const [isBuying, setIsBuying] = useState<boolean>(false);
+  // const [isBuying, setIsBuying] = useState<boolean>(false);
+  const isBuying = useSelector((state: RootState) => state.isBuying);
 
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [completeModalOpen, setCompleteModalOpen] = useState<boolean>(false);
@@ -267,6 +268,11 @@ const BuyingSection = () => {
   // 현재 시간을 저장하는 state
   const [time, setTime] = useState(new Date());
 
+  const [key, setKey] = useState<{
+    id: string,
+    price: number
+  }[]>([]);
+
   const toggleModal = () => {
     setModalOpen(!modalOpen);
   }
@@ -275,7 +281,11 @@ const BuyingSection = () => {
     setCompleteModalOpen(!completeModalOpen);
   }
 
-  const { getBalance, getOwnedCrypto, addTradeHistory, getTradeHistory } = useFunction();
+  const { getBalance, getOwnedCrypto, addTradeHistory, getTradeHistory, getCryptoName } = useFunction();
+
+  useEffect(() => {
+    getCryptoName();
+  }, [])
 
   // 매수가가 바뀌면 그에 따라 입력값도 변경
   useEffect(() => {
@@ -295,28 +305,49 @@ const BuyingSection = () => {
 
   // 호가가 변화할 때마다 실행하지만, 사용자의 구매 대기 여부가 true일 때만 로직을 동작
   useEffect(() => {
+
     // 사용자의 구매 대기 여부가 true일 때만 호가와 구매가격이 일치하는지 검사 
-    if (isBuying) {
-      let item = asking_data.find(item => item.ask_price === buyingPrice);
-      if (item !== undefined) {
-        setMatchedItem(item);
+    if (isBuying[cr_name_selected]) {
+
+      // 로컬 스토리지에 있는 key-value를 꺼냄
+      let localStorageItem = [];
+      for (let i = 0; i < localStorage.length; i++) {
+        let tempKey = localStorage.key(i);
+        if (tempKey !== null) {
+          let tempValue = localStorage.getItem(tempKey);
+          if (tempValue !== null) {
+            tempValue = tempValue.replace(/"/g, '');
+            localStorageItem.push({ id: tempKey, price: Number(tempValue) });
+          }
+        }
       }
+
+      // 호가와 로컬 스토리지에서 꺼낸 값을 비교하여 일치하는 값만 state에 할당
+      let tempState = [];
+      for (let i = 0; i < asking_data.length; i++) {
+        for (let j = 0; j < localStorageItem.length; j++) {
+          if (asking_data[i].ask_price === localStorageItem[j].price) {
+            tempState.push({ id: localStorageItem[j].id, price: localStorageItem[j].price })
+          }
+        }
+      }
+
+      setKey(tempState);
+
+      if(key.length !== 0) {
+        buyCrypto_unSigned(logInEmail, cr_selected.name, buyQuantity, buyTotal);
+        key.forEach(item => {
+          localStorage.removeItem(item.id);
+        })
+      }
+
+      console.log("key 일치 여부 : ", key);
     }
   }, [asking_data, isBuying])
 
-  // 호가와 구매가격이 일치하면 서버로 요청 전송
-  useEffect(() => {
-    if (matchedItem !== null) {
-      buyCrypto(logInEmail, cr_selected.name, buyQuantity, buyTotal);
-    }
-  }, [matchedItem])
-
+  // 호가와 구매가가 일치할 때
   const buyCrypto = (email: string, cryptoName: string, cryptoQuantity: number, buyTotal: number) => {
     (async (email, cryptoName, cryptoQuantity, buyTotal) => {
-      let currentTime = new Date();
-      currentTime.setHours(currentTime.getHours() + 9);
-      setTime(currentTime);
-      console.log("시간 : ", time)
       try {
         const response = await axios.post("http://127.0.0.1:8000/buy_crypto/", {
           email: email,
@@ -327,13 +358,39 @@ const BuyingSection = () => {
         console.log("구매 화폐 전송 성공", response.data);
         getBalance(logInEmail);  // 매수에 사용한 금액만큼 차감되기 때문에 잔고 업데이트
         getOwnedCrypto(logInEmail);  // 소유 화폐가 새로 추가될 수 있으니 업데이트
-        getTradeHistory(logInEmail);  // 매수했으니 업데이트 됐을 거래내역을 가져옴
       }
       catch (error) {
         console.log("구매 화폐 전송 실패: ", error)
       }
     })(email, cryptoName, cryptoQuantity, buyTotal);
-    setIsBuying(false);  // 구매를 마친 후 구매 대기 여부를 다시 false로 변경
+    completeToggleModal();
+  }
+
+  // 호가와 구매가가 일치하지 않을 때
+  const buyCrypto_unSigned = (email: string, cryptoName: string, cryptoQuantity: number, buyTotal: number) => {
+    (async (email, cryptoName, cryptoQuantity, buyTotal) => {
+      try {
+        const response = await axios.post("http://127.0.0.1:8000/buy_crypto_unSigned/", {
+          id: key,
+          email: email,
+          crypto_name: cryptoName,
+          crypto_quantity: cryptoQuantity,
+          buy_total: buyTotal,
+        });
+        console.log("구매 화폐 전송 성공", response.data);
+        getBalance(logInEmail);  // 매수에 사용한 금액만큼 차감되기 때문에 잔고 업데이트
+        getOwnedCrypto(logInEmail);  // 소유 화폐가 새로 추가될 수 있으니 업데이트
+      }
+      catch (error) {
+        console.log("구매 화폐 전송 실패: ", error)
+      }
+    })(email, cryptoName, cryptoQuantity, buyTotal);
+
+    if (localStorage.length <= 1) {
+      let updatedIsBuying = { ...isBuying };
+      updatedIsBuying[cr_name_selected] = false;
+      dispatch(setIsBuying(updatedIsBuying));
+    }
     completeToggleModal();
   }
 
@@ -474,7 +531,9 @@ const BuyingSection = () => {
                         let value = e.target.value;
 
                         // 매수가격을 변경했음에도 구매 대기 여부가 true이면 의도치 않게 매수가 완료될 수 있으니, 매수가를 변경했을 때는 구매 대기 여부를 false로 처리
-                        setIsBuying(false);
+                        // let updatedIsBuying = { ...isBuying };
+                        // updatedIsBuying[cr_name_selected] = false;
+                        // dispatch(setIsBuying(updatedIsBuying));
 
                         // 00, 01, 02, ... 등등 첫번째 숫자가 0인데 그 뒤에 수가 온다면, 그 수로 0을 대체하거나 삭제
                         if (value[0] === '0' && value.length > 1) {
@@ -643,21 +702,27 @@ const BuyingSection = () => {
               logInEmail !== '' ?
                 <div className="trading-submit-buy designate">
                   <span onClick={() => {
-                    setIsBuying(true);
-
                     // 호가와 구매가가 일치하는지 확인
                     let item = asking_data.find(item => item.ask_price === buyingPrice);
                     if (item !== undefined) {
                       // 일치한다면 바로 매수 요청을 전송
                       buyCrypto(logInEmail, cr_selected.name, buyQuantity, buyTotal);
+
                       addTradeHistory(logInEmail, cr_selected.name, tradeCategory, time, cr_selected.market, buyingPrice, buyTotal, buyQuantity, true);
+                      getTradeHistory(logInEmail);
                     }
                     else {
+                      // 선택한 화폐에 대한 구매 대기 여부를 true로 설정
+                      let updatedIsBuying = { ...isBuying };
+                      updatedIsBuying[cr_name_selected] = true;
+                      dispatch(setIsBuying(updatedIsBuying));
+
                       // 일치하지 않는다면 대기 모달 팝업
                       toggleModal();
                       setModalOpen(!modalOpen);
 
                       addTradeHistory(logInEmail, cr_selected.name, tradeCategory, time, cr_selected.market, buyingPrice, buyTotal, buyQuantity, false);
+                      getTradeHistory(logInEmail);
                     }
                   }}>매수</span>
                 </div> :

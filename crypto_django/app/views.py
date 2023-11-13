@@ -435,7 +435,6 @@ def get_user_balance(request, email):
     
     return JsonResponse(data)
 
-
 # 화폐 매수 및 소유 여부 추가
 @api_view(["POST"])
 def buy_crypto(request):
@@ -474,6 +473,73 @@ def buy_crypto(request):
         # 잔고량보다 주문 총액이 큰 경우
         if user.balance < buy_total:
             return JsonResponse({"error": "잔액이 부족합니다"}, status=400)
+
+        # 잔고량 업데이트
+        user.balance -= buy_total
+        user.save()
+        
+        user_crypto.owned_quantity += crypto_quantity  # 기존 화폐 수량에 구매한 수량 추가
+        user_crypto.is_owned = True  # 소유 여부를 True로 전환
+        
+        user_crypto.save()
+            
+        return JsonResponse({"buy_crypto": "화폐 매수 및 소유 여부 업데이트 완료"})
+    except CustomUser.DoesNotExist:
+        return JsonResponse({"error": "해당 이메일의 사용자가 존재하지 않습니다"})
+
+
+# 화폐 매수 및 소유 여부 추가(체결되지 않았던 화폐들에 대해)
+@api_view(["POST"])
+def buy_crypto_unSigned(request):
+    data = json.loads(request.body)
+    print("매수 - 받은 데이터: ", data)
+
+    id = data.get('id')
+    email = data.get('email')
+    crypto_name = data.get('crypto_name')
+    crypto_quantity = data.get('crypto_quantity')
+    buy_total = data.get('buy_total')
+
+    if not id:
+        return JsonResponse({"error": "요청에 고유 ID가 포함되어야 합니다"}, status=400)
+    if not email:
+        return JsonResponse({"error": "요청에 이메일이 포함되어야 합니다"}, status=400)
+    if not crypto_name:
+        return JsonResponse({"error": "요청에 화폐명이 포함되어야 합니다"}, status=400)
+    if not crypto_quantity:
+        return JsonResponse({"error": "요청된 화폐 수량은 0이 아니어야 합니다"}, status=400)
+    if not buy_total:
+        return JsonResponse({"error": "요청에 구매 금액이 포함되어야 합니다"}, status=400)
+
+    try:
+        user = CustomUser.objects.get(email=email)
+        crypto = Crypto.objects.get(name=crypto_name)
+        trade_history = TradeHistory.objects.filter(user__email=email)
+        
+        # 잔고량보다 주문 총액이 큰 경우
+        if user.balance < buy_total:
+            return JsonResponse({"error": "잔액이 부족합니다"}, status=400)
+        
+        for a in id:
+            print("a : ", a)
+            for b in trade_history:
+                print("b.id : ", b.id)
+                if a == str(b.id):
+                    print("일치함")
+                    b.is_signed = True
+                    b.save()
+
+        # 객체가 없어서 새로 생성해야 할 경우 초기 수량을 0, 소유 여부는 False로 지정함으로써 DoseNotExist 방지
+        user_crypto, created = UserCrypto.objects.get_or_create(
+            user=user, 
+            crypto=crypto, 
+            defaults={'owned_quantity': Decimal(0), 'is_owned': False}
+        )
+
+        # 보다 정밀한 계산을 위해선 Decimal 타입이 권장됨 / 효율이 더 중요하다면 flaot
+        crypto_quantity = Decimal(str(crypto_quantity))
+        buy_total = Decimal(str(buy_total))
+
 
         # 잔고량 업데이트
         user.balance -= buy_total
@@ -589,8 +655,6 @@ def add_user_tradeHistory(request):
         is_signed=True if is_signed == True else False,
         )
         
-        trade_history.save()
-
         return JsonResponse({"add_user_tradingHistory": "화폐 거래내역 업데이트 완료"})
 
     except CustomUser.DoesNotExist:
@@ -609,10 +673,19 @@ def get_user_tradeHistory(request, email):
 
     trade_historys = TradeHistory.objects.filter(user=user)
     
-    data = [{"trade_category": trade_history.trade_category, "trade_time": trade_history.trade_time, "user": user.email, "crypto_name": trade_history.crypto.name, "crypto_market": trade_history.crypto_market, "crypto_price": trade_history.crypto_price, "trade_price": trade_history.trade_price, "trade_amount": trade_history.trade_amount, "is_signed": trade_history.is_signed} 
+    
+    data = [{"id": trade_history.id, "trade_category": trade_history.trade_category, "trade_time": trade_history.trade_time, "user": user.email, "crypto_name": trade_history.crypto.name, "crypto_market": trade_history.crypto_market, "crypto_price": trade_history.crypto_price, "trade_price": trade_history.trade_price, "trade_amount": trade_history.trade_amount, "is_signed": trade_history.is_signed} 
             for trade_history in trade_historys]
     
     return JsonResponse(data, safe=False)
+ 
+ 
+@api_view(["GET"])
+def get_crypto_name(requst):
+    
+    crypto_names = Crypto.objects.values_list('name', flat=True)
+    
+    return Response({"detail": crypto_names})
     
 @api_view(["GET"])
 def check_login(request):
