@@ -1,4 +1,4 @@
-import { configureStore, createSlice } from '@reduxjs/toolkit'
+import { PayloadAction, configureStore, createSlice } from '@reduxjs/toolkit'
 
 export type Crypto = {
   name: string,
@@ -66,6 +66,14 @@ export type UserTradeHistory = {
   is_signed: boolean,
 }
 
+export type UnsginedAskingData = {
+  market: string,
+  data: {
+    ask_price: number,
+    bid_price: number,
+  }
+}
+
 export type RootState = {
   cr_name: string[],
   cr_price: number[],
@@ -123,7 +131,8 @@ export type RootState = {
   sectionChange: string,
   userTradeHistory: UserTradeHistory[],
   userTradeHistory_unSigned: UserTradeHistory[],
-  isBuying: { [key: string]: boolean }
+  isBuying: { [key: string]: boolean },
+  askingData_unSigned: UnsginedAskingData[]
 }
 
 const cr_name = createSlice({
@@ -712,6 +721,18 @@ const isBuying = createSlice({
   }
 })
 
+const askingData_unSigned = createSlice({
+  name: 'askingData_unSigned',
+  initialState: {} as { [key: string]: UnsginedAskingData[] },
+  reducers: {
+    setAskingData_unSigned: (state, action) => {
+      // `market`을 key로 사용하여 `data` 배열을 저장합니다.
+      // 이 때, 기존에 `market`에 대한 데이터가 있으면 그것을 대체합니다.
+      state[action.payload.market] = action.payload.data;
+    },
+  },
+});
+
 export default configureStore({
   reducer: {
     cr_name: cr_name.reducer,
@@ -772,6 +793,7 @@ export default configureStore({
     userTradeHistory: userTradeHistory.reducer,
     userTradeHistory_unSigned: userTradeHistory_unSigned.reducer,
     isBuying: isBuying.reducer,
+    askingData_unSigned: askingData_unSigned.reducer,
   }
 })
 
@@ -849,5 +871,6 @@ export const { setSectionChange } = sectionChange.actions;
 export const { setUserTradeHistory } = userTradeHistory.actions;
 export const { setUserTradeHistory_unSigned } = userTradeHistory_unSigned.actions;
 export const { setIsBuying } = isBuying.actions;
+export const { setAskingData_unSigned } = askingData_unSigned.actions;
 
 // export default store;

@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
-import { setUserWallet, RootState, setOwnedCrypto, setUserTradeHistory, setUserTradeHistory_unSigned, setIsBuying } from "../store";
+import { setUserWallet, RootState, setOwnedCrypto, setUserTradeHistory, setUserTradeHistory_unSigned, setIsBuying, setAsking_data, setAsking_dateTime, setAsking_totalAskSize, setAsking_totalBidSize, setAskingData_unSigned } from "../store";
 import { useState } from "react";
 
 export default function useFunction() {
@@ -12,6 +12,8 @@ export default function useFunction() {
   const cr_selected = useSelector((state: RootState) => state.cr_selected);
   const userTradeHistory_unSigned = useSelector((state: RootState) => state.userTradeHistory_unSigned);
   const isBuying = useSelector((state: RootState) => state.isBuying);
+  const cr_name_selected = useSelector((state: RootState) => state.cr_name_selected);
+  const askingData_unSigned = useSelector((state: RootState) => state.askingData_unSigned);
 
   const [time, setTime] = useState(new Date());
 
@@ -78,7 +80,7 @@ export default function useFunction() {
         console.log("반환값-거래내역 : ", response.data);
 
         // 다른 요소는 서버에서 받아온 값 그대로 유지, 거래 시간만 형식 변경해서 dispatch
-        response.data.map((item: { trade_time: Date, is_signed: boolean, id: string; crypto_price: number }, i: number) => {
+        response.data.map((item: { trade_time: Date, is_signed: boolean, id: string, crypto_price: number, crypto_name: string, }, i: number) => {
           let date = new Date(item.trade_time);
           let formattedDate = date.getFullYear() + '.'
             + (date.getMonth() + 1).toString().padStart(2, '0') + '.'
@@ -91,7 +93,8 @@ export default function useFunction() {
           }
           else {
             dispatch(setUserTradeHistory_unSigned({ ...item, trade_time: formattedDate }))
-            localStorage.setItem(item.id, JSON.stringify(item.crypto_price));  // 체결되지 않은 구매 요청에 대한 ID를 로컬 스토리지에 추가
+            let value = { price: item.crypto_price, name: item.crypto_name };
+            localStorage.setItem(item.id, JSON.stringify(value));  // 체결되지 않은 구매 요청에 대한 ID를 로컬 스토리지에 추가
           }
         })
       } catch (error) {
@@ -101,27 +104,145 @@ export default function useFunction() {
   }
 
   // 모든 화폐의 이름을 받아옴
-  const getCryptoName = () => {
+  const getCryptoName = (logInEmail: string) => {
     (async () => {
       try {
         const response = await axios.get(
           'http://127.0.0.1:8000/get_crypto_name/'
         );
-        console.log(response.data);
+
         let cryptoNames = response.data.detail;
 
+        let localStorageItem: string[] = [];
+        for (let i = 0; i < localStorage.length; i++) {
+          let key = localStorage.key(i);
+          if (key !== null) {
+            let value = localStorage.getItem(key);
+            if (value !== null) {
+              let item = JSON.parse(value);
+              localStorageItem.push(item.name);
+            }
+          }
+        }
+
+        // 로컬 스토리지의 값에 있는(체결되지 않은) 화폐는 true로, 아니라면 false로 선언
         let isBuyingTemp = cryptoNames.reduce((obj: { [obj: string]: boolean; }, name: string) => {
-          obj[name] = false;
+          if (localStorageItem.includes(name)) {
+            obj[name] = true;
+          }
+          else {
+            obj[name] = false;
+          }
           return obj;
         }, {})
-        dispatch(setIsBuying(isBuyingTemp));
 
+        dispatch(setIsBuying(isBuyingTemp));
+        localStorage.setItem(`${logInEmail}_IsBuying`, JSON.stringify(isBuyingTemp))
       } catch (error) {
         console.log("화폐명 받아오기 실패", error);
       }
     })();
   }
 
-  return { getBalance, getOwnedCrypto, addTradeHistory, getTradeHistory, getCryptoName };
+  // 모든 화폐의 마켓을 받아옴
+  const getCryptoMarket = (logInEmail: string) => {
+    (async () => {
+      try {
+        const response = await axios.get(
+          'http://127.0.0.1:8000/get_crypto_market/'
+        );
+
+        let cryptoMarkets = response.data.markets;
+
+        let localStorageItem: string[] = [];
+        for (let i = 0; i < localStorage.length; i++) {
+          let key = localStorage.key(i);
+          if (key !== null) {
+            let value = localStorage.getItem(key);
+            if (value !== null) {
+              let item = JSON.parse(value);
+              localStorageItem.push(item.market);
+            }
+          }
+        }
+
+        // 로컬 스토리지의 값에 있는(체결되지 않은) 화폐는 true로, 아니라면 false로 선언
+        let isBuyingTemp = cryptoMarkets.reduce((obj: { [obj: string]: boolean; }, market: string) => {
+          if (localStorageItem.includes(market)) {
+            obj[market] = true;
+          }
+          else {
+            obj[market] = false;
+          }
+          return obj;
+        }, {})
+
+        dispatch(setIsBuying(isBuyingTemp));
+        localStorage.setItem(`${logInEmail}_IsBuying`, JSON.stringify(isBuyingTemp))
+      } catch (error) {
+        console.log("화폐명 받아오기 실패", error);
+      }
+    })();
+  }
+
+  // 선택된 화폐에 대한 호가내역 호출
+  const selectAskingPrice = (market: string) => {
+    (async (market) => {
+      try {
+        const response = await axios.post(
+          "http://127.0.0.1:8000/asking_price/",
+          {
+            market: market,
+          },
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        // console.log("호가내역 : ", response.data[0].orderbook_units);
+        dispatch(setAsking_data(response.data[0].orderbook_units));
+        dispatch(setAsking_dateTime(response.data[0].timestamp));
+        dispatch(setAsking_totalAskSize(response.data[0].total_ask_size));
+        dispatch(setAsking_totalBidSize(response.data[0].total_bid_size));
+      } catch (error) {
+        console.error("호가내역 전송 실패", error);
+      }
+    })(market);
+  };
+
+  // 미체결 화폐에 대한 호가내역 호출
+  const selectAskingPrice_unSigned = (market: string) => {
+    (async (market) => {
+      try {
+        const response = await axios.post(
+          "http://127.0.0.1:8000/asking_price/",
+          {
+            market: market,
+          },
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        // console.log("호가내역-미체결 : ", response.data[0]);
+
+        let tempState = response.data[0].orderbook_units.map((item: { ask_price: number; bid_price: number; }) => ({
+          ask_price: item.ask_price,
+          bid_price: item.bid_price
+        }));
+
+        dispatch(setAskingData_unSigned({ market: response.data[0].market, data: tempState }));
+        console.log("미체결 호가값 : ", askingData_unSigned);
+      } catch (error) {
+        console.error("호가내역-미체결 전송 실패", error);
+      }
+    })(market);
+  };
+
+  return { getBalance, getOwnedCrypto, addTradeHistory, getTradeHistory, getCryptoName, selectAskingPrice, selectAskingPrice_unSigned };
 
 }

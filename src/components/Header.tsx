@@ -125,7 +125,9 @@ const Header = () => {
         }
         dispatch(setLogInEmail(''))
         dispatch(setLogInUser(''))
-        localStorage.removeItem('user');
+        // localStorage.removeItem('user');
+        // localStorage.removeItem(`${logInEmail}_isBuying`)
+        localStorage.clear();
       } catch (error) {
         console.log("로그아웃 정보 전송 실패");
       }

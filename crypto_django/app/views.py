@@ -1,6 +1,8 @@
 import json
 import math
+import time
 from django.http import JsonResponse
+import requests
 from app.models import Crypto, CustomUser, UserCrypto, TradeHistory
 from .crpyto_api import price
 from .crpyto_api import (
@@ -494,14 +496,16 @@ def buy_crypto_unSigned(request):
     data = json.loads(request.body)
     print("매수 - 받은 데이터: ", data)
 
-    id = data.get('id')
+    key = data.get('key')
     email = data.get('email')
     crypto_name = data.get('crypto_name')
     crypto_quantity = data.get('crypto_quantity')
     buy_total = data.get('buy_total')
+    
+    print("키 : ", key)
 
-    if not id:
-        return JsonResponse({"error": "요청에 고유 ID가 포함되어야 합니다"}, status=400)
+    if not key:
+        return JsonResponse({"error": "요청에 고유 key가 포함되어야 합니다"}, status=400)
     if not email:
         return JsonResponse({"error": "요청에 이메일이 포함되어야 합니다"}, status=400)
     if not crypto_name:
@@ -520,11 +524,11 @@ def buy_crypto_unSigned(request):
         if user.balance < buy_total:
             return JsonResponse({"error": "잔액이 부족합니다"}, status=400)
         
-        for a in id:
-            print("a : ", a)
+        for a in key:
+            print("a : ", a['id'])
             for b in trade_history:
                 print("b.id : ", b.id)
-                if a == str(b.id):
+                if a['id'] == str(b.id):
                     print("일치함")
                     b.is_signed = True
                     b.save()
@@ -679,13 +683,31 @@ def get_user_tradeHistory(request, email):
     
     return JsonResponse(data, safe=False)
  
- 
+# 모든 화폐명을 클라이언트로 전달
 @api_view(["GET"])
 def get_crypto_name(requst):
     
     crypto_names = Crypto.objects.values_list('name', flat=True)
     
     return Response({"detail": crypto_names})
+
+# 모든 마켓명을 클라이언트로 전달
+@api_view(["GET"])
+def get_crypto_marekt():
+    
+    url = "https://api.upbit.com/v1/market/all?isDetails=true"
+
+    headers = {"accept": "application/json"}
+
+    response = requests.get(url, headers=headers)
+
+    markets = []
+
+    for crypto in eval(response.text):
+        markets.append(crypto['market'])
+        
+    return Response({"markets": markets})
+
     
 @api_view(["GET"])
 def check_login(request):

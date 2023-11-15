@@ -47,6 +47,7 @@ import {
   setLogInEmail,
   setLogInUser,
   setSellingPrice,
+  setIsBuying,
 } from "../store";
 import { useEffect, useState } from "react";
 import img_sort from "../assets/images/sort.png";
@@ -83,6 +84,7 @@ const CryptoList = () => {
   const candle_per_date_BTC = useSelector((state: RootState) => state.candle_per_date_BTC);
   const candle_per_minute = useSelector((state: RootState) => state.candle_per_minute);
   const cr_price_selected = useSelector((state: RootState) => state.cr_price_selected);
+  const cr_name_selected = useSelector((state: RootState) => state.cr_name_selected);
 
 
   // 검색값을 관리하기 위한 state
@@ -122,10 +124,14 @@ const CryptoList = () => {
     (state: RootState) => state.asking_dateTime
   );
 
+  const isBuying = useSelector((state: RootState) => state.isBuying);
+
   const [listCategory, setListCategory] = useState<string>("원화");
 
   // 화폐 가격을 업데이트 하기 전에 해당 state에 담음
   const [prevData, setPrevData] = useState<number[]>();
+
+  // console.log("IsBuying: ", isBuying);
 
   // 이전 화폐 가격과 현재 화폐 가격을 비교하여 변화가 발생한 화폐를 저장할 state
   const [differences, setDifferences] = useState<
@@ -136,7 +142,29 @@ const CryptoList = () => {
     }[]
   >([]);
 
-  const { getOwnedCrypto, getTradeHistory } = useFunction();
+  const { getOwnedCrypto, getTradeHistory, selectAskingPrice, getCryptoName, selectAskingPrice_unSigned } = useFunction();
+
+  const getAskingPrice_unSigned = () => {
+
+    // console.log("동작함");
+    // Object.entries = 객체를 [key, value]쌍의 배열로 변환 
+    let unSignedCrypto = Object.entries(isBuying)
+      .filter(([key, value]) => value === true)
+      .map(([key, value]) => key)
+
+    let unSignedMarket : (string | null)[] = unSignedCrypto.map(name => {
+      let isCorresponed = filteredData.find(isCorresponed => isCorresponed.name === name)
+      return isCorresponed ? isCorresponed.market : null
+    })
+
+    for (let i = 0; i < unSignedMarket.length; i++) {
+      if(unSignedMarket[i]) {
+        selectAskingPrice_unSigned(unSignedMarket[i] as string);
+      }
+    }
+
+    return unSignedMarket;
+  }
 
   useEffect(() => {
     // const 변수 = setInterval(() => { 콜백함수, 시간 })
@@ -219,6 +247,8 @@ const CryptoList = () => {
   //   }
   // });
 
+  console.log();
+
   // 화폐 가격의 변화를 감지하고 이전 값과 비교하여 변화가 생긴 값을 상태에 업데이트
   useEffect(() => {
     setPrevData(cr_price); // state의 업데이트는 비동기적이기 때문에 값이 즉시 바뀌지 않음. 그러므로 이 useEffect() 안에서 prevData는 아직 이전의 값을 가지고 있기 때문에 cr_price와 prevData는 다른 값을 가짐. (cr_price = 현재값, prevData = 이전값)
@@ -256,6 +286,9 @@ const CryptoList = () => {
       // 호가 및 체결내역 호출
       selectClosedPrice(selectedCrypto.market);
       selectAskingPrice(selectedCrypto.market);
+
+      getAskingPrice_unSigned();
+
     }
     // 선택한 화폐가 없을 때(비트코인의 정보 출력)
     else {
@@ -303,6 +336,9 @@ const CryptoList = () => {
         getFavoriteCrypto(user.email);
         getOwnedCrypto(user.email);
         getTradeHistory(user.email);
+        getCryptoName(user.email);
+
+        getAskingPrice_unSigned()
       }
     }
   }, [])
@@ -331,32 +367,7 @@ const CryptoList = () => {
     })(market);
   };
 
-  // 선택된 화폐에 대한 호가내역 호출
-  const selectAskingPrice = (market: string) => {
-    (async (market) => {
-      try {
-        const response = await axios.post(
-          "http://127.0.0.1:8000/asking_price/",
-          {
-            market: market,
-          },
-          {
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
 
-        // console.log("호가내역 : ", response.data[0].timestamp);
-        dispatch(setAsking_data(response.data[0].orderbook_units));
-        dispatch(setAsking_dateTime(response.data[0].timestamp));
-        dispatch(setAsking_totalAskSize(response.data[0].total_ask_size));
-        dispatch(setAsking_totalBidSize(response.data[0].total_bid_size));
-      } catch (error) {
-        console.error("Failed to send data to Django server", error);
-      }
-    })(market);
-  };
 
   // 리스트에서 화폐를 선택하면 해당 화폐에 대한 캔들 호출(차트의 분에 따라)
   const selectMarket_time = (market: string, minute: string) => {
@@ -624,7 +635,7 @@ const CryptoList = () => {
     });
   };
 
-  // 각 값들을 테이블에서 클릭한 화폐의 정보로 변경 -> TradingView, TradingDetail로 전달
+  // 각 값들을 테이블에서 클릭한 화폐의 정보로 변경
   const nameSelect = (value: string) => {
     dispatch(setCr_name_selected(value));
   };
@@ -791,7 +802,8 @@ const CryptoList = () => {
                       key={i}
                       onClick={() => {
                         dispatch(setBuyingPrice(filteredData[i].price)); // 특정 화폐를 클릭하면 해당 화폐의 값으로 '매수가격'이 업데이트 됨
-                        dispatch(setSellingPrice(filteredData[i].price)); // 특정 화폐르 클릭하면 해당 화폐의 값으로 '매도가격'이 업데이트 됨  
+                        dispatch(setSellingPrice(filteredData[i].price)); // 특정 화폐를 클릭하면 해당 화폐의 값으로 '매도가격'이 업데이트 됨  
+
                         nameSelect(filteredData[i].name);
                         marketSelect(filteredData[i].market);
                         setSelectedCrypto(filteredData[i]);
