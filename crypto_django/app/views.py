@@ -524,14 +524,22 @@ def buy_crypto_unSigned(request):
         if user.balance < buy_total:
             return JsonResponse({"error": "잔액이 부족합니다"}, status=400)
         
-        for a in key:
-            print("a : ", a['id'])
-            for b in trade_history:
-                print("b.id : ", b.id)
-                if a['id'] == str(b.id):
-                    print("일치함")
-                    b.is_signed = True
-                    b.save()
+        # for a in key:
+        #     print("a : ", a['id'])
+        #     for b in trade_history:
+        #         print("b.id : ", b.id)
+        #         if a['id'] == str(b.id):
+        #             print("일치함")
+        #             b.is_signed = True
+        #             b.save()
+        
+        for b in trade_history:
+            print("b.id : ", b.id)
+            if key == str(b.id):
+                print("a : ", key)
+                print("일치함")
+                b.is_signed = True
+                b.save()
 
         # 객체가 없어서 새로 생성해야 할 경우 초기 수량을 0, 소유 여부는 False로 지정함으로써 DoseNotExist 방지
         user_crypto, created = UserCrypto.objects.get_or_create(
@@ -554,7 +562,7 @@ def buy_crypto_unSigned(request):
         
         user_crypto.save()
             
-        return JsonResponse({"buy_crypto": "화폐 매수 및 소유 여부 업데이트 완료"})
+        return JsonResponse({"buy_crypto_unSigned": "화폐 매수 및 소유 여부 업데이트 완료"})
     except CustomUser.DoesNotExist:
         return JsonResponse({"error": "해당 이메일의 사용자가 존재하지 않습니다"})
 
