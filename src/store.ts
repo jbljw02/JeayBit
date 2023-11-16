@@ -67,11 +67,8 @@ export type UserTradeHistory = {
 }
 
 export type UnsginedAskingData = {
-  market: string,
-  data: {
-    ask_price: number,
-    bid_price: number,
-  }
+  ask_price: number,
+  bid_price: number,
 }
 
 export type RootState = {
@@ -132,7 +129,8 @@ export type RootState = {
   userTradeHistory: UserTradeHistory[],
   userTradeHistory_unSigned: UserTradeHistory[],
   isBuying: { [key: string]: boolean },
-  askingData_unSigned: UnsginedAskingData[]
+  // askingData_unSigned: UnsginedAskingData[],
+  askingData_unSigned: { [key: string]: UnsginedAskingData[] }
 }
 
 const cr_name = createSlice({
@@ -726,8 +724,6 @@ const askingData_unSigned = createSlice({
   initialState: {} as { [key: string]: UnsginedAskingData[] },
   reducers: {
     setAskingData_unSigned: (state, action) => {
-      // `market`을 key로 사용하여 `data` 배열을 저장합니다.
-      // 이 때, 기존에 `market`에 대한 데이터가 있으면 그것을 대체합니다.
       state[action.payload.market] = action.payload.data;
     },
   },

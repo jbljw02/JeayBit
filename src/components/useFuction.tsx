@@ -14,6 +14,7 @@ export default function useFunction() {
   const isBuying = useSelector((state: RootState) => state.isBuying);
   const cr_name_selected = useSelector((state: RootState) => state.cr_name_selected);
   const askingData_unSigned = useSelector((state: RootState) => state.askingData_unSigned);
+  const filteredData = useSelector((state: RootState) => state.filteredData);
 
   const [time, setTime] = useState(new Date());
 
@@ -80,7 +81,7 @@ export default function useFunction() {
         console.log("반환값-거래내역 : ", response.data);
 
         // 다른 요소는 서버에서 받아온 값 그대로 유지, 거래 시간만 형식 변경해서 dispatch
-        response.data.map((item: { trade_time: Date, is_signed: boolean, id: string, crypto_price: number, crypto_name: string, }, i: number) => {
+        response.data.map((item: { trade_time: Date, is_signed: boolean, id: string, crypto_price: number, crypto_name: string, trade_amount: string, trade_price: string }, i: number) => {
           let date = new Date(item.trade_time);
           let formattedDate = date.getFullYear() + '.'
             + (date.getMonth() + 1).toString().padStart(2, '0') + '.'
@@ -93,7 +94,7 @@ export default function useFunction() {
           }
           else {
             dispatch(setUserTradeHistory_unSigned({ ...item, trade_time: formattedDate }))
-            let value = { price: item.crypto_price, name: item.crypto_name };
+            let value = { name: item.crypto_name, price: item.crypto_price, trade_amount: Number(item.trade_amount), trade_price: Number(item.trade_price) };
             localStorage.setItem(item.id, JSON.stringify(value));  // 체결되지 않은 구매 요청에 대한 ID를 로컬 스토리지에 추가
           }
         })
@@ -235,8 +236,18 @@ export default function useFunction() {
           bid_price: item.bid_price
         }));
 
-        dispatch(setAskingData_unSigned({ market: response.data[0].market, data: tempState }));
-        console.log("미체결 호가값 : ", askingData_unSigned);
+        // dispatch(setAskingData_unSigned({ market: response.data[0].market, data: tempState }));
+
+        // 마켓명에 대응하는 화폐명을 찾음
+        let isCorresponed = filteredData.find(item => item.market === response.data[0].market);
+        let marketName = isCorresponed ? isCorresponed.name : null;
+
+        // 마켓명이 아닌 화폐명을 키로 지정
+        if (marketName) {
+          dispatch(setAskingData_unSigned({ market: marketName, data: tempState }));
+        }
+
+        // console.log("미체결 호가값 : ", askingData_unSigned);
       } catch (error) {
         console.error("호가내역-미체결 전송 실패", error);
       }

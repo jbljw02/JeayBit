@@ -131,8 +131,6 @@ const CryptoList = () => {
   // 화폐 가격을 업데이트 하기 전에 해당 state에 담음
   const [prevData, setPrevData] = useState<number[]>();
 
-  // console.log("IsBuying: ", isBuying);
-
   // 이전 화폐 가격과 현재 화폐 가격을 비교하여 변화가 발생한 화폐를 저장할 state
   const [differences, setDifferences] = useState<
     {
@@ -146,13 +144,13 @@ const CryptoList = () => {
 
   const getAskingPrice_unSigned = () => {
 
-    // console.log("동작함");
     // Object.entries = 객체를 [key, value]쌍의 배열로 변환 
     let unSignedCrypto = Object.entries(isBuying)
       .filter(([key, value]) => value === true)
       .map(([key, value]) => key)
 
-    let unSignedMarket : (string | null)[] = unSignedCrypto.map(name => {
+    // 마켓명으로 요청을 보내야 하기 때문에, 화폐명을 마켓명으로 변경
+    let unSignedMarket : (string | null)[] = unSignedCrypto.map((name) => {
       let isCorresponed = filteredData.find(isCorresponed => isCorresponed.name === name)
       return isCorresponed ? isCorresponed.market : null
     })
@@ -171,10 +169,9 @@ const CryptoList = () => {
     // fetchData 함수를 1초마다 실행 - 서버에서 받아오는 값을 1초마다 갱신시킴
     const interval = setInterval(() => {
       fetchData();
-      // getFavoriteCrypto(logInEmail);
     }, 1000);
 
-    initialData();  // 초기 렌더링시 1회만 실행
+    initialData(); 
 
     // clearInterval(변수)
     // setInterval이 반환하는 interval ID를 clearInterval 함수로 제거
