@@ -692,8 +692,7 @@ const userTradeHistory = createSlice({
   initialState: [] as UserTradeHistory[],
   reducers: {
     setUserTradeHistory: (state, action) => {
-      // 불변성을 지키며 상태를 직접 변경
-      state.push(action.payload);
+      return action.payload
     }
   }
 })
@@ -703,8 +702,7 @@ const userTradeHistory_unSigned = createSlice({
   initialState: [] as UserTradeHistory[],
   reducers: {
     setUserTradeHistory_unSigned: (state, action) => {
-      // 불변성을 지키며 상태를 직접 변경
-      state.push(action.payload);
+      return action.payload;
     }
   }
 })

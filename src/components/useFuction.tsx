@@ -15,6 +15,7 @@ export default function useFunction() {
   const cr_name_selected = useSelector((state: RootState) => state.cr_name_selected);
   const askingData_unSigned = useSelector((state: RootState) => state.askingData_unSigned);
   const filteredData = useSelector((state: RootState) => state.filteredData);
+  const userTradeHistory = useSelector((state: RootState) => state.userTradeHistory);
 
   const [time, setTime] = useState(new Date());
 
@@ -80,6 +81,10 @@ export default function useFunction() {
         );
         console.log("반환값-거래내역 : ", response.data);
 
+        // 서버로부터 받아온 체결 내역과 미체결 내역을 담을 임시 배열
+        const signed: { trade_time: string; is_signed: boolean; id: string; crypto_price: number; crypto_name: string; trade_amount: string; trade_price: string; }[] = [];
+        const unsigned: { trade_time: string; is_signed: boolean; id: string; crypto_price: number; crypto_name: string; trade_amount: string; trade_price: string; }[] = [];
+
         // 다른 요소는 서버에서 받아온 값 그대로 유지, 거래 시간만 형식 변경해서 dispatch
         response.data.map((item: { trade_time: Date, is_signed: boolean, id: string, crypto_price: number, crypto_name: string, trade_amount: string, trade_price: string }, i: number) => {
           let date = new Date(item.trade_time);
@@ -89,15 +94,20 @@ export default function useFunction() {
             + date.getHours().toString().padStart(2, '0') + ':'
             + date.getMinutes().toString().padStart(2, '0');
 
+          // 체결 여부가 true일 경우
           if (item.is_signed) {
-            dispatch(setUserTradeHistory({ ...item, trade_time: formattedDate }))
+            signed.push({ ...item, trade_time: formattedDate });
           }
           else {
-            dispatch(setUserTradeHistory_unSigned({ ...item, trade_time: formattedDate }))
+            unsigned.push({ ...item, trade_time: formattedDate });
+
             let value = { name: item.crypto_name, price: item.crypto_price, trade_amount: Number(item.trade_amount), trade_price: Number(item.trade_price) };
             localStorage.setItem(item.id, JSON.stringify(value));  // 체결되지 않은 구매 요청에 대한 ID를 로컬 스토리지에 추가
           }
-        })
+        });
+
+        dispatch(setUserTradeHistory(signed));
+        dispatch(setUserTradeHistory_unSigned(unsigned));
       } catch (error) {
         console.log("거래내역 받아오기 실패", error);
       }
