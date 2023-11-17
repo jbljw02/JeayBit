@@ -354,7 +354,6 @@ const BuyingSection = () => {
   //   }
   // }, [asking_data, isBuying])
 
-
   useEffect(() => {
 
     let localStorageItem: {
@@ -365,6 +364,7 @@ const BuyingSection = () => {
       trade_price: number,
     }[] = [];
 
+    // 로컬 스토리지에 있는 key-value를 꺼냄
     for (let i = 0; i < localStorage.length; i++) {
       let tempKey = localStorage.key(i);
 
@@ -385,8 +385,7 @@ const BuyingSection = () => {
     }
 
     // console.log("로컬 스토리지 : ", localStorageItem);
-    console.log("미체결 : ", askingData_unSigned);
-
+    // console.log("미체결 : ", askingData_unSigned);
 
     // 미체결 화폐 state의 키를 배열로 생성하고, 순차적으로 반복문 실행
     Object.keys(askingData_unSigned).forEach((cryptoName) => {
@@ -404,14 +403,17 @@ const BuyingSection = () => {
 
         // 이중 for문으로 로컬 스토리지 값 하나당 모든 호가를 비교하며 가격 비교
         for (let k = 0; k < (askingData_unSigned[cryptoName]).length; k++) {
-          console.log("동작중");
+
+          console.log("이름 : ", scheduledCrypto[j].name);
+          // 로컬 스토리지에서 가져온 값과 호가가 일치한다면 구매 요청
           if (scheduledCrypto[j].price === (askingData_unSigned[cryptoName])[k].ask_price) {
-          }
-          else {
+            
+            console.log("일치", scheduledCrypto[j].price);
+            buyCrypto_unSigned(scheduledCrypto[j].id, logInEmail, scheduledCrypto[j].name, scheduledCrypto[j].trade_amount, scheduledCrypto[j].trade_price);
+            localStorage.removeItem(scheduledCrypto[j].id);
           }
         }
 
-        // buyCrypto_unSigned(scheduledCrypto[i].id, logInEmail, scheduledCrypto[i].name, scheduledCrypto[i].trade_amount, scheduledCrypto[i].trade_price);
       }
     })
 
@@ -430,6 +432,7 @@ const BuyingSection = () => {
         console.log("구매 화폐 전송 성공", response.data);
         getBalance(logInEmail);  // 매수에 사용한 금액만큼 차감되기 때문에 잔고 업데이트
         getOwnedCrypto(logInEmail);  // 소유 화폐가 새로 추가될 수 있으니 업데이트
+        getTradeHistory(logInEmail)  // 매수에 성공했으니 거래내역 업데이트
         completeToggleModal();
       }
       catch (error) {
@@ -452,6 +455,7 @@ const BuyingSection = () => {
         console.log("구매 화폐 전송 성공", response.data);
         getBalance(logInEmail);  // 매수에 사용한 금액만큼 차감되기 때문에 잔고 업데이트
         getOwnedCrypto(logInEmail);  // 소유 화폐가 새로 추가될 수 있으니 업데이트
+        getTradeHistory(logInEmail)  // 매수에 성공했으니 거래내역 업데이트
 
         // let temp = localStorage.getItem('isBuying');
         // if(temp !== null) {
@@ -785,7 +789,7 @@ const BuyingSection = () => {
                       // 일치한다면 바로 매수 요청을 전송
                       buyCrypto(logInEmail, cr_selected.name, buyQuantity, buyTotal);
                       addTradeHistory(logInEmail, cr_selected.name, tradeCategory, time, cr_selected.market, buyingPrice, buyTotal, buyQuantity, true);
-                      getTradeHistory(logInEmail);
+                      // getTradeHistory(logInEmail);
                     }
                     else {
                       // 선택한 화폐에 대한 구매 대기 여부를 true로 설정
@@ -803,7 +807,7 @@ const BuyingSection = () => {
                       setModalOpen(!modalOpen);
 
                       addTradeHistory(logInEmail, cr_selected.name, tradeCategory, time, cr_selected.market, buyingPrice, buyTotal, buyQuantity, false);
-                      getTradeHistory(logInEmail);
+                      // getTradeHistory(logInEmail);
                     }
                   }}>매수</span>
                 </div> :
@@ -1695,6 +1699,9 @@ const SellingSection = () => {
 
 const TradeHistory = () => {
 
+  const { getBalance, getOwnedCrypto, addTradeHistory, getTradeHistory, getCryptoName } = useFunction();
+
+  const logInEmail = useSelector((state: RootState) => state.logInEmail);
   const userTradeHistory = useSelector((state: RootState) => state.userTradeHistory)
   const userTradeHistory_unSigned = useSelector((state: RootState) => state.userTradeHistory_unSigned)
 
@@ -1825,12 +1832,12 @@ const TradeHistory = () => {
                               }
                             </span>
                             <br />
-                            <span className={`tradingHistory-category ${item.trade_category === '매수' ? 'asking-buy' : 'asking-sell'}`}>
+                            <span className={`tradingHistory-category ${item.trade_category === 'BUY' ? 'asking-buy' : 'asking-sell'}`}>
 
                               {
                                 item.trade_category !== undefined ? (
 
-                                  item.trade_category === '매수' ?
+                                  item.trade_category === 'BUY' ?
                                     '매수' :
                                     '매도'
                                 ) :
