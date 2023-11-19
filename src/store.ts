@@ -130,7 +130,10 @@ export type RootState = {
   userTradeHistory_unSigned: UserTradeHistory[],
   isBuying: { [key: string]: boolean },
   // askingData_unSigned: UnsginedAskingData[],
-  askingData_unSigned: { [key: string]: UnsginedAskingData[] }
+  askingData_unSigned: { [key: string]: UnsginedAskingData[] },
+  transferSort: string,
+  depositEmpty: boolean,
+  withdrawEmpty: boolean,
 }
 
 const cr_name = createSlice({
@@ -727,6 +730,16 @@ const askingData_unSigned = createSlice({
   },
 });
 
+const transferSort = createSlice({
+  name: 'transferSort',
+  initialState: '입금',
+  reducers: {
+    setTransferSort: (state, action) => {
+      return action.payload;
+    }
+  }
+})
+
 export default configureStore({
   reducer: {
     cr_name: cr_name.reducer,
@@ -788,6 +801,7 @@ export default configureStore({
     userTradeHistory_unSigned: userTradeHistory_unSigned.reducer,
     isBuying: isBuying.reducer,
     askingData_unSigned: askingData_unSigned.reducer,
+    transferSort: transferSort.reducer,
   }
 })
 
@@ -866,5 +880,6 @@ export const { setUserTradeHistory } = userTradeHistory.actions;
 export const { setUserTradeHistory_unSigned } = userTradeHistory_unSigned.actions;
 export const { setIsBuying } = isBuying.actions;
 export const { setAskingData_unSigned } = askingData_unSigned.actions;
+export const { setTransferSort } = transferSort.actions;
 
 // export default store;

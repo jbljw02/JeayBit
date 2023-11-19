@@ -999,7 +999,6 @@ const CryptoList = () => {
                                 // 인덱스 한 번당 소유화폐를 순회시켜서 일치하는 요소를 찾고, 찾지 못한다면 ?를 이용해서 undefined를 반환
                                 Number(ownedCrypto.find((crypto) => item.name === crypto.crypto_name)?.quantity)?.toFixed(2)
                               }
-                              &nbsp;
                               {
                                 (item.market).slice(4)
                               }

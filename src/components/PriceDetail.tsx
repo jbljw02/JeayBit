@@ -309,51 +309,6 @@ const BuyingSection = () => {
     setTotalInputvalue('0');
   }, [cr_name_selected])
 
-  // // 호가가 변화할 때마다 실행하지만, 사용자의 구매 대기 여부가 true일 때만 로직을 동작
-  // useEffect(() => {
-
-  //   // 사용자의 구매 대기 여부가 true일 때만 호가와 구매가격이 일치하는지 검사 
-  //   if (isBuying[cr_market_selected]) {
-
-  //     // 로컬 스토리지에 있는 key-value를 꺼냄
-  //     let localStorageItem = [];
-  //     for (let i = 0; i < localStorage.length; i++) {
-  //       let tempKey = localStorage.key(i);
-
-  //       if (tempKey !== null) {
-  //         let valueItem = localStorage.getItem(tempKey);
-
-  //         if (valueItem !== null) {
-  //           let tempValue = JSON.parse(valueItem);
-  //           localStorageItem.push({ id: tempKey, price: Number(tempValue.price), name: tempValue.name });
-  //         }
-  //       }
-  //     }
-
-  //     // 호가와 로컬 스토리지에서 꺼낸 값을 비교하여 일치하는 값만 state에 할당
-  //     let tempState = [];
-  //     for (let i = 0; i < asking_data.length; i++) {
-  //       for (let j = 0; j < localStorageItem.length; j++) {
-  //         if (asking_data[i].ask_price === localStorageItem[j].price) {
-  //           tempState.push({ id: localStorageItem[j].id, price: localStorageItem[j].price, name: cr_name_selected })
-  //         }
-  //       }
-  //     }
-
-  //     // 일치 여부를 state에 할당
-  //     setKey(tempState);
-
-  //     if (key.length !== 0) {
-  //       buyCrypto_unSigned(logInEmail, cr_selected.name, buyQuantity, buyTotal);
-  //       key.forEach(item => {
-  //         localStorage.removeItem(item.id);
-  //       })
-  //     }
-
-  //     // console.log("key 일치 여부 : ", key);
-  //   }
-  // }, [asking_data, isBuying])
-
   useEffect(() => {
 
     let localStorageItem: {
@@ -1704,6 +1659,8 @@ const TradeHistory = () => {
   const userTradeHistory = useSelector((state: RootState) => state.userTradeHistory)
   const userTradeHistory_unSigned = useSelector((state: RootState) => state.userTradeHistory_unSigned)
 
+  const [completeModalOpen, setCompleteModalOpen] = useState<boolean>(false);
+
   const [historySort, setHistorySort] = useState<string>('체결');
   const [scheduledCancel, setScheduledCancel] = useState<
     {
@@ -1711,7 +1668,9 @@ const TradeHistory = () => {
       index: number,
     }[]>([]);
 
-  console.log("ㅅㅋ : ", scheduledCancel);
+  const completeToggleModal = () => {
+    setCompleteModalOpen(!completeModalOpen);
+  }
 
   // 주문을 취소할 화폐를 서버로 전송
   const cancelOrder = (email: string, ids: string[]) => {
@@ -1724,6 +1683,7 @@ const TradeHistory = () => {
         console.log("주문 취소 정보 전송 성공", response.data);
         getTradeHistory(logInEmail);
         setScheduledCancel([]);
+        completeToggleModal();
       } catch (error) {
         console.log("주문 취소 정보 전송 실패");
       }
@@ -1978,9 +1938,6 @@ const ModalSumbit: React.FC<ModalProps> = ({ modalOpen, setModalOpen, toggleModa
 
   return (
     <div>
-      {/* <Button variant="outlined" color="primary" onClick={toggleModal}>
-        Open dialog
-      </Button> */}
       <Dialog open={modalOpen} onClose={toggleModal} className={classes.dialog} maxWidth={false}>
         <DialogTitle>안내</DialogTitle>
         <DialogContent>
@@ -2008,9 +1965,6 @@ const ModalComplete: React.FC<CompleteModalProps> = ({ completeModalOpen, setCom
 
   return (
     <div>
-      {/* <Button variant="outlined" color="primary" onClick={toggleModal}>
-        Open dialog
-      </Button> */}
       <Dialog open={completeModalOpen} onClose={completeToggleModal} className={classes.dialog} maxWidth={false}>
         <DialogTitle>안내</DialogTitle>
         <DialogContent>
