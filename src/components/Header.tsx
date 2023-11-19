@@ -1,12 +1,12 @@
 import { useDispatch, useSelector } from "react-redux";
 import title from "../assets/images/title.png";
-import { RootState, setBalanceUpdate, setLogInEmail, setLogInUser, setTheme, setUserWallet } from "../store";
+import { RootState, setBalanceUpdate, setLogInEmail, setLogInUser, setTheme, setTransferSort, setUserWallet } from "../store";
 import { SetStateAction, useEffect, useState } from "react";
 import axios from "axios";
 import { Routes, Route, Link, useNavigate, Outlet } from "react-router-dom";
 import { csrftoken } from "./csrftoken";
-import getFuntion from "./useFuction";
 import useFunction from "./useFuction";
+import { Dialog, DialogTitle, DialogContent, DialogActions, Button, makeStyles } from '@material-ui/core';
 
 const Header = () => {
   axios.defaults.xsrfCookieName = "csrftoken";
@@ -22,7 +22,8 @@ const Header = () => {
   const balanceUpdate = useSelector((state: RootState) => state.balanceUpdate);
 
   const [walletHover, setWalletHover] = useState<boolean>(false);
-  const [transferSort, setTransferSort] = useState<string>("입금");
+  // const [transferSort, setTransferSort] = useState<string>("입금");
+  const transferSort = useSelector((state: RootState) => state.transferSort);
 
   // 입금량, 입금 -> 화폐 전환량
   const [depositAmount, setDepositAmount] = useState<number>();
@@ -38,7 +39,13 @@ const Header = () => {
   // 로그인 중인 사용자의 잔고량
   const userWallet = useSelector((state: RootState) => state.userWallet);
 
+  const [completeModalOpen, setCompleteModalOpen] = useState<boolean>(false);
+
   const { getBalance } = useFunction();
+
+  const completeToggleModal = () => {
+    setCompleteModalOpen(!completeModalOpen);
+  }
 
   const themeChange = () => {
     dispatch(setTheme(!theme));
@@ -134,22 +141,6 @@ const Header = () => {
     })();
   };
 
-  const checkLogin = async () => {
-    try {
-      const response = await axios.get("http://127.0.0.1:8000/check_login/", {
-        withCredentials: true,
-      });
-
-      if (response.data.is_logged_in) {
-        console.log("로그인 중");
-      } else {
-        console.log("로그아웃 상태");
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
   // 입금량을 서버로 전송
   const addBalanceToUser = (email: string, depositAmount: number) => {
     if (logInEmail !== "") {
@@ -160,6 +151,7 @@ const Header = () => {
             depositAmount: depositAmount,
           });
           console.log("입금량 전송 성공");
+          completeToggleModal();
         } catch (error) {
           console.log("입금량 전송 실패");
         }
@@ -185,6 +177,7 @@ const Header = () => {
           } else {
             setWithdrawOverflow(false);
             console.log("출금량 전송 성공");
+            completeToggleModal();
           }
         } catch (error) {
           console.log("출금량 전송 실패");
@@ -254,274 +247,302 @@ const Header = () => {
             JeayBit
           </span>
         </span>
-        {/* <span onClick={() => checkLogin()}>확인항</span> */}
-        {logInUser === "" ? (
-          <div className="member-nav-unLogIn">
-            <span
-              onClick={() => {
-                navigate("/logIn");
-              }}
-              className="logIn"
-            >
-              로그인
-            </span>
-            <span
-              onClick={() => {
-                navigate("/signUp");
-              }}
-              className="signUp"
-            >
-              회원가입
-            </span>
-          </div>
-        ) : (
-          <div className="member-nav-LogIn">
-            <span className="logInUser">
-              <u>{logInUser}</u>님
-            </span>
-            <span
-              onClick={() => {
-                logOut();
-              }}
-              className="logOut"
-            >
-              로그아웃
-            </span>
-            <span
-              onMouseEnter={() => setWalletHover(true)}
-              onMouseLeave={() => setWalletHover(false)}
-              // onClick={() => navigate('/Wallet')}
-              className="wallet"
-            >
-              지갑관리
-              {walletHover === true ? (
-                <div
-                  className={`walletHover ${transferSort === "잔고" ? "balance" : ""
-                    }`}
-                >
-                  <div className="transfer-section">
-                    <span
-                      onClick={() => setTransferSort("입금")}
-                      id={`${transferSort === "입금" ? "depositSection" : ""}`}
-                    >
-                      입금
-                    </span>
-                    <span
-                      onClick={() => setTransferSort("출금")}
-                      id={`${transferSort === "출금" ? "withdrawSection" : ""}`}
-                    >
-                      출금
-                    </span>
-                    <span
-                      onClick={() => {
-                        setTransferSort("잔고");
-                        // getBalance(logInEmail);
-                      }}
-                      id={`${transferSort === "잔고" ? "balanceSection" : ""}`}
-                    >
-                      잔고
-                    </span>
-                  </div>
-                  {
-                    // 입금 영역
-                    transferSort === "입금" ? (
-                      <>
-                        <div
-                          className={`transfer-input ${depositLimit === true ? "alert-border" : ""
-                            }`}
-                        >
-                          <div>입금금액</div>
-                          <input
-                            onChange={depositChange}
-                            value={
-                              depositAmount && depositAmount.toLocaleString()
-                            }
-                            placeholder="1,000 ~ 10,000,000"
-                          ></input>
-                          <span>KRW</span>
-                        </div>
-                        {depositLimit === true ? (
-                          <div className="alert-KRW">
-                            한화로 1,000원 이상 1000만원 이하만 입금 가능합니다
-                          </div>
-                        ) : null}
-                        <div className="change-input">
-                          <div>전환량</div>
-                          <input value={depositChangeAmount}></input>
-                          <span className="change-input-span">
-                            <img
-                              className="img-transfer-crypto"
-                              src={
-                                cr_selected && cr_selected.market
-                                  ? Array.isArray(cr_selected.market)
-                                    ? `https://static.upbit.com/logos/${cr_selected.market[0].slice(
-                                      4
-                                    )}.png`
-                                    : `https://static.upbit.com/logos/${cr_selected.market.slice(
-                                      4
-                                    )}.png`
-                                  : undefined
-                              }
-                              alt="화폐사진"
-                            />
-                            <span>
-                              {cr_selected && cr_selected.market
-                                ? Array.isArray(cr_selected.market)
-                                  ? cr_selected.market[0].slice(4)
-                                  : cr_selected.market.slice(4)
-                                : undefined}
-                            </span>
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              viewBox="0 0 24 24"
-                              fill="none"
-                              className="img-crypto-sort"
-                            >
-                              <path
-                                fillRule="evenodd"
-                                clipRule="evenodd"
-                                d="M12.11 12.178L16 8.287l1.768 1.768-5.657 5.657-1.768-1.768-3.889-3.889 1.768-1.768 3.889 3.89z"
-                                fill="currentColor"
-                              ></path>
-                            </svg>
-                          </span>
-                        </div>
-                        <div className="transfer-submit deposit">
+        {
+          logInUser === "" ? (
+            <div className="member-nav-unLogIn">
+              <span
+                onClick={() => {
+                  navigate("/logIn");
+                }}
+                className="logIn"
+              >
+                로그인
+              </span>
+              <span
+                onClick={() => {
+                  navigate("/signUp");
+                }}
+                className="signUp"
+              >
+                회원가입
+              </span>
+            </div>
+          ) : (
+            <div className="member-nav-LogIn">
+              <span className="logInUser">
+                <u>{logInUser}</u>님
+              </span>
+              <span
+                onClick={() => {
+                  logOut();
+                }}
+                className="logOut"
+              >
+                로그아웃
+              </span>
+              <span
+                onMouseEnter={() => setWalletHover(true)}
+                onMouseLeave={() => setWalletHover(false)}
+                // onClick={() => navigate('/Wallet')}
+                className="wallet"
+              >
+                지갑관리
+                {
+                  walletHover === true ? (
+                    <>
+                      <div
+                        className={`walletHover ${transferSort === "잔고" ? "balance" : ""
+                          }`}
+                      >
+                        <div className="transfer-section">
                           <span
-                            onClick={
-                              // async를 사용하여 입금이 완료될 때까지 dispatch를 실행하지 않음
-                              async () => {
-                                if (depositAmount !== undefined) {
-                                  await addBalanceToUser(logInEmail, depositAmount);
-                                } else {
-                                  alert("입금량 존재X");
-                                }
-                                dispatch(setBalanceUpdate(!balanceUpdate))
-                              }
-                            }
+                            onClick={() => dispatch(setTransferSort("입금"))}
+                            id={`${transferSort === "입금" ? "depositSection" : ""}`}
                           >
                             입금
                           </span>
-                        </div>
-                      </>
-                    ) : transferSort === "출금" ? (
-                      // 출금영역
-                      <>
-                        <div
-                          className={`transfer-input ${withdrawOverflow || withdrawLimit === true
-                            ? "alert-border"
-                            : ""
-                            }`}
-                        >
-                          <div>출금금액</div>
-                          <input
-                            onChange={withdrawChange}
-                            value={
-                              withdrawAmount && withdrawAmount.toLocaleString()
-                            }
-                            placeholder="1,000 ~ 10,000,000"
-                          ></input>
-                          <span>KRW</span>
-                        </div>
-                        {withdrawOverflow === true ? (
-                          <div className="alert-KRW">
-                            출금량이 잔고보다 많습니다
-                          </div>
-                        ) : null}
-                        {withdrawLimit === true ? (
-                          <div className="alert-KRW">
-                            출금액은 1,000원 이상 1000만원 이하만 가능합니다
-                          </div>
-                        ) : null}
-                        <div className="change-input">
-                          <div>전환량</div>
-                          <input value={withdrawChangeAmount}></input>
-                          <span className="change-input-span">
-                            <img
-                              className="img-transfer-crypto"
-                              src={
-                                cr_selected && cr_selected.market
-                                  ? Array.isArray(cr_selected.market)
-                                    ? `https://static.upbit.com/logos/${cr_selected.market[0].slice(
-                                      4
-                                    )}.png`
-                                    : `https://static.upbit.com/logos/${cr_selected.market.slice(
-                                      4
-                                    )}.png`
-                                  : undefined
-                              }
-                              alt="화폐사진"
-                            />
-                            <span>
-                              {cr_selected && cr_selected.market
-                                ? Array.isArray(cr_selected.market)
-                                  ? cr_selected.market[0].slice(4)
-                                  : cr_selected.market.slice(4)
-                                : undefined}
-                            </span>
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              viewBox="0 0 24 24"
-                              fill="none"
-                              className="img-crypto-sort"
-                            >
-                              <path
-                                fillRule="evenodd"
-                                clipRule="evenodd"
-                                d="M12.11 12.178L16 8.287l1.768 1.768-5.657 5.657-1.768-1.768-3.889-3.889 1.768-1.768 3.889 3.89z"
-                                fill="currentColor"
-                              ></path>
-                            </svg>
-                          </span>
-                        </div>
-                        <div className="transfer-submit withdraw">
                           <span
-                            onClick={
-                              async () => {
-                                if (withdrawAmount !== undefined) {
-                                  await minusBalanceFromUser(logInEmail, withdrawAmount);
-                                }
-                                dispatch(setBalanceUpdate(!balanceUpdate))
-                              }}
+                            onClick={() => dispatch(setTransferSort("출금"))}
+                            id={`${transferSort === "출금" ? "withdrawSection" : ""}`}
                           >
                             출금
                           </span>
+                          <span
+                            onClick={() => {
+                              dispatch(setTransferSort("잔고"));
+                              // getBalance(logInEmail);
+                            }}
+                            id={`${transferSort === "잔고" ? "balanceSection" : ""}`}
+                          >
+                            잔고
+                          </span>
                         </div>
-                      </>
-                    ) : (
-                      <>
-                        <div className="balance-section">
-                          <div className="balance-content">
-                            <span className="balance-title">
-                              <span>{logInUser}</span>님의 출금가능 금액
-                            </span>
-                            <span className="balance-amount">
-                              {userWallet !== undefined
-                                ? userWallet.toLocaleString()
-                                : null}
-                              <span>&nbsp;KRW</span>
-                            </span>
-                          </div>
-                          <div className="balance-notice">
-                            <ul>
-                              <li>
-                                잔고에 보유할 수 있는 금액의 제한은 없습니다.
-                              </li>
-                              <li>
-                                입금 및 출금 할 수 있는 금액의 상한선은 1회당
-                                10,000,000원입니다.
-                              </li>
-                            </ul>
-                          </div>
-                        </div>
-                      </>
-                    )
-                  }
-                </div>
-              ) : null}
-            </span>
-          </div>
-        )}
+                        {
+                          // 입금 영역
+                          transferSort === "입금" ? (
+                            <>
+                              <ModalComplete depositAmount={depositAmount} withdrawAmount={withdrawAmount} completeModalOpen={completeModalOpen} setCompleteModalOpen={setCompleteModalOpen} completeToggleModal={completeToggleModal} />
+                              <div
+                                className={`transfer-input ${depositLimit === true ? "alert-border" : ""
+                                  }`}
+                              >
+                                <div>입금금액</div>
+                                <input
+                                  onChange={depositChange}
+                                  value={
+                                    depositAmount !== undefined ?
+                                      depositAmount.toLocaleString() :
+                                      ""
+                                  }
+                                  placeholder="1,000 ~ 10,000,000"
+                                ></input>
+                                <span>KRW</span>
+                              </div>
+                              {
+                                depositLimit === true ? (
+                                  <div className="alert-KRW">
+                                    한화로 1,000원 이상 1000만원 이하만 입금 가능합니다
+                                  </div>
+                                ) : null
+                              }
+                              <div className="change-input">
+                                <div>전환량</div>
+                                <input value={depositChangeAmount}></input>
+                                <span className="change-input-span">
+                                  <img
+                                    className="img-transfer-crypto"
+                                    src={
+                                      cr_selected && cr_selected.market
+                                        ? Array.isArray(cr_selected.market)
+                                          ? `https://static.upbit.com/logos/${cr_selected.market[0].slice(
+                                            4
+                                          )}.png`
+                                          : `https://static.upbit.com/logos/${cr_selected.market.slice(
+                                            4
+                                          )}.png`
+                                        : undefined
+                                    }
+                                    alt="화폐사진"
+                                  />
+                                  <span>
+                                    {
+                                      cr_selected && cr_selected.market
+                                        ? Array.isArray(cr_selected.market)
+                                          ? cr_selected.market[0].slice(4)
+                                          : cr_selected.market.slice(4)
+                                        : undefined
+                                    }
+                                  </span>
+                                  <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    className="img-crypto-sort"
+                                  >
+                                    <path
+                                      fillRule="evenodd"
+                                      clipRule="evenodd"
+                                      d="M12.11 12.178L16 8.287l1.768 1.768-5.657 5.657-1.768-1.768-3.889-3.889 1.768-1.768 3.889 3.89z"
+                                      fill="currentColor"
+                                    ></path>
+                                  </svg>
+                                </span>
+                              </div>
+                              <div className="transfer-submit deposit">
+                                <span
+                                  onClick={
+                                    // async를 사용하여 입금이 완료될 때까지 dispatch를 실행하지 않음
+                                    async () => {
+                                      if (depositAmount !== undefined && !depositLimit) {
+                                        await addBalanceToUser(logInEmail, depositAmount);
+                                      }
+                                      else {
+                                        if (!depositLimit) {
+                                          completeToggleModal();
+                                        }
+                                      }
+                                      dispatch(setBalanceUpdate(!balanceUpdate))
+                                    }
+                                  }
+                                >
+                                  입금
+                                </span>
+                              </div>
+                            </>
+                          ) : transferSort === "출금" ? (
+                            // 출금영역
+                            <>
+                              <ModalComplete depositAmount={depositAmount} withdrawAmount={withdrawAmount} completeModalOpen={completeModalOpen} setCompleteModalOpen={setCompleteModalOpen} completeToggleModal={completeToggleModal} />
+
+                              <div
+                                className={
+                                  `transfer-input ${withdrawOverflow || withdrawLimit === true
+                                    ? "alert-border"
+                                    : ""
+                                  }`}
+                              >
+                                <div>출금금액</div>
+                                <input
+                                  onChange={withdrawChange}
+                                  value={
+                                    withdrawAmount !== undefined ?
+                                      withdrawAmount.toLocaleString() :
+                                      ""
+                                  }
+                                  placeholder="1,000 ~ 10,000,000"
+                                ></input>
+                                <span>KRW</span>
+                              </div>
+                              {
+                                withdrawOverflow === true ? (
+                                  <div className="alert-KRW">
+                                    출금량이 잔고보다 많습니다
+                                  </div>
+                                ) : null
+                              }
+                              {
+                                withdrawLimit === true ? (
+                                  <div className="alert-KRW">
+                                    출금액은 1,000원 이상 1000만원 이하만 가능합니다
+                                  </div>
+                                ) : null
+                              }
+                              <div className="change-input">
+                                <div>전환량</div>
+                                <input value={withdrawChangeAmount}></input>
+                                <span className="change-input-span">
+                                  <img
+                                    className="img-transfer-crypto"
+                                    src={
+                                      cr_selected && cr_selected.market
+                                        ? Array.isArray(cr_selected.market)
+                                          ? `https://static.upbit.com/logos/${cr_selected.market[0].slice(
+                                            4
+                                          )}.png`
+                                          : `https://static.upbit.com/logos/${cr_selected.market.slice(
+                                            4
+                                          )}.png`
+                                        : undefined
+                                    }
+                                    alt="화폐사진"
+                                  />
+                                  <span>
+                                    {
+                                      cr_selected && cr_selected.market
+                                        ? Array.isArray(cr_selected.market)
+                                          ? cr_selected.market[0].slice(4)
+                                          : cr_selected.market.slice(4)
+                                        : undefined
+                                    }
+                                  </span>
+                                  <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    className="img-crypto-sort"
+                                  >
+                                    <path
+                                      fillRule="evenodd"
+                                      clipRule="evenodd"
+                                      d="M12.11 12.178L16 8.287l1.768 1.768-5.657 5.657-1.768-1.768-3.889-3.889 1.768-1.768 3.889 3.89z"
+                                      fill="currentColor"
+                                    ></path>
+                                  </svg>
+                                </span>
+                              </div>
+                              <div className="transfer-submit withdraw">
+                                <span
+                                  onClick={
+                                    async () => {
+                                      if (withdrawAmount !== undefined && !withdrawOverflow && !withdrawLimit) {
+                                        await minusBalanceFromUser(logInEmail, withdrawAmount);
+                                      }
+                                      else {
+                                        if (!withdrawOverflow && !withdrawLimit) {
+                                          completeToggleModal();
+                                        }
+                                      }
+                                      dispatch(setBalanceUpdate(!balanceUpdate))
+                                    }}>
+                                  출금
+                                </span>
+                              </div>
+                            </>
+                          ) : (
+                            <>
+                              <div className="balance-section">
+                                <div className="balance-content">
+                                  <span className="balance-title">
+                                    <span>{logInUser}</span>님의 출금가능 금액
+                                  </span>
+                                  <span className="balance-amount">
+                                    {userWallet !== undefined
+                                      ? userWallet.toLocaleString()
+                                      : null}
+                                    <span>&nbsp;KRW</span>
+                                  </span>
+                                </div>
+                                <div className="balance-notice">
+                                  <ul>
+                                    <li>
+                                      잔고에 보유할 수 있는 금액의 제한은 없습니다.
+                                    </li>
+                                    <li>
+                                      입금 및 출금 할 수 있는 금액의 상한선은 1회당
+                                      10,000,000원입니다.
+                                    </li>
+                                  </ul>
+                                </div>
+                              </div>
+                            </>
+                          )
+                        }
+                      </div>
+                    </>
+                  ) : null}
+              </span>
+            </div>
+          )}
         {theme === true ? (
           <svg
             onClick={() => themeChange()}
@@ -676,5 +697,81 @@ const HeaderNav = () => {
     </header>
   );
 };
+
+interface CompleteModalProps {
+  depositAmount: number | undefined;
+  withdrawAmount: number | undefined;
+  completeModalOpen: boolean;
+  setCompleteModalOpen: (open: boolean) => void;
+  completeToggleModal: () => void;
+}
+
+const useStyles = makeStyles({
+  dialog: {
+    '& .MuiDialog-paper': {
+      width: '600px',
+      height: '200px'
+    },
+    '& .MuiDialogTitle-root .MuiTypography-root': {
+      marginTop: '10px',
+      marginLeft: '10px',
+      fontWeight: 'bold',
+    },
+    '& .MuiDialogContent-root': {
+      marginTop: '-10px',
+      marginLeft: '10px',
+    },
+    '& .MuiDialogActions-root': {
+      marginBottom: '10px',
+    },
+    '& .MuiDialogActions-root .MuiButton-root': {
+      fontWeight: 'bold',
+      fontSize: '14.5px',
+    }
+  },
+});
+
+const ModalComplete: React.FC<CompleteModalProps> = ({ depositAmount, withdrawAmount, completeModalOpen, setCompleteModalOpen, completeToggleModal }) => {
+
+  const dispatch = useDispatch();
+
+  const classes = useStyles();
+  const transferSort = useSelector((state: RootState) => state.transferSort);
+  const depositEmpty = useSelector((state: RootState) => state.depositEmpty);
+  const withdrawEmpty = useSelector((state: RootState) => state.withdrawEmpty);
+
+  return (
+    <div>
+      <Dialog open={completeModalOpen} onClose={completeToggleModal} className={classes.dialog} maxWidth={false}>
+        <DialogTitle>안내</DialogTitle>
+        <DialogContent>
+          {
+            transferSort === '입금' && depositAmount !== undefined ?
+              "입금이 완료됐습니다." :
+              null
+          }
+          {
+            transferSort === '출금' && withdrawAmount !== undefined ?
+              "출금이 완료됐습니다" :
+              null
+          }
+          {
+            depositAmount === undefined && transferSort === '입금' ?
+              "입금액을 입력해주세요." :
+              null
+          }
+          {
+            withdrawAmount === undefined && transferSort === '출금' ?
+              "출금액을 입력해주세요." :
+              null
+          }
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={completeToggleModal} color="primary">확인</Button>
+        </DialogActions>
+      </Dialog>
+    </div>
+  )
+}
 
 export { Header, HeaderNav };
