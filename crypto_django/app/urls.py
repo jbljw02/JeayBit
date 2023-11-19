@@ -2,6 +2,7 @@ from django.urls import path
 from django.contrib import admin
 from .views import (
     add_user_tradeHistory,
+    cancel_order,
     get_data,
     candle_per_date,
     candle_per_week,
@@ -26,7 +27,7 @@ from .views import (
     buy_crypto_unSigned,
     sell_crypto,
     get_crypto_name,
-    get_crypto_marekt,
+    get_crypto_market,
 )
 
 urlpatterns = [
@@ -53,6 +54,7 @@ urlpatterns = [
     path("add_user_tradeHistory/", add_user_tradeHistory),
     path("get_user_tradeHistory/<str:email>/", get_user_tradeHistory),
     path("get_crypto_name/", get_crypto_name),
-    path("get_crypto_market/", get_crypto_marekt)
+    path("get_crypto_market/", get_crypto_market),
+    path("cancel_order/", cancel_order)
     # path('admin/', admin.site.urls)
 ]
