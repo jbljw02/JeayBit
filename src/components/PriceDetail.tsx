@@ -404,10 +404,9 @@ const BuyingSection = () => {
         // 이중 for문으로 로컬 스토리지 값 하나당 모든 호가를 비교하며 가격 비교
         for (let k = 0; k < (askingData_unSigned[cryptoName]).length; k++) {
 
-          console.log("이름 : ", scheduledCrypto[j].name);
           // 로컬 스토리지에서 가져온 값과 호가가 일치한다면 구매 요청
           if (scheduledCrypto[j].price === (askingData_unSigned[cryptoName])[k].ask_price) {
-            
+
             console.log("일치", scheduledCrypto[j].price);
             buyCrypto_unSigned(scheduledCrypto[j].id, logInEmail, scheduledCrypto[j].name, scheduledCrypto[j].trade_amount, scheduledCrypto[j].trade_price);
             localStorage.removeItem(scheduledCrypto[j].id);
@@ -1706,6 +1705,42 @@ const TradeHistory = () => {
   const userTradeHistory_unSigned = useSelector((state: RootState) => state.userTradeHistory_unSigned)
 
   const [historySort, setHistorySort] = useState<string>('체결');
+  const [scheduledCancel, setScheduledCancel] = useState<
+    {
+      id: string,
+      index: number,
+    }[]>([]);
+
+  console.log("ㅅㅋ : ", scheduledCancel);
+
+  // 주문을 취소할 화폐를 서버로 전송
+  const cancelOrder = (email: string, ids: string[]) => {
+    (async (email, ids) => {
+      try {
+        const response = await axios.post("http://127.0.0.1:8000/cancel_order/", {
+          ids: ids,
+          email: email,
+        });
+        console.log("주문 취소 정보 전송 성공", response.data);
+        getTradeHistory(logInEmail);
+        setScheduledCancel([]);
+      } catch (error) {
+        console.log("주문 취소 정보 전송 실패");
+      }
+    })(email, ids);
+  }
+
+  const clickUnSigned = (id: string, i: number) => {
+    // 기존 state에 인덱스가 일치하는 속성이 있는지 확인
+    if (scheduledCancel.some(item => item.index === i)) {
+      // 있다면, 인덱스가 다른 부분만을 구분하여 새 배열 생성(인덱스를 제거한다는 의미)
+      setScheduledCancel(scheduledCancel.filter(item => item.index !== i));
+    }
+    else {
+      // 기존 state에 일치하는 인덱스가 없다면 할당
+      setScheduledCancel([...scheduledCancel, { id: id, index: i }]);
+    }
+  }
 
   return (
     <>
@@ -1726,6 +1761,14 @@ const TradeHistory = () => {
               <label className="radio-market radio-label" htmlFor="radio2">
                 미체결
               </label>
+            </td>
+            <td id="trading-history-cancel" style={{ visibility: historySort === '미체결' ? 'visible' : 'hidden' }} onClick={() => {
+              let ids : string[] = scheduledCancel.map(item => item.id);
+              if(ids.length > 0) {
+                cancelOrder(logInEmail, ids);
+              }
+              }}>
+              주문 취소
             </td>
           </tr>
         </tbody>
@@ -1809,7 +1852,11 @@ const TradeHistory = () => {
                   (
                     userTradeHistory_unSigned.map((item, i) => {
                       return (
-                        <tr key={i}>
+                        <tr className={`tr-unSigned ${scheduledCancel.some(item => item.index === i) ?
+                          'unSigned-clicked' : ''
+                          }`}
+                          key={i}
+                          onClick={() => clickUnSigned(item.id, i)}>
                           <td>
                             {
                               item.trade_time !== undefined ?

@@ -228,7 +228,7 @@
   background-color: #F5F5F5;
 }
 
-.transfer-input input::placeholder, 
+.transfer-input input::placeholder,
 .change-input input::placeholder {
   color: rgba(0, 0, 0, 0.4);
   font-weight: bold;
@@ -844,6 +844,15 @@ dd span {
   padding-top: 4px;
 }
 
+.tr-unSigned:hover {
+  background-color: #f3f3f3;
+  cursor: pointer;
+}
+
+.unSigned-clicked {
+  background-color: #f3f3f3;
+}
+
 .trading-headTable,
 .trading-table {
   padding-left: 11px;
@@ -851,10 +860,6 @@ dd span {
   font-size: 15px;
   border-spacing: 0 10px;
 }
-
-/* .trading-table {
-  padding-right: 0px;
-} */
 
 .trading-choice {
   width: 100%;
@@ -1101,6 +1106,17 @@ input[type=range]::-webkit-slider-thumb {
   border-top: 1px solid #E3E8EC;
   border-bottom: 1px solid #E3E8EC;
   table-layout: fixed;
+}
+
+#trading-history-cancel {
+  font-size: 12.5px;
+  position: relative;
+  left: 105px;
+  border-radius: 5px;
+  padding: 6px;
+  background-color: rgba(0, 0, 0, 0.16);
+  color: #FFFFFF;
+  cursor: pointer;
 }
 
 .table-tradingHistory thead th {

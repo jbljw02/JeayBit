@@ -524,15 +524,6 @@ def buy_crypto_unSigned(request):
         if user.balance < buy_total:
             return JsonResponse({"error": "잔액이 부족합니다"}, status=400)
         
-        # for a in key:
-        #     print("a : ", a['id'])
-        #     for b in trade_history:
-        #         print("b.id : ", b.id)
-        #         if a['id'] == str(b.id):
-        #             print("일치함")
-        #             b.is_signed = True
-        #             b.save()
-        
         for b in trade_history:
             print("b.id : ", b.id)
             if key == str(b.id):
@@ -685,7 +676,6 @@ def get_user_tradeHistory(request, email):
 
     trade_historys = TradeHistory.objects.filter(user=user)
     
-    
     data = [{"id": trade_history.id, "trade_category": trade_history.trade_category, "trade_time": trade_history.trade_time, "user": user.email, "crypto_name": trade_history.crypto.name, "crypto_market": trade_history.crypto_market, "crypto_price": trade_history.crypto_price, "trade_price": trade_history.trade_price, "trade_amount": trade_history.trade_amount, "is_signed": trade_history.is_signed} 
             for trade_history in trade_historys]
     
@@ -701,7 +691,7 @@ def get_crypto_name(requst):
 
 # 모든 마켓명을 클라이언트로 전달
 @api_view(["GET"])
-def get_crypto_marekt():
+def get_crypto_market():
     
     url = "https://api.upbit.com/v1/market/all?isDetails=true"
 
@@ -716,6 +706,26 @@ def get_crypto_marekt():
         
     return Response({"markets": markets})
 
+@api_view(["POST"])
+def cancel_order(request):
+    data = request.data
+    ids = data.get("ids")
+    email = data.get('email')
+    
+    if not email:
+        return ({"error": "요청에 이메일이 포함되어야 합니다"})
+    if not ids:
+        return JsonResponse({"error": "취소할 주문의 id가 요청에 포함되어야 합니다"}, status=400)
+    
+    try :
+        user = CustomUser.objects.get(email=email)
+        
+        # ids 배열과 튜플의 id 필드 사이 일치하는 부분이 있으면 삭제
+        trade_history = TradeHistory.objects.filter(user=user, id__in=ids).delete()
+        
+        return JsonResponse({"success": "주문 취소 성공"})
+    except CustomUser.DoesNotExist:
+        JsonResponse({"error": "해당 이메일의 사용자가 존재하지 않습니다"})
     
 @api_view(["GET"])
 def check_login(request):
