@@ -62,6 +62,9 @@ const AskingPrice = () => {
   const asking_totalBidSize = useSelector((state: RootState) => state.asking_totalBidSize);
   const cr_selected = useSelector((state: RootState) => state.cr_selected);
 
+  // console.log("에스킹 : ", asking_data[0].ask_size);
+
+
   const [prevData, setPrevData] = useState<AskingData[]>();
 
   const [differences_ask, setDifferences_ask] = useState<{
@@ -108,7 +111,8 @@ const AskingPrice = () => {
       month: '2-digit',
       day: '2-digit',
       hour: '2-digit',
-      minute: '2-digit'
+      minute: '2-digit',
+      hour12: false,  // 24시간 형식
     }).format(date);
 
     dispatch(setAsking_dateTime(newDateString.replace(". ", "/").replace(".", "").replace("오전 ", "").replace("오후 ", "")))
@@ -138,13 +142,31 @@ const AskingPrice = () => {
                 })
                 let bidClass = isChanged_bid ? 'change-bid' : '';
                 const percentage = (item.bid_size / asking_totalBidSize) * 100;  // 전체호가를 각각 호가로 나누어 비울을 환산한 후 해당 비율만큼 스타일 설정
+
+                let str_bid_size;
+
+                // 14자리 이상의 정수인 경우, 14자리로 줄이고 문자열로 반환
+                if (item.bid_size > 9999999999999) {
+                  str_bid_size = String(Math.floor(item.bid_size));
+                }
+                // 소수점을 포함하여 14자리를 넘어갈 수 있는 경우를 처리
+                else {
+                  str_bid_size = String(item.bid_size);
+                  str_bid_size = str_bid_size.substring(0, 14);
+                }
+
+                // 문자열의 끝이 '.'로 끝난다면 .을 제거
+                if (str_bid_size.endsWith('.')) {
+                  str_bid_size = str_bid_size.slice(0, -1);
+                }
+
                 return (
                   <tr
                     key={i}
                     style={{ background: `linear-gradient(270deg, rgba(34,171,148, .2) ${percentage}%, transparent ${percentage}%)` }}>
                     <td>{asking_dateTime}</td>
                     <td>{(item.bid_price).toLocaleString()}</td>
-                    <td className={bidClass}>{(item.bid_size).toFixed(5)}
+                    <td className={bidClass}>{str_bid_size}
                     </td>
                   </tr>
                 )
@@ -158,14 +180,30 @@ const AskingPrice = () => {
                 })
                 let askClass = isChange_ask ? 'change-ask' : '';
                 const percentage = (item.ask_size / asking_totalAskSize) * 100;  // 전체호가를 각각 호가로 나누어 비울을 환산한 후 해당 비율만큼 스타일 설정
+
+                let str_ask_size;
+                // 14자리 이상의 정수인 경우, 14자리로 줄이고 문자열로 반환
+                if (item.ask_size > 9999999999999) {
+                  str_ask_size = String(Math.floor(item.ask_size));
+                }
+                // 소수점을 포함하여 14자리를 넘어갈 수 있는 경우를 처리
+                else {
+                  str_ask_size = String(item.ask_size);
+                  str_ask_size = str_ask_size.substring(0, 14);
+                }
+
+                // 문자열의 끝이 '.'로 끝난다면 .을 제거
+                if (str_ask_size.endsWith('.')) {
+                  str_ask_size = str_ask_size.slice(0, -1)
+                }
+
                 return (
                   <tr
                     key={i}
                     style={{ background: `linear-gradient(270deg, rgba(242,54,69, .2) ${percentage}%, transparent ${percentage}%)` }}>
                     <td>{asking_dateTime}</td>
                     <td>{(item.ask_price).toLocaleString()}</td>
-                    <td className={askClass}>{(item.ask_size).toFixed(5)}
-                    </td>
+                    <td className={askClass}>{str_ask_size}</td>
                   </tr>
                 )
               })
@@ -207,17 +245,36 @@ const ClosedPrice = () => {
                   month: '2-digit',
                   day: '2-digit',
                   hour: '2-digit',
-                  minute: '2-digit'
+                  minute: '2-digit',
+                  hour12: false,  // 24시간 형식
                 }).format(date);
                 trade_time = trade_time.replace(". ", "/").replace(".", "").replace("오전 ", "").replace("오후 ", "")
+
+                let str_trade_volume;
+
+                // 14자리 이상의 정수인 경우, 14자리로 줄이고 문자열로 반환
+                if (item.trade_volume > 9999999999999) {
+                  str_trade_volume = String(Math.floor(item.trade_volume));
+                }
+                // 소수점을 포함하여 14자리를 넘어갈 수 있는 경우를 처리
+                else {
+                  str_trade_volume = String(item.trade_volume);
+                  str_trade_volume = str_trade_volume.substring(0, 14);
+                }
+
+                // 문자열의 끝이 '.'로 끝난다면 .을 제거
+                if (str_trade_volume.endsWith('.')) {
+                  str_trade_volume = str_trade_volume.slice(0, -1)
+                }
+
                 return (
                   <tr key={i}>
                     <td>{trade_time}</td>
                     <td>{(item.trade_price).toLocaleString()}</td>
                     {
                       item.ask_bid === 'BID' ?
-                        <td className="td-rise">{(item.trade_volume).toFixed(5)}</td> :
-                        <td className="td-fall">{(item.trade_volume).toFixed(5)}</td>
+                        <td className="td-rise">{str_trade_volume}</td> :
+                        <td className="td-fall">{str_trade_volume}</td>
                     }
                   </tr>
                 )
@@ -1515,7 +1572,7 @@ const SellingSection = () => {
                     <td className="trading-category">주문가능</td>
                     <td className="trading-availableTrade">
                       {
-                      // 보유수량이 undefined 또는 null일 때 0 반환
+                        // 보유수량이 undefined 또는 null일 때 0 반환
                         (Array.isArray(ownedCrypto) && ownedCrypto.find((item) => item.crypto_name === cr_name_selected)?.quantity) || '0'
                       }
                       <span>
@@ -1773,6 +1830,24 @@ const TradeHistory = () => {
         getTradeHistory(logInEmail);
         setScheduledCancel([]);
         completeToggleModal();
+
+        let localStorageKeys: string[] = [];
+        for (let i = 0; i < localStorage.length; i++) {
+          let key = localStorage.key(i);
+          if (key !== null) {
+            console.log("dd ", key);
+            localStorageKeys.push(key);
+          }
+        }
+
+        // ids와 로컬 스토리지에 있는 값 사이 id가 겹치는 것
+        let intersection = ids.filter(item => localStorageKeys.includes(item));
+
+        // 교집합 배열의 특정 요소와 같은 로컬 스토리지의 키를 삭제(주문 취소 요청된 로컬 스토리지 삭제)
+        intersection.forEach((item) => {
+          localStorage.removeItem(item);
+        })
+
       } catch (error) {
         console.log("주문 취소 정보 전송 실패");
       }
