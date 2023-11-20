@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { AskingData, RootState, setAsking_data, setAsking_dateTime, setBuyingCrypto, setBuyingPrice, setIsBuying, setSectionChange, setSellingPrice } from "../store";
+import { AskingData, RootState, setAsking_data, setAsking_dateTime, setBuyingCrypto, setBuyingPrice, setIsBuying, setIsSelling, setSectionChange, setSellingPrice } from "../store";
 import { SetStateAction, useEffect, useState } from "react";
 import { Routes, Route, Link, useNavigate, Outlet } from 'react-router-dom'
 import SimpleBar from 'simplebar-react';
@@ -359,10 +359,12 @@ const BuyingSection = () => {
         // 이중 for문으로 로컬 스토리지 값 하나당 모든 호가를 비교하며 가격 비교
         for (let k = 0; k < (askingData_unSigned[cryptoName]).length; k++) {
 
+          // console.log("호가 : ", askingData_unSigned[cryptoName][k].ask_price);
+
           // 로컬 스토리지에서 가져온 값과 호가가 일치한다면 구매 요청
           if (scheduledCrypto[j].price === (askingData_unSigned[cryptoName])[k].ask_price) {
 
-            console.log("일치", scheduledCrypto[j].price);
+            console.log("매수 - 일치", scheduledCrypto[j].price);
             buyCrypto_unSigned(scheduledCrypto[j].id, logInEmail, scheduledCrypto[j].name, scheduledCrypto[j].trade_amount, scheduledCrypto[j].trade_price);
             localStorage.removeItem(scheduledCrypto[j].id);
           }
@@ -388,8 +390,7 @@ const BuyingSection = () => {
         getOwnedCrypto(logInEmail);  // 소유 화폐가 새로 추가될 수 있으니 업데이트
         getTradeHistory(logInEmail)  // 매수에 성공했으니 거래내역 업데이트
         completeToggleModal();
-      }
-      catch (error) {
+      } catch (error) {
         console.log("구매 화폐 전송 실패: ", error)
       }
     })(email, cryptoName, cryptoQuantity, buyTotal);
@@ -421,8 +422,7 @@ const BuyingSection = () => {
         // dispatch(setIsBuying(updatedIsBuying));
         localStorage.removeItem(key)
         completeToggleModal();
-      }
-      catch (error) {
+      } catch (error) {
         console.log("구매 화폐 전송 실패: ", error)
       }
     })(key, email, cryptoName, cryptoQuantity, buyTotal);
@@ -826,7 +826,12 @@ const BuyingSection = () => {
                     <div className="trading-submit-buy market">
                       <span onClick={
                         // 호가와의 일치 여부를 확인하지 않음
-                        () => buyCrypto(logInEmail, cr_selected.name, buyQuantity, buyTotal)}>매수
+                        () => {
+                          buyCrypto(logInEmail, cr_selected.name, buyQuantity, buyTotal)
+                          addTradeHistory(logInEmail, cr_selected.name, tradeCategory, time, cr_selected.market, buyingPrice, buyTotal, buyQuantity, true);
+                        }
+                      }>
+                        매수
                       </span>
                     </div> :
                     <div className="trading-submit-nonLogIn-buy market">
@@ -954,6 +959,7 @@ const SellingSection = () => {
   const userWallet = useSelector((state: RootState) => state.userWallet);
   const asking_data = useSelector((state: RootState) => state.asking_data);  // bid = 매수, ask = 매도
   const ownedCrypto = useSelector((state: RootState) => state.ownedCrypto);
+  const askingData_unSigned = useSelector((state: RootState) => state.askingData_unSigned);
 
   const [selectedPercentage, setSelectedPercentage] = useState<string>('');
   const [bidSort, setBidSort] = useState<string>('지정가');
@@ -971,7 +977,7 @@ const SellingSection = () => {
   const [matchedItem, setMatchedItem] = useState<AskingData | null>(null);
 
   // 화폐를 매도하기 위해 대기중인지 여부
-  const [isSelling, setIsSelling] = useState<boolean>(false);
+  // const [isSelling, setIsSelling] = useState<boolean>(false);
 
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [completeModalOpen, setCompleteModalOpen] = useState<boolean>(false);
@@ -1008,24 +1014,73 @@ const SellingSection = () => {
     setTotalInputvalue('0');
   }, [cr_name_selected])
 
-  // 호가가 변화할 대마다 실행하지만, 사용자의 매도 대기 여부가 true일 때만 로직 동작
   useEffect(() => {
-    // 사용자의 매도 대기 여부가 true일 때만 호가와 매도가격이 일치하는지 검사
-    if (isSelling) {
-      let item = asking_data.find(item => item.bid_price === sellingPrice);
-      if (item !== undefined) {
-        setMatchedItem(item);
+
+    let localStorageItem: {
+      id: string,
+      price: number,
+      name: string,
+      trade_amount: number,
+      trade_price: number,
+    }[] = [];
+
+    // 로컬 스토리지에 있는 key-value를 꺼냄
+    for (let i = 0; i < localStorage.length; i++) {
+      let tempKey = localStorage.key(i);
+
+      if (tempKey !== null) {
+        let valueItem = localStorage.getItem(tempKey);
+
+        if (valueItem !== null) {
+          let tempValue = JSON.parse(valueItem);
+          localStorageItem.push({
+            id: tempKey,
+            price: Number(tempValue.price),
+            name: tempValue.name,
+            trade_amount: tempValue.trade_amount,
+            trade_price: tempValue.trade_price,
+          });
+        }
       }
     }
 
-  }, [asking_data, isSelling])
+    // console.log("로컬 스토리지 : ", localStorageItem);
+    // console.log("미체결 : ", askingData_unSigned);
 
-  useEffect(() => {
-    if (matchedItem !== null) {
-      sellCrypto(logInEmail, cr_selected.name, sellQuantity, sellTotal);
-    }
-  }, [matchedItem])
+    // 미체결 화폐 state의 키를 배열로 생성하고, 순차적으로 반복문 실행
+    Object.keys(askingData_unSigned).forEach((cryptoName) => {
 
+      // state의 키와 일치하는 화폐명을 가진 값을 로컬 스토리지에서 꺼내와서, 배열에 push
+      let scheduledCrypto = [];
+      for (let i = 0; i < localStorageItem.length; i++) {
+        if (cryptoName === localStorageItem[i].name) {
+          scheduledCrypto.push(localStorageItem[i]);
+        }
+      }
+
+      // 로컬 스토리지에서 가져온 값을 기준으로 반복문 동작 - 호가를 순회하면서 값을 비교하기 위함
+      for (let j = 0; j < scheduledCrypto.length; j++) {
+
+        // 이중 for문으로 로컬 스토리지 값 하나당 모든 호가를 비교하며 가격 비교
+        for (let k = 0; k < (askingData_unSigned[cryptoName]).length; k++) {
+
+          console.log("호가 : ", askingData_unSigned[cryptoName][k].bid_price);
+
+          // 로컬 스토리지에서 가져온 값과 호가가 일치한다면 구매 요청
+          if (scheduledCrypto[j].price === (askingData_unSigned[cryptoName])[k].bid_price) {
+
+            console.log("매도 - 일치", scheduledCrypto[j].price);
+            sellCrypto_unSigned(scheduledCrypto[j].id, logInEmail, scheduledCrypto[j].name, scheduledCrypto[j].trade_amount, scheduledCrypto[j].trade_price);
+            localStorage.removeItem(scheduledCrypto[j].id);
+          }
+        }
+
+      }
+    })
+
+  }, [askingData_unSigned])
+
+  // 호가와 매도가가 일치할 때
   const sellCrypto = (email: string, cryptoName: string, cryptoQuantity: number, sellTotal: number) => {
     (async (email, cryptoName, cryptoQuantity, sellTotal) => {
       try {
@@ -1039,12 +1094,36 @@ const SellingSection = () => {
         getBalance(logInEmail);  // 매수에 사용한 금액만큼 차감되기 때문에 잔고 업데이트
         getOwnedCrypto(logInEmail);  // 소유 화폐가 새로 추가될 수 있으니 업데이트
         getTradeHistory(logInEmail);  // 매도했으니 업데이트 됐을 거래내역을 가져옴 
+        completeToggleModal();
       } catch (error) {
         console.log("매도 화폐 전송 실패: ", error);
       }
     })(email, cryptoName, cryptoQuantity, sellTotal);
-    setIsSelling(false);
-    completeToggleModal();
+  }
+
+  // 호가와 구매가가 일치하지 않을 때
+  const sellCrypto_unSigned = (key: string, email: string, cryptoName: string, cryptoQuantity: number, sellTotal: number) => {
+    (async (key, email, cryptoName, cryptoQuantity, sellTotal) => {
+      try {
+        const response = await axios.post("http://127.0.0.1:8000/sell_crypto_unSigned/", {
+          key: key,
+          email: email,
+          crypto_name: cryptoName,
+          crypto_quantity: cryptoQuantity,
+          sell_total: sellTotal,
+        });
+        console.log("매도 화폐 전송 성공", response.data);
+        getBalance(logInEmail);  // 매수에 사용한 금액만큼 차감되기 때문에 잔고 업데이트
+        getOwnedCrypto(logInEmail);  // 소유 화폐가 새로 추가될 수 있으니 업데이트
+        getTradeHistory(logInEmail)  // 매수에 성공했으니 거래내역 업데이트
+
+        localStorage.removeItem(key)
+        completeToggleModal();
+      } catch (error) {
+        console.log("매도 화폐 전송 실패: ", error)
+      }
+    })(key, email, cryptoName, cryptoQuantity, sellTotal);
+
   }
 
   const selectPercentage = (percentage: string) => {
@@ -1207,8 +1286,7 @@ const SellingSection = () => {
                 <td className="trading-availableTrade">
                   {
                     // 보유수량이 undefined 또는 null일 때 0 반환
-                    ownedCrypto.find((item) => item.crypto_name === cr_name_selected)?.quantity ??
-                    0
+                    (Array.isArray(ownedCrypto) && ownedCrypto.find((item) => item.crypto_name === cr_name_selected)?.quantity) || '0'
                   }
                   <span>{(cr_market_selected).slice(4)}</span>
                 </td>
@@ -1310,7 +1388,8 @@ const SellingSection = () => {
                       cr_selected && cr_selected.market ?
                         (cr_selected.market).slice(4) :
                         null
-                    }</span>
+                    }
+                  </span>
                 </td>
               </tr>
               <tr>
@@ -1393,21 +1472,31 @@ const SellingSection = () => {
               logInEmail !== '' ?
                 <div className="trading-submit-sell designate">
                   <span onClick={() => {
-                    setIsSelling(true);
-
                     // 호가와 매도가가 일치하는지 확인
                     let item = asking_data.find(item => item.bid_price === sellingPrice);
                     if (item !== undefined) {
-                      // 일치한다면 바로 매도 요청을 전송
+                      // 일치한다면 바로 매수 요청을 전송
                       sellCrypto(logInEmail, cr_selected.name, sellQuantity, sellTotal);
                       addTradeHistory(logInEmail, cr_selected.name, tradeCategory, time, cr_selected.market, sellingPrice, sellTotal, sellQuantity, true);
+                      // getTradeHistory(logInEmail);
                     }
                     else {
+                      // 선택한 화폐에 대한 매도 대기 여부를 true로 설정
+                      let temp = localStorage.getItem(`${logInEmail}_IsSelling`)
+                      if (temp !== null) {
+                        let localStorage_isSelling = JSON.parse(temp);
+                        localStorage_isSelling[cr_name_selected] = true;
+                        localStorage.setItem(`${logInEmail}_IsSelling`, JSON.stringify(localStorage_isSelling));
+
+                        dispatch(setIsSelling(localStorage_isSelling))
+                      }
+
                       // 일치하지 않는다면 대기 모달 팝업
                       toggleModal();
                       setModalOpen(!modalOpen);
 
                       addTradeHistory(logInEmail, cr_selected.name, tradeCategory, time, cr_selected.market, sellingPrice, sellTotal, sellQuantity, false);
+                      // getTradeHistory(logInEmail);
                     }
                   }}>매도</span>
                 </div> :
@@ -1426,9 +1515,8 @@ const SellingSection = () => {
                     <td className="trading-category">주문가능</td>
                     <td className="trading-availableTrade">
                       {
-                        // 보유수량이 undefined 또는 null일 때 0 반환
-                        ownedCrypto.find((item) => item.crypto_name === cr_name_selected)?.quantity ??
-                        0
+                      // 보유수량이 undefined 또는 null일 때 0 반환
+                        (Array.isArray(ownedCrypto) && ownedCrypto.find((item) => item.crypto_name === cr_name_selected)?.quantity) || '0'
                       }
                       <span>
                         {
@@ -1530,7 +1618,8 @@ const SellingSection = () => {
                         () => {
                           sellCrypto(logInEmail, cr_selected.name, sellQuantity, sellTotal)
                           addTradeHistory(logInEmail, cr_selected.name, tradeCategory, time, cr_selected.market, sellingPrice, sellTotal, sellQuantity, true);
-                        }}>매도
+                        }}>
+                        매도
                       </span>
                     </div> :
                     <div className="trading-submit-nonLogIn-sell market">
@@ -1723,11 +1812,11 @@ const TradeHistory = () => {
               </label>
             </td>
             <td id="trading-history-cancel" style={{ visibility: historySort === '미체결' ? 'visible' : 'hidden' }} onClick={() => {
-              let ids : string[] = scheduledCancel.map(item => item.id);
-              if(ids.length > 0) {
+              let ids: string[] = scheduledCancel.map(item => item.id);
+              if (ids.length > 0) {
                 cancelOrder(logInEmail, ids);
               }
-              }}>
+            }}>
               주문 취소
             </td>
           </tr>

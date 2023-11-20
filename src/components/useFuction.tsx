@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
-import { setUserWallet, RootState, setOwnedCrypto, setUserTradeHistory, setUserTradeHistory_unSigned, setIsBuying, setAsking_data, setAsking_dateTime, setAsking_totalAskSize, setAsking_totalBidSize, setAskingData_unSigned } from "../store";
+import { setUserWallet, RootState, setOwnedCrypto, setUserTradeHistory, setUserTradeHistory_unSigned, setIsBuying, setAsking_data, setAsking_dateTime, setAsking_totalAskSize, setAsking_totalBidSize, setAskingData_unSigned, setIsSelling } from "../store";
 import { useState } from "react";
 
 export default function useFunction() {
@@ -137,7 +137,7 @@ export default function useFunction() {
         }
 
         // 로컬 스토리지의 값에 있는(체결되지 않은) 화폐는 true로, 아니라면 false로 선언
-        let isBuyingTemp = cryptoNames.reduce((obj: { [obj: string]: boolean; }, name: string) => {
+        let isWaitingTemp = cryptoNames.reduce((obj: { [obj: string]: boolean; }, name: string) => {
           if (localStorageItem.includes(name)) {
             obj[name] = true;
           }
@@ -147,8 +147,10 @@ export default function useFunction() {
           return obj;
         }, {})
 
-        dispatch(setIsBuying(isBuyingTemp));
-        localStorage.setItem(`${logInEmail}_IsBuying`, JSON.stringify(isBuyingTemp))
+        dispatch(setIsBuying(isWaitingTemp));
+        dispatch(setIsSelling(isWaitingTemp));
+        localStorage.setItem(`${logInEmail}_IsBuying`, JSON.stringify(isWaitingTemp));
+        localStorage.setItem(`${logInEmail}_IsSelling`, JSON.stringify(isWaitingTemp));
       } catch (error) {
         console.log("화폐명 받아오기 실패", error);
       }

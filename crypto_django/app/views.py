@@ -502,8 +502,6 @@ def buy_crypto_unSigned(request):
     crypto_quantity = data.get('crypto_quantity')
     buy_total = data.get('buy_total')
     
-    print("키 : ", key)
-
     if not key:
         return JsonResponse({"error": "요청에 고유 key가 포함되어야 합니다"}, status=400)
     if not email:
@@ -587,15 +585,15 @@ def sell_crypto(request):
         crypto_quantity = Decimal(str(crypto_quantity))
         sell_total = Decimal(str(sell_total))
 
-        # 잔고량 업데이트
-        user.balance += sell_total
-        user.save()
-        
         # 사용자가 보유한 화폐의 수량보다 매도하려는 수량이 클 경우
         if user_crypto.owned_quantity < crypto_quantity:
             return JsonResponse({"error": "보유한 수량보다 매도수량이 큽니다"}, status=400)
 
-        user_crypto.owned_quantity -= crypto_quantity
+        # 잔고량 업데이트
+        user.balance += sell_total
+        user.save()
+        
+        user_crypto.owned_quantity -= Decimal(crypto_quantity)
 
         # 사용자의 화폐 보유량이 0이 될 경우에는 보유량을 False로 변경
         if user_crypto.owned_quantity == 0:
@@ -606,6 +604,63 @@ def sell_crypto(request):
         return JsonResponse({"sell_crypto": "화폐 매도 및 소유랑 업데이트 완료"})
     except CustomUser.DoesNotExist:
         return JsonResponse({"error": "해당 이메일의 사용자가 존재하지 않습니다"})
+ 
+@api_view(["POST"])
+def sell_crypto_unSigned(request):
+    data = json.loads(request.body)
+    print("매도 - 받은 데이터: ", data)
+
+    key = data.get('key')
+    email = data.get('email')
+    crypto_name = data.get('crypto_name')
+    crypto_quantity = data.get('crypto_quantity')
+    sell_total = data.get('sell_total')
+
+    if not key:
+        return JsonResponse({"error": "요청에 고유 key가 포함되어야 합니다"}, status=400)
+    if not email:
+        return JsonResponse({"error": "요청에 이메일이 포함되어야 합니다"}, status=400)
+    if not crypto_name:
+        return JsonResponse({"error": "요청에 화폐명이 포함되어야 합니다"}, status=400)
+    if not crypto_quantity:
+        return JsonResponse({"error": "요청된 화폐 수량은 0이 아니어야 합니다"}, status=400)
+    if not sell_total:
+        return JsonResponse({"error": "요청에 매도 금액이 포함되어야 합니다"}, status=400)     
+    
+    try:
+        user = CustomUser.objects.get(email=email)
+        crypto = Crypto.objects.get(name=crypto_name)
+        user_crypto = UserCrypto.objects.get(user=user, crypto=crypto)
+        trade_history = TradeHistory.objects.filter(user__email=email)
+        
+        # 사용자가 보유한 화폐의 수량보다 매도하려는 수량이 클 경우
+        if user_crypto.owned_quantity < crypto_quantity:
+            return JsonResponse({"error": "보유한 수량보다 매도수량이 큽니다"}, status=400)
+
+        for b in trade_history:
+            print("b.id : ", b.id)
+            if key == str(b.id):
+                print("a : ", key)
+                print("일치함")
+                b.is_signed = True
+                b.save()
+            
+        # 잔고량 업데이트
+        user.balance += sell_total
+        user.save()
+    
+        user_crypto.owned_quantity -= Decimal(crypto_quantity)
+
+        # 사용자의 화폐 보유량이 0이 될 경우에는 보유량을 False로 변경
+        if user_crypto.owned_quantity == 0:
+            user_crypto.is_owned = False  
+            
+        user_crypto.save()
+        
+        return JsonResponse({"sell_crypto": "화폐 매도 및 소유랑 업데이트 완료"})
+    except CustomUser.DoesNotExist:
+        return JsonResponse({"error": "해당 이메일의 사용자가 존재하지 않습니다"})
+    
    
 # 사용자, 화폐별 거래내역을 추가   
 @api_view(["POST"])
