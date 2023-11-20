@@ -659,7 +659,7 @@ def sell_crypto_unSigned(request):
             
         user_crypto.save()
         
-        return JsonResponse({"sell_crypto": "화폐 매도 및 소유랑 업데이트 완료"})
+        return JsonResponse({"sell_crypto_unSigned": "화폐 매도 및 소유랑 업데이트 완료"})
     except CustomUser.DoesNotExist:
         return JsonResponse({"error": "해당 이메일의 사용자가 존재하지 않습니다"})
     

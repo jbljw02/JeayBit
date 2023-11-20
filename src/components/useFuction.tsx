@@ -266,6 +266,49 @@ export default function useFunction() {
     })(market);
   };
 
-  return { getBalance, getOwnedCrypto, addTradeHistory, getTradeHistory, getCryptoName, selectAskingPrice, selectAskingPrice_unSigned };
+  // 호가와 구매가가 일치하지 않을 때
+  const buyCrypto_unSigned = (key: string, email: string, cryptoName: string, cryptoQuantity: number, buyTotal: number) => {
+    (async (key, email, cryptoName, cryptoQuantity, buyTotal) => {
+      try {
+        const response = await axios.post("http://127.0.0.1:8000/buy_crypto_unSigned/", {
+          key: key,
+          email: email,
+          crypto_name: cryptoName,
+          crypto_quantity: cryptoQuantity,
+          buy_total: buyTotal,
+        });
+        console.log("구매 화폐 전송 성공", response.data);
+        getBalance(logInEmail);  // 매수에 사용한 금액만큼 차감되기 때문에 잔고 업데이트
+        getOwnedCrypto(logInEmail);  // 소유 화폐가 새로 추가될 수 있으니 업데이트
+        getTradeHistory(logInEmail)  // 매수에 성공했으니 거래내역 업데이트
+        localStorage.removeItem(key)
+      } catch (error) {
+        console.log("구매 화폐 전송 실패: ", error)
+      }
+    })(key, email, cryptoName, cryptoQuantity, buyTotal);
+  }
+
+  const sellCrypto_unSigned = (key: string, email: string, cryptoName: string, cryptoQuantity: number, sellTotal: number) => {
+    (async (key, email, cryptoName, cryptoQuantity, sellTotal) => {
+      try {
+        const response = await axios.post("http://127.0.0.1:8000/sell_crypto_unSigned/", {
+          key: key,
+          email: email,
+          crypto_name: cryptoName,
+          crypto_quantity: cryptoQuantity,
+          sell_total: sellTotal,
+        });
+        console.log("매도 화폐 전송 성공", response.data);
+        getBalance(logInEmail);  // 매수에 사용한 금액만큼 차감되기 때문에 잔고 업데이트
+        getOwnedCrypto(logInEmail);  // 소유 화폐가 새로 추가될 수 있으니 업데이트
+        getTradeHistory(logInEmail)  // 매수에 성공했으니 거래내역 업데이트
+        localStorage.removeItem(key)
+      } catch (error) {
+        console.log("매도 화폐 전송 실패: ", error)
+      }
+    })(key, email, cryptoName, cryptoQuantity, sellTotal);
+  }
+
+  return { getBalance, getOwnedCrypto, addTradeHistory, getTradeHistory, getCryptoName, selectAskingPrice, selectAskingPrice_unSigned, buyCrypto_unSigned, sellCrypto_unSigned };
 
 }

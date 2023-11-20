@@ -13,10 +13,154 @@ const PriceDetail = () => {
 
   const dispatch = useDispatch();
 
+  const { buyCrypto_unSigned, sellCrypto_unSigned } = useFunction();
+
   const sectionChange = useSelector((state: RootState) => state.sectionChange);
+  const askingData_unSigned = useSelector((state: RootState) => state.askingData_unSigned);
+  const logInEmail = useSelector((state: RootState) => state.logInEmail);
+  const [completeModalOpen, setCompleteModalOpen] = useState<boolean>(false);
+
+  const completeToggleModal = () => {
+    setCompleteModalOpen(!completeModalOpen);
+  }
+
+  // 미체결 화폐 매수 - 구매 대기 상태에서 동작 
+  useEffect(() => {
+
+    let localStorageItem: {
+      id: string,
+      price: number,
+      name: string,
+      trade_amount: number,
+      trade_price: number,
+    }[] = [];
+
+    // 로컬 스토리지에 있는 key-value를 꺼냄
+    for (let i = 0; i < localStorage.length; i++) {
+      let tempKey = localStorage.key(i);
+
+      if (tempKey !== null) {
+        let valueItem = localStorage.getItem(tempKey);
+
+        if (valueItem !== null) {
+          let tempValue = JSON.parse(valueItem);
+          localStorageItem.push({
+            id: tempKey,
+            price: Number(tempValue.price),
+            name: tempValue.name,
+            trade_amount: tempValue.trade_amount,
+            trade_price: tempValue.trade_price,
+          });
+        }
+      }
+    }
+
+    // console.log("로컬 스토리지 : ", localStorageItem);
+    // console.log("미체결 : ", askingData_unSigned);
+
+    // 미체결 화폐 state의 키를 배열로 생성하고, 순차적으로 반복문 실행
+    Object.keys(askingData_unSigned).forEach((cryptoName) => {
+
+      // state의 키와 일치하는 화폐명을 가진 값을 로컬 스토리지에서 꺼내와서, 배열에 push
+      let scheduledCrypto = [];
+      for (let i = 0; i < localStorageItem.length; i++) {
+        if (cryptoName === localStorageItem[i].name) {
+          scheduledCrypto.push(localStorageItem[i]);
+        }
+      }
+
+      // 로컬 스토리지에서 가져온 값을 기준으로 반복문 동작 - 호가를 순회하면서 값을 비교하기 위함
+      for (let j = 0; j < scheduledCrypto.length; j++) {
+
+        // 이중 for문으로 로컬 스토리지 값 하나당 모든 호가를 비교하며 가격 비교
+        for (let k = 0; k < (askingData_unSigned[cryptoName]).length; k++) {
+
+          // console.log("호가 : ", askingData_unSigned[cryptoName][k].ask_price);
+
+          // 로컬 스토리지에서 가져온 값과 호가가 일치한다면 구매 요청
+          if (scheduledCrypto[j].price === (askingData_unSigned[cryptoName])[k].ask_price) {
+
+            console.log("매수 - 일치", scheduledCrypto[j].price);
+            buyCrypto_unSigned(scheduledCrypto[j].id, logInEmail, scheduledCrypto[j].name, scheduledCrypto[j].trade_amount, scheduledCrypto[j].trade_price);
+            completeToggleModal();
+          }
+        }
+
+      }
+    })
+
+  }, [askingData_unSigned])
+
+  // 미체결 화폐 매도 - 매도 대기 상태에서 동작 
+  useEffect(() => {
+
+    let localStorageItem: {
+      id: string,
+      price: number,
+      name: string,
+      trade_amount: number,
+      trade_price: number,
+    }[] = [];
+
+    // 로컬 스토리지에 있는 key-value를 꺼냄
+    for (let i = 0; i < localStorage.length; i++) {
+      let tempKey = localStorage.key(i);
+
+      if (tempKey !== null) {
+        let valueItem = localStorage.getItem(tempKey);
+
+        if (valueItem !== null) {
+          let tempValue = JSON.parse(valueItem);
+          localStorageItem.push({
+            id: tempKey,
+            price: Number(tempValue.price),
+            name: tempValue.name,
+            trade_amount: tempValue.trade_amount,
+            trade_price: tempValue.trade_price,
+          });
+        }
+      }
+    }
+
+    // console.log("로컬 스토리지 : ", localStorageItem);
+    // console.log("미체결 : ", askingData_unSigned);
+
+    // 미체결 화폐 state의 키를 배열로 생성하고, 순차적으로 반복문 실행
+    Object.keys(askingData_unSigned).forEach((cryptoName) => {
+
+      // state의 키와 일치하는 화폐명을 가진 값을 로컬 스토리지에서 꺼내와서, 배열에 push
+      let scheduledCrypto = [];
+      for (let i = 0; i < localStorageItem.length; i++) {
+        if (cryptoName === localStorageItem[i].name) {
+          scheduledCrypto.push(localStorageItem[i]);
+        }
+      }
+
+      // 로컬 스토리지에서 가져온 값을 기준으로 반복문 동작 - 호가를 순회하면서 값을 비교하기 위함
+      for (let j = 0; j < scheduledCrypto.length; j++) {
+
+        // 이중 for문으로 로컬 스토리지 값 하나당 모든 호가를 비교하며 가격 비교
+        for (let k = 0; k < (askingData_unSigned[cryptoName]).length; k++) {
+
+          // console.log("호가 : ", askingData_unSigned[cryptoName][k].bid_price);
+
+          // 로컬 스토리지에서 가져온 값과 호가가 일치한다면 구매 요청
+          if (scheduledCrypto[j].price === (askingData_unSigned[cryptoName])[k].bid_price) {
+
+            console.log("매도 - 일치", scheduledCrypto[j].price);
+            sellCrypto_unSigned(scheduledCrypto[j].id, logInEmail, scheduledCrypto[j].name, scheduledCrypto[j].trade_amount, scheduledCrypto[j].trade_price);
+            completeToggleModal();
+          }
+        }
+
+      }
+    })
+
+  }, [askingData_unSigned])
 
   return (
     <>
+      <ModalComplete completeModalOpen={completeModalOpen} setCompleteModalOpen={setCompleteModalOpen} completeToggleModal={completeToggleModal} />
       <div className="lightMode">
         <div className="priceDetail-title askingTitle lightMode">호가내역</div>
         <AskingPrice />
@@ -61,9 +205,6 @@ const AskingPrice = () => {
   const asking_totalAskSize = useSelector((state: RootState) => state.asking_totalAskSize);
   const asking_totalBidSize = useSelector((state: RootState) => state.asking_totalBidSize);
   const cr_selected = useSelector((state: RootState) => state.cr_selected);
-
-  // console.log("에스킹 : ", asking_data[0].ask_size);
-
 
   const [prevData, setPrevData] = useState<AskingData[]>();
 
@@ -348,7 +489,7 @@ const BuyingSection = () => {
     setCompleteModalOpen(!completeModalOpen);
   }
 
-  const { getBalance, getOwnedCrypto, addTradeHistory, getTradeHistory, getCryptoName } = useFunction();
+  const { getBalance, getOwnedCrypto, addTradeHistory, getTradeHistory, getCryptoName, buyCrypto_unSigned } = useFunction();
 
   // 매수가가 바뀌면 그에 따라 입력값도 변경
   useEffect(() => {
@@ -365,72 +506,6 @@ const BuyingSection = () => {
     setBuyTotal(0);
     setTotalInputvalue('0');
   }, [cr_name_selected])
-
-  useEffect(() => {
-
-    let localStorageItem: {
-      id: string,
-      price: number,
-      name: string,
-      trade_amount: number,
-      trade_price: number,
-    }[] = [];
-
-    // 로컬 스토리지에 있는 key-value를 꺼냄
-    for (let i = 0; i < localStorage.length; i++) {
-      let tempKey = localStorage.key(i);
-
-      if (tempKey !== null) {
-        let valueItem = localStorage.getItem(tempKey);
-
-        if (valueItem !== null) {
-          let tempValue = JSON.parse(valueItem);
-          localStorageItem.push({
-            id: tempKey,
-            price: Number(tempValue.price),
-            name: tempValue.name,
-            trade_amount: tempValue.trade_amount,
-            trade_price: tempValue.trade_price,
-          });
-        }
-      }
-    }
-
-    // console.log("로컬 스토리지 : ", localStorageItem);
-    // console.log("미체결 : ", askingData_unSigned);
-
-    // 미체결 화폐 state의 키를 배열로 생성하고, 순차적으로 반복문 실행
-    Object.keys(askingData_unSigned).forEach((cryptoName) => {
-
-      // state의 키와 일치하는 화폐명을 가진 값을 로컬 스토리지에서 꺼내와서, 배열에 push
-      let scheduledCrypto = [];
-      for (let i = 0; i < localStorageItem.length; i++) {
-        if (cryptoName === localStorageItem[i].name) {
-          scheduledCrypto.push(localStorageItem[i]);
-        }
-      }
-
-      // 로컬 스토리지에서 가져온 값을 기준으로 반복문 동작 - 호가를 순회하면서 값을 비교하기 위함
-      for (let j = 0; j < scheduledCrypto.length; j++) {
-
-        // 이중 for문으로 로컬 스토리지 값 하나당 모든 호가를 비교하며 가격 비교
-        for (let k = 0; k < (askingData_unSigned[cryptoName]).length; k++) {
-
-          // console.log("호가 : ", askingData_unSigned[cryptoName][k].ask_price);
-
-          // 로컬 스토리지에서 가져온 값과 호가가 일치한다면 구매 요청
-          if (scheduledCrypto[j].price === (askingData_unSigned[cryptoName])[k].ask_price) {
-
-            console.log("매수 - 일치", scheduledCrypto[j].price);
-            buyCrypto_unSigned(scheduledCrypto[j].id, logInEmail, scheduledCrypto[j].name, scheduledCrypto[j].trade_amount, scheduledCrypto[j].trade_price);
-            localStorage.removeItem(scheduledCrypto[j].id);
-          }
-        }
-
-      }
-    })
-
-  }, [askingData_unSigned])
 
   // 호가와 구매가가 일치할 때
   const buyCrypto = (email: string, cryptoName: string, cryptoQuantity: number, buyTotal: number) => {
@@ -451,39 +526,6 @@ const BuyingSection = () => {
         console.log("구매 화폐 전송 실패: ", error)
       }
     })(email, cryptoName, cryptoQuantity, buyTotal);
-  }
-
-  // 호가와 구매가가 일치하지 않을 때
-  const buyCrypto_unSigned = (key: string, email: string, cryptoName: string, cryptoQuantity: number, buyTotal: number) => {
-    (async (key, email, cryptoName, cryptoQuantity, buyTotal) => {
-      try {
-        const response = await axios.post("http://127.0.0.1:8000/buy_crypto_unSigned/", {
-          key: key,
-          email: email,
-          crypto_name: cryptoName,
-          crypto_quantity: cryptoQuantity,
-          buy_total: buyTotal,
-        });
-        console.log("구매 화폐 전송 성공", response.data);
-        getBalance(logInEmail);  // 매수에 사용한 금액만큼 차감되기 때문에 잔고 업데이트
-        getOwnedCrypto(logInEmail);  // 소유 화폐가 새로 추가될 수 있으니 업데이트
-        getTradeHistory(logInEmail)  // 매수에 성공했으니 거래내역 업데이트
-
-        // let temp = localStorage.getItem('isBuying');
-        // if(temp !== null) {
-        //   let localStorage_isBuying = JSON.parse(temp);
-        // }
-
-        // let updatedIsBuying = { ...isBuying };
-        // updatedIsBuying[cr_name_selected] = false;
-        // dispatch(setIsBuying(updatedIsBuying));
-        localStorage.removeItem(key)
-        completeToggleModal();
-      } catch (error) {
-        console.log("구매 화폐 전송 실패: ", error)
-      }
-    })(key, email, cryptoName, cryptoQuantity, buyTotal);
-
   }
 
   const selectPercentage = (percentage: string) => {
@@ -1071,72 +1113,6 @@ const SellingSection = () => {
     setTotalInputvalue('0');
   }, [cr_name_selected])
 
-  useEffect(() => {
-
-    let localStorageItem: {
-      id: string,
-      price: number,
-      name: string,
-      trade_amount: number,
-      trade_price: number,
-    }[] = [];
-
-    // 로컬 스토리지에 있는 key-value를 꺼냄
-    for (let i = 0; i < localStorage.length; i++) {
-      let tempKey = localStorage.key(i);
-
-      if (tempKey !== null) {
-        let valueItem = localStorage.getItem(tempKey);
-
-        if (valueItem !== null) {
-          let tempValue = JSON.parse(valueItem);
-          localStorageItem.push({
-            id: tempKey,
-            price: Number(tempValue.price),
-            name: tempValue.name,
-            trade_amount: tempValue.trade_amount,
-            trade_price: tempValue.trade_price,
-          });
-        }
-      }
-    }
-
-    // console.log("로컬 스토리지 : ", localStorageItem);
-    // console.log("미체결 : ", askingData_unSigned);
-
-    // 미체결 화폐 state의 키를 배열로 생성하고, 순차적으로 반복문 실행
-    Object.keys(askingData_unSigned).forEach((cryptoName) => {
-
-      // state의 키와 일치하는 화폐명을 가진 값을 로컬 스토리지에서 꺼내와서, 배열에 push
-      let scheduledCrypto = [];
-      for (let i = 0; i < localStorageItem.length; i++) {
-        if (cryptoName === localStorageItem[i].name) {
-          scheduledCrypto.push(localStorageItem[i]);
-        }
-      }
-
-      // 로컬 스토리지에서 가져온 값을 기준으로 반복문 동작 - 호가를 순회하면서 값을 비교하기 위함
-      for (let j = 0; j < scheduledCrypto.length; j++) {
-
-        // 이중 for문으로 로컬 스토리지 값 하나당 모든 호가를 비교하며 가격 비교
-        for (let k = 0; k < (askingData_unSigned[cryptoName]).length; k++) {
-
-          console.log("호가 : ", askingData_unSigned[cryptoName][k].bid_price);
-
-          // 로컬 스토리지에서 가져온 값과 호가가 일치한다면 구매 요청
-          if (scheduledCrypto[j].price === (askingData_unSigned[cryptoName])[k].bid_price) {
-
-            console.log("매도 - 일치", scheduledCrypto[j].price);
-            sellCrypto_unSigned(scheduledCrypto[j].id, logInEmail, scheduledCrypto[j].name, scheduledCrypto[j].trade_amount, scheduledCrypto[j].trade_price);
-            localStorage.removeItem(scheduledCrypto[j].id);
-          }
-        }
-
-      }
-    })
-
-  }, [askingData_unSigned])
-
   // 호가와 매도가가 일치할 때
   const sellCrypto = (email: string, cryptoName: string, cryptoQuantity: number, sellTotal: number) => {
     (async (email, cryptoName, cryptoQuantity, sellTotal) => {
@@ -1156,31 +1132,6 @@ const SellingSection = () => {
         console.log("매도 화폐 전송 실패: ", error);
       }
     })(email, cryptoName, cryptoQuantity, sellTotal);
-  }
-
-  // 호가와 구매가가 일치하지 않을 때
-  const sellCrypto_unSigned = (key: string, email: string, cryptoName: string, cryptoQuantity: number, sellTotal: number) => {
-    (async (key, email, cryptoName, cryptoQuantity, sellTotal) => {
-      try {
-        const response = await axios.post("http://127.0.0.1:8000/sell_crypto_unSigned/", {
-          key: key,
-          email: email,
-          crypto_name: cryptoName,
-          crypto_quantity: cryptoQuantity,
-          sell_total: sellTotal,
-        });
-        console.log("매도 화폐 전송 성공", response.data);
-        getBalance(logInEmail);  // 매수에 사용한 금액만큼 차감되기 때문에 잔고 업데이트
-        getOwnedCrypto(logInEmail);  // 소유 화폐가 새로 추가될 수 있으니 업데이트
-        getTradeHistory(logInEmail)  // 매수에 성공했으니 거래내역 업데이트
-
-        localStorage.removeItem(key)
-        completeToggleModal();
-      } catch (error) {
-        console.log("매도 화폐 전송 실패: ", error)
-      }
-    })(key, email, cryptoName, cryptoQuantity, sellTotal);
-
   }
 
   const selectPercentage = (percentage: string) => {
