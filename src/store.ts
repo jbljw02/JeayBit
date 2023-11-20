@@ -129,6 +129,7 @@ export type RootState = {
   userTradeHistory: UserTradeHistory[],
   userTradeHistory_unSigned: UserTradeHistory[],
   isBuying: { [key: string]: boolean },
+  isSelling: { [key: string]: boolean },
   // askingData_unSigned: UnsginedAskingData[],
   askingData_unSigned: { [key: string]: UnsginedAskingData[] },
   transferSort: string,
@@ -720,6 +721,16 @@ const isBuying = createSlice({
   }
 })
 
+const isSelling = createSlice({
+  name: 'isSelling',
+  initialState: '',
+  reducers: {
+    setIsSelling: (state, action) => {
+      return action.payload;
+    }
+  }
+})
+
 const askingData_unSigned = createSlice({
   name: 'askingData_unSigned',
   initialState: {} as { [key: string]: UnsginedAskingData[] },
@@ -800,6 +811,7 @@ export default configureStore({
     userTradeHistory: userTradeHistory.reducer,
     userTradeHistory_unSigned: userTradeHistory_unSigned.reducer,
     isBuying: isBuying.reducer,
+    isSelling: isSelling.reducer,
     askingData_unSigned: askingData_unSigned.reducer,
     transferSort: transferSort.reducer,
   }
@@ -879,6 +891,7 @@ export const { setSectionChange } = sectionChange.actions;
 export const { setUserTradeHistory } = userTradeHistory.actions;
 export const { setUserTradeHistory_unSigned } = userTradeHistory_unSigned.actions;
 export const { setIsBuying } = isBuying.actions;
+export const { setIsSelling } = isSelling.actions;
 export const { setAskingData_unSigned } = askingData_unSigned.actions;
 export const { setTransferSort } = transferSort.actions;
 

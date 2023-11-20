@@ -352,28 +352,24 @@ const Header = () => {
                                   <img
                                     className="img-transfer-crypto"
                                     src={
-                                      cr_selected && cr_selected.market
-                                        ? Array.isArray(cr_selected.market)
-                                          ? `https://static.upbit.com/logos/${cr_selected.market[0].slice(
-                                            4
-                                          )}.png`
-                                          : `https://static.upbit.com/logos/${cr_selected.market.slice(
-                                            4
-                                          )}.png`
-                                        : undefined
+                                      cr_selected && cr_selected.market ?
+                                        Array.isArray(cr_selected.market) ?
+                                          `https://static.upbit.com/logos/${cr_selected.market[0].slice(4)}.png` :
+                                          `https://static.upbit.com/logos/${cr_selected.market.slice(4)}.png` :
+                                        undefined
                                     }
                                     alt="화폐사진"
                                   />
                                   <span>
                                     {
-                                      cr_selected && cr_selected.market
-                                        ? Array.isArray(cr_selected.market)
-                                          ? cr_selected.market[0].slice(4)
-                                          : cr_selected.market.slice(4)
-                                        : undefined
+                                      cr_selected && cr_selected.market ?
+                                        Array.isArray(cr_selected.market) ?
+                                          cr_selected.market[0].slice(4) :
+                                          cr_selected.market.slice(4) :
+                                        undefined
                                     }
                                   </span>
-                                  <svg
+                                  {/* <svg
                                     xmlns="http://www.w3.org/2000/svg"
                                     viewBox="0 0 24 24"
                                     fill="none"
@@ -385,7 +381,7 @@ const Header = () => {
                                       d="M12.11 12.178L16 8.287l1.768 1.768-5.657 5.657-1.768-1.768-3.889-3.889 1.768-1.768 3.889 3.89z"
                                       fill="currentColor"
                                     ></path>
-                                  </svg>
+                                  </svg> */}
                                 </span>
                               </div>
                               <div className="transfer-submit deposit">
@@ -419,8 +415,7 @@ const Header = () => {
                                   `transfer-input ${withdrawOverflow || withdrawLimit === true
                                     ? "alert-border"
                                     : ""
-                                  }`}
-                              >
+                                  }`}>
                                 <div>출금금액</div>
                                 <input
                                   onChange={withdrawChange}
@@ -454,15 +449,11 @@ const Header = () => {
                                   <img
                                     className="img-transfer-crypto"
                                     src={
-                                      cr_selected && cr_selected.market
-                                        ? Array.isArray(cr_selected.market)
-                                          ? `https://static.upbit.com/logos/${cr_selected.market[0].slice(
-                                            4
-                                          )}.png`
-                                          : `https://static.upbit.com/logos/${cr_selected.market.slice(
-                                            4
-                                          )}.png`
-                                        : undefined
+                                      cr_selected && cr_selected.market ?
+                                        Array.isArray(cr_selected.market) ?
+                                          `https://static.upbit.com/logos/${cr_selected.market[0].slice(4)}.png` :
+                                          `https://static.upbit.com/logos/${cr_selected.market.slice(4)}.png` :
+                                        undefined
                                     }
                                     alt="화폐사진"
                                   />
@@ -475,7 +466,7 @@ const Header = () => {
                                         : undefined
                                     }
                                   </span>
-                                  <svg
+                                  {/* <svg
                                     xmlns="http://www.w3.org/2000/svg"
                                     viewBox="0 0 24 24"
                                     fill="none"
@@ -487,7 +478,7 @@ const Header = () => {
                                       d="M12.11 12.178L16 8.287l1.768 1.768-5.657 5.657-1.768-1.768-3.889-3.889 1.768-1.768 3.889 3.89z"
                                       fill="currentColor"
                                     ></path>
-                                  </svg>
+                                  </svg> */}
                                 </span>
                               </div>
                               <div className="transfer-submit withdraw">
@@ -516,9 +507,11 @@ const Header = () => {
                                     <span>{logInUser}</span>님의 출금가능 금액
                                   </span>
                                   <span className="balance-amount">
-                                    {userWallet !== undefined
-                                      ? userWallet.toLocaleString()
-                                      : null}
+                                    {
+                                      userWallet !== undefined ?
+                                        Number(userWallet).toLocaleString() :
+                                        0
+                                    }
                                     <span>&nbsp;KRW</span>
                                   </span>
                                 </div>
@@ -752,7 +745,7 @@ const ModalComplete: React.FC<CompleteModalProps> = ({ depositAmount, withdrawAm
           }
           {
             transferSort === '출금' && withdrawAmount !== undefined ?
-              "출금이 완료됐습니다" :
+              "출금이 완료됐습니다." :
               null
           }
           {
