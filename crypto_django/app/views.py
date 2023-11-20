@@ -144,6 +144,8 @@ def candle_per_month(request):
 # 호가내역
 @api_view(["GET", "POST"])
 def asking_price(request):
+    print("호가내역 - 요청데이터 : ", request.data)
+
     try:
         market = request.data["market"]
 
