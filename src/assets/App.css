@@ -96,13 +96,15 @@
 
 .member-nav-unLogIn {
   position: absolute;
-  left: 2378px;
+  /* left: 2378px; */
+  right: 1vw;
   font-size: 13px;
 }
 
 .member-nav-LogIn {
   position: absolute;
-  left: 2297px;
+  /* left: 2340px; */
+  right: 1vw;
   font-size: 13px;
 }
 

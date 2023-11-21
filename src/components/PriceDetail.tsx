@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { AskingData, RootState, setAsking_data, setAsking_dateTime, setBuyingCrypto, setBuyingPrice, setIsBuying, setIsSelling, setSectionChange, setSellingPrice } from "../store";
+import { AskingData, RootState, setAsking_data, setAsking_dateTime, setBuyingCrypto, setBuyingPrice, setIsBuying, setIsSelling, setSectionChange, setSellingPrice, setTheme } from "../store";
 import { SetStateAction, useEffect, useState } from "react";
 import { Routes, Route, Link, useNavigate, Outlet } from 'react-router-dom'
 import SimpleBar from 'simplebar-react';
@@ -13,8 +13,9 @@ const PriceDetail = () => {
 
   const dispatch = useDispatch();
 
-  const { buyCrypto_unSigned, sellCrypto_unSigned } = useFunction();
+  const { buyCrypto_unSigned, sellCrypto_unSigned, themeChange } = useFunction();
 
+  const theme = useSelector((state: RootState) => state.theme);
   const sectionChange = useSelector((state: RootState) => state.sectionChange);
   const askingData_unSigned = useSelector((state: RootState) => state.askingData_unSigned);
   const logInEmail = useSelector((state: RootState) => state.logInEmail);
@@ -158,6 +159,8 @@ const PriceDetail = () => {
 
   }, [askingData_unSigned])
 
+  console.log("테마 변경 : ", theme);
+
   return (
     <>
       <ModalComplete completeModalOpen={completeModalOpen} setCompleteModalOpen={setCompleteModalOpen} completeToggleModal={completeToggleModal} />
@@ -170,15 +173,15 @@ const PriceDetail = () => {
           <span className={`${sectionChange === '매수' ?
             'buyingSection' :
             ''
-            }`} onClick={() => (dispatch(setSectionChange('매수')))}>매수</span>
+            }`} onClick={() => dispatch(setSectionChange('매수'))}>매수</span>
           <span className={`${sectionChange === '매도' ?
             'sellingSection' :
             ''
-            }`} onClick={() => (dispatch(setSectionChange('매도')))}>매도</span>
+            }`} onClick={() => dispatch(setSectionChange('매도'))}>매도</span>
           <span className={`${sectionChange === '거래내역' ?
             'tradingHistorySection' :
             ''
-            }`} onClick={() => (dispatch(setSectionChange('거래내역')))}>거래내역</span>
+            }`} onClick={() => dispatch(setSectionChange('거래내역'))}>거래내역</span>
         </div>
         {
           sectionChange === '매수' ?
@@ -442,6 +445,8 @@ const BuyingSection = () => {
   const asking_data = useSelector((state: RootState) => state.asking_data);  // bid = 매수, ask = 매도
   const askingData_unSigned = useSelector((state: RootState) => state.askingData_unSigned);
   const filteredData = useSelector((state: RootState) => state.filteredData);
+  const theme = useSelector((state: RootState) => state.theme);
+
 
   const buyingPrice = useSelector((state: RootState) => state.buyingPrice);
   const [selectedPercentage, setSelectedPercentage] = useState<string>('');
@@ -616,7 +621,7 @@ const BuyingSection = () => {
       <table className="trading-headTable">
         <tbody>
           <tr className="trading-choice">
-            <td className="radio">
+            <td className={`radio ${theme ? 'darkMode-title' : 'lightMode-title'}`}>
               주문구분
             </td>
             <td></td>
@@ -625,13 +630,13 @@ const BuyingSection = () => {
             <td></td>
             <td className="radio">
               <input type="radio" name="radio" id="radio1" className="radio-input" onChange={() => (setBidSort('지정가'))} checked={bidSort === '지정가'}></input>
-              <label className="radio-designate radio-label" htmlFor="radio1">
+              <label className={`radio-designate radio-label ${theme ? 'darkMode-title' : 'lightMode-title'}`} htmlFor="radio1">
                 지정가
               </label>
             </td>
             <td className="radio">
               <input type="radio" name="radio" id="radio2" className="radio-input" onChange={() => (setBidSort('시장가'))} checked={bidSort === '시장가'}></input>
-              <label className="radio-market radio-label" htmlFor="radio2">
+              <label className={`radio-market radio-label ${theme ? 'darkMode-title' : 'lightMode-title'}`} htmlFor="radio2">
                 시장가
               </label>
             </td>
@@ -651,15 +656,16 @@ const BuyingSection = () => {
             <table className="trading-table">
               <tbody>
                 <tr>
-                  <td className="trading-category">주문가능</td>
+                  <td className={`trading-category ${theme ? 'darkMode-title' : 'lightMode-title'}`}>주문가능</td>
                   <td className="trading-availableTrade">{(Number(userWallet).toLocaleString())}
-                    <span>KRW</span>
+                    <span className={`${theme ? 'darkMode' : 'lightMode'}`}>KRW</span>
                   </td>
                 </tr>
                 <tr>
-                  <td className="trading-category">매수가격</td>
+                  <td>매수가격</td>
                   <td className="td-input">
-                    <input type="text"
+                    <input
+                      type="text"
                       value={buyingInputValue}
                       onChange={(e) => {
                         let value = e.target.value;
@@ -707,9 +713,11 @@ const BuyingSection = () => {
                   </td>
                 </tr>
                 <tr>
-                  <td className="trading-category">주문수량</td>
+                  <td className={`trading-category ${theme ? 'darkMode-title' : 'lightMode-title'}`}>주문수량</td>
                   <td className="td-input">
-                    <input type="text"
+                    <input
+                      type="text"
+                      className={`${theme ? 'darkMode-title' : 'lightMode-title'}`}
                       value={quantityInputValue}
                       onChange={(e) => {
                         let value = e.target.value;
@@ -788,9 +796,11 @@ const BuyingSection = () => {
                   </td>
                 </tr>
                 <tr>
-                  <td className="trading-category">주문총액</td>
+                  <td className={`trading-category ${theme ? 'darkMode-title' : 'lightMode-title'}`}>주문총액</td>
                   <td className="td-input">
-                    <input type="text"
+                    <input
+                      type="text"
+                      className={`${theme ? 'darkMode-title' : 'lightMode-title'}`}
                       value={totalInputValue}
                       onChange={(e) => {
                         let value = e.target.value;
@@ -876,13 +886,13 @@ const BuyingSection = () => {
               <>
                 <table className="trading-table">
                   <tr>
-                    <td className="trading-category">주문가능</td>
+                    <td className={`trading-category ${theme ? 'darkMode-title' : 'lightMode-title'}`}>주문가능</td>
                     <td className="trading-availableTrade">{(Number(userWallet).toLocaleString())}
                       <span>KRW</span>
                     </td>
                   </tr>
                   <tr>
-                    <td className="trading-category">주문총액</td>
+                    <td className={`trading-category ${theme ? 'darkMode-title' : 'lightMode-title'}`}>주문총액</td>
                     <td className="td-input">
                       <input value={buyTotal}>
                       </input>
@@ -1059,6 +1069,7 @@ const SellingSection = () => {
   const asking_data = useSelector((state: RootState) => state.asking_data);  // bid = 매수, ask = 매도
   const ownedCrypto = useSelector((state: RootState) => state.ownedCrypto);
   const askingData_unSigned = useSelector((state: RootState) => state.askingData_unSigned);
+  const theme = useSelector((state: RootState) => state.theme);
 
   const [selectedPercentage, setSelectedPercentage] = useState<string>('');
   const [bidSort, setBidSort] = useState<string>('지정가');
@@ -1257,7 +1268,7 @@ const SellingSection = () => {
       <ModalComplete completeModalOpen={completeModalOpen} setCompleteModalOpen={setCompleteModalOpen} completeToggleModal={completeToggleModal} />
       <table className="trading-headTable">
         <tr className="trading-choice">
-          <td className="radio">
+          <td className={`radio ${theme ? 'darkMode-title' : 'lightMode-title'}`}>
             주문구분
           </td>
           <td></td>
@@ -1266,13 +1277,13 @@ const SellingSection = () => {
           <td></td>
           <td className="radio">
             <input type="radio" name="radio" id="radio1" className="radio-input" onClick={() => (setBidSort('지정가'))} checked={bidSort === '지정가'}></input>
-            <label className="radio-designate radio-label" htmlFor="radio1">
+            <label className={`radio-designate radio-label ${theme ? 'darkMode-title' : 'lightMode-title'}`} htmlFor="radio1">
               지정가
             </label>
           </td>
           <td className="radio">
             <input type="radio" name="radio" id="radio2" className="radio-input" onClick={() => (setBidSort('시장가'))} checked={bidSort === '시장가'}></input>
-            <label className="radio-market radio-label" htmlFor="radio2">
+            <label className={`radio-market radio-label ${theme ? 'darkMode-title' : 'lightMode-title'}`} htmlFor="radio2">
               시장가
             </label>
           </td>
@@ -1290,7 +1301,7 @@ const SellingSection = () => {
           <>
             <table className="trading-table">
               <tr>
-                <td className="trading-category">주문가능</td>
+                <td className={`trading-category ${theme ? 'darkMode-title' : 'lightMode-title'}`}>주문가능</td>
                 <td className="trading-availableTrade">
                   {
                     // 보유수량이 undefined 또는 null일 때 0 반환
@@ -1300,7 +1311,7 @@ const SellingSection = () => {
                 </td>
               </tr>
               <tr>
-                <td className="trading-category">매도가격</td>
+                <td className={`trading-category ${theme ? 'darkMode-title' : 'lightMode-title'}`}>매도가격</td>
                 <td className="td-input">
                   <input type="text"
                     value={sellingInputValue}
@@ -1349,7 +1360,7 @@ const SellingSection = () => {
                 </td>
               </tr>
               <tr>
-                <td className="trading-category">주문수량</td>
+                <td className={`trading-category ${theme ? 'darkMode-title' : 'lightMode-title'}`}>주문수량</td>
                 <td className="td-input">
                   <input type="text"
                     value={quantityInputValue}
@@ -1431,7 +1442,7 @@ const SellingSection = () => {
                 </td>
               </tr>
               <tr>
-                <td className="trading-category">주문총액</td>
+                <td className={`trading-category ${theme ? 'darkMode-title' : 'lightMode-title'}`}>주문총액</td>
                 <td className="td-input">
                   <input type="text"
                     value={totalInputValue}
@@ -1520,7 +1531,7 @@ const SellingSection = () => {
               <>
                 <table className="trading-table">
                   <tr>
-                    <td className="trading-category">주문가능</td>
+                    <td className={`trading-category ${theme ? 'darkMode-title' : 'lightMode-title'}`}>주문가능</td>
                     <td className="trading-availableTrade">
                       {
                         // 보유수량이 undefined 또는 null일 때 0 반환
@@ -1536,7 +1547,7 @@ const SellingSection = () => {
                     </td>
                   </tr>
                   <tr>
-                    <td className="trading-category">주문수량</td>
+                    <td className={`trading-category ${theme ? 'darkMode-title' : 'lightMode-title'}`}>주문수량</td>
                     <td className="td-input">
                       <input type="text"
                         value={quantityInputValue}
