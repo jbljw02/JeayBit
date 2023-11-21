@@ -41,67 +41,67 @@ const Header = () => {
 
   const [completeModalOpen, setCompleteModalOpen] = useState<boolean>(false);
 
-  const { getBalance } = useFunction();
+  const { getBalance, themeChange } = useFunction();
 
   const completeToggleModal = () => {
     setCompleteModalOpen(!completeModalOpen);
   }
 
-  const themeChange = () => {
-    dispatch(setTheme(!theme));
+  // const themeChange = () => {
+  //   dispatch(setTheme(!theme));
 
-    let generalTheme = document.querySelectorAll(".lightMode, .darkMode");
-    let titleTheme = document.querySelectorAll(
-      ".lightMode-title, .darkMode-title"
-    );
-    let titleImgTheme = document.querySelectorAll(
-      ".title-img-light, .title-img-dark"
-    );
-    let hoverTheme = document.querySelectorAll(
-      ".hover-lightMode, .hover-darkMode"
-    );
+  //   let generalTheme = document.querySelectorAll(".lightMode, .darkMode");
+  //   let titleTheme = document.querySelectorAll(
+  //     ".lightMode-title, .darkMode-title"
+  //   );
+  //   let titleImgTheme = document.querySelectorAll(
+  //     ".title-img-light, .title-img-dark"
+  //   );
+  //   let hoverTheme = document.querySelectorAll(
+  //     ".hover-lightMode, .hover-darkMode"
+  //   );
 
-    // 라이트모드 <-> 다크모드 순회
-    generalTheme.forEach((element) => {
-      if (!theme) {
-        element.classList.remove("lightMode");
-        element.classList.add("darkMode");
-      } else {
-        element.classList.remove("darkMode");
-        element.classList.add("lightMode");
-      }
-    });
+  //   // 라이트모드 <-> 다크모드 순회
+  //   generalTheme.forEach((element) => {
+  //     if (!theme) {
+  //       element.classList.remove("lightMode");
+  //       element.classList.add("darkMode");
+  //     } else {
+  //       element.classList.remove("darkMode");
+  //       element.classList.add("lightMode");
+  //     }
+  //   });
 
-    titleTheme.forEach((element) => {
-      if (!theme) {
-        element.classList.remove("lightMode-title");
-        element.classList.add("darkMode-title");
-      } else {
-        element.classList.remove("darkMode-title");
-        element.classList.add("lightMode-title");
-      }
-    });
+  //   titleTheme.forEach((element) => {
+  //     if (!theme) {
+  //       element.classList.remove("lightMode-title");
+  //       element.classList.add("darkMode-title");
+  //     } else {
+  //       element.classList.remove("darkMode-title");
+  //       element.classList.add("lightMode-title");
+  //     }
+  //   });
 
-    titleImgTheme.forEach((element) => {
-      if (!theme) {
-        element.classList.remove("title-img-light");
-        element.classList.add("title-img-dark");
-      } else {
-        element.classList.remove("title-img-dark");
-        element.classList.add("title-img-light");
-      }
-    });
+  //   titleImgTheme.forEach((element) => {
+  //     if (!theme) {
+  //       element.classList.remove("title-img-light");
+  //       element.classList.add("title-img-dark");
+  //     } else {
+  //       element.classList.remove("title-img-dark");
+  //       element.classList.add("title-img-light");
+  //     }
+  //   });
 
-    hoverTheme.forEach((element) => {
-      if (!theme) {
-        element.classList.remove("hover-lightMode");
-        element.classList.add("hover-darkMode");
-      } else {
-        element.classList.remove("hover-darkMode");
-        element.classList.add("hover-lightMode");
-      }
-    });
-  };
+  //   hoverTheme.forEach((element) => {
+  //     if (!theme) {
+  //       element.classList.remove("hover-lightMode");
+  //       element.classList.add("hover-darkMode");
+  //     } else {
+  //       element.classList.remove("hover-darkMode");
+  //       element.classList.add("hover-lightMode");
+  //     }
+  //   });
+  // };
 
   // 화면 첫 랜더링 시, 사용자 변경 시, 입출금 할 때마다 잔고 데이터 받아옴
   useEffect(() => {
@@ -536,35 +536,36 @@ const Header = () => {
               </span>
             </div>
           )}
-        {theme === true ? (
-          <svg
-            onClick={() => themeChange()}
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            fill="none"
-            className="changeTheme"
-          >
-            <path
-              d="M20.968 12.768a7 7 0 01-9.735-9.735 9 9 0 109.735 9.735z"
-              fill="currentColor"
-            ></path>
-          </svg>
-        ) : (
-          <svg
-            onClick={() => themeChange()}
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            fill="none"
-            className="changeTheme"
-          >
-            <path
-              fillRule="evenodd"
-              clipRule="evenodd"
-              d="M10.5 2h3v3h-3V2zM16 12a4 4 0 11-8 0 4 4 0 018 0zM5.99 3.869L3.867 5.99 5.99 8.112 8.111 5.99 5.989 3.87zM2 13.5v-3h3v3H2zm1.868 4.51l2.121 2.12 2.122-2.12-2.122-2.122-2.121 2.121zM13.5 19v3h-3v-3h3zm4.51-3.112l-2.121 2.122 2.121 2.121 2.121-2.121-2.121-2.122zM19 10.5h3v3h-3v-3zm-3.11-4.51l2.12 2.121 2.122-2.121-2.121-2.121-2.122 2.121z"
-              fill="currentColor"
-            ></path>
-          </svg>
-        )}
+        {/* {
+          theme === true ? (
+            <svg
+              onClick={() => themeChange()}
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              className="changeTheme"
+            >
+              <path
+                d="M20.968 12.768a7 7 0 01-9.735-9.735 9 9 0 109.735 9.735z"
+                fill="currentColor"
+              ></path>
+            </svg>
+          ) : (
+            <svg
+              onClick={() => themeChange()}
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              className="changeTheme"
+            >
+              <path
+                fillRule="evenodd"
+                clipRule="evenodd"
+                d="M10.5 2h3v3h-3V2zM16 12a4 4 0 11-8 0 4 4 0 018 0zM5.99 3.869L3.867 5.99 5.99 8.112 8.111 5.99 5.989 3.87zM2 13.5v-3h3v3H2zm1.868 4.51l2.121 2.12 2.122-2.12-2.122-2.122-2.121 2.121zM13.5 19v3h-3v-3h3zm4.51-3.112l-2.121 2.122 2.121 2.121 2.121-2.121-2.121-2.122zM19 10.5h3v3h-3v-3zm-3.11-4.51l2.12 2.121 2.122-2.121-2.121-2.121-2.122 2.121z"
+                fill="currentColor"
+              ></path>
+            </svg>
+          )} */}
         {/* {
           theme === true ?
             <svg onClick={() => themeChange()} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" className="changeTheme">
@@ -586,60 +587,7 @@ const HeaderNav = () => {
   const navigate = useNavigate();
   const theme = useSelector((state: RootState) => state.theme);
 
-  const themeChange = () => {
-    dispatch(setTheme(!theme));
-    let generalTheme = document.querySelectorAll(".lightMode, .darkMode");
-    let titleTheme = document.querySelectorAll(
-      ".lightMode-title, .darkMode-title"
-    );
-    let titleImgTheme = document.querySelectorAll(
-      ".title-img-light, .title-img-dark"
-    );
-    let hoverTheme = document.querySelectorAll(
-      ".hover-lightMode, .hover-darkMode"
-    );
-
-    // 라이트모드 <-> 다크모드 순회
-    generalTheme.forEach((element) => {
-      if (!theme) {
-        element.classList.remove("lightMode");
-        element.classList.add("darkMode");
-      } else {
-        element.classList.remove("darkMode");
-        element.classList.add("lightMode");
-      }
-    });
-
-    titleTheme.forEach((element) => {
-      if (!theme) {
-        element.classList.remove("lightMode-title");
-        element.classList.add("darkMode-title");
-      } else {
-        element.classList.remove("darkMode-title");
-        element.classList.add("lightMode-title");
-      }
-    });
-
-    titleImgTheme.forEach((element) => {
-      if (!theme) {
-        element.classList.remove("title-img-light");
-        element.classList.add("title-img-dark");
-      } else {
-        element.classList.remove("title-img-dark");
-        element.classList.add("title-img-light");
-      }
-    });
-
-    hoverTheme.forEach((element) => {
-      if (!theme) {
-        element.classList.remove("hover-lightMode");
-        element.classList.add("hover-darkMode");
-      } else {
-        element.classList.remove("hover-darkMode");
-        element.classList.add("hover-lightMode");
-      }
-    });
-  };
+  const { themeChange } = useFunction();
 
   return (
     <header className="header-nav lightMode-title">

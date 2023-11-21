@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
-import { setUserWallet, RootState, setOwnedCrypto, setUserTradeHistory, setUserTradeHistory_unSigned, setIsBuying, setAsking_data, setAsking_dateTime, setAsking_totalAskSize, setAsking_totalBidSize, setAskingData_unSigned, setIsSelling } from "../store";
+import { setUserWallet, RootState, setOwnedCrypto, setUserTradeHistory, setUserTradeHistory_unSigned, setIsBuying, setAsking_data, setAsking_dateTime, setAsking_totalAskSize, setAsking_totalBidSize, setAskingData_unSigned, setIsSelling, setTheme } from "../store";
 import { useState } from "react";
 
 export default function useFunction() {
@@ -16,6 +16,7 @@ export default function useFunction() {
   const askingData_unSigned = useSelector((state: RootState) => state.askingData_unSigned);
   const filteredData = useSelector((state: RootState) => state.filteredData);
   const userTradeHistory = useSelector((state: RootState) => state.userTradeHistory);
+  const theme = useSelector((state: RootState) => state.theme);
 
   const [time, setTime] = useState(new Date());
 
@@ -309,6 +310,62 @@ export default function useFunction() {
     })(key, email, cryptoName, cryptoQuantity, sellTotal);
   }
 
-  return { getBalance, getOwnedCrypto, addTradeHistory, getTradeHistory, getCryptoName, selectAskingPrice, selectAskingPrice_unSigned, buyCrypto_unSigned, sellCrypto_unSigned };
+  const themeChange = () => {
+
+    dispatch(setTheme(!theme));
+    let generalTheme = document.querySelectorAll(".lightMode, .darkMode");
+    let titleTheme = document.querySelectorAll(
+      ".lightMode-title, .darkMode-title"
+    );
+    let titleImgTheme = document.querySelectorAll(
+      ".title-img-light, .title-img-dark"
+    );
+    let hoverTheme = document.querySelectorAll(
+      ".hover-lightMode, .hover-darkMode"
+    );
+
+    // 라이트모드 <-> 다크모드 순회
+    generalTheme.forEach((element) => {
+      if (!theme) {
+        element.classList.remove("lightMode");
+        element.classList.add("darkMode");
+      } else {
+        element.classList.remove("darkMode");
+        element.classList.add("lightMode");
+      }
+    });
+
+    titleTheme.forEach((element) => {
+      if (!theme) {
+        element.classList.remove("lightMode-title");
+        element.classList.add("darkMode-title");
+      } else {
+        element.classList.remove("darkMode-title");
+        element.classList.add("lightMode-title");
+      }
+    });
+
+    titleImgTheme.forEach((element) => {
+      if (!theme) {
+        element.classList.remove("title-img-light");
+        element.classList.add("title-img-dark");
+      } else {
+        element.classList.remove("title-img-dark");
+        element.classList.add("title-img-light");
+      }
+    });
+
+    hoverTheme.forEach((element) => {
+      if (!theme) {
+        element.classList.remove("hover-lightMode");
+        element.classList.add("hover-darkMode");
+      } else {
+        element.classList.remove("hover-darkMode");
+        element.classList.add("hover-lightMode");
+      }
+    });
+  };
+
+  return { getBalance, getOwnedCrypto, addTradeHistory, getTradeHistory, getCryptoName, selectAskingPrice, selectAskingPrice_unSigned, buyCrypto_unSigned, sellCrypto_unSigned, themeChange };
 
 }
