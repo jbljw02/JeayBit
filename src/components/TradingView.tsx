@@ -19,13 +19,6 @@ const TradingView = () => {
   const cr_open_price = useSelector((state: RootState) => { return state.cr_open_price });
   const cr_high_price = useSelector((state: RootState) => { return state.cr_high_price });
   const cr_low_price = useSelector((state: RootState) => { return state.cr_low_price });
-  // const cr_selected.change = useSelector((state: RootState) => { return state.cr_selected.change });
-  // const cr_selected.change_rate = useSelector((state: RootState) => { return state.cr_selected.change_rate });
-  // const cr_selected.trade_price = useSelector((state: RootState) => { return state.cr_selected.trade_price });
-  // const cr_selected.tradeVolume = useSelector((state: RootState) => { return state.cr_selected.tradeVolume });
-  // const cr_selected.open_price = useSelector((state: RootState) => { return state.cr_selected.open_price });
-  // const cr_selected.high_price = useSelector((state: RootState) => { return state.cr_selected.high_price });
-  // const (cr_selected.low_price) = useSelector((state: RootState) => { return state.(cr_selected.low_price) });
   const delimitedTime = useSelector((state: RootState) => state.delimitedTime);
   const delimitedDate = useSelector((state: RootState) => state.delimitedDate);
   const selectedChartSort = useSelector((state: RootState) => state.selectedChartSort);
@@ -89,7 +82,7 @@ const TradingView = () => {
         </span>
       </div>
       <div className="trading-detail lightMode">
-        {/* 삼항연산자 중첩 - 전일 대비 가격이 상승했다면 청색, 하락했다면 적색, 동일하다면 검정색 */}
+        {/* 전일 대비 가격이 상승했다면 청색, 하락했다면 적색, 동일하다면 검정색 */}
         {/* 선택된 화폐의 가격과 변화율 및 24시간 동안의 상세정보 */}
         {
           cr_selected && cr_selected.change ?
@@ -220,7 +213,7 @@ const TradingView = () => {
                   )
                 })
               }
-              <td className="dropDown">
+              <label className="dropDown">
                 {
                   chartSortTime === '' ?
                     <span className="chartSortDate-selected">{chartSortDate}</span> :
@@ -253,7 +246,7 @@ const TradingView = () => {
                     })
                   }
                 </ul>
-              </td>
+              </label>
             </tr>
           </tbody>
         </table>
@@ -333,7 +326,6 @@ const Crypto_change_rate_selected = () => {
               )
           ) : null
       }
-
     </>
   );
 }

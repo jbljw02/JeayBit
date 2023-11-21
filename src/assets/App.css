@@ -498,13 +498,20 @@
   padding: 10px 0px;
   cursor: pointer;
   white-space: nowrap;
-
 }
 
 .chartSortDate {
   padding-left: 5px;
   padding-right: 1px;
   cursor: pointer;
+}
+
+.chartSortDate-selected {
+  padding-left: 5px;
+  padding-right: 1px;
+  cursor: pointer;
+  color: #2962FF;
+  font-weight: bold;
 }
 
 .chartSortDate:hover {

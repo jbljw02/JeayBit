@@ -635,12 +635,12 @@ const BuyingSection = () => {
                 시장가
               </label>
             </td>
-            <td className="radio">
+            {/* <td className="radio">
               <input type="radio" name="radio" id="radio3" className="radio-input" onChange={() => (setBidSort('예약가'))} checked={bidSort === '예약가'}></input>
               <label className="radio-reserve radio-label" htmlFor="radio3">
                 예약/지정가
               </label>
-            </td>
+            </td> */}
           </tr>
         </tbody>
       </table>
@@ -1276,12 +1276,12 @@ const SellingSection = () => {
               시장가
             </label>
           </td>
-          <td className="radio">
+          {/* <td className="radio">
             <input type="radio" name="radio" id="radio3" className="radio-input" onClick={() => (setBidSort('예약가'))} checked={bidSort === '예약가'}></input>
             <label className="radio-reserve radio-label" htmlFor="radio3">
               예약/지정가
             </label>
-          </td>
+          </td> */}
         </tr>
       </table>
       {
@@ -1984,7 +1984,6 @@ const TradeHistory = () => {
                             {
                               item.trade_amount !== undefined ?
                                 (
-
                                   (String(item.trade_amount)).length <= 10 ?
                                     item.trade_amount :
                                     (
