@@ -1101,12 +1101,19 @@ input[type=range]::-webkit-slider-thumb {
 }
 
 .table-tradingHistory {
-  margin-top: 5px;
   width: 100%;
   border-collapse: collapse;
   border-top: 1px solid #E3E8EC;
   border-bottom: 1px solid #E3E8EC;
   table-layout: fixed;
+}
+
+#historyHead {
+  margin-top: 5px;
+}
+
+#historyBody {
+  border-top: none;
 }
 
 #trading-history-cancel {
@@ -1125,7 +1132,6 @@ input[type=range]::-webkit-slider-thumb {
   text-align: center;
   /* font-weight: lighter !important; */
   padding: 11px 0px;
-  border-bottom: 1px solid #E3E8EC;
   border-right: 1px solid #E3E8EC;
 }
 
@@ -1355,7 +1361,7 @@ input[type=range]::-webkit-slider-thumb {
   max-height: calc(100vh - 1150px);
   /* max-height: 200px; */
   overflow-x: hidden;
-  margin-top: -6px;
+  /* margin-top: -6px; */
   /* padding-top: -6px; */
 }
 
