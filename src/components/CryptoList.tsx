@@ -150,13 +150,13 @@ const CryptoList = () => {
       .map(([key, value]) => key)
 
     // 마켓명으로 요청을 보내야 하기 때문에, 화폐명을 마켓명으로 변경
-    let unSignedMarket : (string | null)[] = unSignedCrypto.map((name) => {
+    let unSignedMarket: (string | null)[] = unSignedCrypto.map((name) => {
       let isCorresponed = filteredData.find(isCorresponed => isCorresponed.name === name)
       return isCorresponed ? isCorresponed.market : null
     })
 
     for (let i = 0; i < unSignedMarket.length; i++) {
-      if(unSignedMarket[i]) {
+      if (unSignedMarket[i]) {
         selectAskingPrice_unSigned(unSignedMarket[i] as string);
       }
     }
@@ -171,7 +171,7 @@ const CryptoList = () => {
       fetchData();
     }, 1000);
 
-    initialData(); 
+    initialData();
 
     // clearInterval(변수)
     // setInterval이 반환하는 interval ID를 clearInterval 함수로 제거
@@ -693,10 +693,15 @@ const CryptoList = () => {
 
       {/* 화폐 정보 테이블 */}
       {/* 스크롤바를 넣기 위해 테이블을 두 개로 구성 */}
-      <table className="list-table">
+      <table className="list-table" id="listHead">
+        <colgroup>
+          <col width={150} />
+          <col width={90} />
+          <col width={90} />
+          <col width={90} />
+        </colgroup>
         <thead className="list-thead lightMode">
           <tr className="lightMode-title">
-
             {
               listCategory !== '보유' ?
                 <>
@@ -771,11 +776,16 @@ const CryptoList = () => {
           </tr>
         </thead>
       </table>
-
       {
         listCategory === "원화" ? (
           <SimpleBar className="scrollBar-listTable">
             <table className="list-table">
+              <colgroup>
+                <col width={150} />
+                <col width={90} />
+                <col width={90} />
+                <col width={90} />
+              </colgroup>
               <tbody className="scrollable-tbody">
                 {/* 검색값을 반환한 filteredData 함수를 다시 반복문을 이용하여 출력 */}
                 {filteredData.map((item, i) => {
@@ -891,123 +901,144 @@ const CryptoList = () => {
             // 보유 화폐 영역
             <SimpleBar className="scrollBar-listTable">
               <table className="list-table">
+                <colgroup>
+                  <col width={150} />
+                  <col width={90} />
+                  <col width={90} />
+                  <col width={90} />
+                </colgroup>
                 <tbody className="scrollable-tbody">
                   {/* 검색값을 반환한 filteredData 함수를 다시 반복문을 이용하여 출력 */}
-                  {filteredData.map((item, i) => {
+                  {
+                    filteredData.map((item, i) => {
 
-                    // 가격의 변화가 생긴 state를 테이블에서 찾아 해당 td 시각화
-                    let isChanged = differences.some((diff, index) => {
-                      return diff.index === i && diff.newValue === item.price;
-                    });
-                    let priceClass_rise = isChanged ? "change-price-rise" : "";
-                    let priceClass_fall = isChanged ? "change-price-fall" : "";
-
-                    // DB에서 가져온 보유화폐 목록과 일치하는 행을 찾음
-                    let isOwned =
-                      Array.isArray(ownedCrypto) && ownedCrypto.some((diff, index) => {
-                        return item.name === diff.crypto_name;
+                      // 가격의 변화가 생긴 state를 테이블에서 찾아 해당 td 시각화
+                      let isChanged = differences.some((diff, index) => {
+                        return diff.index === i && diff.newValue === item.price;
                       });
+                      let priceClass_rise = isChanged ? "change-price-rise" : "";
+                      let priceClass_fall = isChanged ? "change-price-fall" : "";
 
-                    // 관심화폐는 시각화 해주기 위해 구분
-                    let isFavorited =
-                      Array.isArray(favoriteCrypto) && favoriteCrypto.some((diff, index) => {
-                        return item.name === diff.crypto_name;
-                      });
+                      // DB에서 가져온 보유화폐 목록과 일치하는 행을 찾음
+                      let isOwned =
+                        Array.isArray(ownedCrypto) && ownedCrypto.some((diff, index) => {
+                          return item.name === diff.crypto_name;
+                        });
 
-                    return (
-                      // 보유화폐만 출력
-                      isOwned && (
-                        <tr
-                          key={i}
-                          onClick={() => {
-                            dispatch(setBuyingPrice(filteredData[i].price)); // 특정 화폐를 클릭하면 해당 화폐의 값으로 '매수가격'이 업데이트 됨
-                            dispatch(setSellingPrice(filteredData[i].price)); // 특정 화폐를 클릭하면 해당 화폐의 값으로 '매더가격'이 업데이트 됨
-                            nameSelect(filteredData[i].name);
-                            marketSelect(filteredData[i].market);
-                            setSelectedCrypto(filteredData[i]);
-                            selectMarket_date(filteredData[i].market);
-                            selectMarket_time(
-                              filteredData[i].market,
-                              selectedChartSort
-                            );
-                            selectAskingPrice(filteredData[i].market);
-                            selectClosedPrice(filteredData[i].market);
-                          }}
-                        >
-                          <td className="td-name lightMode" id="owned-td-name">
-                            <span className="span-star">
-                              <img
-                                onClick={() => {
-                                  starClick(i);
-                                  addCryptoToUser(logInEmail, filteredData[i].name);
-                                }}
-                                // 최초 star[i]의 상태는 'starOn'일 수가 없으므로 반드시 starOff 출력
-                                // src={star[i] === 'starOn' ? starOn : starOff}
-                                src={isFavorited ? starOn : starOff}
-                                alt="star"
-                              />
-                            </span>
-                            <div className="div-name">
-                              <div>{item.name}</div>
-                              <div>{item.market}</div>
-                            </div>
-                          </td>
+                      // 관심화폐는 시각화 해주기 위해 구분
+                      let isFavorited =
+                        Array.isArray(favoriteCrypto) && favoriteCrypto.some((diff, index) => {
+                          return item.name === diff.crypto_name;
+                        });
 
-                          {/* 전일 대비 가격이 상승했다면 청색, 하락했다면 적색, 동일하다면 검정색 */}
-                          {item.change === "RISE" ? (
-                            <td className="lightMode" id="owned-td-price">
-                              <span className={`td-rise ${priceClass_rise}`}>
-                                {item.price.toLocaleString()}
+
+                      // 인덱스 한 번당 소유화폐를 순회시켜서 일치하는 요소를 찾고, 찾지 못한다면 ?를 이용해서 undefined를 반환
+                      let ownedQuantity = String(Number(ownedCrypto.find((crypto) => item.name === crypto.crypto_name)?.quantity)?.toFixed(2))
+
+                      let ownedMarket = (item.market).slice(4)
+
+                      let userOwnedQuantity = ownedQuantity + ownedMarket;
+
+                      // 전체 문자열의 길이가 12자리를 넘어갈 경우 12자리가 될 때 까지 마지막 인덱스 제거
+                      while (userOwnedQuantity.length > 12) {
+                        ownedQuantity = ownedQuantity.slice(0, -1);
+                        userOwnedQuantity = ownedQuantity + ownedMarket;
+                      }
+
+                      // 마지막 인덱스가 '.'일 경우 제거
+                      if (userOwnedQuantity.endsWith('.')) {
+                        userOwnedQuantity = userOwnedQuantity.slice(0, -1);
+                      }
+
+                      return (
+                        // 보유화폐만 출력
+                        isOwned && (
+                          <tr
+                            key={i}
+                            onClick={() => {
+                              dispatch(setBuyingPrice(filteredData[i].price)); // 특정 화폐를 클릭하면 해당 화폐의 값으로 '매수가격'이 업데이트 됨
+                              dispatch(setSellingPrice(filteredData[i].price)); // 특정 화폐를 클릭하면 해당 화폐의 값으로 '매더가격'이 업데이트 됨
+                              nameSelect(filteredData[i].name);
+                              marketSelect(filteredData[i].market);
+                              setSelectedCrypto(filteredData[i]);
+                              selectMarket_date(filteredData[i].market);
+                              selectMarket_time(
+                                filteredData[i].market,
+                                selectedChartSort
+                              );
+                              selectAskingPrice(filteredData[i].market);
+                              selectClosedPrice(filteredData[i].market);
+                            }}>
+                            <td className="td-name lightMode" id="owned-td-name">
+                              <span className="span-star">
+                                <img
+                                  onClick={() => {
+                                    starClick(i);
+                                    addCryptoToUser(logInEmail, filteredData[i].name);
+                                  }}
+                                  // 최초 star[i]의 상태는 'starOn'일 수가 없으므로 반드시 starOff 출력
+                                  // src={star[i] === 'starOn' ? starOn : starOff}
+                                  src={isFavorited ? starOn : starOff}
+                                  alt="star"
+                                />
+                              </span>
+                              <div className="div-name">
+                                <div>{item.name}</div>
+                                <div>{item.market}</div>
+                              </div>
+                            </td>
+
+                            {/* 전일 대비 가격이 상승했다면 청색, 하락했다면 적색, 동일하다면 검정색 */}
+                            {
+                              item.change === "RISE" ? (
+                                <td className="lightMode" id="owned-td-price">
+                                  <span className={`td-rise ${priceClass_rise}`}>
+                                    {item.price.toLocaleString()}
+                                  </span>
+                                </td>
+                              ) : item.change === "FALL" ? (
+                                <td className="lightMode" id="owned-td-price">
+                                  <span className={`td-fall ${priceClass_fall}`}>
+                                    {item.price.toLocaleString()}
+                                  </span>
+                                </td>
+                              ) : (
+                                <td className="lightMode" id="owned-td-price">
+                                  <span>{item.price.toLocaleString()}</span>
+                                </td>
+                              )}
+                            {
+                              item.change === "RISE" ? (
+                                <td className="lightMode" id="owned-td-changeRate">
+                                  <span className="td-rise">
+                                    +{(item.change_rate * 100).toFixed(2)}% <br />{" "}
+                                    {item.change_price.toLocaleString()}
+                                  </span>
+                                </td>
+                              ) : item.change === "FALL" ? (
+                                <td className="lightMode" id="owned-td-changeRate">
+                                  <span className="td-fall">
+                                    -{(item.change_rate * 100).toFixed(2)}% <br />{" "}
+                                    {item.change_price.toLocaleString()}
+                                  </span>
+                                </td>
+                              ) : (
+                                <td className="lightMode" id="owned-td-changeRate">
+                                  <span>
+                                    {(item.change_rate * 100).toFixed(2)}% <br />{" "}
+                                    {item.change_price.toLocaleString()}
+                                  </span>
+                                </td>
+                              )}
+                            <td className="lightMode" id="owned-td-quantity">
+                              <span className="td-volume">
+                                {userOwnedQuantity}
                               </span>
                             </td>
-                          ) : item.change === "FALL" ? (
-                            <td className="lightMode" id="owned-td-price">
-                              <span className={`td-fall ${priceClass_fall}`}>
-                                {item.price.toLocaleString()}
-                              </span>
-                            </td>
-                          ) : (
-                            <td className="lightMode" id="owned-td-price">
-                              <span>{item.price.toLocaleString()}</span>
-                            </td>
-                          )}
-                          {item.change === "RISE" ? (
-                            <td className="lightMode" id="owned-td-changeRate">
-                              <span className="td-rise">
-                                +{(item.change_rate * 100).toFixed(2)}% <br />{" "}
-                                {item.change_price.toLocaleString()}
-                              </span>
-                            </td>
-                          ) : item.change === "FALL" ? (
-                            <td className="lightMode" id="owned-td-changeRate">
-                              <span className="td-fall">
-                                -{(item.change_rate * 100).toFixed(2)}% <br />{" "}
-                                {item.change_price.toLocaleString()}
-                              </span>
-                            </td>
-                          ) : (
-                            <td className="lightMode" id="owned-td-changeRate">
-                              <span>
-                                {(item.change_rate * 100).toFixed(2)}% <br />{" "}
-                                {item.change_price.toLocaleString()}
-                              </span>
-                            </td>
-                          )}
-                          <td className="lightMode" id="owned-td-quantity">
-                            <span className="td-volume">
-                              {
-                                // 인덱스 한 번당 소유화폐를 순회시켜서 일치하는 요소를 찾고, 찾지 못한다면 ?를 이용해서 undefined를 반환
-                                Number(ownedCrypto.find((crypto) => item.name === crypto.crypto_name)?.quantity)?.toFixed(2)
-                              }
-                              {
-                                (item.market).slice(4)
-                              }
-                            </span>
-                          </td>
-                        </tr>
-                      )
-                    );
-                  })}
+                          </tr>
+                        )
+                      );
+                    })}
                 </tbody>
               </table>
             </SimpleBar>
@@ -1020,6 +1051,12 @@ const CryptoList = () => {
           // 관심 화폐 영역
           <SimpleBar className="scrollBar-listTable">
             <table className="list-table">
+              <colgroup>
+                <col width={150} />
+                <col width={90} />
+                <col width={90} />
+                <col width={90} />
+              </colgroup>
               <tbody className="scrollable-tbody">
                 {/* 검색값을 반환한 filteredData 함수를 다시 반복문을 이용하여 출력 */}
                 {filteredData.map((item, i) => {
