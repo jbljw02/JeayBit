@@ -944,11 +944,17 @@ dd span {
   margin-left: 5px;
 }
 
+.td-input div {
+  display: flex;
+}
+
 .td-input span {
   font-size: 11.5px;
   color: rgba(0, 0, 0, 0.3);
   font-weight: bold;
   padding-left: 2px;
+  padding-top: 4.3px;
+  padding-right: 3px;
 }
 
 .trading-table input {
