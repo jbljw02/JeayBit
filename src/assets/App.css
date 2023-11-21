@@ -1254,6 +1254,7 @@ input[type=range]::-webkit-slider-thumb {
   flex-direction: column;
   border-collapse: collapse;
   table-layout: fixed;
+  width: 100%;
 }
 
 .list-thead {
@@ -1278,7 +1279,9 @@ input[type=range]::-webkit-slider-thumb {
   border-bottom-style: solid;
   /* border-bottom: 1px solid #E3E8EC;
   border-top: 1pxs solid transparent; */
-  padding: 9.5px;
+  /* padding: 9.5px; */
+  padding-top: 9.5px;
+  padding-bottom: 9.5px;
   white-space: nowrap;
 }
 
@@ -1292,28 +1295,39 @@ input[type=range]::-webkit-slider-thumb {
   font-weight: bold;
 }
 
-.liat-table tr {
+.list-thead {
   width: 100%;
 }
 
-.name {
-  padding-right: 115px;
-  padding-left: 39px;
+.list-table tr {
   width: 100%;
+}
+
+.list-table tr td:nth-child(2) {
+  text-align: right;
+  padding-right: 8px;
+}
+
+.list-table tr td:nth-child(3) {
+  text-align: right;
+  padding-right: 13px;
+}
+
+.list-table tr td:nth-child(4) {
+  text-align: right;
+  padding-right: 8px;
+}
+
+.name {
+  padding-left: 36.5px;
+  text-align: left;
 }
 
 .price,
 .compare,
 .volume {
-  padding-right: 31px;
-}
-
-.compare {
-  padding-right: 15px;
-}
-
-#owned-name {
-  padding-right: 100px;
+  text-align: right;
+  padding-right: 11px;
 }
 
 .list-table tbody tr {
@@ -1371,13 +1385,12 @@ input[type=range]::-webkit-slider-thumb {
 }
 
 .td-name {
-  width: 100%;
+  padding-left: 10px;
 }
 
 .span-star {
   position: relative;
   bottom: 6px;
-  padding-left: 5px;
 }
 
 .div-name {
