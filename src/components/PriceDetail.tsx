@@ -1849,13 +1849,13 @@ const TradeHistory = () => {
         </tbody>
       </table>
 
-      <table className="table-tradingHistory">
-        <colgroup>
+      <table className="table-tradingHistory historyHead" id="historyHead">
+        {/* <colgroup>
           <col width={75} />
           <col width={75} />
           <col width={80} />
           <col width={85} />
-        </colgroup>
+        </colgroup> */}
         <thead>
           <tr>
             <th>주문시간</th>
@@ -1872,13 +1872,13 @@ const TradeHistory = () => {
         </thead>
       </table>
       <SimpleBar className="scrollBar-tradingHistoryTable">
-        <table className="table-tradingHistory">
-          <colgroup>
+        <table className="table-tradingHistory" id="historyBody">
+          {/* <colgroup>
             <col width={75} />
             <col width={75} />
             <col width={80} />
             <col width={85} />
-          </colgroup>
+          </colgroup> */}
           <tbody>
             {
               // 체결된 화폐들의 거래내역
