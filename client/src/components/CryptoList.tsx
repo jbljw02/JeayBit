@@ -77,6 +77,7 @@ const CryptoList = () => {
   const isBuying = useSelector((state: RootState) => state.isBuying);
 
   const [selectedCrypto, setSelectedCrypto] = useState<any>();
+  // eslint-disable-next-line
   const [userSelectedCrypto, setUserSelectedCrypto] = useState<any>();
 
   const logInEmail = useSelector((state: RootState) => state.logInEmail);
@@ -133,6 +134,7 @@ const CryptoList = () => {
     // clearInterval(변수)
     // setInterval이 반환하는 interval ID를 clearInterval 함수로 제거
     return () => clearInterval(interval);
+    // eslint-disable-next-line
   }, []);
 
   // 별 이미지를 클릭할 때마다 서버로부터 관심 화폐에 대한 정보 받아옴
@@ -140,6 +142,7 @@ const CryptoList = () => {
     if (logInEmail !== '') {
       getFavoriteCrypto(logInEmail);
     }
+    // eslint-disable-next-line
   }, [isFavorited]);
 
   // 화면에 보여질 초기 화폐의 차트(비트코인)
@@ -264,12 +267,14 @@ const CryptoList = () => {
         selectMarket_time(cr_market_selected, chartSortTime);
       }
     }
+    // eslint-disable-next-line
   }, [filteredData]);
 
   // 리스트에 있는 화폐 검색시 업데이트
   useEffect(() => {
     // fetchData();
     dispatch(setFilteredData(updatedData));
+    // eslint-disable-next-line
   }, [search_cr, cr_price]);
 
   useEffect(() => {
@@ -277,6 +282,7 @@ const CryptoList = () => {
       selectMarket_date(cr_market_selected);
       // selectMarket_time(cr_market_selected, chartSortTime);
     }
+    // eslint-disable-next-line
   }, [cr_market_selected, chartSortDate, chartSortTime]);
 
   // 화면이 첫 렌더링 될 때마다 
@@ -295,6 +301,7 @@ const CryptoList = () => {
         getAskingPrice_unSigned()
       }
     }
+    // eslint-disable-next-line
   }, [])
 
   // 선택된 화폐에 대한 체결내역 호출
