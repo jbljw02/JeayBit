@@ -1,7 +1,4 @@
 import { HeaderNav } from "./Header";
-import { Footer } from './Footer';
-import { useDispatch, useSelector } from "react-redux";
-import { RootState, setTheme } from "../store";
 import { SetStateAction, useState } from "react";
 import axios, { AxiosError } from "axios";
 import { useNavigate } from "react-router-dom";
@@ -9,7 +6,6 @@ import title from '../assets/images/title.png';
 
 const SignUp = () => {
 
-  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const [activeInput, setActiveInput] = useState<string>('');

@@ -1,10 +1,10 @@
 import { HeaderNav } from "./Header";
 import title from '../assets/images/title.png';
 import { useNavigate } from "react-router-dom";
-import { SetStateAction, useEffect, useState } from "react";
-import axios, { AxiosError } from "axios";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState, setLogInEmail, setLogInUser } from "../store";
+import { SetStateAction, useState } from "react";
+import axios from "axios";
+import { useDispatch } from "react-redux";
+import { setLogInEmail, setLogInUser } from "../store";
 import { csrftoken } from './csrftoken';
 
 
@@ -18,9 +18,6 @@ const LogIn = () => {
   const [isEmailEmpty, setIsEmailEmpty] = useState<boolean>(false);
   const [password, setPassword] = useState<string>('');
   const [isPasswordEmpty, setIsPasswordEmpty] = useState<boolean>(false);
-
-  const logInUser = useSelector((state: RootState) => state.logInUser);
-  const logInEmail = useSelector((state: RootState) => state.logInEmail);
 
   const dispatch = useDispatch();
 

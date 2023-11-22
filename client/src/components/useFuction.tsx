@@ -1,24 +1,14 @@
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { setUserWallet, RootState, setOwnedCrypto, setUserTradeHistory, setUserTradeHistory_unSigned, setIsBuying, setAsking_data, setAsking_dateTime, setAsking_totalAskSize, setAsking_totalBidSize, setAskingData_unSigned, setIsSelling, setTheme } from "../store";
-import { useState } from "react";
 
 export default function useFunction() {
 
   const dispatch = useDispatch();
   const logInUser = useSelector((state: RootState) => state.logInUser);
-  const ownedCrypto = useSelector((state: RootState) => state.ownedCrypto);
   const logInEmail = useSelector((state: RootState) => state.logInEmail);
-  const cr_selected = useSelector((state: RootState) => state.cr_selected);
-  const userTradeHistory_unSigned = useSelector((state: RootState) => state.userTradeHistory_unSigned);
-  const isBuying = useSelector((state: RootState) => state.isBuying);
-  const cr_name_selected = useSelector((state: RootState) => state.cr_name_selected);
-  const askingData_unSigned = useSelector((state: RootState) => state.askingData_unSigned);
   const filteredData = useSelector((state: RootState) => state.filteredData);
-  const userTradeHistory = useSelector((state: RootState) => state.userTradeHistory);
   const theme = useSelector((state: RootState) => state.theme);
-
-  const [time, setTime] = useState(new Date());
 
   // 서버로부터 사용자의 잔고량을 받아옴
   const getBalance = (email: string) => {
@@ -87,21 +77,21 @@ export default function useFunction() {
         const unsigned: { trade_time: string; is_signed: boolean; id: string; crypto_price: number; crypto_name: string; trade_amount: string; trade_price: string; }[] = [];
 
         // 다른 요소는 서버에서 받아온 값 그대로 유지, 거래 시간만 형식 변경해서 dispatch
-        response.data.map((item: { trade_time: Date, is_signed: boolean, id: string, crypto_price: number, crypto_name: string, trade_amount: string, trade_price: string }, i: number) => {
+        response.data.forEach((item: { trade_time: Date, is_signed: boolean, id: string, crypto_price: number, crypto_name: string, trade_amount: string, trade_price: string }, i: number) => {
           let date = new Date(item.trade_time);
           let formattedDate = date.getFullYear() + '.'
             + (date.getMonth() + 1).toString().padStart(2, '0') + '.'
             + date.getDate().toString().padStart(2, '0') + ' '
             + date.getHours().toString().padStart(2, '0') + ':'
             + date.getMinutes().toString().padStart(2, '0');
-
+        
           // 체결 여부가 true일 경우
           if (item.is_signed) {
             signed.push({ ...item, trade_time: formattedDate });
           }
           else {
             unsigned.push({ ...item, trade_time: formattedDate });
-
+        
             let value = { name: item.crypto_name, price: item.crypto_price, trade_amount: Number(item.trade_amount), trade_price: Number(item.trade_price) };
             localStorage.setItem(item.id, JSON.stringify(value));  // 체결되지 않은 구매 요청에 대한 ID를 로컬 스토리지에 추가
           }
@@ -152,47 +142,6 @@ export default function useFunction() {
         dispatch(setIsSelling(isWaitingTemp));
         localStorage.setItem(`${logInEmail}_IsBuying`, JSON.stringify(isWaitingTemp));
         localStorage.setItem(`${logInEmail}_IsSelling`, JSON.stringify(isWaitingTemp));
-      } catch (error) {
-        console.log("화폐명 받아오기 실패", error);
-      }
-    })();
-  }
-
-  // 모든 화폐의 마켓을 받아옴
-  const getCryptoMarket = (logInEmail: string) => {
-    (async () => {
-      try {
-        const response = await axios.get(
-          'http://127.0.0.1:8000/get_crypto_market/'
-        );
-
-        let cryptoMarkets = response.data.markets;
-
-        let localStorageItem: string[] = [];
-        for (let i = 0; i < localStorage.length; i++) {
-          let key = localStorage.key(i);
-          if (key !== null) {
-            let value = localStorage.getItem(key);
-            if (value !== null) {
-              let item = JSON.parse(value);
-              localStorageItem.push(item.market);
-            }
-          }
-        }
-
-        // 로컬 스토리지의 값에 있는(체결되지 않은) 화폐는 true로, 아니라면 false로 선언
-        let isBuyingTemp = cryptoMarkets.reduce((obj: { [obj: string]: boolean; }, market: string) => {
-          if (localStorageItem.includes(market)) {
-            obj[market] = true;
-          }
-          else {
-            obj[market] = false;
-          }
-          return obj;
-        }, {})
-
-        dispatch(setIsBuying(isBuyingTemp));
-        localStorage.setItem(`${logInEmail}_IsBuying`, JSON.stringify(isBuyingTemp))
       } catch (error) {
         console.log("화폐명 받아오기 실패", error);
       }

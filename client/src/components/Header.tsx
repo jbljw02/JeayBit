@@ -1,9 +1,9 @@
 import { useDispatch, useSelector } from "react-redux";
 import title from "../assets/images/title.png";
-import { RootState, setBalanceUpdate, setLogInEmail, setLogInUser, setTheme, setTransferSort, setUserWallet } from "../store";
-import { SetStateAction, useEffect, useState } from "react";
+import { RootState, setBalanceUpdate, setLogInEmail, setLogInUser, setTransferSort } from "../store";
+import { useEffect, useState } from "react";
 import axios from "axios";
-import { Routes, Route, Link, useNavigate, Outlet } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { csrftoken } from "./csrftoken";
 import useFunction from "./useFuction";
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button, makeStyles } from '@material-ui/core';
@@ -16,14 +16,12 @@ const Header = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const theme = useSelector((state: RootState) => state.theme);
   const cr_selected = useSelector((state: RootState) => state.cr_selected);
   const logInUser = useSelector((state: RootState) => state.logInUser);
   const logInEmail = useSelector((state: RootState) => state.logInEmail);
   const balanceUpdate = useSelector((state: RootState) => state.balanceUpdate);
 
   const [walletHover, setWalletHover] = useState<boolean>(false);
-  // const [transferSort, setTransferSort] = useState<string>("입금");
   const transferSort = useSelector((state: RootState) => state.transferSort);
 
   // 입금량, 입금 -> 화폐 전환량
@@ -42,7 +40,7 @@ const Header = () => {
 
   const [completeModalOpen, setCompleteModalOpen] = useState<boolean>(false);
 
-  const { getBalance, themeChange } = useFunction();
+  const { getBalance } = useFunction();
 
   const completeToggleModal = () => {
     setCompleteModalOpen(!completeModalOpen);
@@ -109,7 +107,7 @@ const Header = () => {
     if (logInEmail !== '') {
       getBalance(logInEmail);
     }
-  }, [logInEmail, balanceUpdate])
+  }, [logInEmail, balanceUpdate, getBalance])
 
   const logOut = () => {
     (async () => {
@@ -133,8 +131,6 @@ const Header = () => {
         }
         dispatch(setLogInEmail(''))
         dispatch(setLogInUser(''))
-        // localStorage.removeItem('user');
-        // localStorage.removeItem(`${logInEmail}_isBuying`)
         localStorage.clear();
       } catch (error) {
         console.log("로그아웃 정보 전송 실패");
@@ -588,11 +584,7 @@ const Header = () => {
 };
 
 const HeaderNav = () => {
-  const dispatch = useDispatch();
   const navigate = useNavigate();
-  const theme = useSelector((state: RootState) => state.theme);
-
-  const { themeChange } = useFunction();
 
   return (
     <header className="header-nav lightMode-title">
@@ -679,12 +671,8 @@ const useStyles = makeStyles({
 
 const ModalComplete: React.FC<CompleteModalProps> = ({ depositAmount, withdrawAmount, completeModalOpen, setCompleteModalOpen, completeToggleModal }) => {
 
-  const dispatch = useDispatch();
-
   const classes = useStyles();
   const transferSort = useSelector((state: RootState) => state.transferSort);
-  const depositEmpty = useSelector((state: RootState) => state.depositEmpty);
-  const withdrawEmpty = useSelector((state: RootState) => state.withdrawEmpty);
 
   return (
     <div>

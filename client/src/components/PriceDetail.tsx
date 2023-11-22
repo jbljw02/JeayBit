@@ -1,29 +1,27 @@
 import { useDispatch, useSelector } from "react-redux";
-import { AskingData, RootState, setAsking_data, setAsking_dateTime, setBuyingCrypto, setBuyingPrice, setIsBuying, setIsSelling, setSectionChange, setSellingPrice, setTheme } from "../store";
-import { SetStateAction, useEffect, useState, useRef } from "react";
-import { Routes, Route, Link, useNavigate, Outlet } from 'react-router-dom'
+import { AskingData, RootState, setAsking_dateTime, setBuyingPrice, setIsBuying, setIsSelling, setSectionChange, setSellingPrice } from "../store";
+import { useCallback, useEffect, useState } from "react";
+import { useNavigate } from 'react-router-dom'
 import SimpleBar from 'simplebar-react';
 import 'simplebar/dist/simplebar.min.css';
 import axios from "axios";
 import useFunction from "./useFuction";
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button, makeStyles } from '@material-ui/core';
-import { UnsginedAskingData } from "../store";
 
 const PriceDetail = () => {
 
   const dispatch = useDispatch();
 
-  const { buyCrypto_unSigned, sellCrypto_unSigned, themeChange } = useFunction();
+  const { buyCrypto_unSigned, sellCrypto_unSigned } = useFunction();
 
-  const theme = useSelector((state: RootState) => state.theme);
   const sectionChange = useSelector((state: RootState) => state.sectionChange);
   const askingData_unSigned = useSelector((state: RootState) => state.askingData_unSigned);
   const logInEmail = useSelector((state: RootState) => state.logInEmail);
   const [completeModalOpen, setCompleteModalOpen] = useState<boolean>(false);
 
-  const completeToggleModal = () => {
-    setCompleteModalOpen(!completeModalOpen);
-  }
+  const completeToggleModal = useCallback(() => {
+    setCompleteModalOpen(prevState => !prevState);
+  }, []);
 
   // 미체결 화폐 매수 - 구매 대기 상태에서 동작 
   useEffect(() => {
@@ -90,7 +88,7 @@ const PriceDetail = () => {
       }
     })
 
-  }, [askingData_unSigned])
+  }, [askingData_unSigned, buyCrypto_unSigned, completeToggleModal, logInEmail])
 
   // 미체결 화폐 매도 - 매도 대기 상태에서 동작 
   useEffect(() => {
@@ -157,7 +155,7 @@ const PriceDetail = () => {
       }
     })
 
-  }, [askingData_unSigned])
+  }, [askingData_unSigned, completeToggleModal, logInEmail, sellCrypto_unSigned])
 
   return (
     <>
@@ -205,7 +203,6 @@ const AskingPrice = () => {
   const asking_dateTime = useSelector((state: RootState) => state.asking_dateTime);
   const asking_totalAskSize = useSelector((state: RootState) => state.asking_totalAskSize);
   const asking_totalBidSize = useSelector((state: RootState) => state.asking_totalBidSize);
-  const cr_selected = useSelector((state: RootState) => state.cr_selected);
 
   const [prevData, setPrevData] = useState<AskingData[]>();
 
@@ -245,7 +242,7 @@ const AskingPrice = () => {
 
     setDifferences_ask(newDifferences_ask)
     setDifferences_bid(newDifferences_bid);
-  }, [asking_data])
+  }, [asking_data, prevData])
 
   if (asking_dateTime) {
     const date = new Date(asking_dateTime);
@@ -365,7 +362,6 @@ const ClosedPrice = () => {
 
   const closed_data = useSelector((state: RootState) => state.closed_data);
   const cr_market_selected = useSelector((state: RootState) => state.cr_market_selected);
-  const cr_selected = useSelector((state: RootState) => state.cr_selected);
 
   return (
     <>
@@ -441,16 +437,12 @@ const BuyingSection = () => {
 
   const cr_selected = useSelector((state: RootState) => state.cr_selected);
   const cr_name_selected = useSelector((state: RootState) => state.cr_name_selected);
-  const cr_market_selected = useSelector((state: RootState) => state.cr_market_selected);
   const logInEmail = useSelector((state: RootState) => state.logInEmail);
   const userWallet = useSelector((state: RootState) => state.userWallet);
   const asking_data = useSelector((state: RootState) => state.asking_data);  // bid = 매수, ask = 매도
-  const askingData_unSigned = useSelector((state: RootState) => state.askingData_unSigned);
-  const filteredData = useSelector((state: RootState) => state.filteredData);
   const theme = useSelector((state: RootState) => state.theme);
-
-
   const buyingPrice = useSelector((state: RootState) => state.buyingPrice);
+
   const [selectedPercentage, setSelectedPercentage] = useState<string>('');
   const [bidSort, setBidSort] = useState<string>('지정가');
 
@@ -461,12 +453,6 @@ const BuyingSection = () => {
   const [totalInputValue, setTotalInputvalue] = useState('0');
   const [buyingInputValue, setBuyingInputValue] = useState('0');
 
-  // 구매하려는 화폐의 가격과 호가 사이의 일치 여부
-  const [matchedItem, setMatchedItem] = useState<AskingData | null>(null);
-
-  // 화폐를 구매하기 위해 대기중인지 여부
-  const isBuying = useSelector((state: RootState) => state.isBuying);
-
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [completeModalOpen, setCompleteModalOpen] = useState<boolean>(false);
 
@@ -476,18 +462,6 @@ const BuyingSection = () => {
   // 현재 시간을 저장하는 state
   const [time, setTime] = useState(new Date());
 
-  const [isMatch, setIsMatch] = useState<[{
-    id: string,
-    price: number,
-    name: string,
-  }]>();
-
-  const [key, setKey] = useState<{
-    id: string,
-    price: number,
-    name: string,
-  }[]>([]);
-
   const toggleModal = () => {
     setModalOpen(!modalOpen);
   }
@@ -496,7 +470,7 @@ const BuyingSection = () => {
     setCompleteModalOpen(!completeModalOpen);
   }
 
-  const { getBalance, getOwnedCrypto, addTradeHistory, getTradeHistory, getCryptoName, buyCrypto_unSigned } = useFunction();
+  const { getBalance, getOwnedCrypto, addTradeHistory, getTradeHistory } = useFunction();
 
   // 매수가가 바뀌면 그에 따라 입력값도 변경
   useEffect(() => {
@@ -1074,15 +1048,11 @@ const SellingSection = () => {
   const cr_market_selected = useSelector((state: RootState) => state.cr_market_selected);
   const cr_name_selected = useSelector((state: RootState) => state.cr_name_selected);
   const logInEmail = useSelector((state: RootState) => state.logInEmail);
-  const userWallet = useSelector((state: RootState) => state.userWallet);
   const asking_data = useSelector((state: RootState) => state.asking_data);  // bid = 매수, ask = 매도
   const ownedCrypto = useSelector((state: RootState) => state.ownedCrypto);
-  const askingData_unSigned = useSelector((state: RootState) => state.askingData_unSigned);
-  const theme = useSelector((state: RootState) => state.theme);
 
   const [selectedPercentage, setSelectedPercentage] = useState<string>('');
   const [bidSort, setBidSort] = useState<string>('지정가');
-  // const [availableQuantity, setAvailableQuantity] = useState<any>(0);
 
   const sellingPrice = useSelector((state: RootState) => state.sellingPrice);
   const [sellTotal, setSellTotal] = useState<number>(0);
@@ -1091,13 +1061,6 @@ const SellingSection = () => {
   const [quantityInputValue, setQuantityInputValue] = useState('0');
   const [totalInputValue, setTotalInputvalue] = useState('0');
   const [sellingInputValue, setSellingInputValue] = useState('0');
-
-  // 매도하려는 화폐의 가격과 호가 사이의 일치 여부
-  const [matchedItem, setMatchedItem] = useState<AskingData | null>(null);
-
-  // 화폐를 매도하기 위해 대기중인지 여부
-  // const [isSelling, setIsSelling] = useState<boolean>(false);
-
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [completeModalOpen, setCompleteModalOpen] = useState<boolean>(false);
 
@@ -1779,7 +1742,7 @@ const SellingSection = () => {
 
 const TradeHistory = () => {
 
-  const { getBalance, getOwnedCrypto, addTradeHistory, getTradeHistory, getCryptoName } = useFunction();
+  const { getTradeHistory } = useFunction();
 
   const logInEmail = useSelector((state: RootState) => state.logInEmail);
   const userTradeHistory = useSelector((state: RootState) => state.userTradeHistory)
@@ -2074,7 +2037,7 @@ const useStyles = makeStyles({
   },
 });
 
-const ModalSumbit: React.FC<ModalProps> = ({ modalOpen, setModalOpen, toggleModal }) => {
+const ModalSumbit: React.FC<ModalProps> = ({ modalOpen, toggleModal }) => {
 
   const classes = useStyles();
   const sectionChange = useSelector((state: RootState) => state.sectionChange);
@@ -2101,7 +2064,7 @@ const ModalSumbit: React.FC<ModalProps> = ({ modalOpen, setModalOpen, toggleModa
   )
 }
 
-const ModalComplete: React.FC<CompleteModalProps> = ({ completeModalOpen, setCompleteModalOpen, completeToggleModal }) => {
+const ModalComplete: React.FC<CompleteModalProps> = ({ completeModalOpen, completeToggleModal }) => {
 
   const classes = useStyles();
   const sectionChange = useSelector((state: RootState) => state.sectionChange);

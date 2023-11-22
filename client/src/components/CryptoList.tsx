@@ -6,21 +6,10 @@ import {
   Crypto,
   setCr_name_selected,
   setCr_market_selected,
-  setCr_price_selected,
-  setCr_change_selected,
-  setCr_change_rate_selected,
-  setCr_change_price_selected,
   setSortedData,
-  setCr_trade_price_selected,
-  setCr_trade_volume_selected,
-  setCr_open_price_selected,
-  setCr_high_price_selected,
-  setCr_low_price_selected,
-  Market,
   setCandle_per_date,
   setCandle_per_week,
   setCandle_per_month,
-  setSelectedChartSort,
   setCandle_per_minute,
   setCr_name,
   setCr_price,
@@ -35,19 +24,12 @@ import {
   setCr_low_price,
   setCandle_per_date_BTC,
   setClosed_data,
-  setAsking_data,
-  setAsking_dateTime,
-  setAsking_totalAskSize,
-  setAsking_totalBidSize,
   setCr_selected,
-  FavoriteCrypto,
   setFavoriteCrypto,
-  setCr_clickedIndex,
   setBuyingPrice,
   setLogInEmail,
   setLogInUser,
   setSellingPrice,
-  setIsBuying,
 } from "../store";
 import { useEffect, useState } from "react";
 import img_sort from "../assets/images/sort.png";
@@ -77,15 +59,7 @@ const CryptoList = () => {
   const cr_low_price = useSelector((state: RootState) => state.cr_low_price);
   const star = useSelector((state: RootState) => state.star);
   const filteredData = useSelector((state: RootState) => state.filteredData);
-  const sortedData = useSelector((state: RootState) => state.sortedData);
-  const cr_trade_price_selected = useSelector((state: RootState) => state.cr_trade_price_selected);
   const cr_market_selected = useSelector((state: RootState) => state.cr_market_selected);
-  const candle_per_date = useSelector((state: RootState) => state.candle_per_date);
-  const candle_per_date_BTC = useSelector((state: RootState) => state.candle_per_date_BTC);
-  const candle_per_minute = useSelector((state: RootState) => state.candle_per_minute);
-  const cr_price_selected = useSelector((state: RootState) => state.cr_price_selected);
-  const cr_name_selected = useSelector((state: RootState) => state.cr_name_selected);
-
 
   // 검색값을 관리하기 위한 state
   const [search_cr, setSearch_cr] = useState<string>("");
@@ -96,36 +70,19 @@ const CryptoList = () => {
   // 정렬하려는 목적에 따라 이미지를 변경하기 위해 배열로 생성
   const sort_images = [img_sort, img_sort_down, img_sort_up];
 
-  const cr_clickedIndex = useSelector((state: RootState) => state.cr_clickedIndex);
-  const delimitedDate = useSelector((state: RootState) => state.delimitedDate);
-  const delimitedTime = useSelector((state: RootState) => state.delimitedTime);
   const selectedChartSort = useSelector((state: RootState) => state.selectedChartSort);
   const chartSortTime = useSelector((state: RootState) => state.chartSortTime);
   const chartSortDate = useSelector((state: RootState) => state.chartSortDate);
+  const ownedCrypto = useSelector((state: RootState) => state.ownedCrypto);
+  const isBuying = useSelector((state: RootState) => state.isBuying);
 
   const [selectedCrypto, setSelectedCrypto] = useState<any>();
   const [userSelectedCrypto, setUserSelectedCrypto] = useState<any>();
-  const cr_selected = useSelector((state: RootState) => state.cr_selected);
 
   const logInEmail = useSelector((state: RootState) => state.logInEmail);
 
   const favoriteCrypto = useSelector((state: RootState) => state.favoriteCrypto);
   const [isFavorited, setIsFavorited] = useState<boolean>(false);
-
-  const ownedCrypto = useSelector((state: RootState) => state.ownedCrypto);
-  const [isOwned, setIsOwned] = useState<boolean>(false);
-
-  // 체결 내역을 담을 state
-  const closedData = useSelector((state: RootState) => state.closed_data);
-
-  // 호가 내역을 담을 state
-  const asking_data = useSelector((state: RootState) => state.asking_data);
-  const asking_dateTime = useSelector(
-    (state: RootState) => state.asking_dateTime
-  );
-
-  const isBuying = useSelector((state: RootState) => state.isBuying);
-
   const [listCategory, setListCategory] = useState<string>("원화");
 
   // 화폐 가격을 업데이트 하기 전에 해당 state에 담음
@@ -516,7 +473,7 @@ const CryptoList = () => {
       let fall_crypto: Crypto[] = [];
 
       // 상승/동결/하락 여부에 따라 구분하여 새 배열 생성
-      sortedData.map((item) => {
+      sortedData.forEach((item) => {
         rise_crypto = sortedData.filter((item) => item.change === "RISE");
         even_crypto = sortedData.filter((item) => item.change === "EVEN");
         fall_crypto = sortedData.filter((item) => item.change === "FALL");
