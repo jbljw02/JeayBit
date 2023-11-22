@@ -1,32 +1,16 @@
-import { useState } from "react";
-import { CryptoList } from "./CryptoList";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState, setChartSortDate, setChartSortTime, setSelectedChartSort } from "../store";
 import price_rise from '../assets/images/price-up.png'
 import price_fall from '../assets/images/price-down.png'
-import React, { Component } from "react";
 import { Chart } from "./TradingChart";
-import axios from "axios";
 
 const TradingView = () => {
 
-  const [checkedValue, setCheckedValue] = useState<string>("1일")
-
-  // 테이블에서 선택된 화폐의 이름, 마켓, 가격을 가져옴
-  const cr_name_selected = useSelector((state: RootState) => { return state.cr_name_selected });
-  // const (cr_selected.markets) = useSelector((state: RootState) => { return state.(cr_selected.markets) });
-  // const cr_selected.price = useSelector((state: RootState) => { return state.cr_selected.price });
-  const cr_open_price = useSelector((state: RootState) => { return state.cr_open_price });
-  const cr_high_price = useSelector((state: RootState) => { return state.cr_high_price });
-  const cr_low_price = useSelector((state: RootState) => { return state.cr_low_price });
   const delimitedTime = useSelector((state: RootState) => state.delimitedTime);
   const delimitedDate = useSelector((state: RootState) => state.delimitedDate);
-  const selectedChartSort = useSelector((state: RootState) => state.selectedChartSort);
   const chartSortTime = useSelector((state: RootState) => state.chartSortTime);
   const chartSortDate = useSelector((state: RootState) => state.chartSortDate);
   const cr_selected = useSelector((state: RootState) => state.cr_selected);
-
-  const candle_per_date = useSelector((state: RootState) => state.candle_per_date);
 
   const dispatch = useDispatch();
 
@@ -43,10 +27,6 @@ const TradingView = () => {
     dispatch(setChartSortDate(value));
     dispatch(setChartSortTime(''))
   }
-
-  // if (Object.keys(cr_selected).length > 0) {
-  // console.log("테스트 : ", cr_selected);
-  // }
 
   return (
     <>
@@ -94,8 +74,8 @@ const TradingView = () => {
                       {
                         (cr_selected.price[0]).toLocaleString()
                       }
-                      <Crypto_change_rate_selected></Crypto_change_rate_selected>
-                      <Crypto_detail></Crypto_detail>
+                      <CryptoChangeRateSelected></CryptoChangeRateSelected>
+                      <CryptoDetail></CryptoDetail>
                     </div> :
                     (
                       cr_selected.change[0] === 'FALL' ?
@@ -103,15 +83,15 @@ const TradingView = () => {
                           {
                             (cr_selected.price[0]).toLocaleString()
                           }
-                          <Crypto_change_rate_selected></Crypto_change_rate_selected>
-                          <Crypto_detail></Crypto_detail>
+                          <CryptoChangeRateSelected></CryptoChangeRateSelected>
+                          <CryptoDetail></CryptoDetail>
                         </div> :
                         <div className="crypto-price-even">
                           {
                             (cr_selected.price[0]).toLocaleString()
                           }
-                          <Crypto_change_rate_selected></Crypto_change_rate_selected>
-                          <Crypto_detail></Crypto_detail>
+                          <CryptoChangeRateSelected></CryptoChangeRateSelected>
+                          <CryptoDetail></CryptoDetail>
                         </div>
                     )
 
@@ -122,8 +102,8 @@ const TradingView = () => {
                       {
                         (cr_selected.price).toLocaleString()
                       }
-                      <Crypto_change_rate_selected></Crypto_change_rate_selected>
-                      <Crypto_detail></Crypto_detail>
+                      <CryptoChangeRateSelected></CryptoChangeRateSelected>
+                      <CryptoDetail></CryptoDetail>
                     </div> :
                     (
                       cr_selected.change === 'FALL' ?
@@ -131,15 +111,15 @@ const TradingView = () => {
                           {
                             (cr_selected.price).toLocaleString()
                           }
-                          <Crypto_change_rate_selected></Crypto_change_rate_selected>
-                          <Crypto_detail></Crypto_detail>
+                          <CryptoChangeRateSelected></CryptoChangeRateSelected>
+                          <CryptoDetail></CryptoDetail>
                         </div> :
                         <div className="crypto-price-even">
                           {
                             (cr_selected.price).toLocaleString()
                           }
-                          <Crypto_change_rate_selected></Crypto_change_rate_selected>
-                          <Crypto_detail></Crypto_detail>
+                          <CryptoChangeRateSelected></CryptoChangeRateSelected>
+                          <CryptoDetail></CryptoDetail>
                         </div>
                     )
                 )
@@ -258,10 +238,9 @@ const TradingView = () => {
   );
 }
 
-{/* 화폐의 변화율에 따라 css 속성 다르게 적용 */ }
-const Crypto_change_rate_selected = () => {
-  // const cr_selected.change = useSelector((state: RootState) => { return state.cr_selected.change });
-  // const cr_selected.change_rate = useSelector((state: RootState) => { return state.cr_selected.change_rate });
+/* 화폐의 변화율에 따라 css 속성 다르게 적용 */ 
+const CryptoChangeRateSelected = () => {
+  
   const cr_selected = useSelector((state: RootState) => state.cr_selected);
 
   return (
@@ -330,14 +309,9 @@ const Crypto_change_rate_selected = () => {
   );
 }
 
-{/* 24시간동안의 화폐의 상세정보 */ }
-const Crypto_detail = () => {
+/* 24시간동안의 화폐의 상세정보 */
+const CryptoDetail = () => {
 
-  // const (cr_selected.markets) = useSelector((state: RootState) => { return state.(cr_selected.markets) });
-  // const cr_selected.price = useSelector((state: RootState) => { return state.cr_selected.price });
-  // const cr_selected.tradeVolume = useSelector((state: RootState) => { return state.cr_selected.tradeVolume });
-  // const cr_selected.open_price = useSelector((state: RootState) => { return state.cr_selected.open_price });
-  // const cr_selected.high_price = useSelector((state: RootState) => { return state.cr_selected.high_price });
   const cr_selected = useSelector((state: RootState) => state.cr_selected);
 
   return (
