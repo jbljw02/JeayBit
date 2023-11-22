@@ -1,4 +1,4 @@
-import { PayloadAction, configureStore, createSlice } from '@reduxjs/toolkit'
+import { configureStore, createSlice } from '@reduxjs/toolkit'
 
 export type Crypto = {
   name: string,
@@ -130,7 +130,6 @@ export type RootState = {
   userTradeHistory_unSigned: UserTradeHistory[],
   isBuying: { [key: string]: boolean },
   isSelling: { [key: string]: boolean },
-  // askingData_unSigned: UnsginedAskingData[],
   askingData_unSigned: { [key: string]: UnsginedAskingData[] },
   transferSort: string,
   depositEmpty: boolean,

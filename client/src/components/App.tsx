@@ -1,11 +1,8 @@
-import { useEffect, useState } from 'react';
-import axios from 'axios';
-import { useDispatch, useSelector, Provider } from 'react-redux';
-import store, { RootState } from "../store";
+import { Provider } from 'react-redux';
+import store from "../store";
 import { Header } from './Header'
 import { TradingView } from './TradingView';
 import { CryptoList } from './CryptoList'
-import { Footer } from './Footer'
 import { PriceDetail } from './PriceDetail';
 import '../assets/App.css';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
@@ -13,8 +10,6 @@ import { LogIn } from './LogIn';
 import { SignUp } from './SignUp';
 
 const App = () => {
-
-  const theme = useSelector((state: RootState) => state.theme);
 
   return (
     <Provider store={store}>
