@@ -1,22 +1,16 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import ReactApexChart from 'react-apexcharts';
-import dayjs from 'dayjs';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState, setCandle_per_date_BTC } from '../store';
-import axios from 'axios';
-
+import { useSelector } from 'react-redux';
+import { RootState } from '../store';
 
 const Chart = () => {
-  const cr_name_selected = useSelector((state: RootState) => state.cr_name_selected);
   const candle_per_date_BTC = useSelector((state: RootState) => state.candle_per_date_BTC);
   const candle_per_date = useSelector((state: RootState) => state.candle_per_date);
   const candle_per_week = useSelector((state: RootState) => state.candle_per_week);
   const candle_per_month = useSelector((state: RootState) => state.candle_per_month);
   const candle_per_minute = useSelector((state: RootState) => state.candle_per_minute);
-  const selectedChartSort = useSelector((state: RootState) => state.selectedChartSort);
   const chartSortTime = useSelector((state: RootState) => state.chartSortTime);
   const chartSortDate = useSelector((state: RootState) => state.chartSortDate);
-  const theme = useSelector((state: RootState) => state.theme);
 
   const [options, setOptions] = useState<any>({
     chart: {
