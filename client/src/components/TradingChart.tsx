@@ -12,6 +12,7 @@ const Chart = () => {
   const chartSortTime = useSelector((state: RootState) => state.chartSortTime);
   const chartSortDate = useSelector((state: RootState) => state.chartSortDate);
 
+  // eslint-disable-next-line
   const [options, setOptions] = useState<any>({
     chart: {
       height: '100%',
