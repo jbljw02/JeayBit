@@ -9,6 +9,7 @@ import useFunction from "./useFuction";
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button, makeStyles } from '@material-ui/core';
 
 const Header = () => {
+
   axios.defaults.xsrfCookieName = "csrftoken";
   axios.defaults.xsrfHeaderName = "X-CSRFToken";
 
@@ -347,29 +348,30 @@ const Header = () => {
                               }
                               <div className="change-input">
                                 <div>전환량</div>
-                                <input value={depositChangeAmount}></input>
-                                <span className="change-input-span">
-                                  <img
-                                    className="img-transfer-crypto"
-                                    src={
-                                      cr_selected && cr_selected.market ?
-                                        Array.isArray(cr_selected.market) ?
-                                          `https://static.upbit.com/logos/${cr_selected.market[0].slice(4)}.png` :
-                                          `https://static.upbit.com/logos/${cr_selected.market.slice(4)}.png` :
-                                        undefined
-                                    }
-                                    alt="화폐사진"
-                                  />
-                                  <span>
-                                    {
-                                      cr_selected && cr_selected.market ?
-                                        Array.isArray(cr_selected.market) ?
-                                          cr_selected.market[0].slice(4) :
-                                          cr_selected.market.slice(4) :
-                                        undefined
-                                    }
-                                  </span>
-                                  {/* <svg
+                                <div className="change-input-div">
+                                  <input value={depositChangeAmount}></input>
+                                  <span className="change-input-span">
+                                    <img
+                                      className="img-transfer-crypto"
+                                      src={
+                                        cr_selected && cr_selected.market ?
+                                          Array.isArray(cr_selected.market) ?
+                                            `https://static.upbit.com/logos/${cr_selected.market[0].slice(4)}.png` :
+                                            `https://static.upbit.com/logos/${cr_selected.market.slice(4)}.png` :
+                                          undefined
+                                      }
+                                      alt="화폐사진"
+                                    />
+                                    <span>
+                                      {
+                                        cr_selected && cr_selected.market ?
+                                          Array.isArray(cr_selected.market) ?
+                                            cr_selected.market[0].slice(4) :
+                                            cr_selected.market.slice(4) :
+                                          undefined
+                                      }
+                                    </span>
+                                    {/* <svg
                                     xmlns="http://www.w3.org/2000/svg"
                                     viewBox="0 0 24 24"
                                     fill="none"
@@ -382,7 +384,8 @@ const Header = () => {
                                       fill="currentColor"
                                     ></path>
                                   </svg> */}
-                                </span>
+                                  </span>
+                                </div>
                               </div>
                               <div className="transfer-submit deposit">
                                 <span
@@ -444,29 +447,30 @@ const Header = () => {
                               }
                               <div className="change-input">
                                 <div>전환량</div>
-                                <input value={withdrawChangeAmount}></input>
-                                <span className="change-input-span">
-                                  <img
-                                    className="img-transfer-crypto"
-                                    src={
-                                      cr_selected && cr_selected.market ?
-                                        Array.isArray(cr_selected.market) ?
-                                          `https://static.upbit.com/logos/${cr_selected.market[0].slice(4)}.png` :
-                                          `https://static.upbit.com/logos/${cr_selected.market.slice(4)}.png` :
-                                        undefined
-                                    }
-                                    alt="화폐사진"
-                                  />
-                                  <span>
-                                    {
-                                      cr_selected && cr_selected.market
-                                        ? Array.isArray(cr_selected.market)
-                                          ? cr_selected.market[0].slice(4)
-                                          : cr_selected.market.slice(4)
-                                        : undefined
-                                    }
-                                  </span>
-                                  {/* <svg
+                                <div className="change-input-div">
+                                  <input value={withdrawChangeAmount}></input>
+                                  <span className="change-input-span">
+                                    <img
+                                      className="img-transfer-crypto"
+                                      src={
+                                        cr_selected && cr_selected.market ?
+                                          Array.isArray(cr_selected.market) ?
+                                            `https://static.upbit.com/logos/${cr_selected.market[0].slice(4)}.png` :
+                                            `https://static.upbit.com/logos/${cr_selected.market.slice(4)}.png` :
+                                          undefined
+                                      }
+                                      alt="화폐사진"
+                                    />
+                                    <span>
+                                      {
+                                        cr_selected && cr_selected.market
+                                          ? Array.isArray(cr_selected.market)
+                                            ? cr_selected.market[0].slice(4)
+                                            : cr_selected.market.slice(4)
+                                          : undefined
+                                      }
+                                    </span>
+                                    {/* <svg
                                     xmlns="http://www.w3.org/2000/svg"
                                     viewBox="0 0 24 24"
                                     fill="none"
@@ -479,7 +483,8 @@ const Header = () => {
                                       fill="currentColor"
                                     ></path>
                                   </svg> */}
-                                </span>
+                                  </span>
+                                </div>
                               </div>
                               <div className="transfer-submit withdraw">
                                 <span
