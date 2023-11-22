@@ -214,6 +214,10 @@
   font-weight: lighter;
 }
 
+.change-input-div {
+  display: flex;
+}
+
 .transfer-input input {
   width: 82.5%;
   height: 60%;
@@ -223,7 +227,9 @@
 }
 
 .change-input input {
-  width: 74%;
+  /* width: 74%; */
+  padding-top: 9px;
+  width: 70%;
   height: 60%;
   border: none;
   font-size: 20px;
@@ -243,11 +249,13 @@
 }
 
 .change-input-span {
+  font-weight: bold;
   background-color: #ffffff;
   border-radius: 15px;
-  padding: 12px 7px;
+  padding: 3px 7px 12px 7px;
   padding-right: 15px;
-  /* margin-left: 6px; */
+  align-items: end;
+  /* margin-left: 30px; */
 }
 
 .change-input-span span {

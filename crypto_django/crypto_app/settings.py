@@ -98,6 +98,8 @@ ROOT_URLCONF = 'crypto_app.urls'
 
 SESSION_COOKIE_SAMESITE = 'None'  # 'None': 모든 컨텍스트(다른 사이트)에서 쿠키 전송 가능
 SESSION_COOKIE_SECURE = True  # 'True': HTTPS 연결시에만 쿠키 전송
+CSRF_COOKIE_SAMESITE = 'None'
+CSRF_COOKIE_SECURE = True
 
 from crypto_app.authmiddleware import CsrfExemptSessionAuthentication
 AUTHENTICATION_BACKENDS = [
