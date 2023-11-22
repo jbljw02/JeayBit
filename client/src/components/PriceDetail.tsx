@@ -457,9 +457,11 @@ const BuyingSection = () => {
   const [completeModalOpen, setCompleteModalOpen] = useState<boolean>(false);
 
   // 화폐 거래내역에 '매수'로 저장할지 '매도'로 저장할지를 지정
+  // eslint-disable-next-line
   const [tradeCategory, setTradeCategory] = useState<string>('매수');
 
   // 현재 시간을 저장하는 state
+  // eslint-disable-next-line
   const [time, setTime] = useState(new Date());
 
   const toggleModal = () => {
@@ -1065,9 +1067,11 @@ const SellingSection = () => {
   const [completeModalOpen, setCompleteModalOpen] = useState<boolean>(false);
 
   // 화폐 거래내역에 '매수'로 저장할지 '매도'로 저장할지를 지정
+  // eslint-disable-next-line
   const [tradeCategory, setTradeCategory] = useState<string>('매도');
 
   // 현재 시간을 저장하는 state
+  // eslint-disable-next-line
   const [time, setTime] = useState(new Date());
 
   const toggleModal = () => {
