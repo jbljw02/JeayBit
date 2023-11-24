@@ -494,7 +494,7 @@ const BuyingSection = () => {
   const buyCrypto = (email: string, cryptoName: string, cryptoQuantity: number, buyTotal: number) => {
     (async (email, cryptoName, cryptoQuantity, buyTotal) => {
       try {
-        const response = await axios.post("http://127.0.0.1:8000/buy_crypto/", {
+        const response = await axios.post("http://13.124.59.186/buy_crypto/", {
           email: email,
           crypto_name: cryptoName,
           crypto_quantity: cryptoQuantity,
@@ -1104,7 +1104,7 @@ const SellingSection = () => {
   const sellCrypto = (email: string, cryptoName: string, cryptoQuantity: number, sellTotal: number) => {
     (async (email, cryptoName, cryptoQuantity, sellTotal) => {
       try {
-        const response = await axios.post("http://127.0.0.1:8000/sell_crypto/", {
+        const response = await axios.post("http://13.124.59.186/sell_crypto/", {
           email: email,
           crypto_name: cryptoName,
           crypto_quantity: cryptoQuantity,
@@ -1769,7 +1769,7 @@ const TradeHistory = () => {
   const cancelOrder = (email: string, ids: string[]) => {
     (async (email, ids) => {
       try {
-        const response = await axios.post("http://127.0.0.1:8000/cancel_order/", {
+        const response = await axios.post("http://13.124.59.186/cancel_order/", {
           ids: ids,
           email: email,
         });

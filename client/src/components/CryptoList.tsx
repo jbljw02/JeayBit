@@ -148,7 +148,7 @@ const CryptoList = () => {
   // 화면에 보여질 초기 화폐의 차트(비트코인)
   const initialData = async () => {
     try {
-      const response = await axios.get("http://127.0.0.1:8000/get_data/");
+      const response = await axios.get("http://13.124.59.186/get_data/");
       dispatch(setCandle_per_date_BTC(response.data.candle_btc_date));
       dispatch(setCr_market_selected(response.data.market[0]));
       dispatch(setCr_name_selected(response.data.name[0]));
@@ -161,7 +161,7 @@ const CryptoList = () => {
   // = async function () {}
   const fetchData = async () => {
     try {
-      const response = await axios.get("http://127.0.0.1:8000/get_data/");
+      const response = await axios.get("http://13.124.59.186/get_data/");
       dispatch(setCr_name(response.data.name));
       dispatch(setCr_price(response.data.price));
       dispatch(setCr_market(response.data.market));
@@ -309,7 +309,7 @@ const CryptoList = () => {
     (async (market) => {
       try {
         const response = await axios.post(
-          "http://127.0.0.1:8000/closed_price/",
+          "http://13.124.59.186/closed_price/",
           {
             market: market,
           },
@@ -336,7 +336,7 @@ const CryptoList = () => {
       if (minute !== '') {
         try {
           const response = await axios.post(
-            "http://127.0.0.1:8000/candle_per_minute/",
+            "http://13.124.59.186/candle_per_minute/",
             {
               market: market,
               minute: minute,
@@ -362,7 +362,7 @@ const CryptoList = () => {
       (async (market) => {
         try {
           const response = await axios.post(
-            "http://127.0.0.1:8000/candle_per_date/",
+            "http://13.124.59.186/candle_per_date/",
             {
               market: market,
               // date: tempChartSort,
@@ -384,7 +384,7 @@ const CryptoList = () => {
       void (async (market) => {
         try {
           const response = await axios.post(
-            "http://127.0.0.1:8000/candle_per_week/",
+            "http://13.124.59.186/candle_per_week/",
             {
               market: market,
             },
@@ -405,7 +405,7 @@ const CryptoList = () => {
       void (async (market) => {
         try {
           const response = await axios.post(
-            "http://127.0.0.1:8000/candle_per_month/",
+            "http://13.124.59.186/candle_per_month/",
             {
               market: market,
             },
@@ -436,7 +436,7 @@ const CryptoList = () => {
     if (logInEmail !== "") {
       (async (email, cryptoName) => {
         try {
-          axios.post("http://127.0.0.1:8000/add_favoriteCrypto_to_user/", {
+          axios.post("http://13.124.59.186/add_favoriteCrypto_to_user/", {
             email: email,
             crypto_name: cryptoName,
           });
@@ -454,7 +454,7 @@ const CryptoList = () => {
     (async () => {
       try {
         const response = await axios.get(
-          `http://127.0.0.1:8000/get_user_favoriteCrypto/${logInEmail}/`
+          `http://13.124.59.186/get_user_favoriteCrypto/${logInEmail}/`
         );
         console.log("반환값-관심화폐 : ", response.data);
         dispatch(setFavoriteCrypto(response.data));
