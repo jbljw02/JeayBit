@@ -113,7 +113,7 @@ const Header = () => {
     (async () => {
       try {
         const response = await axios.post(
-          "http://127.0.0.1:8000/logOut/",
+          "http://13.124.59.186/logOut/",
           {},
           {
             headers: {
@@ -143,7 +143,7 @@ const Header = () => {
     if (logInEmail !== "") {
       return (async (email, depositAmount) => {
         try {
-          await axios.post("http://127.0.0.1:8000/add_balance_to_user/", {
+          await axios.post("http://13.124.59.186/add_balance_to_user/", {
             email: email,
             depositAmount: depositAmount,
           });
@@ -162,7 +162,7 @@ const Header = () => {
       return (async (email, withdrawAmount) => {
         try {
           const response = await axios.post(
-            "http://127.0.0.1:8000/minus_balance_from_user/",
+            "http://13.124.59.186/minus_balance_from_user/",
             {
               email: email,
               withdrawAmount: withdrawAmount,
