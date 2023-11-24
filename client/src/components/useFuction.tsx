@@ -15,7 +15,7 @@ export default function useFunction() {
     (async () => {
       try {
         const response = await axios.get(
-          `http://13.124.59.186/get_user_balance/${email}/`
+          `https://jeaybit.site/get_user_balance/${email}/`
         );
         dispatch(setUserWallet(response.data.user_balance));
         console.log(logInUser, "의 잔고 : ", response.data.user_balance);
@@ -30,7 +30,7 @@ export default function useFunction() {
     (async () => {
       try {
         const response = await axios.get(
-          `http://13.124.59.186/get_user_ownedCrypto/${logInEmail}/`
+          `https://jeaybit.site/get_user_ownedCrypto/${logInEmail}/`
         );
         dispatch(setOwnedCrypto(response.data))
         console.log("반환값-소유화폐 : ", response.data)
@@ -44,7 +44,7 @@ export default function useFunction() {
   const addTradeHistory = (email: string, cryptoName: string, tradeCategory: string, tradeTime: Date, cryptoMarket: string, cryptoPrice: number, tradePrice: number, tradeAmount: number, isSigned: boolean) => {
     (async (email, cryptoName, tradeTime, cryptoMarket, cryptoPrice, tradePrice, tradeAmount) => {
       try {
-        const response = await axios.post("http://13.124.59.186/add_user_tradeHistory/", {
+        const response = await axios.post("https://jeaybit.site/add_user_tradeHistory/", {
           email: email,
           crypto_name: cryptoName,
           trade_category: tradeCategory,
@@ -68,7 +68,7 @@ export default function useFunction() {
     (async () => {
       try {
         const response = await axios.get(
-          `http://13.124.59.186/get_user_tradeHistory/${logInEmail}/`
+          `https://jeaybit.site/get_user_tradeHistory/${logInEmail}/`
         );
         console.log("반환값-거래내역 : ", response.data);
 
@@ -110,7 +110,7 @@ export default function useFunction() {
     (async () => {
       try {
         const response = await axios.get(
-          'http://13.124.59.186/get_crypto_name/'
+          'https://jeaybit.site/get_crypto_name/'
         );
 
         let cryptoNames = response.data.detail;
@@ -153,7 +153,7 @@ export default function useFunction() {
     (async (market) => {
       try {
         const response = await axios.post(
-          "http://13.124.59.186/asking_price/",
+          "https://jeaybit.site/asking_price/",
           {
             market: market,
           },
@@ -180,7 +180,7 @@ export default function useFunction() {
     (async (market) => {
       try {
         const response = await axios.post(
-          "http://13.124.59.186/asking_price/",
+          "https://jeaybit.site/asking_price/",
           {
             market: market,
           },
@@ -220,7 +220,7 @@ export default function useFunction() {
   const buyCrypto_unSigned = (key: string, email: string, cryptoName: string, cryptoQuantity: number, buyTotal: number) => {
     (async (key, email, cryptoName, cryptoQuantity, buyTotal) => {
       try {
-        const response = await axios.post("http://13.124.59.186/buy_crypto_unSigned/", {
+        const response = await axios.post("https://jeaybit.site/buy_crypto_unSigned/", {
           key: key,
           email: email,
           crypto_name: cryptoName,
@@ -241,7 +241,7 @@ export default function useFunction() {
   const sellCrypto_unSigned = (key: string, email: string, cryptoName: string, cryptoQuantity: number, sellTotal: number) => {
     (async (key, email, cryptoName, cryptoQuantity, sellTotal) => {
       try {
-        const response = await axios.post("http://13.124.59.186/sell_crypto_unSigned/", {
+        const response = await axios.post("https://jeaybit.site/sell_crypto_unSigned/", {
           key: key,
           email: email,
           crypto_name: cryptoName,

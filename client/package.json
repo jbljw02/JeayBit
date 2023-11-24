@@ -2,7 +2,7 @@
   "name": "cryptocurrency_rt",
   "version": "0.1.0",
   "private": true,
-  "proxy": "http://13.124.59.186/",
+  "proxy": "https://jeaybit.site/",
   "dependencies": {
     "@material-ui/core": "^4.12.4",
     "@reduxjs/toolkit": "^1.9.5",
