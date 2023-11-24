@@ -33,7 +33,7 @@ const LogIn = () => {
         console.log(email)
         console.log(password)
         try {
-          const response = await axios.post('http://13.124.59.186/logIn/', {
+          const response = await axios.post('https://jeaybit.site/logIn/', {
             email: email,
             password: password,
           }, {
