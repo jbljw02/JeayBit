@@ -42,6 +42,7 @@ const TradingView = () => {
                   `https://static.upbit.com/logos/${(cr_selected.market).slice(4)}.png`) : undefined
           }
           onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }}
+          alt=""
         >
         </img>
         {/* 화폐 이름 */}
