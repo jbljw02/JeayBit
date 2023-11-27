@@ -195,10 +195,17 @@
   padding-left: 12px;
 }
 
-.change-input span {
+.change-input-div {
+  display: flex;
+}
+
+.change-input-span {
   font-size: 17px;
   color: rgba(0, 0, 0, 0.4);
   margin-left: 57px;
+  text-align: end;
+  margin-right: 20px;
+  font-weight: bold;
 }
 
 .alert-border {
@@ -657,6 +664,9 @@ dd span {
 
 /* 호가, 체결내역 공간 css */
 .PriceDetail {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
   /* flex: 0 0 25%; */
   width: 390px;
   margin-left: auto;
@@ -690,6 +700,8 @@ dd span {
   table-layout: fixed;
   border-collapse: collapse;
   width: 100%;
+  /* height: 100%; */
+  /* height: 30%; */
 }
 
 .closedPrice-table thead tr,
@@ -800,6 +812,23 @@ dd span {
 
 .asking-sell {
   color: #f23645;
+}
+
+.simplebar-placeholder {
+  /* height: auto !important; */
+}
+
+.asking-section {
+  /* flex: 1; */
+}
+
+.closed-section {
+  /* flex: 1; */
+}
+
+.div-trading {
+  /* display: none; */
+  /* height: 500px; */
 }
 
 .trading-section {
@@ -1379,22 +1408,27 @@ input[type=range]::-webkit-slider-thumb {
 
 .scrollBar-askingPriceTable {
   width: 100%;
-  max-height: calc(100vh - 1090px);
+  max-height: 360px;
+  /* max-height: calc(100vh - 1090px); */
+  /* max-height: 100%; */
+  /* max-height: 30%; */
   /* max-height: 415px; */
   overflow-x: hidden;
 }
 
 .scrollBar-closedPriceTable {
   width: 100%;
-  max-height: calc(100vh - 1090px);
+  max-height: 360px;
+  /* max-height: 100%; */
+  /* max-height: calc(100vh - 1090px); */
   /* max-height: 415px; */
   overflow-x: hidden;
 }
 
 .scrollBar-tradingHistoryTable {
   width: 100%;
-  max-height: calc(100vh - 1150px);
-  /* max-height: 200px; */
+  /* max-height: calc(100vh - 1150px); */
+  max-height: 300px;
   overflow-x: hidden;
   /* margin-top: -6px; */
   /* padding-top: -6px; */

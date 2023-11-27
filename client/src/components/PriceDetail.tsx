@@ -160,11 +160,15 @@ const PriceDetail = () => {
   return (
     <>
       <ModalComplete completeModalOpen={completeModalOpen} setCompleteModalOpen={setCompleteModalOpen} completeToggleModal={completeToggleModal} />
-      <div className="lightMode">
+      <div className="asking-section">
         <div className="priceDetail-title askingTitle lightMode">호가내역</div>
         <AskingPrice />
+      </div>
+      <div className="closed-section">
         <div className="priceDetail-title closedTitle lightMode">체결내역</div>
         <ClosedPrice />
+      </div>
+      <div className="div-trading">
         <div className="trading-section lightMode-title">
           <span className={`${sectionChange === '매수' ?
             'buyingSection' :
@@ -593,7 +597,7 @@ const BuyingSection = () => {
   }
 
   return (
-    <>
+    <div className="div-tradingSection">
       <ModalSumbit modalOpen={modalOpen} setModalOpen={setModalOpen} toggleModal={toggleModal} />
       <ModalComplete completeModalOpen={completeModalOpen} setCompleteModalOpen={setCompleteModalOpen} completeToggleModal={completeToggleModal} />
       <table className="trading-headTable">
@@ -1037,7 +1041,7 @@ const BuyingSection = () => {
               </>
           )
       }
-    </>
+    </div>
   )
 }
 
@@ -1814,7 +1818,7 @@ const TradeHistory = () => {
   }
 
   return (
-    <>
+    <div className="div-trading-table">
       <table className="trading-headTable">
         <tbody>
           <tr className="trading-choice">
@@ -2000,7 +2004,7 @@ const TradeHistory = () => {
           </tbody>
         </table>
       </SimpleBar>
-    </>
+    </div>
   )
 }
 
