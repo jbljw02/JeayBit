@@ -344,16 +344,18 @@ const Header = () => {
                               }
                               <div className="change-input">
                                 <div>전환량</div>
-                                <input value={depositChangeAmount}></input>
-                                <span>
-                                  {
-                                    cr_selected && cr_selected.market ?
-                                      Array.isArray(cr_selected.market) ?
-                                        cr_selected.market[0].slice(4) :
-                                        cr_selected.market.slice(4) :
-                                      undefined
-                                  }
-                                </span>
+                                <div className="change-input-div">
+                                  <input value={depositChangeAmount}></input>
+                                  <span className="change-input-span">
+                                    {
+                                      cr_selected && cr_selected.market ?
+                                        Array.isArray(cr_selected.market) ?
+                                          cr_selected.market[0].slice(4) :
+                                          cr_selected.market.slice(4) :
+                                        undefined
+                                    }
+                                  </span>
+                                </div>
                               </div>
                               <div className="transfer-submit deposit">
                                 <span
@@ -415,16 +417,18 @@ const Header = () => {
                               }
                               <div className="change-input">
                                 <div>전환량</div>
-                                <input value={withdrawChangeAmount}></input>
-                                <span>
-                                  {
-                                    cr_selected && cr_selected.market
-                                      ? Array.isArray(cr_selected.market)
-                                        ? cr_selected.market[0].slice(4)
-                                        : cr_selected.market.slice(4)
-                                      : undefined
-                                  }
-                                </span>
+                                <div className="change-input-div">
+                                  <input value={withdrawChangeAmount}></input>
+                                  <span className="change-input-span">
+                                    {
+                                      cr_selected && cr_selected.market
+                                        ? Array.isArray(cr_selected.market)
+                                          ? cr_selected.market[0].slice(4)
+                                          : cr_selected.market.slice(4)
+                                        : undefined
+                                    }
+                                  </span>
+                                </div>
                               </div>
                               <div className="transfer-submit withdraw">
                                 <span
