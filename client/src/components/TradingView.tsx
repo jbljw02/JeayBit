@@ -32,13 +32,17 @@ const TradingView = () => {
     <>
       <div className="crypto-name lightMode-title">
         {/* src 내부에 동적으로 state를 넣기 위해선 `(햅틱) 사용 */}
-        <img className="crypto-img" src={
-          cr_selected && cr_selected.market ?
-            (
-              Array.isArray(cr_selected.market) ?
-                `https://static.upbit.com/logos/${(cr_selected.market[0]).slice(4)}.png` :
-                `https://static.upbit.com/logos/${(cr_selected.market).slice(4)}.png`) : undefined
-        } alt="화폐사진">
+        <img
+          className="crypto-img"
+          src={
+            cr_selected && cr_selected.market ?
+              (
+                Array.isArray(cr_selected.market) ?
+                  `https://static.upbit.com/logos/${(cr_selected.market[0]).slice(4)}.png` :
+                  `https://static.upbit.com/logos/${(cr_selected.market).slice(4)}.png`) : undefined
+          }
+          onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }}
+        >
         </img>
         {/* 화폐 이름 */}
         {
@@ -238,9 +242,9 @@ const TradingView = () => {
   );
 }
 
-/* 화폐의 변화율에 따라 css 속성 다르게 적용 */ 
+/* 화폐의 변화율에 따라 css 속성 다르게 적용 */
 const CryptoChangeRateSelected = () => {
-  
+
   const cr_selected = useSelector((state: RootState) => state.cr_selected);
 
   return (
