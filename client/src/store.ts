@@ -134,6 +134,8 @@ export type RootState = {
   transferSort: string,
   depositEmpty: boolean,
   withdrawEmpty: boolean,
+  askHide: boolean,
+  closeHide: boolean,
 }
 
 const cr_name = createSlice({
@@ -750,6 +752,26 @@ const transferSort = createSlice({
   }
 })
 
+const askHide = createSlice({
+  name: 'askHide',
+  initialState: false,
+  reducers: {
+    setAskHide: (state, action) => {
+      return action.payload;
+    }
+  }
+})
+
+const closeHide = createSlice({
+  name: 'closeHide',
+  initialState: false,
+  reducers: {
+    setCloseHide: (state, action) => {
+      return action.payload;
+    }
+  }
+})
+
 export default configureStore({
   reducer: {
     cr_name: cr_name.reducer,
@@ -813,6 +835,8 @@ export default configureStore({
     isSelling: isSelling.reducer,
     askingData_unSigned: askingData_unSigned.reducer,
     transferSort: transferSort.reducer,
+    askHide: askHide.reducer,
+    closeHide: closeHide.reducer,
   }
 })
 
@@ -893,5 +917,7 @@ export const { setIsBuying } = isBuying.actions;
 export const { setIsSelling } = isSelling.actions;
 export const { setAskingData_unSigned } = askingData_unSigned.actions;
 export const { setTransferSort } = transferSort.actions;
+export const { setAskHide } = askHide.actions;
+export const { setCloseHide } = closeHide.actions;
 
 // export default store;

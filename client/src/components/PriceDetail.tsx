@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { AskingData, RootState, setAsking_dateTime, setBuyingPrice, setIsBuying, setIsSelling, setSectionChange, setSellingPrice } from "../store";
+import { AskingData, RootState, setAskHide, setAsking_dateTime, setBuyingPrice, setCloseHide, setIsBuying, setIsSelling, setSectionChange, setSellingPrice } from "../store";
 import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom'
 import SimpleBar from 'simplebar-react';
@@ -17,6 +17,9 @@ const PriceDetail = () => {
   const sectionChange = useSelector((state: RootState) => state.sectionChange);
   const askingData_unSigned = useSelector((state: RootState) => state.askingData_unSigned);
   const logInEmail = useSelector((state: RootState) => state.logInEmail);
+  const askHide = useSelector((state: RootState) => state.askHide);
+  const closeHide = useSelector((state: RootState) => state.closeHide);
+
   const [completeModalOpen, setCompleteModalOpen] = useState<boolean>(false);
 
   const completeToggleModal = useCallback(() => {
@@ -121,9 +124,6 @@ const PriceDetail = () => {
       }
     }
 
-    // console.log("로컬 스토리지 : ", localStorageItem);
-    // console.log("미체결 : ", askingData_unSigned);
-
     // 미체결 화폐 state의 키를 배열로 생성하고, 순차적으로 반복문 실행
     Object.keys(askingData_unSigned).forEach((cryptoName) => {
 
@@ -157,15 +157,45 @@ const PriceDetail = () => {
 
   }, [askingData_unSigned, completeToggleModal, logInEmail, sellCrypto_unSigned])
 
+  const toggleAskHide = () => {
+    dispatch(setAskHide(!askHide));
+  }
+
+  const toggleCloseHide = () => {
+    dispatch(setCloseHide(!closeHide))
+  }
+
   return (
     <>
       <ModalComplete completeModalOpen={completeModalOpen} setCompleteModalOpen={setCompleteModalOpen} completeToggleModal={completeToggleModal} />
       <div className="asking-section">
-        <div className="priceDetail-title askingTitle lightMode">호가내역</div>
+        <div className="priceDetail-title askingTitle lightMode">
+          호가내역
+          <svg className="arrow-hide" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 5"
+            onClick={() => toggleAskHide()}
+            style={{
+              pointerEvents: 'all',
+              transformOrigin: askHide ? '50% 50%' : undefined,
+              transform: askHide ? 'rotate(270deg)' : undefined
+            }}>
+            <path d="M5.016 0 0 .003 2.506 2.5 5.016 5l2.509-2.5L10.033.003 5.016 0z" />
+          </svg>
+        </div>
         <AskingPrice />
       </div>
       <div className="closed-section">
-        <div className="priceDetail-title closedTitle lightMode">체결내역</div>
+        <div className="priceDetail-title closedTitle lightMode">
+          체결내역
+          <svg className="arrow-hide" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 5"
+            onClick={() => toggleCloseHide()}
+            style={{
+              pointerEvents: 'all',
+              transformOrigin: closeHide ? '50% 50%' : undefined,
+              transform: closeHide ? 'rotate(270deg)' : undefined
+            }}>
+            <path d="M5.016 0 0 .003 2.506 2.5 5.016 5l2.509-2.5L10.033.003 5.016 0z" />
+          </svg>
+        </div>
         <ClosedPrice />
       </div>
       <div className="div-trading">
@@ -207,6 +237,7 @@ const AskingPrice = () => {
   const asking_dateTime = useSelector((state: RootState) => state.asking_dateTime);
   const asking_totalAskSize = useSelector((state: RootState) => state.asking_totalAskSize);
   const asking_totalBidSize = useSelector((state: RootState) => state.asking_totalBidSize);
+  const askHide = useSelector((state: RootState) => state.askHide);
 
   const [prevData, setPrevData] = useState<AskingData[]>();
 
@@ -282,78 +313,84 @@ const AskingPrice = () => {
         <table className="askingPrice-table lightMode">
           <tbody>
             {
-              asking_data.map((item, i) => {
-                // 이전 호가와 현재 호가를 비교한 값을 이용 - 변경된 호가가 현재 state를 순회하면서 일치하는 값에 대해서 스타일 지정
-                let isChanged_bid = differences_bid.some((value, index) => {
-                  return value.new_bid_size === item.bid_size;
-                })
-                let bidClass = isChanged_bid ? 'change-bid' : '';
-                const percentage = (item.bid_size / asking_totalBidSize) * 100;  // 전체호가를 각각 호가로 나누어 비울을 환산한 후 해당 비율만큼 스타일 설정
+              !askHide ?
+                asking_data.map((item, i) => {
+                  // 이전 호가와 현재 호가를 비교한 값을 이용 - 변경된 호가가 현재 state를 순회하면서 일치하는 값에 대해서 스타일 지정
+                  let isChanged_bid = differences_bid.some((value, index) => {
+                    return value.new_bid_size === item.bid_size;
+                  })
+                  let bidClass = isChanged_bid ? 'change-bid' : '';
+                  const percentage = (item.bid_size / asking_totalBidSize) * 100;  // 전체호가를 각각 호가로 나누어 비울을 환산한 후 해당 비율만큼 스타일 설정
 
-                let str_bid_size;
+                  let str_bid_size;
 
-                // 14자리 이상의 정수인 경우, 14자리로 줄이고 문자열로 반환
-                if (item.bid_size > 9999999999999) {
-                  str_bid_size = String(Math.floor(item.bid_size));
-                }
-                // 소수점을 포함하여 14자리를 넘어갈 수 있는 경우를 처리
-                else {
-                  str_bid_size = String(item.bid_size);
-                  str_bid_size = str_bid_size.substring(0, 14);
-                }
+                  // 14자리 이상의 정수인 경우, 14자리로 줄이고 문자열로 반환
+                  if (item.bid_size > 9999999999999) {
+                    str_bid_size = String(Math.floor(item.bid_size));
+                  }
+                  // 소수점을 포함하여 14자리를 넘어갈 수 있는 경우를 처리
+                  else {
+                    str_bid_size = String(item.bid_size);
+                    str_bid_size = str_bid_size.substring(0, 14);
+                  }
 
-                // 문자열의 끝이 '.'로 끝난다면 .을 제거
-                if (str_bid_size.endsWith('.')) {
-                  str_bid_size = str_bid_size.slice(0, -1);
-                }
+                  // 문자열의 끝이 '.'로 끝난다면 .을 제거
+                  if (str_bid_size.endsWith('.')) {
+                    str_bid_size = str_bid_size.slice(0, -1);
+                  }
 
-                return (
-                  <tr
-                    key={i}
-                    style={{ background: `linear-gradient(270deg, rgba(34,171,148, .2) ${percentage}%, transparent ${percentage}%)` }}>
-                    <td>{asking_dateTime}</td>
-                    <td>{(item.bid_price).toLocaleString()}</td>
-                    <td className={bidClass}>{str_bid_size}
-                    </td>
-                  </tr>
-                )
-              })
+                  return (
+                    <tr
+                      key={i}
+                      style={{ background: `linear-gradient(270deg, rgba(34,171,148, .2) ${percentage}%, transparent ${percentage}%)` }}>
+                      <td>{asking_dateTime}</td>
+                      <td>{(item.bid_price).toLocaleString()}</td>
+                      <td className={bidClass}>{str_bid_size}
+                      </td>
+                    </tr>
+                  )
+                }) :
+                <div className="hide-element">
+                  ...
+                </div>
             }
             {
-              asking_data.map((item, i) => {
-                // 이전 호가와 현재 호가를 비교한 값을 이용 - 변경된 호가가 현재 state를 순회하면서 일치하는 값에 대해서 스타일 지정
-                let isChange_ask = differences_ask.some((value, index) => {
-                  return value.new_ask_size === item.ask_size;
-                })
-                let askClass = isChange_ask ? 'change-ask' : '';
-                const percentage = (item.ask_size / asking_totalAskSize) * 100;  // 전체호가를 각각 호가로 나누어 비울을 환산한 후 해당 비율만큼 스타일 설정
+              !askHide ?
+                asking_data.map((item, i) => {
+                  // 이전 호가와 현재 호가를 비교한 값을 이용 - 변경된 호가가 현재 state를 순회하면서 일치하는 값에 대해서 스타일 지정
+                  let isChange_ask = differences_ask.some((value, index) => {
+                    return value.new_ask_size === item.ask_size;
+                  })
+                  let askClass = isChange_ask ? 'change-ask' : '';
+                  const percentage = (item.ask_size / asking_totalAskSize) * 100;  // 전체호가를 각각 호가로 나누어 비울을 환산한 후 해당 비율만큼 스타일 설정
 
-                let str_ask_size;
-                // 14자리 이상의 정수인 경우, 14자리로 줄이고 문자열로 반환
-                if (item.ask_size > 9999999999999) {
-                  str_ask_size = String(Math.floor(item.ask_size));
-                }
-                // 소수점을 포함하여 14자리를 넘어갈 수 있는 경우를 처리
-                else {
-                  str_ask_size = String(item.ask_size);
-                  str_ask_size = str_ask_size.substring(0, 14);
-                }
+                  let str_ask_size;
+                  // 14자리 이상의 정수인 경우, 14자리로 줄이고 문자열로 반환
+                  if (item.ask_size > 9999999999999) {
+                    str_ask_size = String(Math.floor(item.ask_size));
+                  }
+                  // 소수점을 포함하여 14자리를 넘어갈 수 있는 경우를 처리
+                  else {
+                    str_ask_size = String(item.ask_size);
+                    str_ask_size = str_ask_size.substring(0, 14);
+                  }
 
-                // 문자열의 끝이 '.'로 끝난다면 .을 제거
-                if (str_ask_size.endsWith('.')) {
-                  str_ask_size = str_ask_size.slice(0, -1)
-                }
+                  // 문자열의 끝이 '.'로 끝난다면 .을 제거
+                  if (str_ask_size.endsWith('.')) {
+                    str_ask_size = str_ask_size.slice(0, -1)
+                  }
 
-                return (
-                  <tr
-                    key={i}
-                    style={{ background: `linear-gradient(270deg, rgba(242,54,69, .2) ${percentage}%, transparent ${percentage}%)` }}>
-                    <td>{asking_dateTime}</td>
-                    <td>{(item.ask_price).toLocaleString()}</td>
-                    <td className={askClass}>{str_ask_size}</td>
-                  </tr>
-                )
-              })
+                  return (
+                    <tr
+                      key={i}
+                      style={{ background: `linear-gradient(270deg, rgba(242,54,69, .2) ${percentage}%, transparent ${percentage}%)` }}>
+                      <td>{asking_dateTime}</td>
+                      <td>{(item.ask_price).toLocaleString()}</td>
+                      <td className={askClass}>{str_ask_size}</td>
+                    </tr>
+                  )
+                }) :
+                null
             }
           </tbody>
         </table>
@@ -366,6 +403,7 @@ const ClosedPrice = () => {
 
   const closed_data = useSelector((state: RootState) => state.closed_data);
   const cr_market_selected = useSelector((state: RootState) => state.cr_market_selected);
+  const closeHide = useSelector((state: RootState) => state.closeHide);
 
   return (
     <>
@@ -385,47 +423,49 @@ const ClosedPrice = () => {
         <table className="closedPrice-table">
           <tbody>
             {
-              closed_data.map((item, i) => {
-                const date = new Date(item.timestamp);
-                let trade_time = new Intl.DateTimeFormat('ko-KR', {
-                  month: '2-digit',
-                  day: '2-digit',
-                  hour: '2-digit',
-                  minute: '2-digit',
-                  hour12: false,  // 24시간 형식
-                }).format(date);
-                trade_time = trade_time.replace(". ", "/").replace(".", "").replace("오전 ", "").replace("오후 ", "")
+              !closeHide ?
+                closed_data.map((item, i) => {
+                  const date = new Date(item.timestamp);
+                  let trade_time = new Intl.DateTimeFormat('ko-KR', {
+                    month: '2-digit',
+                    day: '2-digit',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    hour12: false,  // 24시간 형식
+                  }).format(date);
+                  trade_time = trade_time.replace(". ", "/").replace(".", "").replace("오전 ", "").replace("오후 ", "")
 
-                let str_trade_volume;
+                  let str_trade_volume;
 
-                // 14자리 이상의 정수인 경우, 14자리로 줄이고 문자열로 반환
-                if (item.trade_volume > 9999999999999) {
-                  str_trade_volume = String(Math.floor(item.trade_volume));
+                  // 14자리 이상의 정수인 경우, 14자리로 줄이고 문자열로 반환
+                  if (item.trade_volume > 9999999999999) {
+                    str_trade_volume = String(Math.floor(item.trade_volume));
+                  }
+                  // 소수점을 포함하여 14자리를 넘어갈 수 있는 경우를 처리
+                  else {
+                    str_trade_volume = String(item.trade_volume);
+                    str_trade_volume = str_trade_volume.substring(0, 14);
+                  }
+
+                  // 문자열의 끝이 '.'로 끝난다면 .을 제거
+                  if (str_trade_volume.endsWith('.')) {
+                    str_trade_volume = str_trade_volume.slice(0, -1)
+                  }
+
+                  return (
+                    <tr key={i}>
+                      <td>{trade_time}</td>
+                      <td>{(item.trade_price).toLocaleString()}</td>
+                      {
+                        item.ask_bid === 'BID' ?
+                          <td className="td-rise">{str_trade_volume}</td> :
+                          <td className="td-fall">{str_trade_volume}</td>
+                      }
+                    </tr>
+                  )
                 }
-                // 소수점을 포함하여 14자리를 넘어갈 수 있는 경우를 처리
-                else {
-                  str_trade_volume = String(item.trade_volume);
-                  str_trade_volume = str_trade_volume.substring(0, 14);
-                }
-
-                // 문자열의 끝이 '.'로 끝난다면 .을 제거
-                if (str_trade_volume.endsWith('.')) {
-                  str_trade_volume = str_trade_volume.slice(0, -1)
-                }
-
-                return (
-                  <tr key={i}>
-                    <td>{trade_time}</td>
-                    <td>{(item.trade_price).toLocaleString()}</td>
-                    {
-                      item.ask_bid === 'BID' ?
-                        <td className="td-rise">{str_trade_volume}</td> :
-                        <td className="td-fall">{str_trade_volume}</td>
-                    }
-                  </tr>
-                )
-              }
-              )
+                ) :
+                <div className="hide-element">...</div>
             }
           </tbody>
         </table>
@@ -498,7 +538,7 @@ const BuyingSection = () => {
   const buyCrypto = (email: string, cryptoName: string, cryptoQuantity: number, buyTotal: number) => {
     (async (email, cryptoName, cryptoQuantity, buyTotal) => {
       try {
-        const response = await axios.post("https://jeaybit.site/buy_crypto/", {
+        const response = await axios.post("http://127.0.0.1:8000/buy_crypto/", {
           email: email,
           crypto_name: cryptoName,
           crypto_quantity: cryptoQuantity,
@@ -1108,7 +1148,7 @@ const SellingSection = () => {
   const sellCrypto = (email: string, cryptoName: string, cryptoQuantity: number, sellTotal: number) => {
     (async (email, cryptoName, cryptoQuantity, sellTotal) => {
       try {
-        const response = await axios.post("https://jeaybit.site/sell_crypto/", {
+        const response = await axios.post("http://127.0.0.1:8000/sell_crypto/", {
           email: email,
           crypto_name: cryptoName,
           crypto_quantity: cryptoQuantity,
@@ -1773,7 +1813,7 @@ const TradeHistory = () => {
   const cancelOrder = (email: string, ids: string[]) => {
     (async (email, ids) => {
       try {
-        const response = await axios.post("https://jeaybit.site/cancel_order/", {
+        const response = await axios.post("http://127.0.0.1:8000/cancel_order/", {
           ids: ids,
           email: email,
         });
@@ -1884,8 +1924,11 @@ const TradeHistory = () => {
               // 체결된 화폐들의 거래내역
               historySort === '체결' ?
                 userTradeHistory.map((item, i) => {
+                  let isLastItem = i === userTradeHistory.length - 1;
                   return (
-                    <tr key={i}>
+                    <tr
+                      id={`${isLastItem ? 'last-row' : ''}`}
+                      key={i}>
                       <td>
                         {(item.trade_time).slice(0, 10)} <br />
                         {(item.trade_time).slice(10)}
@@ -1926,12 +1969,16 @@ const TradeHistory = () => {
                 userTradeHistory_unSigned !== undefined && Array.isArray(userTradeHistory_unSigned) ?
                   (
                     userTradeHistory_unSigned.map((item, i) => {
+                      let isLastItem = i === userTradeHistory_unSigned.length - 1;
                       return (
-                        <tr className={`tr-unSigned ${scheduledCancel.some(item => item.index === i) ?
-                          'unSigned-clicked' : ''
-                          }`}
+                        <tr
+                          className={`tr-unSigned ${scheduledCancel.some(item => item.index === i) ?
+                            'unSigned-clicked' : ''
+                            }`}
+                          id={`${isLastItem ? 'last-row' : ''}`}
                           key={i}
-                          onClick={() => clickUnSigned(item.id, i)}>
+                          onClick={() => clickUnSigned(item.id, i)}
+                        >
                           <td>
                             {
                               item.trade_time !== undefined ?
