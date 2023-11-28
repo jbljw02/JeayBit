@@ -5,7 +5,6 @@ import { setUserWallet, RootState, setOwnedCrypto, setUserTradeHistory, setUserT
 export default function useFunction() {
 
   const dispatch = useDispatch();
-  const logInUser = useSelector((state: RootState) => state.logInUser);
   const logInEmail = useSelector((state: RootState) => state.logInEmail);
   const filteredData = useSelector((state: RootState) => state.filteredData);
   const theme = useSelector((state: RootState) => state.theme);
