@@ -298,103 +298,105 @@ const AskingPrice = () => {
 
   return (
     <>
-      <table className="askingPrice-table lightMode">
-        <thead className="lightMode-title">
-          <tr>
-            <th>등록시간</th>
-            <th>호가</th>
-            <th>
-              수량<span>({(cr_market_selected).slice(4)})</span>
-            </th>
-          </tr>
-        </thead>
-      </table>
-      <SimpleBar className="scrollBar-askingPriceTable">
-        <table className="askingPrice-table lightMode">
-          <tbody>
-            {
-              !askHide ?
-                asking_data.map((item, i) => {
-                  // 이전 호가와 현재 호가를 비교한 값을 이용 - 변경된 호가가 현재 state를 순회하면서 일치하는 값에 대해서 스타일 지정
-                  let isChanged_bid = differences_bid.some((value, index) => {
-                    return value.new_bid_size === item.bid_size;
-                  })
-                  let bidClass = isChanged_bid ? 'change-bid' : '';
-                  const percentage = (item.bid_size / asking_totalBidSize) * 100;  // 전체호가를 각각 호가로 나누어 비울을 환산한 후 해당 비율만큼 스타일 설정
+      {
+        !askHide ?
+          <>
+            <table className="askingPrice-table lightMode">
+              <thead className="lightMode-title">
+                <tr>
+                  <th>등록시간</th>
+                  <th>호가</th>
+                  <th>
+                    수량<span>({(cr_market_selected).slice(4)})</span>
+                  </th>
+                </tr>
+              </thead>
+            </table>
+            <SimpleBar className="scrollBar-askingPriceTable">
+              <table className="askingPrice-table lightMode">
+                <tbody>
+                  {
+                    asking_data.map((item, i) => {
+                      // 이전 호가와 현재 호가를 비교한 값을 이용 - 변경된 호가가 현재 state를 순회하면서 일치하는 값에 대해서 스타일 지정
+                      let isChanged_bid = differences_bid.some((value, index) => {
+                        return value.new_bid_size === item.bid_size;
+                      })
+                      let bidClass = isChanged_bid ? 'change-bid' : '';
+                      const percentage = (item.bid_size / asking_totalBidSize) * 100;  // 전체호가를 각각 호가로 나누어 비울을 환산한 후 해당 비율만큼 스타일 설정
 
-                  let str_bid_size;
+                      let str_bid_size;
 
-                  // 14자리 이상의 정수인 경우, 14자리로 줄이고 문자열로 반환
-                  if (item.bid_size > 9999999999999) {
-                    str_bid_size = String(Math.floor(item.bid_size));
+                      // 14자리 이상의 정수인 경우, 14자리로 줄이고 문자열로 반환
+                      if (item.bid_size > 9999999999999) {
+                        str_bid_size = String(Math.floor(item.bid_size));
+                      }
+                      // 소수점을 포함하여 14자리를 넘어갈 수 있는 경우를 처리
+                      else {
+                        str_bid_size = String(item.bid_size);
+                        str_bid_size = str_bid_size.substring(0, 14);
+                      }
+
+                      // 문자열의 끝이 '.'로 끝난다면 .을 제거
+                      if (str_bid_size.endsWith('.')) {
+                        str_bid_size = str_bid_size.slice(0, -1);
+                      }
+
+                      return (
+                        <tr
+                          key={i}
+                          style={{ background: `linear-gradient(270deg, rgba(34,171,148, .2) ${percentage}%, transparent ${percentage}%)` }}>
+                          <td>{asking_dateTime}</td>
+                          <td>{(item.bid_price).toLocaleString()}</td>
+                          <td className={bidClass}>{str_bid_size}
+                          </td>
+                        </tr>
+                      )
+                    })
                   }
-                  // 소수점을 포함하여 14자리를 넘어갈 수 있는 경우를 처리
-                  else {
-                    str_bid_size = String(item.bid_size);
-                    str_bid_size = str_bid_size.substring(0, 14);
-                  }
+                  {
+                    !askHide ?
+                      asking_data.map((item, i) => {
+                        // 이전 호가와 현재 호가를 비교한 값을 이용 - 변경된 호가가 현재 state를 순회하면서 일치하는 값에 대해서 스타일 지정
+                        let isChange_ask = differences_ask.some((value, index) => {
+                          return value.new_ask_size === item.ask_size;
+                        })
+                        let askClass = isChange_ask ? 'change-ask' : '';
+                        const percentage = (item.ask_size / asking_totalAskSize) * 100;  // 전체호가를 각각 호가로 나누어 비울을 환산한 후 해당 비율만큼 스타일 설정
 
-                  // 문자열의 끝이 '.'로 끝난다면 .을 제거
-                  if (str_bid_size.endsWith('.')) {
-                    str_bid_size = str_bid_size.slice(0, -1);
-                  }
+                        let str_ask_size;
+                        // 14자리 이상의 정수인 경우, 14자리로 줄이고 문자열로 반환
+                        if (item.ask_size > 9999999999999) {
+                          str_ask_size = String(Math.floor(item.ask_size));
+                        }
+                        // 소수점을 포함하여 14자리를 넘어갈 수 있는 경우를 처리
+                        else {
+                          str_ask_size = String(item.ask_size);
+                          str_ask_size = str_ask_size.substring(0, 14);
+                        }
 
-                  return (
-                    <tr
-                      key={i}
-                      style={{ background: `linear-gradient(270deg, rgba(34,171,148, .2) ${percentage}%, transparent ${percentage}%)` }}>
-                      <td>{asking_dateTime}</td>
-                      <td>{(item.bid_price).toLocaleString()}</td>
-                      <td className={bidClass}>{str_bid_size}
-                      </td>
-                    </tr>
-                  )
-                }) :
-                <div className="hide-element">
-                  ...
-                </div>
-            }
-            {
-              !askHide ?
-                asking_data.map((item, i) => {
-                  // 이전 호가와 현재 호가를 비교한 값을 이용 - 변경된 호가가 현재 state를 순회하면서 일치하는 값에 대해서 스타일 지정
-                  let isChange_ask = differences_ask.some((value, index) => {
-                    return value.new_ask_size === item.ask_size;
-                  })
-                  let askClass = isChange_ask ? 'change-ask' : '';
-                  const percentage = (item.ask_size / asking_totalAskSize) * 100;  // 전체호가를 각각 호가로 나누어 비울을 환산한 후 해당 비율만큼 스타일 설정
+                        // 문자열의 끝이 '.'로 끝난다면 .을 제거
+                        if (str_ask_size.endsWith('.')) {
+                          str_ask_size = str_ask_size.slice(0, -1)
+                        }
 
-                  let str_ask_size;
-                  // 14자리 이상의 정수인 경우, 14자리로 줄이고 문자열로 반환
-                  if (item.ask_size > 9999999999999) {
-                    str_ask_size = String(Math.floor(item.ask_size));
+                        return (
+                          <tr
+                            key={i}
+                            style={{ background: `linear-gradient(270deg, rgba(242,54,69, .2) ${percentage}%, transparent ${percentage}%)` }}>
+                            <td>{asking_dateTime}</td>
+                            <td>{(item.ask_price).toLocaleString()}</td>
+                            <td className={askClass}>{str_ask_size}</td>
+                          </tr>
+                        )
+                      }) :
+                      null
                   }
-                  // 소수점을 포함하여 14자리를 넘어갈 수 있는 경우를 처리
-                  else {
-                    str_ask_size = String(item.ask_size);
-                    str_ask_size = str_ask_size.substring(0, 14);
-                  }
-
-                  // 문자열의 끝이 '.'로 끝난다면 .을 제거
-                  if (str_ask_size.endsWith('.')) {
-                    str_ask_size = str_ask_size.slice(0, -1)
-                  }
-
-                  return (
-                    <tr
-                      key={i}
-                      style={{ background: `linear-gradient(270deg, rgba(242,54,69, .2) ${percentage}%, transparent ${percentage}%)` }}>
-                      <td>{asking_dateTime}</td>
-                      <td>{(item.ask_price).toLocaleString()}</td>
-                      <td className={askClass}>{str_ask_size}</td>
-                    </tr>
-                  )
-                }) :
-                null
-            }
-          </tbody>
-        </table>
-      </SimpleBar>
+                </tbody>
+              </table>
+            </SimpleBar>
+          </> :
+          <div className="hide-element">...</div>
+      }
     </>
   )
 }
@@ -408,68 +410,72 @@ const ClosedPrice = () => {
   return (
     <>
       {/* 스크롤바를 넣기 위해 테이블을 두 개로 구성 */}
-      <table className="closedPrice-table lightMode-title">
-        <thead>
-          <tr>
-            <th>체결시간</th>
-            <th>체결가격</th>
-            <th>
-              체결량<span>({(cr_market_selected).slice(4)})</span>
-            </th>
-          </tr>
-        </thead>
-      </table>
-      <SimpleBar className="scrollBar-closedPriceTable">
-        <table className="closedPrice-table">
-          <tbody>
-            {
-              !closeHide ?
-                closed_data.map((item, i) => {
-                  const date = new Date(item.timestamp);
-                  let trade_time = new Intl.DateTimeFormat('ko-KR', {
-                    month: '2-digit',
-                    day: '2-digit',
-                    hour: '2-digit',
-                    minute: '2-digit',
-                    hour12: false,  // 24시간 형식
-                  }).format(date);
-                  trade_time = trade_time.replace(". ", "/").replace(".", "").replace("오전 ", "").replace("오후 ", "")
+      {
+        !closeHide ?
+          <>
+            <table className="closedPrice-table lightMode-title">
+              <thead>
+                <tr>
+                  <th>체결시간</th>
+                  <th>체결가격</th>
+                  <th>
+                    체결량<span>({(cr_market_selected).slice(4)})</span>
+                  </th>
+                </tr>
+              </thead>
+            </table>
+            <SimpleBar className="scrollBar-closedPriceTable">
+              <table className="closedPrice-table">
+                <tbody>
+                  {
+                    closed_data.map((item, i) => {
+                      const date = new Date(item.timestamp);
+                      let trade_time = new Intl.DateTimeFormat('ko-KR', {
+                        month: '2-digit',
+                        day: '2-digit',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        hour12: false,  // 24시간 형식
+                      }).format(date);
+                      trade_time = trade_time.replace(". ", "/").replace(".", "").replace("오전 ", "").replace("오후 ", "")
 
-                  let str_trade_volume;
+                      let str_trade_volume;
 
-                  // 14자리 이상의 정수인 경우, 14자리로 줄이고 문자열로 반환
-                  if (item.trade_volume > 9999999999999) {
-                    str_trade_volume = String(Math.floor(item.trade_volume));
-                  }
-                  // 소수점을 포함하여 14자리를 넘어갈 수 있는 경우를 처리
-                  else {
-                    str_trade_volume = String(item.trade_volume);
-                    str_trade_volume = str_trade_volume.substring(0, 14);
-                  }
-
-                  // 문자열의 끝이 '.'로 끝난다면 .을 제거
-                  if (str_trade_volume.endsWith('.')) {
-                    str_trade_volume = str_trade_volume.slice(0, -1)
-                  }
-
-                  return (
-                    <tr key={i}>
-                      <td>{trade_time}</td>
-                      <td>{(item.trade_price).toLocaleString()}</td>
-                      {
-                        item.ask_bid === 'BID' ?
-                          <td className="td-rise">{str_trade_volume}</td> :
-                          <td className="td-fall">{str_trade_volume}</td>
+                      // 14자리 이상의 정수인 경우, 14자리로 줄이고 문자열로 반환
+                      if (item.trade_volume > 9999999999999) {
+                        str_trade_volume = String(Math.floor(item.trade_volume));
                       }
-                    </tr>
-                  )
-                }
-                ) :
-                <div className="hide-element">...</div>
-            }
-          </tbody>
-        </table>
-      </SimpleBar>
+                      // 소수점을 포함하여 14자리를 넘어갈 수 있는 경우를 처리
+                      else {
+                        str_trade_volume = String(item.trade_volume);
+                        str_trade_volume = str_trade_volume.substring(0, 14);
+                      }
+
+                      // 문자열의 끝이 '.'로 끝난다면 .을 제거
+                      if (str_trade_volume.endsWith('.')) {
+                        str_trade_volume = str_trade_volume.slice(0, -1)
+                      }
+
+                      return (
+                        <tr key={i}>
+                          <td>{trade_time}</td>
+                          <td>{(item.trade_price).toLocaleString()}</td>
+                          {
+                            item.ask_bid === 'BID' ?
+                              <td className="td-rise">{str_trade_volume}</td> :
+                              <td className="td-fall">{str_trade_volume}</td>
+                          }
+                        </tr>
+                      )
+                    }
+                    )
+                  }
+                </tbody>
+              </table>
+            </SimpleBar>
+          </> :
+          <div className="hide-element">...</div>
+      }
     </>
   )
 }
