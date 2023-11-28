@@ -8,6 +8,7 @@ import '../assets/App.css';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { LogIn } from './LogIn';
 import { SignUp } from './SignUp';
+import SimpleBar from 'simplebar-react';
 
 const App = () => {
 
@@ -25,9 +26,11 @@ const App = () => {
                       <article className='TradingView'>
                         <TradingView></TradingView>
                       </article>
-                      <article className='PriceDetail lightMode'>
-                        <PriceDetail></PriceDetail>
-                      </article>
+                      <SimpleBar className="scrollBar-PriceDetail">
+                        <article className='PriceDetail lightMode'>
+                          <PriceDetail></PriceDetail>
+                        </article>
+                      </SimpleBar>
                     </div>
                     <aside className='aside'>
                       <article className="CryptoList">
