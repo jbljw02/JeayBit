@@ -26,7 +26,7 @@ const App = () => {
                       <article className='TradingView'>
                         <TradingView></TradingView>
                       </article>
-                      <SimpleBar className="scrollBar-PriceDetail" forceVisible="y" autoHide={false} scrollbarMaxSize={700}>
+                      <SimpleBar className="scrollBar-PriceDetail" scrollbarMaxSize={700}>
                         <article className='PriceDetail lightMode'>
                           <PriceDetail></PriceDetail>
                         </article>
