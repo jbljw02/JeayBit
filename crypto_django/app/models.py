@@ -27,7 +27,7 @@ class CustomUserManager(BaseUserManager):
         user.is_staff = True
         user.is_superuser = True
         user.save(using=self._db)
-        return user    
+        return user 
 
 # 실제 사용자 데이터를 표현하는 모델
 # AbstraceBaseUser는 password, last_name을 가지고 있는 모델, PermissionsMixin는 groups 및 user_permissions 제공
@@ -41,26 +41,26 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     is_superuser = models.BooleanField(default=False)  # 슈퍼유저인지 여부
     is_active = models.BooleanField(default=True)  # 계정 활성화 여부
 
-    groups = models.ManyToManyField(
-        to=Group,
-        verbose_name=_('groups'),
-        blank=True,
-        help_text=_(
-            'The groups this user belongs to. A user will get all permissions '
-            'granted to each of their groups.'
-        ),
-        related_query_name="customuser",
-        related_name="customuser_set",
-     )
+    # groups = models.ManyToManyField(
+    #     to=Group,
+    #     verbose_name=_('groups'),
+    #     blank=True,
+    #     help_text=_(
+    #         'The groups this user belongs to. A user will get all permissions '
+    #         'granted to each of their groups.'
+    #     ),
+    #     related_query_name="customuser",
+    #     related_name="customuser_set",
+    #  )
     
-    user_permissions = models.ManyToManyField(
-         to=Permission,
-         verbose_name=_('user permissions'),
-         blank=True,
-         help_text=_('Specific permissions for this user.'),
-         related_query_name="customuser",
-         related_name="customuser_set",
-     )
+    # user_permissions = models.ManyToManyField(
+    #      to=Permission,
+    #      verbose_name=_('user permissions'),
+    #      blank=True,
+    #      help_text=_('Specific permissions for this user.'),
+    #      related_query_name="customuser",
+    #      related_name="customuser_set",
+    #  )
 
     objects = CustomUserManager()
 
