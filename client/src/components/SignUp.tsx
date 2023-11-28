@@ -37,7 +37,7 @@ const SignUp = () => {
     (async (userName, email, password) => {
       try {
         if (emailValid === true && passwordValid === true) {
-          await axios.post('http://127.0.0.1:8000/sign_up/', {
+          await axios.post('https://jeaybit.site/sign_up/', {
             username: userName,
             email: email,
             password: password,
