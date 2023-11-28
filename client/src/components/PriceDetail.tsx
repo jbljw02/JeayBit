@@ -643,7 +643,7 @@ const BuyingSection = () => {
   }
 
   return (
-    <div className="div-tradingSection">
+    <>
       <ModalSumbit modalOpen={modalOpen} setModalOpen={setModalOpen} toggleModal={toggleModal} />
       <ModalComplete completeModalOpen={completeModalOpen} setCompleteModalOpen={setCompleteModalOpen} completeToggleModal={completeToggleModal} />
       <table className="trading-headTable">
@@ -1087,7 +1087,7 @@ const BuyingSection = () => {
               </>
           )
       }
-    </div>
+    </>
   )
 }
 
