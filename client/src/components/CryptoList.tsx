@@ -37,10 +37,10 @@ import img_sort_up from "../assets/images/sort-up.png";
 import img_sort_down from "../assets/images/sort-down.png";
 import starOn from "../assets/images/star-on.png";
 import starOff from "../assets/images/star-off.png";
-import SimpleBar from "simplebar-react";
-import "simplebar/dist/simplebar.min.css";
 import axios from "axios";
 import useFunction from "./useFuction";
+import PerfectScrollbar from 'react-perfect-scrollbar';
+import 'react-perfect-scrollbar/dist/css/styles.css';
 
 const CryptoList = () => {
 
@@ -742,7 +742,7 @@ const CryptoList = () => {
       </table>
       {
         listCategory === "원화" ? (
-          <SimpleBar className="scrollBar-listTable">
+          <PerfectScrollbar className="scrollBar-listTable">
             <table className="list-table">
               <colgroup>
                 <col width={150} />
@@ -859,11 +859,11 @@ const CryptoList = () => {
                 })}
               </tbody>
             </table>
-          </SimpleBar>
+          </PerfectScrollbar>
         ) : listCategory === "보유" ? (
           logInEmail !== "" ? (
             // 보유 화폐 영역
-            <SimpleBar className="scrollBar-listTable">
+            <PerfectScrollbar className="scrollBar-listTable">
               <table className="list-table">
                 <colgroup>
                   <col width={150} />
@@ -1005,7 +1005,7 @@ const CryptoList = () => {
                     })}
                 </tbody>
               </table>
-            </SimpleBar>
+            </PerfectScrollbar>
           ) : (
             <div className="crypto-notice">
               보유 화폐를 확인하시려면 로그인 해주세요.
@@ -1013,7 +1013,7 @@ const CryptoList = () => {
           )
         ) : logInEmail !== "" ? (
           // 관심 화폐 영역
-          <SimpleBar className="scrollBar-listTable">
+          <PerfectScrollbar className="scrollBar-listTable">
             <table className="list-table">
               <colgroup>
                 <col width={150} />
@@ -1132,7 +1132,7 @@ const CryptoList = () => {
                 })}
               </tbody>
             </table>
-          </SimpleBar>
+          </PerfectScrollbar>
         ) : (
           <div className="crypto-notice">
             관심 화폐를 확인하시려면 로그인 해주세요.

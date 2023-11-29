@@ -20,9 +20,6 @@
   border-bottom-width: 1px;
   border-bottom-style: solid;
   padding-left: 10px;
-  z-index: 1000;
-  /* position: relative; */
-  /* display: flex; */
 }
 
 .header-nav {
@@ -35,7 +32,7 @@
 /* 차트, 호가 및 체결내역, 화폐 리스트 영역 CSS */
 .content-container {
   width: 100%;
-  height: 100%;
+  height: 100vh;
   display: flex;
 }
 
@@ -368,7 +365,7 @@
   /* flex: 0 0 75%; */
   flex: 1;
   /* background-color: white; */
-  border-right: 1px solid #E3E8EC;
+  /* border-right: 1px solid #E3E8EC; */
 }
 
 .crypto-name {
@@ -673,17 +670,11 @@ dd span {
   flex-direction: column;
   /* height: 100vh; */
   height: 100%;
-  /* flex: 0 0 25%; */
+  /* height: 800px; */
   width: 390px;
   margin-left: auto;
-  /* background-color: white;   */
-  /* border-left: 1px solid #E3E8EC; */
-  /* border-right: 1px solid #E3E8EC; */
-  /* border-bottom: 1px solid #E3E8EC; */
-  /* border-left-width: 1px;
-  border-left-style: solid;
-  border-right-width: 1px;
-  border-right-style: solid; */
+  border-left: 1px solid #E3E8EC;
+  /* overflow: hidden; */
 }
 
 .priceDetail-title {
@@ -849,16 +840,20 @@ dd span {
 
 .asking-section {
   /* border-bottom: 1px solid black; */
+  width: 100%;
 }
 
 .closed-section {
   /* flex: 1; */
+  width: 100%;
 }
 
 .div-trading {
+  width: 100%;
   /* display: none; */
-  height: 100%;
-  border-bottom: 1px solid #E3E8EC;
+  /* height: 600px; */
+  height: 63%;
+  /* border-bottom: 1px solid #E3E8EC; */
 }
 
 .trading-section {
@@ -1178,12 +1173,12 @@ input[type=range]::-webkit-slider-thumb {
   width: 100%;
   border-collapse: collapse;
   border-top: 1px solid #E3E8EC;
-  border-bottom: 1px solid #E3E8EC;
   table-layout: fixed;
 }
 
 #historyHead {
   margin-top: 5px;
+  border-bottom: 1px solid #E3E8EC;
 }
 
 #last-row td {
@@ -1283,6 +1278,7 @@ input[type=range]::-webkit-slider-thumb {
   width: 420px;
   margin-left: auto;
   height: 100vh;
+  border-left: 1px solid #E3E8EC;
 }
 
 .CryptoList {
@@ -1441,6 +1437,10 @@ input[type=range]::-webkit-slider-thumb {
   background-color: red;
 }
 
+.ps__rail-y {
+  width: 0px !important;
+}
+
 .scrollBar-listTable {
   width: 100%;
   max-height: calc(100vh - 135px);
@@ -1448,47 +1448,63 @@ input[type=range]::-webkit-slider-thumb {
   overflow-x: hidden;
 }
 
-.scrollBar-PriceDetail {
-  /* width: 100%; */
-  width: 390px;
-  border-right: 1px solid #E3E8EC;
-  /* max-height: calc(100vh - 300px); */
-  /* max-height: 100vh; */
-  max-height: 200%;
-  overflow-x: hidden;
-  /* overflow-y: scroll; */
+.scrollBar-listTable .ps__thumb-y {
+  width: 6px !important;
+  /* height: 300px !important; */
+  background-color: #9e9e9e !important;
 }
 
-.scrollBar-PriceDetail::-webkit-scrollbar {
-  display: none; 
-}
-
-.scrollBar-askingPriceTable {
+#scrollBar-askingPriceTable {
   width: 100%;
   max-height: 360px;
   /* max-height: calc(100vh - 1090px); */
   /* max-height: 100%; */
   /* max-height: 30%; */
   /* max-height: 415px; */
-  overflow-x: hidden;
+  /* overflow-x: hidden; */
 }
 
-.scrollBar-closedPriceTable {
+#scrollBar-askingPriceTable .ps__thumb-y {
+  width: 6px !important;
+  height: 99px !important;
+  display: block !important;
+}
+
+.scrollBar-priceDetail .ps__thumb-y {
+  width: 10px !important;
+  height: 300px !important;
+  display: none !important;
+}
+
+#scrollBar-closedPriceTable {
   width: 100%;
   max-height: 360px;
   /* max-height: 100%; */
   /* max-height: calc(100vh - 1090px); */
   /* max-height: 415px; */
-  overflow-x: hidden;
+  /* overflow-x: hidden; */
 }
 
-.scrollBar-tradingHistoryTable {
+#scrollBar-closedPriceTable .ps__thumb-y {
+  width: 6px !important;
+  height: 99px !important;
+  display: block !important;
+}
+
+#scrollBar-tradingHistoryTable {
   width: 100%;
   /* max-height: calc(100vh - 1150px); */
-  max-height: 300px;
+  max-height: 300px !important;
   overflow-x: hidden;
   /* margin-top: -6px; */
   /* padding-top: -6px; */
+  border-bottom: 1px solid #E3E8EC;
+}
+
+#scrollBar-tradingHistoryTable .ps__thumb-y {
+  width: 6px !important;
+  /* height: 80px !important; */
+  display: block !important;
 }
 
 /* 스크롤바 색 지정 */

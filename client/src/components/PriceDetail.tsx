@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { AskingData, RootState, setAskHide, setAsking_dateTime, setBuyingPrice, setCloseHide, setIsBuying, setIsSelling, setSectionChange, setSellingPrice } from "../store";
+import { AskingData, RootState, setAskHide, setAsking_dateTime, setBuyingPrice, setCloseHide, setIsBuying, setIsScrollMove, setIsSelling, setSectionChange, setSellingPrice } from "../store";
 import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom'
 import SimpleBar from 'simplebar-react';
@@ -7,6 +7,8 @@ import 'simplebar/dist/simplebar.min.css';
 import axios from "axios";
 import useFunction from "./useFuction";
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button, makeStyles } from '@material-ui/core';
+import PerfectScrollbar from 'react-perfect-scrollbar';
+import 'react-perfect-scrollbar/dist/css/styles.css';
 
 const PriceDetail = () => {
 
@@ -19,6 +21,7 @@ const PriceDetail = () => {
   const logInEmail = useSelector((state: RootState) => state.logInEmail);
   const askHide = useSelector((state: RootState) => state.askHide);
   const closeHide = useSelector((state: RootState) => state.closeHide);
+  const isScrollMove = useSelector((state: RootState) => state.isScrollMove);
 
   const [completeModalOpen, setCompleteModalOpen] = useState<boolean>(false);
 
@@ -165,64 +168,72 @@ const PriceDetail = () => {
     dispatch(setCloseHide(!closeHide))
   }
 
+  const handleScroll = () => {
+    dispatch(setIsScrollMove(true));
+    setTimeout(() => dispatch(setIsScrollMove(false)), 1000);
+  }
+
   return (
     <>
       <ModalComplete completeModalOpen={completeModalOpen} setCompleteModalOpen={setCompleteModalOpen} completeToggleModal={completeToggleModal} />
-      <div className="asking-section">
-        <div className="priceDetail-title askingTitle lightMode">
-          호가내역
-          <svg className="arrow-hide" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 5"
-            onClick={() => toggleAskHide()}
-            style={{
-              pointerEvents: 'all',
-              transformOrigin: askHide ? '50% 50%' : undefined,
-              transform: askHide ? 'rotate(270deg)' : undefined
-            }}>
-            <path d="M5.016 0 0 .003 2.506 2.5 5.016 5l2.509-2.5L10.033.003 5.016 0z" />
-          </svg>
+      <PerfectScrollbar
+        className='scrollBar-priceDetail hide-scrollBar'>
+        <div className="asking-section">
+          <div className="priceDetail-title askingTitle lightMode">
+            호가내역
+            <svg className="arrow-hide" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 5"
+              onClick={() => toggleAskHide()}
+              style={{
+                pointerEvents: 'all',
+                transformOrigin: askHide ? '50% 50%' : undefined,
+                transform: askHide ? 'rotate(270deg)' : undefined
+              }}>
+              <path d="M5.016 0 0 .003 2.506 2.5 5.016 5l2.509-2.5L10.033.003 5.016 0z" />
+            </svg>
+          </div>
+          <AskingPrice />
         </div>
-        <AskingPrice />
-      </div>
-      <div className="closed-section">
-        <div className="priceDetail-title closedTitle lightMode">
-          체결내역
-          <svg className="arrow-hide" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 5"
-            onClick={() => toggleCloseHide()}
-            style={{
-              pointerEvents: 'all',
-              transformOrigin: closeHide ? '50% 50%' : undefined,
-              transform: closeHide ? 'rotate(270deg)' : undefined
-            }}>
-            <path d="M5.016 0 0 .003 2.506 2.5 5.016 5l2.509-2.5L10.033.003 5.016 0z" />
-          </svg>
+        <div className="closed-section">
+          <div className="priceDetail-title closedTitle lightMode">
+            체결내역
+            <svg className="arrow-hide" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 5"
+              onClick={() => toggleCloseHide()}
+              style={{
+                pointerEvents: 'all',
+                transformOrigin: closeHide ? '50% 50%' : undefined,
+                transform: closeHide ? 'rotate(270deg)' : undefined
+              }}>
+              <path d="M5.016 0 0 .003 2.506 2.5 5.016 5l2.509-2.5L10.033.003 5.016 0z" />
+            </svg>
+          </div>
+          <ClosedPrice />
         </div>
-        <ClosedPrice />
-      </div>
-      <div className="div-trading">
-        <div className="trading-section lightMode-title">
-          <span className={`${sectionChange === '매수' ?
-            'buyingSection' :
-            ''
-            }`} onClick={() => dispatch(setSectionChange('매수'))}>매수</span>
-          <span className={`${sectionChange === '매도' ?
-            'sellingSection' :
-            ''
-            }`} onClick={() => dispatch(setSectionChange('매도'))}>매도</span>
-          <span className={`${sectionChange === '거래내역' ?
-            'tradingHistorySection' :
-            ''
-            }`} onClick={() => dispatch(setSectionChange('거래내역'))}>거래내역</span>
+        <div className="div-trading">
+          <div className="trading-section lightMode-title">
+            <span className={`${sectionChange === '매수' ?
+              'buyingSection' :
+              ''
+              }`} onClick={() => dispatch(setSectionChange('매수'))}>매수</span>
+            <span className={`${sectionChange === '매도' ?
+              'sellingSection' :
+              ''
+              }`} onClick={() => dispatch(setSectionChange('매도'))}>매도</span>
+            <span className={`${sectionChange === '거래내역' ?
+              'tradingHistorySection' :
+              ''
+              }`} onClick={() => dispatch(setSectionChange('거래내역'))}>거래내역</span>
+          </div>
+          {
+            sectionChange === '매수' ?
+              <BuyingSection /> :
+              (
+                sectionChange === '매도' ?
+                  <SellingSection /> :
+                  <TradeHistory />
+              )
+          }
         </div>
-        {
-          sectionChange === '매수' ?
-            <BuyingSection /> :
-            (
-              sectionChange === '매도' ?
-                <SellingSection /> :
-                <TradeHistory />
-            )
-        }
-      </div>
+      </PerfectScrollbar>
     </>
   );
 }
@@ -238,6 +249,7 @@ const AskingPrice = () => {
   const asking_totalAskSize = useSelector((state: RootState) => state.asking_totalAskSize);
   const asking_totalBidSize = useSelector((state: RootState) => state.asking_totalBidSize);
   const askHide = useSelector((state: RootState) => state.askHide);
+  const isScrollMove = useSelector((state: RootState) => state.isScrollMove);
 
   const [prevData, setPrevData] = useState<AskingData[]>();
 
@@ -296,6 +308,11 @@ const AskingPrice = () => {
     }
   }
 
+  const handleScroll = () => {
+    dispatch(setIsScrollMove(true));
+    setTimeout(() => dispatch(setIsScrollMove(false)), 1000);
+  }
+
   return (
     <>
       {
@@ -312,7 +329,7 @@ const AskingPrice = () => {
                 </tr>
               </thead>
             </table>
-            <SimpleBar className="scrollBar-askingPriceTable">
+            <PerfectScrollbar id="scrollBar-askingPriceTable">
               <table className="askingPrice-table lightMode">
                 <tbody>
                   {
@@ -393,7 +410,7 @@ const AskingPrice = () => {
                   }
                 </tbody>
               </table>
-            </SimpleBar>
+            </PerfectScrollbar>
           </> :
           <div className="hide-element">...</div>
       }
@@ -406,6 +423,7 @@ const ClosedPrice = () => {
   const closed_data = useSelector((state: RootState) => state.closed_data);
   const cr_market_selected = useSelector((state: RootState) => state.cr_market_selected);
   const closeHide = useSelector((state: RootState) => state.closeHide);
+  const isScrollMove = useSelector((state: RootState) => state.isScrollMove);
 
   return (
     <>
@@ -424,7 +442,7 @@ const ClosedPrice = () => {
                 </tr>
               </thead>
             </table>
-            <SimpleBar className="scrollBar-closedPriceTable">
+            <PerfectScrollbar id="scrollBar-closedPriceTable">
               <table className="closedPrice-table">
                 <tbody>
                   {
@@ -472,7 +490,7 @@ const ClosedPrice = () => {
                   }
                 </tbody>
               </table>
-            </SimpleBar>
+            </PerfectScrollbar>
           </> :
           <div className="hide-element">...</div>
       }
@@ -1917,7 +1935,7 @@ const TradeHistory = () => {
           </tr>
         </thead>
       </table>
-      <SimpleBar className="scrollBar-tradingHistoryTable">
+      <PerfectScrollbar id="scrollBar-tradingHistoryTable">
         <table className="table-tradingHistory" id="historyBody">
           {/* <colgroup>
             <col width={75} />
@@ -2056,7 +2074,7 @@ const TradeHistory = () => {
             }
           </tbody>
         </table>
-      </SimpleBar>
+      </PerfectScrollbar>
     </div>
   )
 }
