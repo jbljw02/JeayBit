@@ -1,9 +1,9 @@
 import { useDispatch, useSelector } from "react-redux";
-import { AskingData, RootState, setAskHide, setAsking_dateTime, setBuyingPrice, setCloseHide, setIsBuying, setIsScrollMove, setIsSelling, setSectionChange, setSellingPrice } from "../store";
+import { AskingData, RootState, setAskHide, setAsking_dateTime, setBuyingPrice, setCloseHide, setIsBuying, setIsSelling, setSectionChange, setSellingPrice } from "../store";
 import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom'
-import SimpleBar from 'simplebar-react';
-import 'simplebar/dist/simplebar.min.css';
+// import SimpleBar from 'simplebar-react';
+// import 'simplebar/dist/simplebar.min.css';
 import axios from "axios";
 import useFunction from "./useFuction";
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button, makeStyles } from '@material-ui/core';
@@ -21,7 +21,6 @@ const PriceDetail = () => {
   const logInEmail = useSelector((state: RootState) => state.logInEmail);
   const askHide = useSelector((state: RootState) => state.askHide);
   const closeHide = useSelector((state: RootState) => state.closeHide);
-  const isScrollMove = useSelector((state: RootState) => state.isScrollMove);
 
   const [completeModalOpen, setCompleteModalOpen] = useState<boolean>(false);
 
@@ -168,11 +167,6 @@ const PriceDetail = () => {
     dispatch(setCloseHide(!closeHide))
   }
 
-  const handleScroll = () => {
-    dispatch(setIsScrollMove(true));
-    setTimeout(() => dispatch(setIsScrollMove(false)), 1000);
-  }
-
   return (
     <>
       <ModalComplete completeModalOpen={completeModalOpen} setCompleteModalOpen={setCompleteModalOpen} completeToggleModal={completeToggleModal} />
@@ -249,7 +243,6 @@ const AskingPrice = () => {
   const asking_totalAskSize = useSelector((state: RootState) => state.asking_totalAskSize);
   const asking_totalBidSize = useSelector((state: RootState) => state.asking_totalBidSize);
   const askHide = useSelector((state: RootState) => state.askHide);
-  const isScrollMove = useSelector((state: RootState) => state.isScrollMove);
 
   const [prevData, setPrevData] = useState<AskingData[]>();
 
@@ -306,11 +299,6 @@ const AskingPrice = () => {
         newDateString.replace(". ", "/").replace(".", "").replace("오전 ", "").replace("오후 ", "")
       ));
     }
-  }
-
-  const handleScroll = () => {
-    dispatch(setIsScrollMove(true));
-    setTimeout(() => dispatch(setIsScrollMove(false)), 1000);
   }
 
   return (
@@ -423,7 +411,6 @@ const ClosedPrice = () => {
   const closed_data = useSelector((state: RootState) => state.closed_data);
   const cr_market_selected = useSelector((state: RootState) => state.cr_market_selected);
   const closeHide = useSelector((state: RootState) => state.closeHide);
-  const isScrollMove = useSelector((state: RootState) => state.isScrollMove);
 
   return (
     <>
