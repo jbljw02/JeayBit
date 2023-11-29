@@ -136,6 +136,7 @@ export type RootState = {
   withdrawEmpty: boolean,
   askHide: boolean,
   closeHide: boolean,
+  isScrollMove: boolean,
 }
 
 const cr_name = createSlice({
@@ -772,6 +773,16 @@ const closeHide = createSlice({
   }
 })
 
+const isScrollMove = createSlice({
+  name: 'isScrollMove',
+  initialState: false,
+  reducers: {
+    setIsScrollMove: (state, action) => {
+      return action.payload;
+    }
+  }
+})
+
 export default configureStore({
   reducer: {
     cr_name: cr_name.reducer,
@@ -837,6 +848,7 @@ export default configureStore({
     transferSort: transferSort.reducer,
     askHide: askHide.reducer,
     closeHide: closeHide.reducer,
+    isScrollMove: isScrollMove.reducer,
   }
 })
 
@@ -919,5 +931,6 @@ export const { setAskingData_unSigned } = askingData_unSigned.actions;
 export const { setTransferSort } = transferSort.actions;
 export const { setAskHide } = askHide.actions;
 export const { setCloseHide } = closeHide.actions;
+export const { setIsScrollMove } = isScrollMove.actions;
 
 // export default store;

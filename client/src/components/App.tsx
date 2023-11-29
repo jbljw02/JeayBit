@@ -8,10 +8,8 @@ import '../assets/App.css';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { LogIn } from './LogIn';
 import { SignUp } from './SignUp';
-import SimpleBar from 'simplebar-react';
 
 const App = () => {
-
   return (
     <Provider store={store}>
       <div className="App">
@@ -28,11 +26,9 @@ const App = () => {
                       <article className='TradingView'>
                         <TradingView></TradingView>
                       </article>
-                      <SimpleBar className="scrollBar-PriceDetail" scrollbarMaxSize={700}>
-                        <article className='PriceDetail lightMode'>
-                          <PriceDetail></PriceDetail>
-                        </article>
-                      </SimpleBar>
+                      <article className='PriceDetail lightMode'>
+                        <PriceDetail></PriceDetail>
+                      </article>
                     </div>
                     <aside className='aside'>
                       <article className="CryptoList">
@@ -47,7 +43,6 @@ const App = () => {
               <Route path="/signUp" element={<SignUp />} />
             </Routes>
           </BrowserRouter>
-
         </div>
       </div>
     </Provider>
