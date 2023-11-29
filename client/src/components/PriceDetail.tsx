@@ -1900,7 +1900,7 @@ const TradeHistory = () => {
         </tbody>
       </table>
 
-      <table className="table-tradingHistory historyHead" id="historyHead">
+      <table className="table-tradingHistory" id={`${logInEmail !== '' ? 'historyHead' : ''}`}>
         {/* <colgroup>
           <col width={75} />
           <col width={75} />
