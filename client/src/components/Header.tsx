@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import title from "../assets/images/title.png";
-import { RootState, setBalanceUpdate, setLogInEmail, setLogInUser, setTransferSort } from "../store";
+import { RootState, setBalanceUpdate, setLogInEmail, setLogInUser, setTransferSort, setUserTradeHistory, setUserTradeHistory_unSigned } from "../store";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -131,6 +131,8 @@ const Header = () => {
         }
         dispatch(setLogInEmail(''))
         dispatch(setLogInUser(''))
+        dispatch(setUserTradeHistory([]))
+        dispatch(setUserTradeHistory_unSigned([]))
         localStorage.clear();
       } catch (error) {
         console.log("로그아웃 정보 전송 실패");
