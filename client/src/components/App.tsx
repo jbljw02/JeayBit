@@ -20,7 +20,9 @@ const App = () => {
             <Routes>
               <Route path="/" element={
                 <>
-                  <Header></Header>
+                  <header className="header lightMode-title">
+                    <Header></Header>
+                  </header>
                   <div className='content-container'>
                     <div className='main'>
                       <article className='TradingView'>

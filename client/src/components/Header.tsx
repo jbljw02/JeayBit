@@ -222,7 +222,7 @@ const Header = () => {
   };
 
   return (
-    <header className="header lightMode-title">
+    <>
       {/* 제목 폰트를 사용하기 위한 구글 폰트 api */}
       <style>
         @import
@@ -527,7 +527,7 @@ const Header = () => {
             </span>
         } */}
       </div>
-    </header>
+    </>
   );
 };
 
