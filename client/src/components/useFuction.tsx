@@ -43,7 +43,7 @@ export default function useFunction() {
   const addTradeHistory = (email: string, cryptoName: string, tradeCategory: string, tradeTime: Date, cryptoMarket: string, cryptoPrice: number, tradePrice: number, tradeAmount: number, isSigned: boolean) => {
     (async (email, cryptoName, tradeTime, cryptoMarket, cryptoPrice, tradePrice, tradeAmount) => {
       try {
-        const response = await axios.post("https://jeaybit.site/add_user_tradeHistory/", {
+        await axios.post("https://jeaybit.site/add_user_tradeHistory/", {
           email: email,
           crypto_name: cryptoName,
           trade_category: tradeCategory,
@@ -219,7 +219,7 @@ export default function useFunction() {
   const buyCrypto_unSigned = (key: string, email: string, cryptoName: string, cryptoQuantity: number, buyTotal: number) => {
     (async (key, email, cryptoName, cryptoQuantity, buyTotal) => {
       try {
-        const response = await axios.post("https://jeaybit.site/buy_crypto_unSigned/", {
+        await axios.post("https://jeaybit.site/buy_crypto_unSigned/", {
           key: key,
           email: email,
           crypto_name: cryptoName,
@@ -240,7 +240,7 @@ export default function useFunction() {
   const sellCrypto_unSigned = (key: string, email: string, cryptoName: string, cryptoQuantity: number, sellTotal: number) => {
     (async (key, email, cryptoName, cryptoQuantity, sellTotal) => {
       try {
-        const response = await axios.post("https://jeaybit.site/sell_crypto_unSigned/", {
+        await axios.post("https://jeaybit.site/sell_crypto_unSigned/", {
           key: key,
           email: email,
           crypto_name: cryptoName,
