@@ -23,15 +23,12 @@ const LogIn = () => {
 
   const logIn = (email: string, password: string) => {
 
-    console.log("토큰 : ", csrftoken)
     setIsEmailEmpty(false);
     setIsPasswordEmpty(false);
     
     // 이메일 및 비밀번호가 모두 입력돼야 서버로 데이터 전송
     if (email !== '' && password !== '') {
       (async (email, password) => {
-        console.log(email)
-        console.log(password)
         try {
           const response = await axios.post('https://jeaybit.site/logIn/', {
             email: email,
@@ -43,7 +40,7 @@ const LogIn = () => {
             },
             withCredentials: true,
           });
-          console.log("로그인 정보 전송 성공", response.data)
+          // console.log("로그인 정보 전송 성공", response.data)
           dispatch(setLogInUser(response.data.username))
           dispatch(setLogInEmail(response.data.email))
 
@@ -51,7 +48,7 @@ const LogIn = () => {
 
           navigate('/')
         } catch (error) {
-          console.log("로그인 정보 전송 실패", error)
+          // console.log("로그인 정보 전송 실패", error)
         }
       })(email, password)
     }

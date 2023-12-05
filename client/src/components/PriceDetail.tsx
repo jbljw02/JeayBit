@@ -34,6 +34,7 @@ const PriceDetail = () => {
     let localStorageItem: {
       id: string,
       price: number,
+      trade_category: string,
       name: string,
       trade_amount: number,
       trade_price: number,
@@ -51,6 +52,7 @@ const PriceDetail = () => {
           localStorageItem.push({
             id: tempKey,
             price: Number(tempValue.price),
+            trade_category: tempValue.trade_category,
             name: tempValue.name,
             trade_amount: tempValue.trade_amount,
             trade_price: tempValue.trade_price,
@@ -58,9 +60,6 @@ const PriceDetail = () => {
         }
       }
     }
-
-    // console.log("로컬 스토리지 : ", localStorageItem);
-    // console.log("미체결 : ", askingData_unSigned);
 
     // 미체결 화폐 state의 키를 배열로 생성하고, 순차적으로 반복문 실행
     Object.keys(askingData_unSigned).forEach((cryptoName) => {
@@ -82,9 +81,9 @@ const PriceDetail = () => {
           // console.log("호가 : ", askingData_unSigned[cryptoName][k].ask_price);
 
           // 로컬 스토리지에서 가져온 값과 호가가 일치한다면 구매 요청
-          if (scheduledCrypto[j].price === (askingData_unSigned[cryptoName])[k].ask_price) {
+          if (scheduledCrypto[j].trade_category === 'BUY' && scheduledCrypto[j].price === (askingData_unSigned[cryptoName])[k].ask_price) {
 
-            console.log("매수 - 일치", scheduledCrypto[j].price);
+            // console.log("매수 - 일치", scheduledCrypto[j].price);
             buyCrypto_unSigned(scheduledCrypto[j].id, logInEmail, scheduledCrypto[j].name, scheduledCrypto[j].trade_amount, scheduledCrypto[j].trade_price);
             completeToggleModal();
           }
@@ -101,6 +100,7 @@ const PriceDetail = () => {
     let localStorageItem: {
       id: string,
       price: number,
+      trade_category: string,
       name: string,
       trade_amount: number,
       trade_price: number,
@@ -118,6 +118,7 @@ const PriceDetail = () => {
           localStorageItem.push({
             id: tempKey,
             price: Number(tempValue.price),
+            trade_category: tempValue.trade_category,
             name: tempValue.name,
             trade_amount: tempValue.trade_amount,
             trade_price: tempValue.trade_price,
@@ -146,9 +147,9 @@ const PriceDetail = () => {
           // console.log("호가 : ", askingData_unSigned[cryptoName][k].bid_price);
 
           // 로컬 스토리지에서 가져온 값과 호가가 일치한다면 구매 요청
-          if (scheduledCrypto[j].price === (askingData_unSigned[cryptoName])[k].bid_price) {
+          if (scheduledCrypto[j].trade_category === 'SELL' && scheduledCrypto[j].price === (askingData_unSigned[cryptoName])[k].bid_price) {
 
-            console.log("매도 - 일치", scheduledCrypto[j].price);
+            // console.log("매도 - 일치", scheduledCrypto[j].price);
             sellCrypto_unSigned(scheduledCrypto[j].id, logInEmail, scheduledCrypto[j].name, scheduledCrypto[j].trade_amount, scheduledCrypto[j].trade_price);
             completeToggleModal();
           }
@@ -555,13 +556,13 @@ const BuyingSection = () => {
           crypto_quantity: cryptoQuantity,
           buy_total: buyTotal,
         });
-        console.log("구매 화폐 전송 성공", response.data);
+        // console.log("구매 화폐 전송 성공", response.data);
         getBalance(logInEmail);  // 매수에 사용한 금액만큼 차감되기 때문에 잔고 업데이트
         getOwnedCrypto(logInEmail);  // 소유 화폐가 새로 추가될 수 있으니 업데이트
         getTradeHistory(logInEmail)  // 매수에 성공했으니 거래내역 업데이트
         completeToggleModal();
       } catch (error) {
-        console.log("구매 화폐 전송 실패: ", error)
+        // console.log("구매 화폐 전송 실패: ", error)
       }
     })(email, cryptoName, cryptoQuantity, buyTotal);
   }
@@ -1165,13 +1166,13 @@ const SellingSection = () => {
           crypto_quantity: cryptoQuantity,
           sell_total: sellTotal,
         });
-        console.log("매도 화폐 전송 성공", response.data);
+        // console.log("매도 화폐 전송 성공", response.data);
         getBalance(logInEmail);  // 매수에 사용한 금액만큼 차감되기 때문에 잔고 업데이트
         getOwnedCrypto(logInEmail);  // 소유 화폐가 새로 추가될 수 있으니 업데이트
         getTradeHistory(logInEmail);  // 매도했으니 업데이트 됐을 거래내역을 가져옴 
         completeToggleModal();
       } catch (error) {
-        console.log("매도 화폐 전송 실패: ", error);
+        // console.log("매도 화폐 전송 실패: ", error);
       }
     })(email, cryptoName, cryptoQuantity, sellTotal);
   }
@@ -1801,7 +1802,6 @@ const SellingSection = () => {
 
 const TradeHistory = () => {
 
-
   const { getTradeHistory } = useFunction();
 
   const logInEmail = useSelector((state: RootState) => state.logInEmail);
@@ -1829,7 +1829,7 @@ const TradeHistory = () => {
           ids: ids,
           email: email,
         });
-        console.log("주문 취소 정보 전송 성공", response.data);
+        // console.log("주문 취소 정보 전송 성공", response.data);
         getTradeHistory(logInEmail);
         setScheduledCancel([]);
         completeToggleModal();
@@ -1838,7 +1838,6 @@ const TradeHistory = () => {
         for (let i = 0; i < localStorage.length; i++) {
           let key = localStorage.key(i);
           if (key !== null) {
-            console.log("dd ", key);
             localStorageKeys.push(key);
           }
         }
@@ -1852,7 +1851,7 @@ const TradeHistory = () => {
         })
 
       } catch (error) {
-        console.log("주문 취소 정보 전송 실패");
+        // console.log("주문 취소 정보 전송 실패");
       }
     })(email, ids);
   }

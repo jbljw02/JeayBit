@@ -42,15 +42,15 @@ const SignUp = () => {
             email: email,
             password: password,
           });
-          console.log("회원가입 정보 전송 성공");
+          // console.log("회원가입 정보 전송 성공");
           navigate('/logIn')
         }
         else {
-          console.log("유효하지 않은 비밀번호 혹은 이메일")
+          // console.log("유효하지 않은 비밀번호 혹은 이메일")
         }
       } catch (error) {
         const axiosError = error as AxiosError<DataError>;
-        console.log("회원가입 에러 : ", axiosError.response);
+        // console.log("회원가입 에러 : ", axiosError.response);
 
         if (axiosError.response) {
           const axiosError_responseData: DataError = axiosError.response.data;
@@ -59,19 +59,19 @@ const SignUp = () => {
           if (axiosError.response !== undefined && axiosError.response.status === 400) {
             if (axiosError_responseData.error === '이미 사용중인 이메일') {
               setIsEmailDuplicate(true);
-              console.log("사유 : ", axiosError_responseData.error)
+              // console.log("사유 : ", axiosError_responseData.error)
             }
             if (axiosError_responseData.error === '이메일을 설정하지 않음') {
               setIsEmailEmpty(true);
-              console.log("사유 : ", axiosError_responseData.error)
+              // console.log("사유 : ", axiosError_responseData.error)
             }
             if (axiosError_responseData.error === '비밀번호를 설정하지 않음') {
               setIsPasswordEmpty(true);
-              console.log("사유 : ", axiosError_responseData.error)
+              // console.log("사유 : ", axiosError_responseData.error)
             }
             if (axiosError_responseData.error === '이름을 설정하지 않음') {
               setIsNameEmpty(true);
-              console.log("사유 : ", axiosError_responseData.error)
+              // console.log("사유 : ", axiosError_responseData.error)
             }
           }
         }
