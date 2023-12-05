@@ -19,7 +19,7 @@ export default function useFunction() {
         dispatch(setUserWallet(response.data.user_balance));
         // console.log(logInUser, "의 잔고 : ", response.data.user_balance);
       } catch (error) {
-        console.log(error);
+        // console.log("잔고량 받아오기 실패", error);
       }
     })();
   };
@@ -32,9 +32,9 @@ export default function useFunction() {
           `https://jeaybit.site/get_user_ownedCrypto/${logInEmail}/`
         );
         dispatch(setOwnedCrypto(response.data))
-        console.log("반환값-소유화폐 : ", response.data)
+        // console.log("반환값-소유화폐 : ", response.data)
       } catch (error) {
-        console.log(error);
+        // console.log("소유 화폐 받아오기 실패", error);
       }
     })()
   }
@@ -55,9 +55,9 @@ export default function useFunction() {
           is_signed: isSigned,
         });
         getTradeHistory(logInEmail);
-        console.log("거래 내역 전송 성공", response.data)
+        // console.log("거래 내역 전송 성공", response.data)
       } catch (error) {
-        console.log("거래 내역 전송 실패", error);
+        // console.log("거래 내역 전송 실패", error);
       }
     })(email, cryptoName, tradeTime, cryptoMarket, cryptoPrice, tradePrice, tradeAmount)
   }
@@ -69,14 +69,14 @@ export default function useFunction() {
         const response = await axios.get(
           `https://jeaybit.site/get_user_tradeHistory/${logInEmail}/`
         );
-        console.log("반환값-거래내역 : ", response.data);
+        // console.log("반환값-거래내역 : ", response.data);
 
         // 서버로부터 받아온 체결 내역과 미체결 내역을 담을 임시 배열
         const signed: { trade_time: string; is_signed: boolean; id: string; crypto_price: number; crypto_name: string; trade_amount: string; trade_price: string; }[] = [];
         const unsigned: { trade_time: string; is_signed: boolean; id: string; crypto_price: number; crypto_name: string; trade_amount: string; trade_price: string; }[] = [];
 
         // 다른 요소는 서버에서 받아온 값 그대로 유지, 거래 시간만 형식 변경해서 dispatch
-        response.data.forEach((item: { trade_time: Date, is_signed: boolean, id: string, crypto_price: number, crypto_name: string, trade_amount: string, trade_price: string }, i: number) => {
+        response.data.forEach((item: { trade_time: Date, is_signed: boolean, id: string, crypto_price: number, crypto_name: string, trade_amount: string, trade_price: string, trade_category: string }, i: number) => {
           let date = new Date(item.trade_time);
           let formattedDate = date.getFullYear() + '.'
             + (date.getMonth() + 1).toString().padStart(2, '0') + '.'
@@ -91,7 +91,7 @@ export default function useFunction() {
           else {
             unsigned.push({ ...item, trade_time: formattedDate });
         
-            let value = { name: item.crypto_name, price: item.crypto_price, trade_amount: Number(item.trade_amount), trade_price: Number(item.trade_price) };
+            let value = { name: item.crypto_name, price: item.crypto_price, trade_category: item.trade_category, trade_amount: Number(item.trade_amount), trade_price: Number(item.trade_price) };
             localStorage.setItem(item.id, JSON.stringify(value));  // 체결되지 않은 구매 요청에 대한 ID를 로컬 스토리지에 추가
           }
         });
@@ -99,7 +99,7 @@ export default function useFunction() {
         dispatch(setUserTradeHistory(signed));
         dispatch(setUserTradeHistory_unSigned(unsigned));
       } catch (error) {
-        console.log("거래내역 받아오기 실패", error);
+        // console.log("거래내역 받아오기 실패", error);
       }
     })();
   }
@@ -142,7 +142,7 @@ export default function useFunction() {
         localStorage.setItem(`${logInEmail}_IsBuying`, JSON.stringify(isWaitingTemp));
         localStorage.setItem(`${logInEmail}_IsSelling`, JSON.stringify(isWaitingTemp));
       } catch (error) {
-        console.log("화폐명 받아오기 실패", error);
+        // console.log("화폐명 받아오기 실패", error);
       }
     })();
   }
@@ -169,7 +169,7 @@ export default function useFunction() {
         dispatch(setAsking_totalAskSize(response.data[0].total_ask_size));
         dispatch(setAsking_totalBidSize(response.data[0].total_bid_size));
       } catch (error) {
-        console.error("호가내역 전송 실패", error);
+        // console.error("호가내역 전송 실패", error);
       }
     })(market);
   };
@@ -210,7 +210,7 @@ export default function useFunction() {
 
         // console.log("미체결 호가값 : ", askingData_unSigned);
       } catch (error) {
-        console.error("호가내역-미체결 전송 실패", error);
+        // console.error("호가내역-미체결 전송 실패", error);
       }
     })(market);
   };
@@ -226,13 +226,13 @@ export default function useFunction() {
           crypto_quantity: cryptoQuantity,
           buy_total: buyTotal,
         });
-        console.log("구매 화폐 전송 성공", response.data);
+        // console.log("구매 화폐 전송 성공", response.data);
         getBalance(logInEmail);  // 매수에 사용한 금액만큼 차감되기 때문에 잔고 업데이트
         getOwnedCrypto(logInEmail);  // 소유 화폐가 새로 추가될 수 있으니 업데이트
         getTradeHistory(logInEmail)  // 매수에 성공했으니 거래내역 업데이트
         localStorage.removeItem(key)
       } catch (error) {
-        console.log("구매 화폐 전송 실패: ", error)
+        // console.log("구매 화폐 전송 실패: ", error)
       }
     })(key, email, cryptoName, cryptoQuantity, buyTotal);
   }
@@ -247,13 +247,13 @@ export default function useFunction() {
           crypto_quantity: cryptoQuantity,
           sell_total: sellTotal,
         });
-        console.log("매도 화폐 전송 성공", response.data);
+        // console.log("매도 화폐 전송 성공", response.data);
         getBalance(logInEmail);  // 매수에 사용한 금액만큼 차감되기 때문에 잔고 업데이트
         getOwnedCrypto(logInEmail);  // 소유 화폐가 새로 추가될 수 있으니 업데이트
         getTradeHistory(logInEmail)  // 매수에 성공했으니 거래내역 업데이트
         localStorage.removeItem(key)
       } catch (error) {
-        console.log("매도 화폐 전송 실패: ", error)
+        // console.log("매도 화폐 전송 실패: ", error)
       }
     })(key, email, cryptoName, cryptoQuantity, sellTotal);
   }

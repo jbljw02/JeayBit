@@ -153,7 +153,7 @@ const CryptoList = () => {
       dispatch(setCr_market_selected(response.data.market[0]));
       dispatch(setCr_name_selected(response.data.name[0]));
     } catch (error) {
-      console.error(error);
+      // console.error(error);
     }
   };
 
@@ -174,7 +174,7 @@ const CryptoList = () => {
       dispatch(setCr_high_price(response.data.high_price));
       dispatch(setCr_low_price(response.data.low_price));
     } catch (error) {
-      console.error(error);
+      // console.error(error);
     }
   };
 
@@ -203,8 +203,6 @@ const CryptoList = () => {
   //     dispatch(setFilteredData(updatedData));
   //   }
   // });
-
-  console.log();
 
   // 화폐 가격의 변화를 감지하고 이전 값과 비교하여 변화가 생긴 값을 상태에 업데이트
   useEffect(() => {
@@ -323,11 +321,10 @@ const CryptoList = () => {
         // console.log("체결내역 : ", response.data);
         dispatch(setClosed_data(response.data));
       } catch (error) {
-        console.error("Failed to send data to Django server", error);
+        // console.error("체결내역 호출 실패", error);
       }
     })(market);
   };
-
 
 
   // 리스트에서 화폐를 선택하면 해당 화폐에 대한 캔들 호출(차트의 분에 따라)
@@ -350,7 +347,7 @@ const CryptoList = () => {
           // console.log(chartSortTime, "당 요청값: ", response.data);
           dispatch(setCandle_per_minute(response.data));
         } catch (error) {
-          console.error("Failed to send data to Django server", error);
+          // console.error("분당 캔들 호출 실패", error);
         }
       }
     })(market, minute);
@@ -377,7 +374,7 @@ const CryptoList = () => {
           // console.log("1일 요청된 값 : ", response.data)
           dispatch(setCandle_per_date(response.data));
         } catch (error) {
-          console.error("Failed to send data to Django server", error);
+          // console.error("1일당 캔들 호출 실패", error);
         }
       })(market);
     } else if (chartSortDate === "1주") {
@@ -398,7 +395,7 @@ const CryptoList = () => {
           // console.log("1주 요청된 값 : ", response.data)
           dispatch(setCandle_per_week(response.data));
         } catch (error) {
-          console.error("Failed to send data to Django server", error);
+          // console.error("1주당 캔들 호출 실패", error);
         }
       })(market);
     } else if (chartSortDate === "1개월") {
@@ -419,7 +416,7 @@ const CryptoList = () => {
           // console.log("1개월 요청된 값 : ", response.data)
           dispatch(setCandle_per_month(response.data));
         } catch (error) {
-          console.error("Failed to send data to Django server", error);
+          // console.error("1개월당 호출 실패", error);
         }
       })(market);
     }
@@ -441,7 +438,7 @@ const CryptoList = () => {
             crypto_name: cryptoName,
           });
         } catch (error) {
-          console.log("관심 화폐 정보 전송 실패");
+          // console.log("관심 화폐 정보 전송 실패");
         }
       })(email, cryptoName);
     } else {
@@ -456,10 +453,10 @@ const CryptoList = () => {
         const response = await axios.get(
           `https://jeaybit.site/get_user_favoriteCrypto/${logInEmail}/`
         );
-        console.log("반환값-관심화폐 : ", response.data);
+        // console.log("반환값-관심화폐 : ", response.data);
         dispatch(setFavoriteCrypto(response.data));
       } catch (error) {
-        console.log(error);
+        // console.log("관심 화폐 정보 받아오기 실패", error);
       }
     })();
   };

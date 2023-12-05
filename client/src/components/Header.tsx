@@ -125,9 +125,9 @@ const Header = () => {
         );
 
         if (response.status === 200) {
-          console.log("로그아웃 성공 : ", response);
+          // console.log("로그아웃 성공 : ", response);
         } else {
-          console.log("로그아웃 실패");
+          // console.log("로그아웃 실패");
         }
         dispatch(setLogInEmail(''))
         dispatch(setLogInUser(''))
@@ -135,7 +135,7 @@ const Header = () => {
         dispatch(setUserTradeHistory_unSigned([]))
         localStorage.clear();
       } catch (error) {
-        console.log("로그아웃 정보 전송 실패");
+        // console.log("로그아웃 정보 전송 실패");
       }
     })();
   };
@@ -149,10 +149,10 @@ const Header = () => {
             email: email,
             depositAmount: depositAmount,
           });
-          console.log("입금량 전송 성공");
+          // console.log("입금량 전송 성공");
           completeToggleModal();
         } catch (error) {
-          console.log("입금량 전송 실패");
+          // console.log("입금량 전송 실패");
         }
       })(email, depositAmount);
     }
@@ -172,14 +172,14 @@ const Header = () => {
           );
           if (response.data.error) {
             setWithdrawOverflow(true);
-            console.log("출금량이 잔고보다 많습니다 : ", response.data);
+            // console.log("출금량이 잔고보다 많습니다 : ", response.data);
           } else {
             setWithdrawOverflow(false);
-            console.log("출금량 전송 성공");
+            // console.log("출금량 전송 성공");
             completeToggleModal();
           }
         } catch (error) {
-          console.log("출금량 전송 실패");
+          // console.log("출금량 전송 실패");
         }
       })(email, withdrawAmount);
     }
