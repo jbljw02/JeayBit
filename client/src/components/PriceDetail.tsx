@@ -348,12 +348,10 @@ const AskingPrice = () => {
                       }
 
                       return (
-                        <tr
-                          key={i}
-                          style={{ background: `linear-gradient(270deg, rgba(34,171,148, .2) ${percentage}%, transparent ${percentage}%)` }}>
+                        <tr key={i}>
                           <td>{asking_dateTime}</td>
                           <td>{(item.bid_price).toLocaleString()}</td>
-                          <td className={bidClass}>{str_bid_size}
+                          <td style={{ background: `linear-gradient(270deg, rgba(34,171,148, .2) ${percentage}%, transparent ${percentage}%)` }} className={bidClass}>{str_bid_size}
                           </td>
                         </tr>
                       )
@@ -386,12 +384,10 @@ const AskingPrice = () => {
                         }
 
                         return (
-                          <tr
-                            key={i}
-                            style={{ background: `linear-gradient(270deg, rgba(242,54,69, .2) ${percentage}%, transparent ${percentage}%)` }}>
+                          <tr key={i}>
                             <td>{asking_dateTime}</td>
                             <td>{(item.ask_price).toLocaleString()}</td>
-                            <td className={askClass}>{str_ask_size}</td>
+                            <td style={{ background: `linear-gradient(270deg, rgba(242,54,69, .2) ${percentage}%, transparent ${percentage}%)` }} className={askClass}>{str_ask_size}</td>
                           </tr>
                         )
                       }) :
