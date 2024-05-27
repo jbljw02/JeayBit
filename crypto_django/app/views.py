@@ -758,7 +758,7 @@ def get_crypto_market():
 
     markets = []
 
-    for crypto in eval(response.text):
+    for crypto in json.loads(response.text):
         markets.append(crypto['market'])
         
     return Response({"markets": markets})

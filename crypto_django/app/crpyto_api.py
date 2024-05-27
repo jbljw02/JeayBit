@@ -1,5 +1,6 @@
 from requests import get
 from .models import Crypto
+import json
 
 def price():
     headers = {"accept" : "application/json"}
@@ -9,7 +10,7 @@ def price():
     market = []
     name = []
 
-    for crypto in eval(response.text):
+    for crypto in json.loads(response.text):
         if crypto['market'].startswith('KRW') and crypto['market_warning'] == 'NONE':
             name.append(crypto['korean_name']) 
             market.append(crypto['market'])  
@@ -20,7 +21,7 @@ def price():
     url = f"https://api.upbit.com/v1/ticker?markets={market}"
     response = get(url, headers=headers)
 
-    data = eval(response.text)
+    data = json.loads(response.text)
 
     cur_price = []  # 종가 및 현재가
     change = []  # 변화여부(상승/유지/하락) 
