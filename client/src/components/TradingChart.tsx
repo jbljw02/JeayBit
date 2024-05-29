@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import ReactApexChart from 'react-apexcharts';
 import { useSelector } from 'react-redux';
-import { RootState } from '../store';
+import { RootState } from '../redux/store';
 
-const Chart = () => {
+export default function TradingChart() {
   const candle_per_date_BTC = useSelector((state: RootState) => state.candle_per_date_BTC);
   const candle_per_date = useSelector((state: RootState) => state.candle_per_date);
   const candle_per_week = useSelector((state: RootState) => state.candle_per_week);
@@ -221,5 +221,3 @@ const Chart = () => {
     <ReactApexChart options={options} series={series} type="candlestick" height={'100%'} />
   );
 };
-
-export { Chart };

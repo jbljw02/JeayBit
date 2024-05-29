@@ -23,37 +23,39 @@ def price():
 
     data = json.loads(response.text)
 
-    cur_price = []  # 종가 및 현재가
-    change = []  # 변화여부(상승/유지/하락) 
-    change_rate = []  # 변화율
-    change_price = []  # 변화가격
-    acc_trade_price_24h = []  # 24시간 거래대금
-    acc_trade_volume_24h = []  # 24시간 거래량
-    open_price = []  # 시가
-    high_price = []  # 고가
-    low_price = []  # 종가
+    cur_price = [] # 종가 및 현재가
+    change = [] # 변화여부(상승/유지/하락) 
+    change_rate = [] # 변화율
+    change_price = [] # 변화가격
+    acc_trade_price_24h = [] # 24시간 거래대금
+    acc_trade_volume_24h = [] # 24시간 거래량
+    open_price = [] # 시가
+    high_price = [] # 고가
+    low_price = [] # 종가
     
     for i in range(len(data)):
 
         if data[i]['trade_price'] % 1 == 0:
-            cur_price.append(int(data[i]['trade_price']))  # int
+            cur_price.append(int(data[i]['trade_price'])) # int
         else:
-            cur_price.append(data[i]['trade_price'])  # float
+            cur_price.append(data[i]['trade_price']) # float
 
-        change.append(data[i]['change'])    # str
-        change_rate.append(float(data[i]['change_rate']))  # str -> float
+        change.append(data[i]['change']) # str
+        change_rate.append(float(data[i]['change_rate'])) # str -> float
 
 
         if data[i]['change_price'] % 1 == 0:
-            change_price.append(int(data[i]['change_price']))  # int
+            change_price.append(int(data[i]['change_price'])) # int
         else:
-            change_price.append(data[i]['change_price'])  # float
+            change_price.append(data[i]['change_price']) # float
 
-        acc_trade_price_24h.append(data[i]['acc_trade_price_24h'])  # float
-        acc_trade_volume_24h.append(data[i]['acc_trade_volume_24h'])  # float
-        open_price.append(data[i]['opening_price'])  # float
-        high_price.append(data[i]['high_price'])  # 고가
-        low_price.append(data[i]['low_price'])  # 저가
+        acc_trade_price_24h.append(data[i]['acc_trade_price_24h']) # float
+        acc_trade_volume_24h.append(data[i]['acc_trade_volume_24h']) # float
+        open_price.append(data[i]['opening_price']) # float
+        high_price.append(data[i]['high_price']) # 고가
+        low_price.append(data[i]['low_price']) # 저가
+        
+        
 
     return name, cur_price, unJoin_market, change, change_rate, change_price, acc_trade_price_24h, acc_trade_volume_24h, open_price, high_price, low_price
 

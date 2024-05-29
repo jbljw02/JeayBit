@@ -1,17 +1,14 @@
 import { useDispatch, useSelector } from "react-redux";
-import { AskingData, RootState, setAskHide, setAsking_dateTime, setBuyingPrice, setCloseHide, setIsBuying, setIsSelling, setSectionChange, setSellingPrice } from "../store";
+import { AskingData, RootState, setAskHide, setAsking_dateTime, setBuyingPrice, setCloseHide, setIsBuying, setIsSelling, setSectionChange, setSellingPrice } from "../redux/store";
 import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom'
-// import SimpleBar from 'simplebar-react';
-// import 'simplebar/dist/simplebar.min.css';
 import axios from "axios";
 import useFunction from "./useFuction";
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button, makeStyles } from '@material-ui/core';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import 'react-perfect-scrollbar/dist/css/styles.css';
 
-const PriceDetail = () => {
-
+export default function PriceDetail() {
   const dispatch = useDispatch();
 
   const { buyCrypto_unSigned, sellCrypto_unSigned } = useFunction();
@@ -30,7 +27,6 @@ const PriceDetail = () => {
 
   // 미체결 화폐 매수 - 구매 대기 상태에서 동작 
   useEffect(() => {
-
     let localStorageItem: {
       id: string,
       price: number,
@@ -546,7 +542,7 @@ const BuyingSection = () => {
   const buyCrypto = (email: string, cryptoName: string, cryptoQuantity: number, buyTotal: number) => {
     (async (email, cryptoName, cryptoQuantity, buyTotal) => {
       try {
-        await axios.post("https://jeaybit.site/buy_crypto/", {
+        await axios.post("http://127.0.0.1:8000/buy_crypto/", {
           email: email,
           crypto_name: cryptoName,
           crypto_quantity: cryptoQuantity,
@@ -1156,7 +1152,7 @@ const SellingSection = () => {
   const sellCrypto = (email: string, cryptoName: string, cryptoQuantity: number, sellTotal: number) => {
     (async (email, cryptoName, cryptoQuantity, sellTotal) => {
       try {
-        await axios.post("https://jeaybit.site/sell_crypto/", {
+        await axios.post("http://127.0.0.1:8000/sell_crypto/", {
           email: email,
           crypto_name: cryptoName,
           crypto_quantity: cryptoQuantity,
@@ -1821,7 +1817,7 @@ const TradeHistory = () => {
   const cancelOrder = (email: string, ids: string[]) => {
     (async (email, ids) => {
       try {
-        await axios.post("https://jeaybit.site/cancel_order/", {
+        await axios.post("http://127.0.0.1:8000/cancel_order/", {
           ids: ids,
           email: email,
         });
@@ -2149,5 +2145,3 @@ const ModalComplete: React.FC<CompleteModalProps> = ({ completeModalOpen, comple
     </div>
   )
 }
-
-export { PriceDetail };

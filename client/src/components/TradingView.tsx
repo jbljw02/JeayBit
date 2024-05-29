@@ -1,10 +1,10 @@
 import { useDispatch, useSelector } from "react-redux";
-import { RootState, setChartSortDate, setChartSortTime, setSelectedChartSort } from "../store";
+import { RootState, setChartSortDate, setChartSortTime, setSelectedChartSort } from "../redux/store";
 import price_rise from '../assets/images/price-up.png'
 import price_fall from '../assets/images/price-down.png'
-import { Chart } from "./TradingChart";
+import TradingChart from "./TradingChart";
 
-const TradingView = () => {
+export default function TradingView() {
 
   const delimitedTime = useSelector((state: RootState) => state.delimitedTime);
   const delimitedDate = useSelector((state: RootState) => state.delimitedDate);
@@ -237,7 +237,7 @@ const TradingView = () => {
         </table>
       </div>
       <div className="trading-chart">
-        <Chart />
+        <TradingChart />
       </div>
     </>
   );

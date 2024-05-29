@@ -1,4 +1,5 @@
-import { configureStore, createSlice } from '@reduxjs/toolkit'
+import { combineReducers, configureStore, createSlice } from '@reduxjs/toolkit'
+import cryptoListReducers, { ListCategory } from './features/cryptoListSlice';
 
 export type Crypto = {
   name: string,
@@ -137,6 +138,9 @@ export type RootState = {
   askHide: boolean,
   closeHide: boolean,
   isScrollMove: boolean,
+
+  listCategory: ListCategory,
+  user: User,
 }
 
 const cr_name = createSlice({
@@ -284,7 +288,7 @@ const cr_selected = createSlice({
 })
 
 const cr_name_selected = createSlice({
-  name: 'cr_selected',
+  name: 'cr_name_selected',
   initialState: '',
   reducers: {
     setCr_name_selected: (state, action) => {
@@ -563,6 +567,24 @@ const theme = createSlice({
   }
 })
 
+export type User = {
+  name: string,
+  email: string
+}
+
+const user = createSlice({
+  name: 'user',
+  initialState: {
+    name: '',
+    email: ''
+  },
+  reducers: {
+    setUser: (state, action) => {
+      return action.payload;
+    }
+  }
+})
+
 const logInUser = createSlice({
   name: 'logInUser',
   initialState: '',
@@ -783,6 +805,37 @@ const isScrollMove = createSlice({
   }
 })
 
+export const listCategorySlice = createSlice({
+  name: 'listCategory',
+  initialState: '원화',
+  reducers: {
+    setListCategory: (state, action) => {
+      return action.payload;
+    }
+  }
+});
+
+export const allCryptoSlice = createSlice({
+  name: 'allCrypto',
+  initialState: [],
+  reducers: {
+    setAllCrypto: (state, action) => {
+
+    }
+  }
+})
+
+const combindedReducer = combineReducers({
+  listCategory: cryptoListReducers.listCategory,
+})
+
+export const makeStore = () => {
+  return configureStore({
+    reducer: combindedReducer,
+  })
+}
+
+
 export default configureStore({
   reducer: {
     cr_name: cr_name.reducer,
@@ -849,6 +902,9 @@ export default configureStore({
     askHide: askHide.reducer,
     closeHide: closeHide.reducer,
     isScrollMove: isScrollMove.reducer,
+
+    listCategory: listCategorySlice.reducer,
+    allCrypto: allCryptoSlice.reducer,
   }
 })
 
@@ -933,4 +989,4 @@ export const { setAskHide } = askHide.actions;
 export const { setCloseHide } = closeHide.actions;
 export const { setIsScrollMove } = isScrollMove.actions;
 
-// export default store;
+export const { setAllCrypto } = allCryptoSlice.actions;

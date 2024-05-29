@@ -1,12 +1,13 @@
 import { useDispatch, useSelector } from "react-redux";
 import title from "../assets/images/title.png";
-import { RootState, setBalanceUpdate, setLogInEmail, setLogInUser, setTransferSort, setUserTradeHistory, setUserTradeHistory_unSigned } from "../store";
+import { RootState, setBalanceUpdate, setLogInEmail, setLogInUser, setTransferSort, setUserTradeHistory, setUserTradeHistory_unSigned } from "../redux/store";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { csrftoken } from "./csrftoken";
 import useFunction from "./useFuction";
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button, makeStyles } from '@material-ui/core';
+import { setUser } from "../redux/features/userSlice";
 
 const Header = () => {
 
@@ -46,61 +47,6 @@ const Header = () => {
     setCompleteModalOpen(!completeModalOpen);
   }
 
-  // const themeChange = () => {
-  //   dispatch(setTheme(!theme));
-
-  //   let generalTheme = document.querySelectorAll(".lightMode, .darkMode");
-  //   let titleTheme = document.querySelectorAll(
-  //     ".lightMode-title, .darkMode-title"
-  //   );
-  //   let titleImgTheme = document.querySelectorAll(
-  //     ".title-img-light, .title-img-dark"
-  //   );
-  //   let hoverTheme = document.querySelectorAll(
-  //     ".hover-lightMode, .hover-darkMode"
-  //   );
-
-  //   // 라이트모드 <-> 다크모드 순회
-  //   generalTheme.forEach((element) => {
-  //     if (!theme) {
-  //       element.classList.remove("lightMode");
-  //       element.classList.add("darkMode");
-  //     } else {
-  //       element.classList.remove("darkMode");
-  //       element.classList.add("lightMode");
-  //     }
-  //   });
-
-  //   titleTheme.forEach((element) => {
-  //     if (!theme) {
-  //       element.classList.remove("lightMode-title");
-  //       element.classList.add("darkMode-title");
-  //     } else {
-  //       element.classList.remove("darkMode-title");
-  //       element.classList.add("lightMode-title");
-  //     }
-  //   });
-
-  //   titleImgTheme.forEach((element) => {
-  //     if (!theme) {
-  //       element.classList.remove("title-img-light");
-  //       element.classList.add("title-img-dark");
-  //     } else {
-  //       element.classList.remove("title-img-dark");
-  //       element.classList.add("title-img-light");
-  //     }
-  //   });
-
-  //   hoverTheme.forEach((element) => {
-  //     if (!theme) {
-  //       element.classList.remove("hover-lightMode");
-  //       element.classList.add("hover-darkMode");
-  //     } else {
-  //       element.classList.remove("hover-darkMode");
-  //       element.classList.add("hover-lightMode");
-  //     }
-  //   });
-  // };
 
   // 화면 첫 랜더링 시, 사용자 변경 시, 입출금 할 때마다 잔고 데이터 받아옴
   useEffect(() => {
@@ -113,7 +59,7 @@ const Header = () => {
     (async () => {
       try {
         const response = await axios.post(
-          "https://jeaybit.site/logOut/",
+          "http://127.0.0.1:8000/logOut/",
           {},
           {
             headers: {
@@ -129,6 +75,10 @@ const Header = () => {
         } else {
           // console.log("로그아웃 실패");
         }
+        dispatch(setUser({
+          name: '',
+          email: '',
+        }))
         dispatch(setLogInEmail(''))
         dispatch(setLogInUser(''))
         dispatch(setUserTradeHistory([]))
@@ -145,7 +95,7 @@ const Header = () => {
     if (logInEmail !== "") {
       return (async (email, depositAmount) => {
         try {
-          await axios.post("https://jeaybit.site/add_balance_to_user/", {
+          await axios.post("http://127.0.0.1:8000/add_balance_to_user/", {
             email: email,
             depositAmount: depositAmount,
           });
@@ -164,7 +114,7 @@ const Header = () => {
       return (async (email, withdrawAmount) => {
         try {
           const response = await axios.post(
-            "https://jeaybit.site/minus_balance_from_user/",
+            "http://127.0.0.1:8000/minus_balance_from_user/",
             {
               email: email,
               withdrawAmount: withdrawAmount,

@@ -4,11 +4,11 @@ import { useNavigate } from "react-router-dom";
 import { SetStateAction, useState } from "react";
 import axios from "axios";
 import { useDispatch } from "react-redux";
-import { setLogInEmail, setLogInUser } from "../store";
+import { setLogInEmail, setLogInUser } from "../redux/store";
 import { csrftoken } from './csrftoken';
+import { setUser } from "../redux/features/userSlice";
 
-
-const LogIn = () => {
+export default function LogIn() {
 
   const navigate = useNavigate();
 
@@ -30,7 +30,7 @@ const LogIn = () => {
     if (email !== '' && password !== '') {
       (async (email, password) => {
         try {
-          const response = await axios.post('https://jeaybit.site/logIn/', {
+          const response = await axios.post('http://127.0.0.1:8000/logIn/', {
             email: email,
             password: password,
           }, {
@@ -41,6 +41,10 @@ const LogIn = () => {
             withCredentials: true,
           });
           // console.log("로그인 정보 전송 성공", response.data)
+          dispatch(setUser({
+            name: response.data.name,
+            email: response.data.email,
+          }));
           dispatch(setLogInUser(response.data.username))
           dispatch(setLogInEmail(response.data.email))
 
@@ -137,5 +141,3 @@ const LogIn = () => {
     </div>
   )
 }
-
-export { LogIn };

@@ -4,7 +4,7 @@ import axios, { AxiosError } from "axios";
 import { useNavigate } from "react-router-dom";
 import title from '../assets/images/title.png';
 
-const SignUp = () => {
+export default function SignUp() {
 
   const navigate = useNavigate();
 
@@ -37,7 +37,7 @@ const SignUp = () => {
     (async (userName, email, password) => {
       try {
         if (emailValid === true && passwordValid === true) {
-          await axios.post('https://jeaybit.site/sign_up/', {
+          await axios.post('http://127.0.0.1:8000/sign_up/', {
             username: userName,
             email: email,
             password: password,
@@ -212,5 +212,3 @@ const SignUp = () => {
     </div>
   )
 }
-
-export { SignUp };
