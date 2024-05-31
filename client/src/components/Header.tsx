@@ -1,23 +1,18 @@
 import { useDispatch, useSelector } from "react-redux";
 import title from "../assets/images/title.png";
-import { RootState, setBalanceUpdate, setLogInEmail, setLogInUser, setTransferSort, setUserTradeHistory, setUserTradeHistory_unSigned } from "../redux/store";
+import { RootState, setBalanceUpdate, setCsrfToken, setLogInEmail, setLogInUser, setTransferSort, setUserTradeHistory, setUserTradeHistory_unSigned } from "../redux/store";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { csrftoken } from "./csrftoken";
 import useFunction from "./useFuction";
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button, makeStyles } from '@material-ui/core';
 import { setUser } from "../redux/features/userSlice";
+import Cookies from 'js-cookie';
 
 const Header = () => {
-
-  axios.defaults.xsrfCookieName = "csrftoken";
-  axios.defaults.xsrfHeaderName = "X-CSRFToken";
-
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const cr_selected = useSelector((state: RootState) => state.cr_selected);
   const logInUser = useSelector((state: RootState) => state.logInUser);
   const logInEmail = useSelector((state: RootState) => state.logInEmail);
   const balanceUpdate = useSelector((state: RootState) => state.balanceUpdate);
@@ -40,6 +35,7 @@ const Header = () => {
   const userWallet = useSelector((state: RootState) => state.userWallet);
 
   const [completeModalOpen, setCompleteModalOpen] = useState<boolean>(false);
+  const selectedCrypto = useSelector((state: RootState) => state.selectedCrypto);
 
   const { getBalance } = useFunction();
 
@@ -55,20 +51,32 @@ const Header = () => {
     }
   }, [logInEmail, balanceUpdate, getBalance])
 
+  const csrfToken = useSelector((state: RootState) => state.csrfToken);
+
+  // const getCsrfToken = async () => {
+  //   axios.get('http://127.0.0.1:8000/csrf_token/')
+  //     .then(response => {
+  //       const tokenResponse = response.data.csrfToken;
+  //       dispatch(setCsrfToken(tokenResponse));
+  //     })
+  //     .catch(error => console.error('Error fetching CSRF token:', error));
+  // }
+
+  // useEffect(() => {
+  //   getCsrfToken();
+  // }, []);
+
   const logOut = () => {
     (async () => {
       try {
-        const response = await axios.post(
-          "http://127.0.0.1:8000/logOut/",
-          {},
+        console.log("토큰: ", csrfToken);
+        const response = await axios.post("http://127.0.0.1:8000/logOut/",
           {
-            headers: {
-              "Content-Type": "application/json",
-              "X-CSRFToken": csrftoken,
-            },
+            
+          },
+          {
             withCredentials: true,
-          }
-        );
+          });
 
         if (response.status === 200) {
           // console.log("로그아웃 성공 : ", response);
@@ -85,7 +93,7 @@ const Header = () => {
         dispatch(setUserTradeHistory_unSigned([]))
         localStorage.clear();
       } catch (error) {
-        // console.log("로그아웃 정보 전송 실패");
+        console.error("로그아웃 정보 전송 실패");
       }
     })();
   };
@@ -144,7 +152,7 @@ const Header = () => {
       setDepositLimit(false);
       setDepositAmount(numberValue);
       setDepositChangeAmount(
-        parseFloat((numberValue / cr_selected.price).toFixed(7))
+        parseFloat((numberValue / selectedCrypto.price).toFixed(7))
       );
     } else {
       if (numberValue <= 10000000) {
@@ -163,7 +171,7 @@ const Header = () => {
       setWithdrawLimit(false);
       setWithdrawAmount(numberValue);
       setWithdrawChangeAmount(
-        parseFloat((numberValue / cr_selected.price).toFixed(7))
+        parseFloat((numberValue / selectedCrypto.price).toFixed(7))
       );
     } else {
       if (numberValue <= 10000000) {
@@ -300,10 +308,10 @@ const Header = () => {
                                   <input value={depositChangeAmount}></input>
                                   <span className="change-input-span">
                                     {
-                                      cr_selected && cr_selected.market ?
-                                        Array.isArray(cr_selected.market) ?
-                                          cr_selected.market[0].slice(4) :
-                                          cr_selected.market.slice(4) :
+                                      selectedCrypto && selectedCrypto.market ?
+                                        Array.isArray(selectedCrypto.market) ?
+                                          selectedCrypto.market[0].slice(4) :
+                                          selectedCrypto.market.slice(4) :
                                         undefined
                                     }
                                   </span>
@@ -373,10 +381,10 @@ const Header = () => {
                                   <input value={withdrawChangeAmount}></input>
                                   <span className="change-input-span">
                                     {
-                                      cr_selected && cr_selected.market
-                                        ? Array.isArray(cr_selected.market)
-                                          ? cr_selected.market[0].slice(4)
-                                          : cr_selected.market.slice(4)
+                                      selectedCrypto && selectedCrypto.market
+                                        ? Array.isArray(selectedCrypto.market)
+                                          ? selectedCrypto.market[0].slice(4)
+                                          : selectedCrypto.market.slice(4)
                                         : undefined
                                     }
                                   </span>

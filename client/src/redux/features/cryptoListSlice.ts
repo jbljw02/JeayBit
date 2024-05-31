@@ -16,6 +16,6 @@ export const { setListCategory } = listCategorySlice.actions;
 
 const reducers = {
     listCategory: listCategorySlice.reducer,
-}
+};
 
 export default reducers;

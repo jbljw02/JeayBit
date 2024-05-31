@@ -6,8 +6,17 @@ import LogIn from '../components/LogIn';
 import PriceDetail from '../components/PriceDetail';
 import SignUp from '../components/SignUp';
 import TradingView from '../components/TradingView';
+import { useEffect } from 'react';
+import useFunction from '../components/useFuction';
 
 export default function Home() {
+
+    const { checkLogin } = useFunction();
+
+    useEffect(() => {
+        checkLogin();
+    }, []);
+
     return (
         <div className="container">
             <BrowserRouter>

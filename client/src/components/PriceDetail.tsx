@@ -483,7 +483,7 @@ const BuyingSection = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const cr_selected = useSelector((state: RootState) => state.cr_selected);
+  const selectedCrypto = useSelector((state: RootState) => state.selectedCrypto);
   const cr_name_selected = useSelector((state: RootState) => state.cr_name_selected);
   const logInEmail = useSelector((state: RootState) => state.logInEmail);
   const userWallet = useSelector((state: RootState) => state.userWallet);
@@ -786,8 +786,8 @@ const BuyingSection = () => {
                       />
                       <span>
                         {
-                          cr_selected && cr_selected.market ?
-                            (cr_selected.market).slice(4) :
+                          selectedCrypto && selectedCrypto.market ?
+                            (selectedCrypto.market).slice(4) :
                             null
                         }
                       </span>
@@ -881,8 +881,8 @@ const BuyingSection = () => {
                     let item = asking_data.find(item => item.ask_price === buyingPrice);
                     if (item !== undefined) {
                       // 일치한다면 바로 매수 요청을 전송
-                      buyCrypto(logInEmail, cr_selected.name, buyQuantity, buyTotal);
-                      addTradeHistory(logInEmail, cr_selected.name, tradeCategory, time, cr_selected.market, buyingPrice, buyTotal, buyQuantity, true);
+                      buyCrypto(logInEmail, selectedCrypto.name, buyQuantity, buyTotal);
+                      addTradeHistory(logInEmail, selectedCrypto.name, tradeCategory, time, selectedCrypto.market, buyingPrice, buyTotal, buyQuantity, true);
                       // getTradeHistory(logInEmail);
                     }
                     else {
@@ -900,7 +900,7 @@ const BuyingSection = () => {
                       toggleModal();
                       setModalOpen(!modalOpen);
 
-                      addTradeHistory(logInEmail, cr_selected.name, tradeCategory, time, cr_selected.market, buyingPrice, buyTotal, buyQuantity, false);
+                      addTradeHistory(logInEmail, selectedCrypto.name, tradeCategory, time, selectedCrypto.market, buyingPrice, buyTotal, buyQuantity, false);
                       // getTradeHistory(logInEmail);
                     }
                   }}>매수</span>
@@ -969,8 +969,8 @@ const BuyingSection = () => {
                       <span onClick={
                         // 호가와의 일치 여부를 확인하지 않음
                         () => {
-                          buyCrypto(logInEmail, cr_selected.name, buyQuantity, buyTotal)
-                          addTradeHistory(logInEmail, cr_selected.name, tradeCategory, time, cr_selected.market, buyingPrice, buyTotal, buyQuantity, true);
+                          buyCrypto(logInEmail, selectedCrypto.name, buyQuantity, buyTotal)
+                          addTradeHistory(logInEmail, selectedCrypto.name, tradeCategory, time, selectedCrypto.market, buyingPrice, buyTotal, buyQuantity, true);
                         }
                       }>
                         매수
@@ -1027,8 +1027,8 @@ const BuyingSection = () => {
                       </input>
                       <span>
                         {
-                          cr_selected && cr_selected.market ?
-                            (cr_selected.market).slice(4) :
+                          selectedCrypto && selectedCrypto.market ?
+                            (selectedCrypto.market).slice(4) :
                             null
                         }</span>
                     </td>
@@ -1094,7 +1094,7 @@ const SellingSection = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const cr_selected = useSelector((state: RootState) => state.cr_selected);
+  const selectedCrypto = useSelector((state: RootState) => state.selectedCrypto);
   const cr_market_selected = useSelector((state: RootState) => state.cr_market_selected);
   const cr_name_selected = useSelector((state: RootState) => state.cr_name_selected);
   const logInEmail = useSelector((state: RootState) => state.logInEmail);
@@ -1432,8 +1432,8 @@ const SellingSection = () => {
                     />
                     <span>
                       {
-                        cr_selected && cr_selected.market ?
-                          (cr_selected.market).slice(4) :
+                        selectedCrypto && selectedCrypto.market ?
+                          (selectedCrypto.market).slice(4) :
                           null
                       }
                     </span>
@@ -1526,8 +1526,8 @@ const SellingSection = () => {
                     let item = asking_data.find(item => item.bid_price === sellingPrice);
                     if (item !== undefined) {
                       // 일치한다면 바로 매수 요청을 전송
-                      sellCrypto(logInEmail, cr_selected.name, sellQuantity, sellTotal);
-                      addTradeHistory(logInEmail, cr_selected.name, tradeCategory, time, cr_selected.market, sellingPrice, sellTotal, sellQuantity, true);
+                      sellCrypto(logInEmail, selectedCrypto.name, sellQuantity, sellTotal);
+                      addTradeHistory(logInEmail, selectedCrypto.name, tradeCategory, time, selectedCrypto.market, sellingPrice, sellTotal, sellQuantity, true);
                       // getTradeHistory(logInEmail);
                     }
                     else {
@@ -1545,7 +1545,7 @@ const SellingSection = () => {
                       toggleModal();
                       setModalOpen(!modalOpen);
 
-                      addTradeHistory(logInEmail, cr_selected.name, tradeCategory, time, cr_selected.market, sellingPrice, sellTotal, sellQuantity, false);
+                      addTradeHistory(logInEmail, selectedCrypto.name, tradeCategory, time, selectedCrypto.market, sellingPrice, sellTotal, sellQuantity, false);
                       // getTradeHistory(logInEmail);
                     }
                   }}>매도</span>
@@ -1570,8 +1570,8 @@ const SellingSection = () => {
                       }
                       <span>
                         {
-                          cr_selected && cr_selected.market ?
-                            (cr_selected.market).slice(4) :
+                          selectedCrypto && selectedCrypto.market ?
+                            (selectedCrypto.market).slice(4) :
                             null
                         }
                       </span>
@@ -1623,8 +1623,8 @@ const SellingSection = () => {
                         />
                         <span>
                           {
-                            cr_selected && cr_selected.market ?
-                              (cr_selected.market).slice(4) :
+                            selectedCrypto && selectedCrypto.market ?
+                              (selectedCrypto.market).slice(4) :
                               null
                           }
                         </span>
@@ -1668,8 +1668,8 @@ const SellingSection = () => {
                       <span onClick={
                         // 호가와의 일치 여부를 확인하지 않음
                         () => {
-                          sellCrypto(logInEmail, cr_selected.name, sellQuantity, sellTotal)
-                          addTradeHistory(logInEmail, cr_selected.name, tradeCategory, time, cr_selected.market, sellingPrice, sellTotal, sellQuantity, true);
+                          sellCrypto(logInEmail, selectedCrypto.name, sellQuantity, sellTotal)
+                          addTradeHistory(logInEmail, selectedCrypto.name, tradeCategory, time, selectedCrypto.market, sellingPrice, sellTotal, sellQuantity, true);
                         }}>
                         매도
                       </span>
@@ -1688,8 +1688,8 @@ const SellingSection = () => {
                     <td className="trading-availableTrade">0
                       <span>
                         {
-                          cr_selected && cr_selected.market ?
-                            (cr_selected.market).slice(4) :
+                          selectedCrypto && selectedCrypto.market ?
+                            (selectedCrypto.market).slice(4) :
                             null
                         }</span>
                     </td>
@@ -1729,8 +1729,8 @@ const SellingSection = () => {
                       </input>
                       <span>
                         {
-                          cr_selected && cr_selected.market ?
-                            (cr_selected.market).slice(4) :
+                          selectedCrypto && selectedCrypto.market ?
+                            (selectedCrypto.market).slice(4) :
                             null
                         }</span>
                     </td>

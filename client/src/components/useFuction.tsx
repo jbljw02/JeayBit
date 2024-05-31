@@ -1,6 +1,8 @@
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
-import { setUserWallet, RootState, setOwnedCrypto, setUserTradeHistory, setUserTradeHistory_unSigned, setIsBuying, setAsking_data, setAsking_dateTime, setAsking_totalAskSize, setAsking_totalBidSize, setAskingData_unSigned, setIsSelling, setTheme, setClosed_data, setCandle_per_minute, setCandle_per_date, setCandle_per_week, setCandle_per_month, setCr_change, setCr_change_price, setCr_change_rate, setCr_high_price, setCr_low_price, setCr_market, setCr_name, setCr_open_price, setCr_price, setCr_trade_price, setCr_trade_volume, setCandle_per_date_BTC, setCr_market_selected, setCr_name_selected, setFavoriteCrypto, setAllCrypto } from "../redux/store";
+import { setUserWallet, RootState, setOwnedCrypto, setUserTradeHistory, setUserTradeHistory_unSigned, setIsBuying, setAsking_data, setAsking_dateTime, setAsking_totalAskSize, setAsking_totalBidSize, setAskingData_unSigned, setIsSelling, setTheme, setClosed_data, setCandle_per_minute, setCandle_per_date, setCandle_per_week, setCandle_per_month, setCr_change, setCr_change_price, setCr_change_rate, setCr_high_price, setCr_low_price, setCr_market, setCr_name, setCr_open_price, setCr_price, setCr_trade_price, setCr_trade_volume, setCandle_per_date_BTC, setCr_market_selected, setCr_name_selected, setFavoriteCrypto, setAllCrypto, setCsrfToken } from "../redux/store";
+import { useEffect } from "react";
+import Cookies from 'js-cookie';
 
 export default function useFunction() {
 
@@ -10,11 +12,10 @@ export default function useFunction() {
   const chartSortDate = useSelector((state: RootState) => state.chartSortDate);
   const theme = useSelector((state: RootState) => state.theme);
 
-  const fetchData = async () => {
+  const getAllCrypto = async () => {
     try {
-      const response = await axios.get("http://127.0.0.1:8000/get_data/");
-      console.log("리 ", response.data);
-      // dispatch(setAllCrypto(response.data))
+      const response = await axios.get("http://127.0.0.1:8000/get_all_crypto/");
+      dispatch(setAllCrypto(response.data.all_crypto));
       dispatch(setCr_name(response.data.name));
       dispatch(setCr_price(response.data.price));
       dispatch(setCr_market(response.data.market));
@@ -27,9 +28,20 @@ export default function useFunction() {
       dispatch(setCr_high_price(response.data.high_price));
       dispatch(setCr_low_price(response.data.low_price));
     } catch (error) {
-      // console.error(error);
+      throw error;
     }
   };
+
+  const checkLogin = async () => {
+    try {
+      const response = await axios.post("http://127.0.0.1:8000/check_login/", {}, {
+        withCredentials: true
+      });
+      console.log("response.data: ", response.data);
+    } catch (error) {
+      console.error("Error: ", error);
+    }
+  }
 
   // 서버로부터 사용자의 잔고량을 받아옴
   const getBalance = (email: string) => {
@@ -41,7 +53,7 @@ export default function useFunction() {
         dispatch(setUserWallet(response.data.user_balance));
         // console.log(logInUser, "의 잔고 : ", response.data.user_balance);
       } catch (error) {
-        // console.log("잔고량 받아오기 실패", error);
+        throw error;
       }
     })();
   };
@@ -58,6 +70,7 @@ export default function useFunction() {
       // console.error(error);
     }
   };
+
   // 사용자가 소유하고 있는 화폐의 정보를 받아옴
   const getOwnedCrypto = (logInEmail: string) => {
     (async () => {
@@ -184,6 +197,7 @@ export default function useFunction() {
   // 선택된 화폐에 대한 호가내역 호출
   const selectAskingPrice = (market: string) => {
     (async (market) => {
+      console.log("마켓: ", market);
       try {
         const response = await axios.post(
           "http://127.0.0.1:8000/asking_price/",
@@ -308,16 +322,15 @@ export default function useFunction() {
           }
         );
 
-        // console.log("체결내역 : ", response.data);
         dispatch(setClosed_data(response.data));
       } catch (error) {
-        // console.error("체결내역 호출 실패", error);
+        throw error;
       }
     })(market);
   };
 
   // 리스트에서 화폐를 선택하면 해당 화폐에 대한 캔들 호출(차트의 분에 따라)
-  const selectMarket_time = (market: string, minute: string) => {
+  const requestCandleMinute = (market: string, minute: string) => {
     (async (market, minute) => {
       if (minute !== '') {
         try {
@@ -342,8 +355,8 @@ export default function useFunction() {
     })(market, minute);
   };
 
-
-  const selectMarket_date = (market: string) => {
+  // 리스트에서 화폐를 선택하면 해당 화폐에 대한 캔들 호출(차트의 일/주/월에 따라)
+  const requestCandleDate = (market: string) => {
     if (chartSortDate === "1일") {
       (async (market) => {
         try {
@@ -493,7 +506,7 @@ export default function useFunction() {
         const response = await axios.get(
           `http://127.0.0.1:8000/get_user_favoriteCrypto/${logInEmail}/`
         );
-        // console.log("반환값-관심화폐 : ", response.data);
+        console.log("반환값-관심화폐 : ", response.data);
         dispatch(setFavoriteCrypto(response.data));
       } catch (error) {
         // console.log("관심 화폐 정보 받아오기 실패", error);
@@ -502,7 +515,7 @@ export default function useFunction() {
   };
 
   return {
-    fetchData,
+    getAllCrypto,
     initialData,
     getBalance,
     getOwnedCrypto,
@@ -515,10 +528,11 @@ export default function useFunction() {
     sellCrypto_unSigned,
     themeChange,
     selectClosedPrice,
-    selectMarket_time,
-    selectMarket_date,
+    requestCandleMinute,
+    requestCandleDate,
     addCryptoToUser,
-    getFavoriteCrypto
+    getFavoriteCrypto,
+    checkLogin
   };
 
 }

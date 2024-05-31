@@ -3,7 +3,7 @@ from django.contrib import admin
 from .views import (
     add_user_tradeHistory,
     cancel_order,
-    get_data,
+    get_all_crypto,
     candle_per_date,
     candle_per_week,
     candle_per_month,
@@ -15,7 +15,7 @@ from .views import (
     sign_up,
     logIn,
     logOut,
-    check_login,
+    CheckLoginView,
     add_favoriteCrypto_to_user,
     get_user_favoriteCrypto,
     get_user_ownedCrypto,
@@ -29,10 +29,11 @@ from .views import (
     sell_crypto,
     get_crypto_name,
     get_crypto_market,
+    csrf_token,
 )
 
 urlpatterns = [
-    path("get_data/", get_data),
+    path("get_all_crypto/", get_all_crypto),
     path("candle_per_minute/", candle_per_minute),
     path("candle_per_date/", candle_per_date),
     path("candle_per_week/", candle_per_week),
@@ -42,7 +43,7 @@ urlpatterns = [
     path("sign_up/", sign_up),
     path("logIn/", LoginView.as_view()),
     path("logOut/", LogoutView.as_view()),
-    path("check_login/", check_login),
+    path("check_login/", CheckLoginView.as_view()),
     path("add_favoriteCrypto_to_user/", add_favoriteCrypto_to_user),
     path("get_user_favoriteCrypto/<str:email>/", get_user_favoriteCrypto),
     path("get_user_ownedCrypto/<str:email>/", get_user_ownedCrypto),
@@ -57,6 +58,7 @@ urlpatterns = [
     path("get_user_tradeHistory/<str:email>/", get_user_tradeHistory),
     path("get_crypto_name/", get_crypto_name),
     path("get_crypto_market/", get_crypto_market),
-    path("cancel_order/", cancel_order)
+    path("cancel_order/", cancel_order),
+    path("csrf_token/", csrf_token),
     # path('admin/', admin.site.urls)
 ]

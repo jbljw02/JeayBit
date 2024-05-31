@@ -1,12 +1,13 @@
 import { HeaderNav } from "./Header";
 import title from '../assets/images/title.png';
 import { useNavigate } from "react-router-dom";
-import { SetStateAction, useState } from "react";
+import { SetStateAction, useEffect, useState } from "react";
 import axios from "axios";
-import { useDispatch } from "react-redux";
-import { setLogInEmail, setLogInUser } from "../redux/store";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState, setLogInEmail, setLogInUser } from "../redux/store";
 import { csrftoken } from './csrftoken';
 import { setUser } from "../redux/features/userSlice";
+import Cookies from "js-cookie";
 
 export default function LogIn() {
 
@@ -21,23 +22,23 @@ export default function LogIn() {
 
   const dispatch = useDispatch();
 
+  const csrfToken = useSelector((state: RootState) => state.csrfToken);
+
   const logIn = (email: string, password: string) => {
 
     setIsEmailEmpty(false);
     setIsPasswordEmpty(false);
-    
+
     // 이메일 및 비밀번호가 모두 입력돼야 서버로 데이터 전송
     if (email !== '' && password !== '') {
       (async (email, password) => {
         try {
+          // const csrfToken = Cookies.get('csrftoken');
+          console.log("토큰: ", csrfToken);
           const response = await axios.post('http://127.0.0.1:8000/logIn/', {
             email: email,
             password: password,
           }, {
-            headers: {
-              'Content-Type': 'application/json',
-              'X-CSRFToken': csrftoken,
-            },
             withCredentials: true,
           });
           // console.log("로그인 정보 전송 성공", response.data)
@@ -48,6 +49,7 @@ export default function LogIn() {
           dispatch(setLogInUser(response.data.username))
           dispatch(setLogInEmail(response.data.email))
 
+          console.log("양하연: ", response.data);
           localStorage.setItem('user', JSON.stringify(response.data));
 
           navigate('/')

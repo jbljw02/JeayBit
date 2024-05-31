@@ -13,8 +13,9 @@ export type Crypto = {
   open_price: number,
   high_price: number,
   low_price: number,
-  star: string,
   isFavorited: boolean,
+  isOwned: boolean,
+  quantity: number,
 }
 
 export type ClosedData = {
@@ -86,7 +87,7 @@ export type RootState = {
   cr_low_price: number[],
   star: string[],
   filteredData: Crypto[],
-  cr_selected: Crypto,
+  selectedCrypto: Crypto,
   cr_name_selected: string,
   cr_market_selected: string,
   cr_price_selected: number,
@@ -141,6 +142,8 @@ export type RootState = {
 
   listCategory: ListCategory,
   user: User,
+  allCrypto: Crypto[],
+  csrfToken: string,
 }
 
 const cr_name = createSlice({
@@ -277,11 +280,14 @@ const filteredData = createSlice({
 })
 
 // 테이블에서 선택된 화폐의 정보들에 대한 state
-const cr_selected = createSlice({
-  name: 'cr_selected',
-  initialState: {},
+const selectedCryptoSlice = createSlice({
+  name: 'selectedCrypto',
+  initialState: {
+    name: '비트코인',
+    market: 'KRW-BTC',
+  },
   reducers: {
-    setCr_selected: (state, action) => {
+    setSelectedCrypto: (state, action) => {
       return action.payload;
     }
   }
@@ -572,7 +578,7 @@ export type User = {
   email: string
 }
 
-const user = createSlice({
+const userSlice = createSlice({
   name: 'user',
   initialState: {
     name: '',
@@ -820,20 +826,31 @@ export const allCryptoSlice = createSlice({
   initialState: [],
   reducers: {
     setAllCrypto: (state, action) => {
-
+      return action.payload;
     }
   }
 })
 
-const combindedReducer = combineReducers({
-  listCategory: cryptoListReducers.listCategory,
+export const csrfTokenSlice = createSlice({
+  name: 'csrfToken',
+  initialState: [],
+  reducers: {
+    setCsrfToken: (state, action) => {
+      return action.payload;
+    }
+  }
 })
 
-export const makeStore = () => {
-  return configureStore({
-    reducer: combindedReducer,
-  })
-}
+// const combinedReducer = combineReducers({
+//   listCategory: cryptoListReducers.listCategory, 
+// });
+
+// export const makeStore = () => {
+//   return configureStore({
+//     reducer: combinedReducer,
+//   })
+// }
+
 
 
 export default configureStore({
@@ -851,7 +868,7 @@ export default configureStore({
     cr_low_price: cr_low_price.reducer,
     star: star.reducer,
     filteredData: filteredData.reducer,
-    cr_selected: cr_selected.reducer,
+    selectedCrypto: selectedCryptoSlice.reducer,
     cr_name_selected: cr_name_selected.reducer,
     cr_market_selected: cr_market_selected.reducer,
     cr_price_selected: cr_price_selected.reducer,
@@ -905,6 +922,8 @@ export default configureStore({
 
     listCategory: listCategorySlice.reducer,
     allCrypto: allCryptoSlice.reducer,
+    user: userSlice.reducer,
+    csrfToken: csrfTokenSlice.reducer,
   }
 })
 
@@ -937,7 +956,7 @@ export const { setCr_high_price } = cr_high_price.actions;
 export const { setCr_low_price } = cr_low_price.actions;
 export const { setStar } = star.actions;
 export const { setFilteredData } = filteredData.actions;
-export const { setCr_selected } = cr_selected.actions;
+export const { setSelectedCrypto } = selectedCryptoSlice.actions;
 export const { setCr_name_selected } = cr_name_selected.actions;
 export const { setCr_market_selected } = cr_market_selected.actions;
 export const { setCr_price_selected } = cr_price_selected.actions;
@@ -990,3 +1009,5 @@ export const { setCloseHide } = closeHide.actions;
 export const { setIsScrollMove } = isScrollMove.actions;
 
 export const { setAllCrypto } = allCryptoSlice.actions;
+export const { setUser } = userSlice.actions;
+export const { setCsrfToken } = csrfTokenSlice.actions;

@@ -4,7 +4,7 @@ import time
 from django.http import JsonResponse
 import requests
 from app.models import Crypto, CustomUser, UserCrypto, TradeHistory
-from .crpyto_api import price
+from .crpyto_api import all_data
 from .crpyto_api import (
     candle_per_date_BTC,
     candle_per_week_BTC,
@@ -226,6 +226,9 @@ def sign_up(request):
     # 사용자 생성 후 성공 메시지 반환
     return Response({"success": "회원가입 성공"}, status=201)
 
+from django.middleware.csrf import get_token
+def csrf_token(request):
+    return JsonResponse({'csrfToken': get_token(request)})
 
 class LoginView(View):
     def post(self, request):
@@ -234,9 +237,10 @@ class LoginView(View):
             email = data.get("email")
             password = data.get("password")
 
+            # CusomterUser.authenticate로 작성하지 않아도 지정해놓은 모델에 대해 인증을 수행
             user = authenticate(
                 request, email=email, password=password
-            )  # CusomterUser.authenticate로 작성하지 않아도 지정해놓은 모델에 대해 인증을 수행
+            )  
 
             if user is not None:
                 login(request, user)
@@ -253,19 +257,19 @@ class LoginView(View):
             return JsonResponse({"detail": f"서버 내부 에러: {str(e)}"}, status=500)
         
 class LogoutView(View):
-    def post(self,request):
+    def post(self, request):
         print("로그아웃 전 : ", request.session.session_key)
-
         try:
-            if request.session.session_key is not None:
-                request.session.flush()  # 세션 데이터 삭제
-                logout(request)
-                return JsonResponse({"detail": "로그아웃 성공"},status=200)
+            logout(request)
+            if request.session.session_key is None:
+                return JsonResponse({"detail": "로그아웃 성공"}, status=200)
             else:
-                return JsonResponse({"detail": "세션 키가 존재하지 않습니다."}, status=400)
+                request.session.flush()  # 세션 데이터 삭제
+                return JsonResponse({"detail": "로그아웃 성공"}, status=200)
         except Exception as e:
             print("에러 : ", e)
             return JsonResponse({"detail": "로그아웃 실패"}, status=500)
+
 
 # 로그인
 @api_view(["POST"])
@@ -299,15 +303,15 @@ def logOut(request):
     print("로그아웃 전 : ", request.session.session_key)
 
     try:
-        if request.session.session_key is not None:
-            request.session.flush()  # 세션 데이터 삭제
-            logout(request)
-            return JsonResponse({"detail": "로그아웃 성공"})
+        logout(request)
+        if request.session.session_key is None:
+            return JsonResponse({"detail": "로그아웃 성공"}, status=200)
         else:
-            return JsonResponse({"detail": "세션 키가 존재하지 않습니다."}, status=400)
+            request.session.flush()  # 세션 데이터 삭제
+            return JsonResponse({"detail": "로그아웃 성공"}, status=200)
     except Exception as e:
         print("에러 : ", e)
-        return JsonResponse({"detail": "로그아웃 실패"})
+        return JsonResponse({"detail": "로그아웃 실패"}, status=500)
 
 
 # UserCrypto 테이블에 사용자에 따른 화폐 관심 여부 추가
@@ -784,46 +788,29 @@ def cancel_order(request):
     except CustomUser.DoesNotExist:
         JsonResponse({"error": "해당 이메일의 사용자가 존재하지 않습니다"})
     
-@api_view(["GET"])
-def check_login(request):
-    session_id = request.session.session_key
-    print(session_id)
-    return Response({"is_logged_in": request.user.is_authenticated})
 
-def get_data(request):
-    (
-        name,
-        cur_price,
-        unJoin_market,
-        change,
-        change_rate,
-        change_price,
-        acc_trade_price_24h,
-        acc_trade_volume_24h,
-        open_price,
-        high_price,
-        low_price,
-    ) = price()
+class CheckLoginView(View):
+    def post(self, request):
+        try:
+            is_logged_in = request.user.is_authenticated
+            return JsonResponse({"is_logged_in": is_logged_in})
+        except Exception as e:
+            print(f"로그인 체크 에러: {e}")
+            return JsonResponse({"error": "로그인 체크 에러"}, status=500)
+
+
+def get_all_crypto(request):
+    all_crypto = all_data()
 
     candle_btc_date = candle_per_date_BTC()
     closed_price_btc = closed_price_BTC()
     asking_price_btc = asking_price_BTC()
 
     data = {
-        "name": name,
-        "price": cur_price,
-        "market": unJoin_market,
-        "change": change,
-        "change_rate": change_rate,
-        "change_price": change_price,
-        "trade_price": acc_trade_price_24h,
-        "trade_volume": acc_trade_volume_24h,
-        "open_price": open_price,
-        "high_price": high_price,
-        "low_price": low_price,
+        "all_crypto": all_crypto,
         "candle_btc_date": candle_btc_date,
         "closed_price_btc": closed_price_btc,
-        "asking_price_btc": asking_price_btc,
+        "asking_price_btc": asking_price_btc
     }
 
     return JsonResponse(data)

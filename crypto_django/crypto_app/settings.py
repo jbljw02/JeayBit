@@ -24,10 +24,7 @@ SECRET_KEY = 'django-insecure-dp2dyhvazi=*3q459+8exg^8lzs3l3&k(5(p(ndl415eu(r)@9
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
-
 # Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -42,18 +39,20 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
-    # 'django.middleware.csrf.CsrfViewMiddleware',  # 클라이언트 실행할 때 임시 해제
-    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
+    # 'django.middleware.csrf.CsrfViewMiddleware', # 클라이언트 실행할 때 임시 해제
+    'corsheaders.middleware.CorsMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware'
 ]
 
-# CSRF_COOKIE_NAME = 'csrftoken'
-# CSRF_HEADER_NAME = 'X-CSRFToken'
+CSRF_COOKIE_NAME = 'csrftoken'
+CSRF_HEADER_NAME = 'X-CSRFToken'
+
+CORS_ALLOW_CREDENTIALS = True
 
 CSRF_TRUSTED_ORIGINS = (
     'http://localhost:8000',
@@ -67,39 +66,17 @@ CORS_ORIGIN_WHITELIST = (
 
 CORS_ALLOWED_ORIGINS = CORS_ORIGIN_WHITELIST
 
-# CORS_ALLOW_HEADERS = (
-#     'access-control-allow-credentials',
-#     'access-control-allow-origin',
-#     'access-control-request-method',
-#     'access-control-request-headers',
-#     'accept',
-#     'accept-encoding',
-#     'accept-language',
-#     'authorization',
-#     'connection',
-#     'content-type',
-#     'dnt',
-#     'credentials',
-#     'host',
-#     'origin',
-#     'user-agent',
-#     'X-CSRFToken',
-#     'csrftoken',
-#     'x-requested-with',
-# )
-
 CORS_ALLOW_CREDENTIALS = True  # 서버가 클라이언트의 자격증명(예: 쿠키)를 받을 준비가 됨 - 클라이언트는 서버에 쿠키를 보낼 수 있음을 뜻함
-CORS_ALLOW_ALL_ORIGINS = True  # 모든 출처에서 오는 요청을 허용 - 어떤 웹사이트에서 오든 상관없이 서버 리소스에 접근 가능
 ROOT_URLCONF = 'crypto_app.urls'
 
-# CSRF_TRUSTED_ORIGINS = [
-#    "http://localhost:3000",
-# ]
-
-SESSION_COOKIE_SAMESITE = 'None'  # 'None': 모든 컨텍스트(다른 사이트)에서 쿠키 전송 가능
-SESSION_COOKIE_SECURE = True  # 'True': HTTPS 연결시에만 쿠키 전송
-CSRF_COOKIE_SAMESITE = 'None'
+SESSION_COOKIE_NAME = 'sessionKey'
+SESSION_COOKIE_SAMESITE = 'None' # 'None': 모든 컨텍스트(다른 사이트)에서 쿠키 전송 가능
+SESSION_COOKIE_SECURE = True # 'True': HTTPS 연결시에만 쿠키 전송
+CSRF_COOKIE_SAMESITE = 'Lax'
 CSRF_COOKIE_SECURE = True
+CSRF_COOKIE_HTTPONLY = True
+
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 
 from crypto_app.authmiddleware import CsrfExemptSessionAuthentication
 AUTHENTICATION_BACKENDS = [

@@ -3,14 +3,16 @@ import { RootState, setFilteredData, setSortedData } from "../../../redux/store"
 import img_sort from "../../../assets/images/sort.png";
 import img_sort_up from "../../../assets/images/sort-up.png";
 import img_sort_down from "../../../assets/images/sort-down.png";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Crypto } from "../../../redux/store";
 
 export default function ListThead() {
     const dispatch = useDispatch();
+
     const filteredData = useSelector((state: RootState) => state.filteredData);
     const listCategory = useSelector((state: RootState) => state.listCategory);
 
+    // 차례로 화폐명, 현재가, 전일대비, 거래대금의 정렬 상태를 관리
     const [sort_states, setSort_states] = useState<number[]>([0, 0, 0, 0]);
     const sort_images = [img_sort, img_sort_down, img_sort_up];
 
@@ -145,6 +147,9 @@ export default function ListThead() {
             return states_copy;
         });
     };
+
+    const ownedCrypto = useSelector((state: RootState) => state.ownedCrypto);
+    const favoriteCrypto = useSelector((state: RootState) => state.favoriteCrypto);
 
     return (
         <table className="list-table" id="listHead">
