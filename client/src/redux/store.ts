@@ -13,9 +13,9 @@ export type Crypto = {
   open_price: number,
   high_price: number,
   low_price: number,
-  isFavorited: boolean,
-  isOwned: boolean,
-  quantity: number,
+  is_favorited: boolean,
+  is_owned: boolean,
+  owned_quantity: number,
 }
 
 export type ClosedData = {

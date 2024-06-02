@@ -3,8 +3,11 @@ import { RootState, setChartSortDate, setChartSortTime, setSelectedChartSort } f
 import price_rise from '../assets/images/price-up.png'
 import price_fall from '../assets/images/price-down.png'
 import TradingChart from "./TradingChart";
+import useFunction from "./useFuction";
+import { useEffect } from "react";
 
 export default function TradingView() {
+  const dispatch = useDispatch();
 
   const delimitedTime = useSelector((state: RootState) => state.delimitedTime);
   const delimitedDate = useSelector((state: RootState) => state.delimitedDate);
@@ -12,7 +15,10 @@ export default function TradingView() {
   const chartSortDate = useSelector((state: RootState) => state.chartSortDate);
   const selectedCrypto = useSelector((state: RootState) => state.selectedCrypto);
 
-  const dispatch = useDispatch();
+  const allCrypto = useSelector((state: RootState) => state.allCrypto);
+  const filteredData = useSelector((state: RootState) => state.filteredData);
+
+  const { requestCandleMinute, requestCandleDate } = useFunction();
 
   const setChartSortValue = (value: string) => {
     dispatch(setSelectedChartSort(value));
@@ -20,13 +26,35 @@ export default function TradingView() {
 
   const clickChartSortTime = (value: string) => {
     dispatch(setChartSortTime(value));
-    // dispatch(setChartSortDate(''))
   }
 
   const clickChartSortDate = (value: string) => {
     dispatch(setChartSortDate(value));
     dispatch(setChartSortTime(''))
   }
+
+  // 선택 화폐가 변경 되거나, 시간/날짜당 캔들의 정보가 변경될 때 요청
+  useEffect(() => {
+    if (chartSortTime && selectedCrypto.market) {
+      requestCandleMinute(selectedCrypto.market, chartSortTime);
+    }
+    else if (!chartSortTime && selectedCrypto.market) {
+      requestCandleDate(selectedCrypto.market);
+    }
+  }, [selectedCrypto, chartSortTime, chartSortDate]);
+
+  // 선택 화폐가 변경 되거나, 일자당 캔들의 정보가 변경될 때 요청
+  useEffect(() => {
+    if (selectedCrypto.market) {
+      requestCandleDate(selectedCrypto.market);
+    }
+  }, [selectedCrypto, chartSortDate]);
+
+  useEffect(() => {
+    if (filteredData.length > 0 && selectedCrypto.market) {
+
+    }
+  }, [allCrypto]);
 
   return (
     <>

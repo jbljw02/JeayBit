@@ -21,7 +21,9 @@ export default function ListSearch() {
         open_price: item.open_price,
         high_price: item.high_price,
         low_price: item.low_price,
-        isFavorited: item.isFavorited,
+        is_favorited: item.is_favorited,
+        is_owned: item.is_owned,
+        owned_quantity: item.owned_quantity,
         // 검색어에 해당하는 데이터를 비교하여 배열을 재생성
     })).filter((item) =>
         item.name.toLowerCase().includes(search_cr.toLowerCase())

@@ -9,12 +9,29 @@ import { Crypto } from "../../../redux/store";
 export default function ListThead() {
     const dispatch = useDispatch();
 
+    const allCrypto = useSelector((state: RootState) => state.allCrypto);
     const filteredData = useSelector((state: RootState) => state.filteredData);
     const listCategory = useSelector((state: RootState) => state.listCategory);
 
     // 차례로 화폐명, 현재가, 전일대비, 거래대금의 정렬 상태를 관리
     const [sort_states, setSort_states] = useState<number[]>([0, 0, 0, 0]);
     const sort_images = [img_sort, img_sort_down, img_sort_up];
+
+
+    useEffect(() => {
+        if (listCategory === '원화') {
+            dispatch(setFilteredData(allCrypto));
+        }
+        if (listCategory === '관심') {
+            const matchedCrypto = allCrypto.filter(item => item.is_favorited)
+            dispatch(setFilteredData(matchedCrypto));
+        }
+        if (listCategory === '보유') {
+            const matchedCrypto: Crypto[] = allCrypto.filter(item => item.is_owned && item.owned_quantity > 0.00);
+            dispatch(setFilteredData(matchedCrypto));
+        }
+    }, [listCategory]);
+
 
     // 정렬 이미지 클릭 이벤트
     const sortClick = (index: number) => {

@@ -8,13 +8,31 @@ import SignUp from '../components/SignUp';
 import TradingView from '../components/TradingView';
 import { useEffect } from 'react';
 import useFunction from '../components/useFuction';
+import { useDispatch } from 'react-redux';
+import { setUser } from '../redux/store';
 
 export default function Home() {
+    const dispatch = useDispatch();
 
     const { checkLogin } = useFunction();
 
+    // 마운트 초기에 사용자의 로그인 여부를 체크
     useEffect(() => {
-        checkLogin();
+        (async () => {
+            const response = await checkLogin();
+            if (response.is_logged_in) {
+                dispatch(setUser({
+                    name: response.name,
+                    email: response.email,
+                }));
+            }
+            else {
+                dispatch(setUser({
+                    name: '',
+                    email: '',
+                }))
+            }
+        })();
     }, []);
 
     return (

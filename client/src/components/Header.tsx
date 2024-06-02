@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import title from "../assets/images/title.png";
-import { RootState, setBalanceUpdate, setCsrfToken, setLogInEmail, setLogInUser, setTransferSort, setUserTradeHistory, setUserTradeHistory_unSigned } from "../redux/store";
+import { RootState, setBalanceUpdate, setCsrfToken, setLogInEmail, setTransferSort, setUserTradeHistory, setUserTradeHistory_unSigned } from "../redux/store";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -13,8 +13,7 @@ const Header = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const logInUser = useSelector((state: RootState) => state.logInUser);
-  const logInEmail = useSelector((state: RootState) => state.logInEmail);
+  const user = useSelector((state: RootState) => state.user);
   const balanceUpdate = useSelector((state: RootState) => state.balanceUpdate);
 
   const [walletHover, setWalletHover] = useState<boolean>(false);
@@ -46,34 +45,16 @@ const Header = () => {
 
   // 화면 첫 랜더링 시, 사용자 변경 시, 입출금 할 때마다 잔고 데이터 받아옴
   useEffect(() => {
-    if (logInEmail !== '') {
-      getBalance(logInEmail);
+    if (user.email !== '') {
+      getBalance(user.email);
     }
-  }, [logInEmail, balanceUpdate, getBalance])
-
-  const csrfToken = useSelector((state: RootState) => state.csrfToken);
-
-  // const getCsrfToken = async () => {
-  //   axios.get('http://127.0.0.1:8000/csrf_token/')
-  //     .then(response => {
-  //       const tokenResponse = response.data.csrfToken;
-  //       dispatch(setCsrfToken(tokenResponse));
-  //     })
-  //     .catch(error => console.error('Error fetching CSRF token:', error));
-  // }
-
-  // useEffect(() => {
-  //   getCsrfToken();
-  // }, []);
+  }, [user.email, balanceUpdate, getBalance])
 
   const logOut = () => {
     (async () => {
       try {
-        console.log("토큰: ", csrfToken);
         const response = await axios.post("http://127.0.0.1:8000/logOut/",
-          {
-            
-          },
+          {},
           {
             withCredentials: true,
           });
@@ -86,9 +67,7 @@ const Header = () => {
         dispatch(setUser({
           name: '',
           email: '',
-        }))
-        dispatch(setLogInEmail(''))
-        dispatch(setLogInUser(''))
+        }));
         dispatch(setUserTradeHistory([]))
         dispatch(setUserTradeHistory_unSigned([]))
         localStorage.clear();
@@ -100,7 +79,7 @@ const Header = () => {
 
   // 입금량을 서버로 전송
   const addBalanceToUser = (email: string, depositAmount: number) => {
-    if (logInEmail !== "") {
+    if (user.email !== "") {
       return (async (email, depositAmount) => {
         try {
           await axios.post("http://127.0.0.1:8000/add_balance_to_user/", {
@@ -118,7 +97,7 @@ const Header = () => {
 
   // 출금량을 서버로 전송
   const minusBalanceFromUser = (email: string, withdrawAmount: number) => {
-    if (logInEmail !== "") {
+    if (user.email !== "") {
       return (async (email, withdrawAmount) => {
         try {
           const response = await axios.post(
@@ -205,7 +184,7 @@ const Header = () => {
           </span>
         </span>
         {
-          logInUser === "" ? (
+          user.name === "" ? (
             <div className="member-nav-unLogIn">
               <span
                 onClick={() => {
@@ -226,8 +205,8 @@ const Header = () => {
             </div>
           ) : (
             <div className="member-nav-LogIn">
-              <span className="logInUser">
-                <u>{logInUser}</u>님
+              <span className="user.name">
+                <u>{user.name}</u>님
               </span>
               <span
                 onClick={() => {
@@ -267,7 +246,7 @@ const Header = () => {
                           <span
                             onClick={() => {
                               dispatch(setTransferSort("잔고"));
-                              // getBalance(logInEmail);
+                              // getBalance(user.email);
                             }}
                             id={`${transferSort === "잔고" ? "balanceSection" : ""}`}
                           >
@@ -323,7 +302,7 @@ const Header = () => {
                                     // async를 사용하여 입금이 완료될 때까지 dispatch를 실행하지 않음
                                     async () => {
                                       if (depositAmount !== undefined && !depositLimit) {
-                                        await addBalanceToUser(logInEmail, depositAmount);
+                                        await addBalanceToUser(user.email, depositAmount);
                                       }
                                       else {
                                         if (!depositLimit) {
@@ -395,7 +374,7 @@ const Header = () => {
                                   onClick={
                                     async () => {
                                       if (withdrawAmount !== undefined && !withdrawOverflow && !withdrawLimit) {
-                                        await minusBalanceFromUser(logInEmail, withdrawAmount);
+                                        await minusBalanceFromUser(user.email, withdrawAmount);
                                       }
                                       else {
                                         if (!withdrawOverflow && !withdrawLimit) {
@@ -413,7 +392,7 @@ const Header = () => {
                               <div className="balance-section">
                                 <div className="balance-content">
                                   <span className="balance-title">
-                                    <span>{logInUser}</span>님의 출금가능 금액
+                                    <span>{user.name}</span>님의 출금가능 금액
                                   </span>
                                   <span className="balance-amount">
                                     {

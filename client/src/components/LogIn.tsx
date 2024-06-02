@@ -46,12 +46,10 @@ export default function LogIn() {
             name: response.data.name,
             email: response.data.email,
           }));
-          dispatch(setLogInUser(response.data.username))
-          dispatch(setLogInEmail(response.data.email))
-
-          console.log("양하연: ", response.data);
-          localStorage.setItem('user', JSON.stringify(response.data));
-
+          dispatch(setUser({
+            name: response.data.username,
+            email: response.data.email,
+          }))
           navigate('/')
         } catch (error) {
           // console.log("로그인 정보 전송 실패", error)

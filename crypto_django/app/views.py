@@ -19,14 +19,12 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.http import JsonResponse
 from django.views import View
-
+from .models import UserCrypto
 
 # 1분 기준 차트
 @api_view(["GET", "POST"])
 def candle_per_minute(request):
     try:
-        print("마켓 : ", request.data["market"])
-        print("분 : ", request.data["minute"])
         market = request.data["market"]
         minute = request.data["minute"]
 
@@ -44,23 +42,17 @@ def candle_per_minute(request):
             minute = 240
 
         if not market:
-            return Response({"error": "market 데이터를 받아올 수 없음"}, status=400)
+            return Response({"error ": "market 파라미터 X"}, status=400)
 
         url = f"https://api.upbit.com/v1/candles/minutes/{minute}?market={market}&count=100"
 
         response = get(url)
-        print(response)
-
-        # 업비트 api로부터 데이터 수신 실패
-        if response.status_code != 200:
-            return Response({"error": "Failed to get data from Upbit"}, status=500)
-
         data = response.json()
 
-        return Response(data)
+        return Response(data, status=200)
 
     except Exception as e:
-        print("error : ", e)
+        return JsonResponse({"error: ": "분/시간당 캔들 호출 실패"}, status=500)
 
 
 # 1일 기준 차트
@@ -70,23 +62,17 @@ def candle_per_date(request):
         market = request.data["market"]
 
         if not market:
-            return Response({"error": "market 데이터를 받아올 수 없음"}, status=400)
+            return Response({"error": "market 파라미터 X"}, status=500)
 
         url = f"https://api.upbit.com/v1/candles/days?market={market}&count=100"
 
         response = get(url)
-        print(response)
-
-        # 업비트 api로부터 데이터 수신 실패
-        if response.status_code != 200:
-            return Response({"error": "Failed to get data from Upbit"}, status=500)
-
         data = response.json()
 
-        return Response(data)
+        return Response(data, status=200)
 
     except Exception as e:
-        print("error : ", e)
+        return Response({"error: ": "1일당 캔들 호출 실패"}, status=500)
 
 
 # 1주 기준 차트
@@ -96,23 +82,17 @@ def candle_per_week(request):
         market = request.data["market"]
 
         if not market:
-            return Response({"error": "market 데이터를 받아올 수 없음"}, status=400)
+            return Response({"error": "market 파라미터 X"}, status=400)
 
         url = f"https://api.upbit.com/v1/candles/weeks?market={market}&count=100"
 
         response = get(url)
-        print(response)
-
-        # 업비트 api로부터 데이터 수신 실패
-        if response.status_code != 200:
-            return Response({"error": "Failed to get data from Upbit"}, status=500)
-
         data = response.json()
-
-        return Response(data)
-
+        
+        return Response(data, status=200)
+    
     except Exception as e:
-        print("error : ", e)
+        return Response({"error: ": "1주당 캔들 호출 실패"}, status=500)
 
 
 # 1개월 기준 차트
@@ -122,23 +102,17 @@ def candle_per_month(request):
         market = request.data["market"]
 
         if not market:
-            return Response({"error": "market 데이터를 받아올 수 없음"}, status=400)
+            return Response({"error": "market 파라미터 X"}, status=500)
 
         url = f"https://api.upbit.com/v1/candles/months?market={market}&count=100"
 
         response = get(url)
-        print(response)
-
-        # 업비트 api로부터 데이터 수신 실패
-        if response.status_code != 200:
-            return Response({"error": "Failed to get data from Upbit"}, status=500)
-
         data = response.json()
 
-        return Response(data)
+        return Response(data, status=200)
 
     except Exception as e:
-        print("error : ", e)
+        return Response({"error: ": "1주당 캔들 호출 실패"}, status=500)
 
 
 # 호가내역
@@ -890,19 +864,26 @@ def check_login(self, request):
 
 
 class CheckLoginView(View):
-    def post(self, request, *args, **kwargs):
+    def post(self, request):
         try:
             is_logged_in = request.user.is_authenticated
-            print("첫번쨰: ", is_logged_in)
-            return JsonResponse({"is_logged_in": is_logged_in})
+            if is_logged_in:
+                return JsonResponse(
+                    {
+                        "is_logged_in": is_logged_in,
+                        "name": request.user.username,
+                        "email": request.user.email,
+                    }
+                )
         except Exception as e:
-            print(f"로그인 체크 에러: {e}")
             return JsonResponse({"error": "로그인 체크 에러"}, status=500)
 
-from .models import UserCrypto
 
 class GetAllCryptoView(View):
-    def post(self, request, ):
+    def post(
+        self,
+        request,
+    ):
         try:
             # 로그인 여부 확인
             is_logged_in = request.user.is_authenticated
@@ -911,11 +892,11 @@ class GetAllCryptoView(View):
             headers = {"accept": "application/json"}
             url = "https://api.upbit.com/v1/market/all?isDetails=true"
             response = get(url, headers=headers)
-            
+
             market_data = json.loads(response.text)
             market = []
             name = []
-            
+
             for crypto in market_data:
                 if (
                     crypto["market"].startswith("KRW")
@@ -923,15 +904,15 @@ class GetAllCryptoView(View):
                 ):
                     name.append(crypto["korean_name"])
                     market.append(crypto["market"])
-            
+
             unJoin_market = market
             market_str = "%2C%20".join(market)
             url = f"https://api.upbit.com/v1/ticker?markets={market_str}"
             response = get(url, headers=headers)
             data = json.loads(response.text)
-            
+
             all_crypto = []
-            
+
             for i in range(len(data)):
                 crypto_obj = {
                     "name": name[i],
@@ -954,12 +935,12 @@ class GetAllCryptoView(View):
                     "high_price": data[i]["high_price"],
                     "low_price": data[i]["low_price"],
                 }
-                
+
                 # 로그인된 경우 사용자 정보 추가
                 if is_logged_in:
                     user_crypto_info = UserCrypto.objects.filter(
                         user=request.user,
-                        crypto__name=name[i]  # Crypto 모델의 name 필드와 매칭
+                        crypto__name=name[i],  # Crypto 모델의 name 필드와 매칭
                     ).first()
                     if user_crypto_info:
                         crypto_obj["is_favorited"] = user_crypto_info.is_favorited
@@ -969,7 +950,7 @@ class GetAllCryptoView(View):
                         crypto_obj["is_favorited"] = False
                         crypto_obj["is_owned"] = False
                         crypto_obj["owned_quantity"] = 0.00
-                
+
                 all_crypto.append(crypto_obj)
         except Exception as e:
             print(f"암호화폐 데이터 가져오기 에러: {e}")

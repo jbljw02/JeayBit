@@ -7,7 +7,7 @@ import Cookies from 'js-cookie';
 export default function useFunction() {
 
   const dispatch = useDispatch();
-  const logInEmail = useSelector((state: RootState) => state.logInEmail);
+  const user = useSelector((state: RootState) => state.user);
   const filteredData = useSelector((state: RootState) => state.filteredData);
   const chartSortDate = useSelector((state: RootState) => state.chartSortDate);
   const theme = useSelector((state: RootState) => state.theme);
@@ -30,7 +30,6 @@ export default function useFunction() {
       dispatch(setCr_high_price(response.data.high_price));
       dispatch(setCr_low_price(response.data.low_price));
 
-      console.log("그거: ", response.data);
     } catch (error) {
       throw error;
     }
@@ -41,7 +40,8 @@ export default function useFunction() {
       const response = await axios.post("http://127.0.0.1:8000/check_login/", {}, {
         withCredentials: true
       });
-      console.log("response.data: ", response.data);
+
+      return response.data;
     } catch (error) {
       console.error("Error: ", error);
     }
@@ -86,11 +86,11 @@ export default function useFunction() {
   };
 
   // 사용자가 소유하고 있는 화폐의 정보를 받아옴
-  const getOwnedCrypto = (logInEmail: string) => {
+  const getOwnedCrypto = (email: string) => {
     (async () => {
       try {
         const response = await axios.get(
-          `http://127.0.0.1:8000/get_user_ownedCrypto/${logInEmail}/`
+          `http://127.0.0.1:8000/get_user_ownedCrypto/${email}/`
         );
         dispatch(setOwnedCrypto(response.data))
         // console.log("반환값-소유화폐 : ", response.data)
@@ -115,7 +115,7 @@ export default function useFunction() {
           trade_amount: tradeAmount,
           is_signed: isSigned,
         });
-        getTradeHistory(logInEmail);
+        getTradeHistory(email);
         // console.log("거래 내역 전송 성공", response.data)
       } catch (error) {
         // console.log("거래 내역 전송 실패", error);
@@ -124,11 +124,11 @@ export default function useFunction() {
   }
 
   // 서버로부터 거래 내역을 받아옴
-  const getTradeHistory = (logInEmail: string) => {
+  const getTradeHistory = (email: string) => {
     (async () => {
       try {
         const response = await axios.get(
-          `http://127.0.0.1:8000/get_user_tradeHistory/${logInEmail}/`
+          `http://127.0.0.1:8000/get_user_tradeHistory/${email}/`
         );
         // console.log("반환값-거래내역 : ", response.data);
 
@@ -166,7 +166,7 @@ export default function useFunction() {
   }
 
   // 모든 화폐의 이름을 받아옴
-  const getCryptoName = (logInEmail: string) => {
+  const getCryptoName = (email: string) => {
     (async () => {
       try {
         const response = await axios.get(
@@ -200,10 +200,10 @@ export default function useFunction() {
 
         dispatch(setIsBuying(isWaitingTemp));
         dispatch(setIsSelling(isWaitingTemp));
-        localStorage.setItem(`${logInEmail}_IsBuying`, JSON.stringify(isWaitingTemp));
-        localStorage.setItem(`${logInEmail}_IsSelling`, JSON.stringify(isWaitingTemp));
+        localStorage.setItem(`${email}_IsBuying`, JSON.stringify(isWaitingTemp));
+        localStorage.setItem(`${email}_IsSelling`, JSON.stringify(isWaitingTemp));
       } catch (error) {
-        // console.log("화폐명 받아오기 실패", error);
+        throw error;
       }
     })();
   }
@@ -289,9 +289,9 @@ export default function useFunction() {
           buy_total: buyTotal,
         });
         // console.log("구매 화폐 전송 성공", response.data);
-        getBalance(logInEmail);  // 매수에 사용한 금액만큼 차감되기 때문에 잔고 업데이트
-        getOwnedCrypto(logInEmail);  // 소유 화폐가 새로 추가될 수 있으니 업데이트
-        getTradeHistory(logInEmail)  // 매수에 성공했으니 거래내역 업데이트
+        getBalance(email);  // 매수에 사용한 금액만큼 차감되기 때문에 잔고 업데이트
+        getOwnedCrypto(email);  // 소유 화폐가 새로 추가될 수 있으니 업데이트
+        getTradeHistory(email)  // 매수에 성공했으니 거래내역 업데이트
         localStorage.removeItem(key)
       } catch (error) {
         // console.log("구매 화폐 전송 실패: ", error)
@@ -310,9 +310,9 @@ export default function useFunction() {
           sell_total: sellTotal,
         });
         // console.log("매도 화폐 전송 성공", response.data);
-        getBalance(logInEmail);  // 매수에 사용한 금액만큼 차감되기 때문에 잔고 업데이트
-        getOwnedCrypto(logInEmail);  // 소유 화폐가 새로 추가될 수 있으니 업데이트
-        getTradeHistory(logInEmail)  // 매수에 성공했으니 거래내역 업데이트
+        getBalance(email);  // 매수에 사용한 금액만큼 차감되기 때문에 잔고 업데이트
+        getOwnedCrypto(email);  // 소유 화폐가 새로 추가될 수 있으니 업데이트
+        getTradeHistory(email)  // 매수에 성공했으니 거래내역 업데이트
         localStorage.removeItem(key)
       } catch (error) {
         // console.log("매도 화폐 전송 실패: ", error)
@@ -360,10 +360,10 @@ export default function useFunction() {
               },
             }
           );
-          // console.log(chartSortTime, "당 요청값: ", response.data);
+          
           dispatch(setCandle_per_minute(response.data));
         } catch (error) {
-          // console.error("분당 캔들 호출 실패", error);
+          throw error;
         }
       }
     })(market, minute);
@@ -387,10 +387,9 @@ export default function useFunction() {
             }
           );
 
-          // console.log("1일 요청된 값 : ", response.data)
           dispatch(setCandle_per_date(response.data));
         } catch (error) {
-          // console.error("1일당 캔들 호출 실패", error);
+          throw error;
         }
       })(market);
     } else if (chartSortDate === "1주") {
@@ -408,10 +407,9 @@ export default function useFunction() {
             }
           );
 
-          // console.log("1주 요청된 값 : ", response.data)
           dispatch(setCandle_per_week(response.data));
         } catch (error) {
-          // console.error("1주당 캔들 호출 실패", error);
+          throw error;
         }
       })(market);
     } else if (chartSortDate === "1개월") {
@@ -429,10 +427,9 @@ export default function useFunction() {
             }
           );
 
-          // console.log("1개월 요청된 값 : ", response.data)
           dispatch(setCandle_per_month(response.data));
         } catch (error) {
-          // console.error("1개월당 호출 실패", error);
+          throw error;
         }
       })(market);
     }
@@ -440,7 +437,7 @@ export default function useFunction() {
 
   // 로그인한 사용자에 대해 관심 화폐를 업데이트
   const addCryptoToUser = (email: string, cryptoName: string) => {
-    if (logInEmail !== "") {
+    if (user.email !== "") {
       (async (email, cryptoName) => {
         try {
           axios.post("http://127.0.0.1:8000/add_favoriteCrypto_to_user/", {
@@ -448,12 +445,10 @@ export default function useFunction() {
             crypto_name: cryptoName,
           });
         } catch (error) {
-          // console.log("관심 화폐 정보 전송 실패");
+          throw error;
         }
       })(email, cryptoName);
-    } else {
-      alert("사용자 존재X");
-    }
+    } 
   };
 
 
@@ -513,21 +508,6 @@ export default function useFunction() {
     });
   };
 
-  // 로그인한 사용자에 대한 관심 화폐 정보를 받아옴
-  const getFavoriteCrypto = (logInEmail: string) => {
-    (async () => {
-      try {
-        const response = await axios.get(
-          `http://127.0.0.1:8000/get_user_favoriteCrypto/${logInEmail}/`
-        );
-        console.log("반환값-관심화폐 : ", response.data);
-        dispatch(setFavoriteCrypto(response.data));
-      } catch (error) {
-        // console.log("관심 화폐 정보 받아오기 실패", error);
-      }
-    })();
-  };
-
   return {
     getAllCrypto,
     initialData,
@@ -545,7 +525,6 @@ export default function useFunction() {
     requestCandleMinute,
     requestCandleDate,
     addCryptoToUser,
-    getFavoriteCrypto,
     checkLogin
   };
 
