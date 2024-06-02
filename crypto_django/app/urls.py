@@ -3,7 +3,7 @@ from django.contrib import admin
 from .views import (
     add_user_tradeHistory,
     cancel_order,
-    get_all_crypto,
+    GetAllCryptoView,
     candle_per_date,
     candle_per_week,
     candle_per_month,
@@ -33,7 +33,7 @@ from .views import (
 )
 
 urlpatterns = [
-    path("get_all_crypto/", get_all_crypto),
+    path("get_all_crypto/", GetAllCryptoView.as_view()),
     path("candle_per_minute/", candle_per_minute),
     path("candle_per_date/", candle_per_date),
     path("candle_per_week/", candle_per_week),

@@ -14,7 +14,9 @@ export default function useFunction() {
 
   const getAllCrypto = async () => {
     try {
-      const response = await axios.get("http://127.0.0.1:8000/get_all_crypto/");
+      const response = await axios.post("http://127.0.0.1:8000/get_all_crypto/", {}, {
+        withCredentials: true,
+      });
       dispatch(setAllCrypto(response.data.all_crypto));
       dispatch(setCr_name(response.data.name));
       dispatch(setCr_price(response.data.price));
@@ -27,6 +29,8 @@ export default function useFunction() {
       dispatch(setCr_open_price(response.data.open_price));
       dispatch(setCr_high_price(response.data.high_price));
       dispatch(setCr_low_price(response.data.low_price));
+
+      console.log("그거: ", response.data);
     } catch (error) {
       throw error;
     }
@@ -42,6 +46,16 @@ export default function useFunction() {
       console.error("Error: ", error);
     }
   }
+
+  // useEffect(() => {
+  //   // getAllCrypto 함수를 3초마다 실행 - 서버에서 받아오는 값을 1초마다 갱신시킴
+  //   const interval = setInterval(() => {
+  //     checkLogin();
+  //   }, 3000);
+
+  //   // setInterval이 반환하는 interval ID를 clearInterval 함수로 제거
+  //   return () => clearInterval(interval);
+  // }, []);
 
   // 서버로부터 사용자의 잔고량을 받아옴
   const getBalance = (email: string) => {

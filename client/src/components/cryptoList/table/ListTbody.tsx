@@ -68,36 +68,40 @@ export default function ListTbody() {
         //     dispatch(setFilteredData(allCrypto));
         // }
         if (listCategory === '관심') {
-            const matchedCrypto: Crypto[] = filteredData
-                .filter(originItem =>
-                    favoriteCrypto.some(favitem => favitem.crypto_name === originItem.name)
-                )
-                .map(originItem => {
-                    // favoriteCrypto에서 현재 originItem과 이름이 일치하는 항목 찾기
-                    const favItem = favoriteCrypto.find(fav => fav.crypto_name === originItem.name);
-                    // 일치하는 항목의 isFavorite 속성을 포함하여 새 객체 반환
-                    return {
-                        ...originItem,
-                        isFavorite: !!favItem // 일치하는 favItem이 있으면 true, 없으면 false
-                    };
-                });
-            dispatch(setFilteredData(matchedCrypto));
+            if (Array.isArray(favoriteCrypto)) {
+                const matchedCrypto: Crypto[] = filteredData
+                    .filter(originItem =>
+                        favoriteCrypto.some(favitem => favitem.crypto_name === originItem.name)
+                    )
+                    .map(originItem => {
+                        // favoriteCrypto에서 현재 originItem과 이름이 일치하는 항목 찾기
+                        const favItem = favoriteCrypto.find(fav => fav.crypto_name === originItem.name);
+                        // 일치하는 항목의 isFavorite 속성을 포함하여 새 객체 반환
+                        return {
+                            ...originItem,
+                            isFavorite: !!favItem // 일치하는 favItem이 있으면 true, 없으면 false
+                        };
+                    });
+                dispatch(setFilteredData(matchedCrypto));
+            }
         }
         if (listCategory === '보유') {
-            const matchedCrypto: Crypto[] = filteredData
-                .filter(originItem =>
-                    ownedCrypto.some(ownedItem => ownedItem.crypto_name === originItem.name)
-                )
-                .map(originItem => {
-                    // ownedCrypto에서 현재 originItem과 이름이 일치하는 항목 찾기
-                    const ownedItem = ownedCrypto.find(owned => owned.crypto_name === originItem.name);
-                    // 일치하는 항목의 quantity 속성을 포함하여 새 객체 반환
-                    return {
-                        ...originItem,
-                        quantity: ownedItem ? ownedItem.quantity : 0 // 일치하는 ownedItem이 있으면 그 quantity 사용, 없으면 0
-                    };
-                });
-            dispatch(setFilteredData(matchedCrypto));
+            if (Array.isArray(ownedCrypto)) {
+                const matchedCrypto: Crypto[] = filteredData
+                    .filter(originItem =>
+                        ownedCrypto.some(ownedItem => ownedItem.crypto_name === originItem.name)
+                    )
+                    .map(originItem => {
+                        // ownedCrypto에서 현재 originItem과 이름이 일치하는 항목 찾기
+                        const ownedItem = ownedCrypto.find(owned => owned.crypto_name === originItem.name);
+                        // 일치하는 항목의 quantity 속성을 포함하여 새 객체 반환
+                        return {
+                            ...originItem,
+                            quantity: ownedItem ? ownedItem.quantity : 0 // 일치하는 ownedItem이 있으면 그 quantity 사용, 없으면 0
+                        };
+                    });
+                dispatch(setFilteredData(matchedCrypto));
+            }
         }
 
     }, [listCategory]);
@@ -149,7 +153,7 @@ export default function ListTbody() {
         // eslint-disable-next-line
     }, [isFavorited]);
 
-    
+
 
     // 화폐 가격의 변화를 감지하고 이전 값과 비교하여 변화가 생긴 값을 상태에 업데이트
     useEffect(() => {
@@ -192,9 +196,9 @@ export default function ListTbody() {
             // 일치하지 않는 경우 원본 객체를 반환
             return originItem;
         });
-        
+
         dispatch(setFilteredData(updatedCrypto));
-        
+
         // // 차트에 실시간 데이터를 전달(시간당)
         // if (filteredData.length > 0 && selectedCrypto) {
         //     if (selectedCrypto.name && selectedCrypto.market === "KRW-BTC") {
