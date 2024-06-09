@@ -8,7 +8,8 @@ import PerfectScrollbar from 'react-perfect-scrollbar';
 import 'react-perfect-scrollbar/dist/css/styles.css';
 import adjustSize from "../../utils/adjustSize";
 import convertToDate from "../../utils/covertToDate";
-import AskingPrice from "./child/AskingPrice";
+import AskingPrice from "./child/asking/AskingPrice";
+import ClosedPrice from "./child/closed/ClosedPrice";
 
 export default function PriceDetail() {
   const dispatch = useDispatch();
@@ -187,36 +188,8 @@ export default function PriceDetail() {
       {/* <ModalComplete completeModalOpen={completeModalOpen} setCompleteModalOpen={setCompleteModalOpen} completeToggleModal={completeToggleModal} /> */}
       <PerfectScrollbar
         className='scrollBar-priceDetail hide-scrollBar'>
-        <div className="asking-section">
-          <div className="priceDetail-title askingTitle lightMode">
-            호가내역
-            <svg className="arrow-hide" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 5"
-              onClick={() => toggleAskHide()}
-              style={{
-                pointerEvents: 'all',
-                transformOrigin: askHide ? '50% 50%' : undefined,
-                transform: askHide ? 'rotate(270deg)' : undefined
-              }}>
-              <path d="M5.016 0 0 .003 2.506 2.5 5.016 5l2.509-2.5L10.033.003 5.016 0z" />
-            </svg>
-          </div>
-          <AskingPrice />
-        </div>
-        <div className="closed-section">
-          <div className="priceDetail-title closedTitle lightMode">
-            체결내역
-            <svg className="arrow-hide" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 5"
-              onClick={() => toggleCloseHide()}
-              style={{
-                pointerEvents: 'all',
-                transformOrigin: closeHide ? '50% 50%' : undefined,
-                transform: closeHide ? 'rotate(270deg)' : undefined
-              }}>
-              <path d="M5.016 0 0 .003 2.506 2.5 5.016 5l2.509-2.5L10.033.003 5.016 0z" />
-            </svg>
-          </div>
-          <ClosedPrice />
-        </div>
+        <AskingPrice />
+        <ClosedPrice />
         <div className="div-trading">
           <div className="trading-section lightMode-title">
             <span className={`${sectionChange === '매수' ?
@@ -245,61 +218,6 @@ export default function PriceDetail() {
       </PerfectScrollbar>
     </>
   );
-}
-
-const ClosedPrice = () => {
-  const closed_data = useSelector((state: RootState) => state.closed_data);
-  const cr_market_selected = useSelector((state: RootState) => state.cr_market_selected);
-  const closeHide = useSelector((state: RootState) => state.closeHide);
-
-  return (
-    <>
-      {/* 스크롤바를 넣기 위해 테이블을 두 개로 구성 */}
-      {
-        !closeHide ?
-          <>
-            <table className="closedPrice-table lightMode-title">
-              <thead>
-                <tr>
-                  <th>체결시간</th>
-                  <th>체결가격</th>
-                  <th>
-                    체결량<span>({(cr_market_selected).slice(4)})</span>
-                  </th>
-                </tr>
-              </thead>
-            </table>
-            <PerfectScrollbar id="scrollBar-closedPriceTable">
-              <table className="closedPrice-table">
-                <tbody>
-                  {
-                    closed_data.map((item, i) => {
-                      const trade_time = convertToDate(item.timestamp)
-
-                      const str_trade_volume = adjustSize(item.trade_volume);
-
-                      return (
-                        <tr key={i}>
-                          <td>{trade_time}</td>
-                          <td>{(item.trade_price).toLocaleString()}</td>
-                          {
-                            item.ask_bid === 'BID' ?
-                              <td className="td-rise">{str_trade_volume}</td> :
-                              <td className="td-fall">{str_trade_volume}</td>
-                          }
-                        </tr>
-                      )
-                    }
-                    )
-                  }
-                </tbody>
-              </table>
-            </PerfectScrollbar>
-          </> :
-          <div className="hide-element">...</div>
-      }
-    </>
-  )
 }
 
 const BuyingSection = () => {
