@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState, setFilteredData } from "../../redux/store";
+import { RootState, setFilteredData } from "../../../redux/store";
 
 export default function ListSearch() {
     const dispatch = useDispatch();

@@ -3,7 +3,7 @@ import '../assets/App.css';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { Header } from '../components/Header';
 import LogIn from '../components/LogIn';
-import PriceDetail from '../components/PriceDetail';
+import PriceDetail from '../components/priceDetail/PriceDetail';
 import SignUp from '../components/SignUp';
 import TradingView from '../components/TradingView';
 import { useEffect } from 'react';

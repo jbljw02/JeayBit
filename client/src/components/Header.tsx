@@ -5,9 +5,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import useFunction from "./useFuction";
-import { Dialog, DialogTitle, DialogContent, DialogActions, Button, makeStyles } from '@material-ui/core';
 import { setUser } from "../redux/features/userSlice";
-import Cookies from 'js-cookie';
 
 const Header = () => {
   const dispatch = useDispatch();
@@ -257,7 +255,7 @@ const Header = () => {
                           // 입금 영역
                           transferSort === "입금" ? (
                             <>
-                              <ModalComplete depositAmount={depositAmount} withdrawAmount={withdrawAmount} completeModalOpen={completeModalOpen} setCompleteModalOpen={setCompleteModalOpen} completeToggleModal={completeToggleModal} />
+                              {/* <ModalComplete depositAmount={depositAmount} withdrawAmount={withdrawAmount} completeModalOpen={completeModalOpen} setCompleteModalOpen={setCompleteModalOpen} completeToggleModal={completeToggleModal} /> */}
                               <div
                                 className={`transfer-input ${depositLimit === true ? "alert-border" : ""
                                   }`}
@@ -320,7 +318,7 @@ const Header = () => {
                           ) : transferSort === "출금" ? (
                             // 출금영역
                             <>
-                              <ModalComplete depositAmount={depositAmount} withdrawAmount={withdrawAmount} completeModalOpen={completeModalOpen} setCompleteModalOpen={setCompleteModalOpen} completeToggleModal={completeToggleModal} />
+                              {/* <ModalComplete depositAmount={depositAmount} withdrawAmount={withdrawAmount} completeModalOpen={completeModalOpen} setCompleteModalOpen={setCompleteModalOpen} completeToggleModal={completeToggleModal} /> */}
 
                               <div
                                 className={
@@ -531,68 +529,68 @@ interface CompleteModalProps {
   completeToggleModal: () => void;
 }
 
-const useStyles = makeStyles({
-  dialog: {
-    '& .MuiDialog-paper': {
-      width: '600px',
-      height: '200px'
-    },
-    '& .MuiDialogTitle-root .MuiTypography-root': {
-      marginTop: '10px',
-      marginLeft: '10px',
-      fontWeight: 'bold',
-    },
-    '& .MuiDialogContent-root': {
-      marginTop: '-10px',
-      marginLeft: '10px',
-    },
-    '& .MuiDialogActions-root': {
-      marginBottom: '10px',
-    },
-    '& .MuiDialogActions-root .MuiButton-root': {
-      fontWeight: 'bold',
-      fontSize: '14.5px',
-    }
-  },
-});
+// const useStyles = makeStyles({
+//   dialog: {
+//     '& .MuiDialog-paper': {
+//       width: '600px',
+//       height: '200px'
+//     },
+//     '& .MuiDialogTitle-root .MuiTypography-root': {
+//       marginTop: '10px',
+//       marginLeft: '10px',
+//       fontWeight: 'bold',
+//     },
+//     '& .MuiDialogContent-root': {
+//       marginTop: '-10px',
+//       marginLeft: '10px',
+//     },
+//     '& .MuiDialogActions-root': {
+//       marginBottom: '10px',
+//     },
+//     '& .MuiDialogActions-root .MuiButton-root': {
+//       fontWeight: 'bold',
+//       fontSize: '14.5px',
+//     }
+//   },
+// });
 
-const ModalComplete: React.FC<CompleteModalProps> = ({ depositAmount, withdrawAmount, completeModalOpen, setCompleteModalOpen, completeToggleModal }) => {
+// const ModalComplete: React.FC<CompleteModalProps> = ({ depositAmount, withdrawAmount, completeModalOpen, setCompleteModalOpen, completeToggleModal }) => {
 
-  const classes = useStyles();
-  const transferSort = useSelector((state: RootState) => state.transferSort);
+//   const classes = useStyles();
+//   const transferSort = useSelector((state: RootState) => state.transferSort);
 
-  return (
-    <div>
-      <Dialog open={completeModalOpen} onClose={completeToggleModal} className={classes.dialog} maxWidth={false}>
-        <DialogTitle>안내</DialogTitle>
-        <DialogContent>
-          {
-            transferSort === '입금' && depositAmount !== undefined ?
-              "입금이 완료됐습니다." :
-              null
-          }
-          {
-            transferSort === '출금' && withdrawAmount !== undefined ?
-              "출금이 완료됐습니다." :
-              null
-          }
-          {
-            depositAmount === undefined && transferSort === '입금' ?
-              "입금액을 입력해주세요." :
-              null
-          }
-          {
-            withdrawAmount === undefined && transferSort === '출금' ?
-              "출금액을 입력해주세요." :
-              null
-          }
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={completeToggleModal} color="primary">확인</Button>
-        </DialogActions>
-      </Dialog>
-    </div>
-  )
-}
+//   return (
+//     <div>
+//       <Dialog open={completeModalOpen} onClose={completeToggleModal} className={classes.dialog} maxWidth={false}>
+//         <DialogTitle>안내</DialogTitle>
+//         <DialogContent>
+//           {
+//             transferSort === '입금' && depositAmount !== undefined ?
+//               "입금이 완료됐습니다." :
+//               null
+//           }
+//           {
+//             transferSort === '출금' && withdrawAmount !== undefined ?
+//               "출금이 완료됐습니다." :
+//               null
+//           }
+//           {
+//             depositAmount === undefined && transferSort === '입금' ?
+//               "입금액을 입력해주세요." :
+//               null
+//           }
+//           {
+//             withdrawAmount === undefined && transferSort === '출금' ?
+//               "출금액을 입력해주세요." :
+//               null
+//           }
+//         </DialogContent>
+//         <DialogActions>
+//           <Button onClick={completeToggleModal} color="primary">확인</Button>
+//         </DialogActions>
+//       </Dialog>
+//     </div>
+//   )
+// }
 
 export { Header, HeaderNav };

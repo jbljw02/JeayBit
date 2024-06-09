@@ -1,17 +1,33 @@
 import { useDispatch, useSelector } from "react-redux";
-import { AskingData, RootState, setAskHide, setAsking_dateTime, setBuyingPrice, setCloseHide, setIsBuying, setIsSelling, setSectionChange, setSellingPrice } from "../redux/store";
+import { AskingData, RootState, setAskHide, setAsking_dateTime, setBuyingPrice, setCloseHide, setIsBuying, setIsSelling, setSectionChange, setSellingPrice } from "../../redux/store";
 import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom'
 import axios from "axios";
-import useFunction from "./useFuction";
-import { Dialog, DialogTitle, DialogContent, DialogActions, Button, makeStyles } from '@material-ui/core';
+import useFunction from "../useFuction";
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import 'react-perfect-scrollbar/dist/css/styles.css';
+import adjustSize from "../../utils/adjustSize";
+import convertToDate from "../../utils/covertToDate";
+import AskingPrice from "./child/AskingPrice";
 
 export default function PriceDetail() {
   const dispatch = useDispatch();
 
-  const { buyCrypto_unSigned, sellCrypto_unSigned } = useFunction();
+  const { buyCrypto_unSigned,
+    sellCrypto_unSigned,
+    selectAskingPrice,
+    selectClosedPrice
+  } = useFunction();
+
+  const allCrypto = useSelector((state: RootState) => state.allCrypto);
+  const selectedCrypto = useSelector((state: RootState) => state.selectedCrypto);
+
+  useEffect(() => {
+    if (selectedCrypto.market) {
+      selectAskingPrice(selectedCrypto.market);
+      selectClosedPrice(selectedCrypto.market);
+    }
+  }, [allCrypto]);
 
   const sectionChange = useSelector((state: RootState) => state.sectionChange);
   const askingData_unSigned = useSelector((state: RootState) => state.askingData_unSigned);
@@ -164,9 +180,11 @@ export default function PriceDetail() {
     dispatch(setCloseHide(!closeHide))
   }
 
+
+
   return (
     <>
-      <ModalComplete completeModalOpen={completeModalOpen} setCompleteModalOpen={setCompleteModalOpen} completeToggleModal={completeToggleModal} />
+      {/* <ModalComplete completeModalOpen={completeModalOpen} setCompleteModalOpen={setCompleteModalOpen} completeToggleModal={completeToggleModal} /> */}
       <PerfectScrollbar
         className='scrollBar-priceDetail hide-scrollBar'>
         <div className="asking-section">
@@ -229,178 +247,7 @@ export default function PriceDetail() {
   );
 }
 
-// bid = 매수, ask = 매도
-const AskingPrice = () => {
-
-  const dispatch = useDispatch();
-
-  const asking_data = useSelector((state: RootState) => state.asking_data);
-  const cr_market_selected = useSelector((state: RootState) => state.cr_market_selected);
-  const asking_dateTime = useSelector((state: RootState) => state.asking_dateTime);
-  const asking_totalAskSize = useSelector((state: RootState) => state.asking_totalAskSize);
-  const asking_totalBidSize = useSelector((state: RootState) => state.asking_totalBidSize);
-  const askHide = useSelector((state: RootState) => state.askHide);
-
-  const [prevData, setPrevData] = useState<AskingData[]>();
-
-  const [differences_ask, setDifferences_ask] = useState<{
-    new_ask_price: number,
-    new_ask_size: number
-  }[]>([]);
-
-  const [differences_bid, setDifferences_bid] = useState<{
-    new_bid_price: number,
-    new_bid_size: number,
-  }[]>([]);
-
-  // 호가 수량의 변화를 감지하고 이전 값과 비교하여 변화가 생긴 값을 상태에 업데이트
-  useEffect(() => {
-    setPrevData(asking_data);  // state의 업데이트는 비동기적이기 때문에 값이 즉시 바뀌지 않음. 그러므로 이 useEffect() 안에서 prevData는 아직 이전의 값을 가지고 있기 때문에 cr_price와 prevData는 다른 값을 가짐. (cr_price = 현재값, prevData = 이전값)
-
-    let newDifferences_ask: {
-      new_ask_price: number,
-      new_ask_size: number,
-    }[] = [];
-    let newDifferences_bid: {
-      new_bid_price: number,
-      new_bid_size: number,
-    }[] = [];
-
-    if (prevData !== undefined) {
-      prevData.forEach((value, index) => {
-        if (value.ask_size !== asking_data[index].ask_size) {
-          newDifferences_ask.push({ new_ask_price: asking_data[index].ask_price, new_ask_size: asking_data[index].ask_size });
-        }
-        if (value.bid_size !== asking_data[index].bid_size) {
-          newDifferences_bid.push({ new_bid_price: asking_data[index].bid_price, new_bid_size: asking_data[index].bid_size });
-        }
-      })
-    }
-
-    setDifferences_ask(newDifferences_ask)
-    setDifferences_bid(newDifferences_bid);
-  }, [asking_data, prevData])
-
-  if (asking_dateTime) {
-    const date = new Date(asking_dateTime);
-    if (!isNaN(date.getTime())) {
-      let newDateString = new Intl.DateTimeFormat('ko-KR', {
-        month: '2-digit',
-        day: '2-digit',
-        hour: '2-digit',
-        minute: '2-digit',
-        hour12: false,  // 24시간 형식
-      }).format(date);
-
-      dispatch(setAsking_dateTime(
-        newDateString.replace(". ", "/").replace(".", "").replace("오전 ", "").replace("오후 ", "")
-      ));
-    }
-  }
-
-  return (
-    <>
-      {
-        !askHide ?
-          <>
-            <table className="askingPrice-table lightMode">
-              <thead className="lightMode-title">
-                <tr>
-                  <th>등록시간</th>
-                  <th>호가</th>
-                  <th>
-                    수량<span>({(cr_market_selected).slice(4)})</span>
-                  </th>
-                </tr>
-              </thead>
-            </table>
-            <PerfectScrollbar id="scrollBar-askingPriceTable">
-              <table className="askingPrice-table lightMode">
-                <tbody>
-                  {
-                    asking_data.map((item, i) => {
-                      // 이전 호가와 현재 호가를 비교한 값을 이용 - 변경된 호가가 현재 state를 순회하면서 일치하는 값에 대해서 스타일 지정
-                      let isChanged_bid = differences_bid.some((value, index) => {
-                        return value.new_bid_size === item.bid_size;
-                      })
-                      let bidClass = isChanged_bid ? 'change-bid' : '';
-                      const percentage = (item.bid_size / asking_totalBidSize) * 100;  // 전체호가를 각각 호가로 나누어 비울을 환산한 후 해당 비율만큼 스타일 설정
-
-                      let str_bid_size;
-
-                      // 14자리 이상의 정수인 경우, 14자리로 줄이고 문자열로 반환
-                      if (item.bid_size > 9999999999999) {
-                        str_bid_size = String(Math.floor(item.bid_size));
-                      }
-                      // 소수점을 포함하여 14자리를 넘어갈 수 있는 경우를 처리
-                      else {
-                        str_bid_size = String(item.bid_size);
-                        str_bid_size = str_bid_size.substring(0, 14);
-                      }
-
-                      // 문자열의 끝이 '.'로 끝난다면 .을 제거
-                      if (str_bid_size.endsWith('.')) {
-                        str_bid_size = str_bid_size.slice(0, -1);
-                      }
-
-                      return (
-                        <tr key={i}>
-                          <td>{asking_dateTime}</td>
-                          <td>{(item.bid_price).toLocaleString()}</td>
-                          <td style={{ background: `linear-gradient(270deg, rgba(34,171,148, .2) ${percentage}%, transparent ${percentage}%)` }} className={bidClass}>{str_bid_size}
-                          </td>
-                        </tr>
-                      )
-                    })
-                  }
-                  {
-                    !askHide ?
-                      asking_data.map((item, i) => {
-                        // 이전 호가와 현재 호가를 비교한 값을 이용 - 변경된 호가가 현재 state를 순회하면서 일치하는 값에 대해서 스타일 지정
-                        let isChange_ask = differences_ask.some((value, index) => {
-                          return value.new_ask_size === item.ask_size;
-                        })
-                        let askClass = isChange_ask ? 'change-ask' : '';
-                        const percentage = (item.ask_size / asking_totalAskSize) * 100;  // 전체호가를 각각 호가로 나누어 비울을 환산한 후 해당 비율만큼 스타일 설정
-
-                        let str_ask_size;
-                        // 14자리 이상의 정수인 경우, 14자리로 줄이고 문자열로 반환
-                        if (item.ask_size > 9999999999999) {
-                          str_ask_size = String(Math.floor(item.ask_size));
-                        }
-                        // 소수점을 포함하여 14자리를 넘어갈 수 있는 경우를 처리
-                        else {
-                          str_ask_size = String(item.ask_size);
-                          str_ask_size = str_ask_size.substring(0, 14);
-                        }
-
-                        // 문자열의 끝이 '.'로 끝난다면 .을 제거
-                        if (str_ask_size.endsWith('.')) {
-                          str_ask_size = str_ask_size.slice(0, -1)
-                        }
-
-                        return (
-                          <tr key={i}>
-                            <td>{asking_dateTime}</td>
-                            <td>{(item.ask_price).toLocaleString()}</td>
-                            <td style={{ background: `linear-gradient(270deg, rgba(242,54,69, .2) ${percentage}%, transparent ${percentage}%)` }} className={askClass}>{str_ask_size}</td>
-                          </tr>
-                        )
-                      }) :
-                      null
-                  }
-                </tbody>
-              </table>
-            </PerfectScrollbar>
-          </> :
-          <div className="hide-element">...</div>
-      }
-    </>
-  )
-}
-
 const ClosedPrice = () => {
-
   const closed_data = useSelector((state: RootState) => state.closed_data);
   const cr_market_selected = useSelector((state: RootState) => state.cr_market_selected);
   const closeHide = useSelector((state: RootState) => state.closeHide);
@@ -427,32 +274,9 @@ const ClosedPrice = () => {
                 <tbody>
                   {
                     closed_data.map((item, i) => {
-                      const date = new Date(item.timestamp);
-                      let trade_time = new Intl.DateTimeFormat('ko-KR', {
-                        month: '2-digit',
-                        day: '2-digit',
-                        hour: '2-digit',
-                        minute: '2-digit',
-                        hour12: false,  // 24시간 형식
-                      }).format(date);
-                      trade_time = trade_time.replace(". ", "/").replace(".", "").replace("오전 ", "").replace("오후 ", "")
+                      const trade_time = convertToDate(item.timestamp)
 
-                      let str_trade_volume;
-
-                      // 14자리 이상의 정수인 경우, 14자리로 줄이고 문자열로 반환
-                      if (item.trade_volume > 9999999999999) {
-                        str_trade_volume = String(Math.floor(item.trade_volume));
-                      }
-                      // 소수점을 포함하여 14자리를 넘어갈 수 있는 경우를 처리
-                      else {
-                        str_trade_volume = String(item.trade_volume);
-                        str_trade_volume = str_trade_volume.substring(0, 14);
-                      }
-
-                      // 문자열의 끝이 '.'로 끝난다면 .을 제거
-                      if (str_trade_volume.endsWith('.')) {
-                        str_trade_volume = str_trade_volume.slice(0, -1)
-                      }
+                      const str_trade_volume = adjustSize(item.trade_volume);
 
                       return (
                         <tr key={i}>
@@ -525,7 +349,7 @@ const BuyingSection = () => {
   // 매수가가 바뀌면 그에 따라 입력값도 변경
   useEffect(() => {
     setBuyingInputValue(buyingPrice.toString())
-  }, [buyingPrice])
+  }, [buyingPrice]);
 
   // 선택 화폐가 바뀔 때마다 매수 가격을 해당 화폐의 가격으로 변경하고, 주문 수량 및 총액을 초기화
   useEffect(() => {
@@ -642,8 +466,8 @@ const BuyingSection = () => {
 
   return (
     <>
-      <ModalSumbit modalOpen={modalOpen} setModalOpen={setModalOpen} toggleModal={toggleModal} />
-      <ModalComplete completeModalOpen={completeModalOpen} setCompleteModalOpen={setCompleteModalOpen} completeToggleModal={completeToggleModal} />
+      {/* <ModalSumbit modalOpen={modalOpen} setModalOpen={setModalOpen} toggleModal={toggleModal} />
+      <ModalComplete completeModalOpen={completeModalOpen} setCompleteModalOpen={setCompleteModalOpen} completeToggleModal={completeToggleModal} /> */}
       <table className="trading-headTable">
         <tbody>
           <tr className="trading-choice">
@@ -1288,8 +1112,8 @@ const SellingSection = () => {
 
   return (
     <>
-      <ModalSumbit modalOpen={modalOpen} setModalOpen={setModalOpen} toggleModal={toggleModal} />
-      <ModalComplete completeModalOpen={completeModalOpen} setCompleteModalOpen={setCompleteModalOpen} completeToggleModal={completeToggleModal} />
+      {/* <ModalSumbit modalOpen={modalOpen} setModalOpen={setModalOpen} toggleModal={toggleModal} />
+      <ModalComplete completeModalOpen={completeModalOpen} setCompleteModalOpen={setCompleteModalOpen} completeToggleModal={completeToggleModal} /> */}
       <table className="trading-headTable">
         <tr className="trading-choice">
           <td className='radio'>
@@ -2058,90 +1882,90 @@ const TradeHistory = () => {
   )
 }
 
-interface ModalProps {
-  modalOpen: boolean;
-  setModalOpen: (open: boolean) => void;
-  toggleModal: () => void;
-}
+// interface ModalProps {
+//   modalOpen: boolean;
+//   setModalOpen: (open: boolean) => void;
+//   toggleModal: () => void;
+// }
 
-interface CompleteModalProps {
-  completeModalOpen: boolean;
-  setCompleteModalOpen: (open: boolean) => void;
-  completeToggleModal: () => void;
-}
+// interface CompleteModalProps {
+//   completeModalOpen: boolean;
+//   setCompleteModalOpen: (open: boolean) => void;
+//   completeToggleModal: () => void;
+// }
 
-const useStyles = makeStyles({
-  dialog: {
-    '& .MuiDialog-paper': {
-      width: '600px',
-      height: '200px'
-    },
-    '& .MuiDialogTitle-root .MuiTypography-root': {
-      marginTop: '10px',
-      marginLeft: '10px',
-      fontWeight: 'bold',
-    },
-    '& .MuiDialogContent-root': {
-      marginTop: '-10px',
-      marginLeft: '10px',
-    },
-    '& .MuiDialogActions-root': {
-      marginBottom: '10px',
-    },
-    '& .MuiDialogActions-root .MuiButton-root': {
-      fontWeight: 'bold',
-      fontSize: '14.5px',
-    }
-  },
-});
+// const useStyles = makeStyles({
+//   dialog: {
+//     '& .MuiDialog-paper': {
+//       width: '600px',
+//       height: '200px'
+//     },
+//     '& .MuiDialogTitle-root .MuiTypography-root': {
+//       marginTop: '10px',
+//       marginLeft: '10px',
+//       fontWeight: 'bold',
+//     },
+//     '& .MuiDialogContent-root': {
+//       marginTop: '-10px',
+//       marginLeft: '10px',
+//     },
+//     '& .MuiDialogActions-root': {
+//       marginBottom: '10px',
+//     },
+//     '& .MuiDialogActions-root .MuiButton-root': {
+//       fontWeight: 'bold',
+//       fontSize: '14.5px',
+//     }
+//   },
+// });
 
-const ModalSumbit: React.FC<ModalProps> = ({ modalOpen, toggleModal }) => {
+// const ModalSumbit: React.FC<ModalProps> = ({ modalOpen, toggleModal }) => {
 
-  const classes = useStyles();
-  const sectionChange = useSelector((state: RootState) => state.sectionChange);
+//   const classes = useStyles();
+//   const sectionChange = useSelector((state: RootState) => state.sectionChange);
 
-  return (
-    <div>
-      <Dialog open={modalOpen} onClose={toggleModal} className={classes.dialog} maxWidth={false}>
-        <DialogTitle>안내</DialogTitle>
-        <DialogContent>
-          {
-            // JSX에서는 +등으로 문자열을 묶을 수 없으므로 하나의 배열로 반환
-            sectionChange === '매수' ?
-              ["매수 요청이 정상적으로 완료되었습니다.", <br key="buy" />,
-                "요청하신 매수 가격과 일치하는 매수 요청이 발생하면 거래가 완료됩니다."] :
-              ["매도 요청이 정상적으로 완료되었습니다.", <br key="sell" />,
-                "요청하신 매도 가격과 일치하는 매도 요청이 발생하면 거래가 완료됩니다."]
-          }
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={toggleModal} color="primary">확인</Button>
-        </DialogActions>
-      </Dialog>
-    </div>
-  )
-}
+//   return (
+//     <div>
+//       <Dialog open={modalOpen} onClose={toggleModal} className={classes.dialog} maxWidth={false}>
+//         <DialogTitle>안내</DialogTitle>
+//         <DialogContent>
+//           {
+//             // JSX에서는 +등으로 문자열을 묶을 수 없으므로 하나의 배열로 반환
+//             sectionChange === '매수' ?
+//               ["매수 요청이 정상적으로 완료되었습니다.", <br key="buy" />,
+//                 "요청하신 매수 가격과 일치하는 매수 요청이 발생하면 거래가 완료됩니다."] :
+//               ["매도 요청이 정상적으로 완료되었습니다.", <br key="sell" />,
+//                 "요청하신 매도 가격과 일치하는 매도 요청이 발생하면 거래가 완료됩니다."]
+//           }
+//         </DialogContent>
+//         <DialogActions>
+//           <Button onClick={toggleModal} color="primary">확인</Button>
+//         </DialogActions>
+//       </Dialog>
+//     </div>
+//   )
+// }
 
-const ModalComplete: React.FC<CompleteModalProps> = ({ completeModalOpen, completeToggleModal }) => {
+// const ModalComplete: React.FC<CompleteModalProps> = ({ completeModalOpen, completeToggleModal }) => {
 
-  const classes = useStyles();
-  const sectionChange = useSelector((state: RootState) => state.sectionChange);
+//   const classes = useStyles();
+//   const sectionChange = useSelector((state: RootState) => state.sectionChange);
 
-  return (
-    <div>
-      <Dialog open={completeModalOpen} onClose={completeToggleModal} className={classes.dialog} maxWidth={false}>
-        <DialogTitle>안내</DialogTitle>
-        <DialogContent>
-          {
-            sectionChange === '매수' ?
-              "성공적으로 화폐를 매수했습니다." :
-              "성공적으로 화폐를 매도했습니다."
-          }
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={completeToggleModal} color="primary">확인</Button>
-        </DialogActions>
-      </Dialog>
-    </div>
-  )
-}
+//   return (
+//     <div>
+//       <Dialog open={completeModalOpen} onClose={completeToggleModal} className={classes.dialog} maxWidth={false}>
+//         <DialogTitle>안내</DialogTitle>
+//         <DialogContent>
+//           {
+//             sectionChange === '매수' ?
+//               "성공적으로 화폐를 매수했습니다." :
+//               "성공적으로 화폐를 매도했습니다."
+//           }
+//         </DialogContent>
+//         <DialogActions>
+//           <Button onClick={completeToggleModal} color="primary">확인</Button>
+//         </DialogActions>
+//       </Dialog>
+//     </div>
+//   )
+// }

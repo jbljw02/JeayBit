@@ -1,0 +1,28 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    padding: 5px 8px 5px 10px;
+    width: auto;
+    height: 100%;
+}
+
+.title {
+    font-weight: 700;
+    font-size: 20px;
+    margin-bottom: 15px;
+}
+
+.content {
+    font-size: 15px;
+}
+
+button {
+    border: none;
+    background-color: #fff;
+    color: #51518b;
+    align-self: flex-end;
+    font-weight: 600;
+    font-size: 15.5px;
+    margin-top: auto;
+    margin-bottom: 5px;
+}

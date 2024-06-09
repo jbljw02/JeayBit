@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState, setStar, setBuyingPrice, setSellingPrice, setCr_market_selected, setCr_name_selected, setFilteredData, setLogInEmail, setLogInUser, setSortedData, setSelectedCrypto } from "../../../redux/store";
-import useFunction from "../../useFuction";
+import { RootState, setStar, setBuyingPrice, setSellingPrice, setCr_market_selected, setCr_name_selected, setFilteredData, setLogInEmail, setLogInUser, setSortedData, setSelectedCrypto } from "../../../../redux/store";
+import useFunction from "../../../useFuction";
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import 'react-perfect-scrollbar/dist/css/styles.css';
-import starOn from '../../../assets/images/star-on.png'
-import starOff from '../../../assets/images/star-off.png'
-import { Crypto } from "../../../redux/store";
+import starOn from '../../../../assets/images/star-on.png'
+import starOff from '../../../../assets/images/star-off.png'
+import { Crypto } from "../../../../redux/store";
 
 export default function ListTbody() {
     const dispatch = useDispatch();
@@ -154,6 +154,10 @@ export default function ListTbody() {
                             let priceClass_rise = isChanged ? "change-price-rise" : "";
                             let priceClass_fall = isChanged ? "change-price-fall" : "";
 
+                            const cryptoPrice = item.price.toLocaleString(); // 화폐 가격
+                            const changeRate = (item.change_rate * 100).toFixed(2); // 화폐 변화율
+                            const changePrice = item.change_price.toLocaleString(); // 화폐 변화량
+
                             // 화폐의 보유량 설정
                             let userOwnedQuantity;
                             if (listCategory === '보유') {
@@ -173,10 +177,6 @@ export default function ListTbody() {
                                 }
                             }
 
-                            const cryptoPrice = item.price.toLocaleString(); // 화폐 가격
-                            const changeRate = (item.change_rate * 100).toFixed(2); // 화폐 변화율
-                            const changePrice = item.change_price.toLocaleString(); // 화폐 변화량
-
                             return (
                                 <tr
                                     key={i}
@@ -184,9 +184,7 @@ export default function ListTbody() {
                                     <td className="td-name lightMode">
                                         <span className="span-star">
                                             <img
-                                                onClick={(e) => {
-                                                    starClick(i, e);
-                                                }}
+                                                onClick={(e) => { starClick(i, e) }}
                                                 src={item.is_favorited ? starOn : starOff}
                                                 alt="star"
                                             />
@@ -198,6 +196,7 @@ export default function ListTbody() {
                                     </td>
                                     {/* 전일 대비 가격이 상승했다면 청색, 하락했다면 적색, 동일하다면 검정색 */}
                                     {
+                                        // 가격
                                         item.change === "RISE" ? (
                                             <td className="lightMode">
                                                 <span className={`td-rise ${priceClass_rise}`}>
@@ -218,6 +217,7 @@ export default function ListTbody() {
                                                     </td>
                                                 )}
                                     {
+                                        // 변화율 및 변화량
                                         item.change === "RISE" ? (
                                             <td className="lightMode">
                                                 <span className="td-rise">
@@ -242,6 +242,7 @@ export default function ListTbody() {
                                                         </span>
                                                     </td>
                                                 )}
+                                    {/* 보유수량 혹은 거래대금 */}
                                     <td className="lightMode">
                                         {
                                             listCategory === '보유' ?

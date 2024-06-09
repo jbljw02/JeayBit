@@ -32,6 +32,7 @@ export type AskingData = {
   ask_size: number,
   bid_price: number,
   bid_size: number,
+  timestamp: number,
 }
 
 export type Market = {

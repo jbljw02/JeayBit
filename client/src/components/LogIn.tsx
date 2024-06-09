@@ -7,7 +7,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState, setLogInEmail, setLogInUser } from "../redux/store";
 import { csrftoken } from './csrftoken';
 import { setUser } from "../redux/features/userSlice";
-import Cookies from "js-cookie";
 
 export default function LogIn() {
 

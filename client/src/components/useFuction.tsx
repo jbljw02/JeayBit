@@ -1,8 +1,7 @@
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
-import { setUserWallet, RootState, setOwnedCrypto, setUserTradeHistory, setUserTradeHistory_unSigned, setIsBuying, setAsking_data, setAsking_dateTime, setAsking_totalAskSize, setAsking_totalBidSize, setAskingData_unSigned, setIsSelling, setTheme, setClosed_data, setCandle_per_minute, setCandle_per_date, setCandle_per_week, setCandle_per_month, setCr_change, setCr_change_price, setCr_change_rate, setCr_high_price, setCr_low_price, setCr_market, setCr_name, setCr_open_price, setCr_price, setCr_trade_price, setCr_trade_volume, setCandle_per_date_BTC, setCr_market_selected, setCr_name_selected, setFavoriteCrypto, setAllCrypto, setCsrfToken } from "../redux/store";
+import { setUserWallet, RootState, setOwnedCrypto, setUserTradeHistory, setUserTradeHistory_unSigned, setIsBuying, setAsking_data, setAsking_dateTime, setAsking_totalAskSize, setAsking_totalBidSize, setAskingData_unSigned, setIsSelling, setTheme, setClosed_data, setCandle_per_minute, setCandle_per_date, setCandle_per_week, setCandle_per_month, setCr_change, setCr_change_price, setCr_change_rate, setCr_high_price, setCr_low_price, setCr_market, setCr_name, setCr_open_price, setCr_price, setCr_trade_price, setCr_trade_volume, setCandle_per_date_BTC, setCr_market_selected, setCr_name_selected, setFavoriteCrypto, setAllCrypto, setCsrfToken, AskingData } from "../redux/store";
 import { useEffect } from "react";
-import Cookies from 'js-cookie';
 
 export default function useFunction() {
 
@@ -211,7 +210,6 @@ export default function useFunction() {
   // 선택된 화폐에 대한 호가내역 호출
   const selectAskingPrice = (market: string) => {
     (async (market) => {
-      console.log("마켓: ", market);
       try {
         const response = await axios.post(
           "http://127.0.0.1:8000/asking_price/",
@@ -225,16 +223,29 @@ export default function useFunction() {
           }
         );
 
-        // console.log("호가내역 : ", response.data[0].orderbook_units);
-        dispatch(setAsking_data(response.data[0].orderbook_units));
-        dispatch(setAsking_dateTime(response.data[0].timestamp));
+        const orderbookUnits = response.data[0].orderbook_units;
+        const timestamp = response.data[0].timestamp;
+
+        const askingData = orderbookUnits.map((item: AskingData) => (
+          {
+            ...item,
+            timestamp: timestamp,
+          }));
+
+        dispatch(setAsking_data(askingData));
         dispatch(setAsking_totalAskSize(response.data[0].total_ask_size));
         dispatch(setAsking_totalBidSize(response.data[0].total_bid_size));
       } catch (error) {
-        // console.error("호가내역 전송 실패", error);
+        throw error;
       }
     })(market);
   };
+
+  // useEffect(() => {
+  //   setInterval(() => {
+  //     selectAskingPrice('KRW-BTC')
+  //   }, 1000)
+  // }, []);
 
   // 미체결 화폐에 대한 호가내역 호출
   const selectAskingPrice_unSigned = (market: string) => {
@@ -360,7 +371,7 @@ export default function useFunction() {
               },
             }
           );
-          
+
           dispatch(setCandle_per_minute(response.data));
         } catch (error) {
           throw error;
@@ -448,7 +459,7 @@ export default function useFunction() {
           throw error;
         }
       })(email, cryptoName);
-    } 
+    }
   };
 
 

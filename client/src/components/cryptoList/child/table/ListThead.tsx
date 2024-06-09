@@ -1,10 +1,10 @@
 import { useDispatch, useSelector } from "react-redux";
-import { RootState, setFilteredData, setSortedData } from "../../../redux/store";
-import img_sort from "../../../assets/images/sort.png";
-import img_sort_up from "../../../assets/images/sort-up.png";
-import img_sort_down from "../../../assets/images/sort-down.png";
+import { RootState, setFilteredData, setSortedData } from "../../../../redux/store";
+import img_sort from "../../../../assets/images/sort.png";
+import img_sort_up from "../../../../assets/images/sort-up.png";
+import img_sort_down from "../../../../assets/images/sort-down.png";
 import { useEffect, useState } from "react";
-import { Crypto } from "../../../redux/store";
+import { Crypto } from "../../../../redux/store";
 
 export default function ListThead() {
     const dispatch = useDispatch();

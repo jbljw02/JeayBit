@@ -1,7 +1,7 @@
-import ListCategory from "./ListCategory";
-import ListSearch from "./ListSearch";
-import ListTbody from "./table/ListTbody";
-import ListThead from "./table/ListThead";
+import ListCategory from "./child/ListCategory";
+import ListSearch from "./child/ListSearch";
+import ListTbody from "./child/table/ListTbody";
+import ListThead from "./child/table/ListThead";
 
 export default function CryptoList() {
     return (
