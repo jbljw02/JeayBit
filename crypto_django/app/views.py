@@ -52,7 +52,7 @@ def candle_per_minute(request):
         return Response(data, status=200)
 
     except Exception as e:
-        return JsonResponse({"error: ": "분/시간당 캔들 호출 실패"}, status=500)
+        return Response({"error: ": "분/시간당 캔들 호출 실패"}, status=500)
 
 
 # 1일 기준 차트

@@ -7,20 +7,20 @@ import PriceDetail from '../components/priceDetail/PriceDetail';
 import SignUp from '../components/SignUp';
 import TradingView from '../components/TradingView';
 import { useEffect } from 'react';
-import useFunction from '../components/useFuction';
+import useFunction from '../utils/useFuction';
 import { useDispatch } from 'react-redux';
 import { setUser } from '../redux/store';
 
 export default function Home() {
     const dispatch = useDispatch();
 
-    const { checkLogin } = useFunction();
+    const { checkLogin, getInitialData } = useFunction();
 
     // 마운트 초기에 사용자의 로그인 여부를 체크
     useEffect(() => {
         (async () => {
             const response = await checkLogin();
-            if (response.is_logged_in) {
+            if (response && response.is_logged_in) {
                 dispatch(setUser({
                     name: response.name,
                     email: response.email,
@@ -33,6 +33,11 @@ export default function Home() {
                 }))
             }
         })();
+    }, []);
+
+    // 초기 데이터를 요청하여 selectedCrypto의 초기값을 비트코인으로 설정
+    useEffect(() => {
+        getInitialData();
     }, []);
 
     return (

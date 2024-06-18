@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { RootState, setIsSelling, setSellingPrice } from "../../../../redux/store";
-import useFunction from "../../../useFuction";
+import useFunction from "../../../../utils/useFuction";
 
 export default function SellingSectioin() {
     const dispatch = useDispatch();
@@ -30,11 +30,9 @@ export default function SellingSectioin() {
     const [completeModalOpen, setCompleteModalOpen] = useState<boolean>(false);
 
     // 화폐 거래내역에 '매수'로 저장할지 '매도'로 저장할지를 지정
-    // eslint-disable-next-line
     const [tradeCategory, setTradeCategory] = useState<string>('매도');
 
     // 현재 시간을 저장하는 state
-    // eslint-disable-next-line
     const [time, setTime] = useState(new Date());
 
     const toggleModal = () => {
@@ -201,6 +199,7 @@ export default function SellingSectioin() {
         }
     }
 
+
     return (
         <>
             {/* <ModalSumbit modalOpen={modalOpen} setModalOpen={setModalOpen} toggleModal={toggleModal} />
@@ -244,9 +243,9 @@ export default function SellingSectioin() {
                                 <td className="trading-availableTrade">
                                     {
                                         // 보유수량이 undefined 또는 null일 때 0 반환
-                                        (Array.isArray(ownedCrypto) && ownedCrypto.find((item) => item.crypto_name === cr_name_selected)?.quantity) || '0'
+                                        (Array.isArray(ownedCrypto) && ownedCrypto.find((item) => item.crypto_name === selectedCrypto.name)?.quantity) || '0'
                                     }
-                                    <span>{(cr_market_selected).slice(4)}</span>
+                                    <span>{(selectedCrypto.market).slice(4)}</span>
                                 </td>
                             </tr>
                             <tr>

@@ -3,7 +3,7 @@ import { RootState, setChartSortDate, setChartSortTime, setSelectedChartSort } f
 import price_rise from '../assets/images/price-up.png'
 import price_fall from '../assets/images/price-down.png'
 import TradingChart from "./TradingChart";
-import useFunction from "./useFuction";
+import useFunction from "../utils/useFuction";
 import { useEffect } from "react";
 
 export default function TradingView() {

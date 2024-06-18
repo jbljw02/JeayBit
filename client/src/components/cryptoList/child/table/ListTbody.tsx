@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState, setStar, setBuyingPrice, setSellingPrice, setCr_market_selected, setCr_name_selected, setFilteredData, setLogInEmail, setLogInUser, setSortedData, setSelectedCrypto } from "../../../../redux/store";
-import useFunction from "../../../useFuction";
+import useFunction from "../../../../utils/useFuction";
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import 'react-perfect-scrollbar/dist/css/styles.css';
 import starOn from '../../../../assets/images/star-on.png'

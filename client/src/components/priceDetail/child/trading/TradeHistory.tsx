@@ -1,8 +1,8 @@
 import axios from "axios";
 import { useState } from "react";
 import { useSelector } from "react-redux";
-import { RootState } from "../../../../redux/store";
-import useFunction from "../../../useFuction";
+import { RootState, setBuyingPrice, setIsBuying } from '../../../../redux/store'
+import useFunction from "../../../../utils/useFuction";
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import 'react-perfect-scrollbar/dist/css/styles.css';
 
@@ -107,12 +107,6 @@ export default function TradeHistory() {
             </table>
 
             <table className="table-tradingHistory" id={`${user.email !== '' ? 'historyHead' : ''}`}>
-                {/* <colgroup>
-            <col width={75} />
-            <col width={75} />
-            <col width={80} />
-            <col width={85} />
-          </colgroup> */}
                 <thead>
                     <tr>
                         <th>주문시간</th>
@@ -130,12 +124,6 @@ export default function TradeHistory() {
             </table>
             <PerfectScrollbar id="scrollBar-tradingHistoryTable">
                 <table className="table-tradingHistory" id="historyBody">
-                    {/* <colgroup>
-              <col width={75} />
-              <col width={75} />
-              <col width={80} />
-              <col width={85} />
-            </colgroup> */}
                     <tbody>
                         {
                             // 체결된 화폐들의 거래내역
@@ -194,8 +182,7 @@ export default function TradeHistory() {
                                                         }`}
                                                     id={`${isLastItem ? 'last-row' : ''}`}
                                                     key={i}
-                                                    onClick={() => clickUnSigned(item.id, i)}
-                                                >
+                                                    onClick={() => clickUnSigned(item.id, i)}>
                                                     <td>
                                                         {
                                                             item.trade_time !== undefined ?

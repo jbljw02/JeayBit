@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
-import { setUserWallet, RootState, setOwnedCrypto, setUserTradeHistory, setUserTradeHistory_unSigned, setIsBuying, setAsking_data, setAsking_dateTime, setAsking_totalAskSize, setAsking_totalBidSize, setAskingData_unSigned, setIsSelling, setTheme, setClosed_data, setCandle_per_minute, setCandle_per_date, setCandle_per_week, setCandle_per_month, setCr_change, setCr_change_price, setCr_change_rate, setCr_high_price, setCr_low_price, setCr_market, setCr_name, setCr_open_price, setCr_price, setCr_trade_price, setCr_trade_volume, setCandle_per_date_BTC, setCr_market_selected, setCr_name_selected, setFavoriteCrypto, setAllCrypto, setCsrfToken, AskingData } from "../redux/store";
+import { setUserWallet, RootState, setOwnedCrypto, setUserTradeHistory, setUserTradeHistory_unSigned, setIsBuying, setAsking_data, setAsking_dateTime, setAsking_totalAskSize, setAsking_totalBidSize, setAskingData_unSigned, setIsSelling, setTheme, setClosed_data, setCandle_per_minute, setCandle_per_date, setCandle_per_week, setCandle_per_month, setCr_change, setCr_change_price, setCr_change_rate, setCr_high_price, setCr_low_price, setCr_market, setCr_name, setCr_open_price, setCr_price, setCr_trade_price, setCr_trade_volume, setCandle_per_date_BTC, setCr_market_selected, setCr_name_selected, setFavoriteCrypto, setAllCrypto, setCsrfToken, AskingData, setSelectedCrypto } from "../redux/store";
 import { useEffect } from "react";
 
 export default function useFunction() {
@@ -17,6 +17,7 @@ export default function useFunction() {
         withCredentials: true,
       });
       dispatch(setAllCrypto(response.data.all_crypto));
+      // dispatch(setSelectedCrypto(response.data.all_crypto[0]));
       dispatch(setCr_name(response.data.name));
       dispatch(setCr_price(response.data.price));
       dispatch(setCr_market(response.data.market));
@@ -73,16 +74,20 @@ export default function useFunction() {
 
 
   // 화면에 보여질 초기 화폐의 차트(비트코인)
-  const initialData = async () => {
+  const getInitialData = async () => {
     try {
-      const response = await axios.get("http://127.0.0.1:8000/get_data/");
-      dispatch(setCandle_per_date_BTC(response.data.candle_btc_date));
-      dispatch(setCr_market_selected(response.data.market[0]));
-      dispatch(setCr_name_selected(response.data.name[0]));
+      const response = await axios.post("http://127.0.0.1:8000/get_all_crypto/", {}, {
+        withCredentials: true,
+      });
+      dispatch(setSelectedCrypto(response.data.all_crypto[0]));
+      // dispatch(setCandle_per_date_BTC(response.data.candle_btc_date));
+      // dispatch(setCr_market_selected(response.data.market[0]));
+      // dispatch(setCr_name_selected(response.data.name[0]));
     } catch (error) {
-      // console.error(error);
+      throw error;
     }
   };
+
 
   // 사용자가 소유하고 있는 화폐의 정보를 받아옴
   const getOwnedCrypto = (email: string) => {
@@ -462,66 +467,29 @@ export default function useFunction() {
     }
   };
 
-
-  const themeChange = () => {
-
-    dispatch(setTheme(!theme));
-    let generalTheme = document.querySelectorAll(".lightMode, .darkMode");
-    let titleTheme = document.querySelectorAll(
-      ".lightMode-title, .darkMode-title"
-    );
-    let titleImgTheme = document.querySelectorAll(
-      ".title-img-light, .title-img-dark"
-    );
-    let hoverTheme = document.querySelectorAll(
-      ".hover-lightMode, .hover-darkMode"
-    );
-
-    // 라이트모드 <-> 다크모드 순회
-    generalTheme.forEach((element) => {
-      if (!theme) {
-        element.classList.remove("lightMode");
-        element.classList.add("darkMode");
-      } else {
-        element.classList.remove("darkMode");
-        element.classList.add("lightMode");
+  // 호가와 구매가가 일치할 때
+  const buyCrypto = (email: string, cryptoName: string, cryptoQuantity: number, buyTotal: number) => {
+    (async (email, cryptoName, cryptoQuantity, buyTotal) => {
+      try {
+        await axios.post("http://127.0.0.1:8000/buy_crypto/", {
+          email: email,
+          crypto_name: cryptoName,
+          crypto_quantity: cryptoQuantity,
+          buy_total: buyTotal,
+        });
+        // console.log("구매 화폐 전송 성공", response.data);
+        getBalance(email);  // 매수에 사용한 금액만큼 차감되기 때문에 잔고 업데이트
+        getOwnedCrypto(email);  // 소유 화폐가 새로 추가될 수 있으니 업데이트
+        getTradeHistory(email)  // 매수에 성공했으니 거래내역 업데이트
+      } catch (error) {
+        // console.log("구매 화폐 전송 실패: ", error)
       }
-    });
-
-    titleTheme.forEach((element) => {
-      if (!theme) {
-        element.classList.remove("lightMode-title");
-        element.classList.add("darkMode-title");
-      } else {
-        element.classList.remove("darkMode-title");
-        element.classList.add("lightMode-title");
-      }
-    });
-
-    titleImgTheme.forEach((element) => {
-      if (!theme) {
-        element.classList.remove("title-img-light");
-        element.classList.add("title-img-dark");
-      } else {
-        element.classList.remove("title-img-dark");
-        element.classList.add("title-img-light");
-      }
-    });
-
-    hoverTheme.forEach((element) => {
-      if (!theme) {
-        element.classList.remove("hover-lightMode");
-        element.classList.add("hover-darkMode");
-      } else {
-        element.classList.remove("hover-darkMode");
-        element.classList.add("hover-lightMode");
-      }
-    });
-  };
+    })(email, cryptoName, cryptoQuantity, buyTotal);
+  }
 
   return {
     getAllCrypto,
-    initialData,
+    getInitialData,
     getBalance,
     getOwnedCrypto,
     addTradeHistory,
@@ -531,12 +499,12 @@ export default function useFunction() {
     selectAskingPrice_unSigned,
     buyCrypto_unSigned,
     sellCrypto_unSigned,
-    themeChange,
     selectClosedPrice,
     requestCandleMinute,
     requestCandleDate,
     addCryptoToUser,
-    checkLogin
+    checkLogin,
+    buyCrypto,
   };
 
 }
