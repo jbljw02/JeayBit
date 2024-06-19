@@ -58,20 +58,17 @@ export default function useFunction() {
   // }, []);
 
   // 서버로부터 사용자의 잔고량을 받아옴
-  const getBalance = (email: string) => {
-    (async () => {
-      try {
-        const response = await axios.get(
-          `http://127.0.0.1:8000/get_user_balance/${email}/`
-        );
-        dispatch(setUserWallet(response.data.user_balance));
-        // console.log(logInUser, "의 잔고 : ", response.data.user_balance);
-      } catch (error) {
-        throw error;
-      }
-    })();
-  };
-
+  const getBalance = async (email: string) => {
+    try {
+      const response = await axios.get(
+        `http://127.0.0.1:8000/get_user_balance/${email}/`
+      );
+      dispatch(setUserWallet(response.data.user_balance));
+      console.log(user.name, "의 잔고 : ", response.data.user_balance);
+    } catch (error) {
+      console.error("잔고량 받기 실패: ", error)
+    }
+  }
 
   // 화면에 보여질 초기 화폐의 차트(비트코인)
   const getInitialData = async () => {
@@ -90,83 +87,95 @@ export default function useFunction() {
 
 
   // 사용자가 소유하고 있는 화폐의 정보를 받아옴
-  const getOwnedCrypto = (email: string) => {
-    (async () => {
-      try {
-        const response = await axios.get(
-          `http://127.0.0.1:8000/get_user_ownedCrypto/${email}/`
-        );
-        dispatch(setOwnedCrypto(response.data))
-        // console.log("반환값-소유화폐 : ", response.data)
-      } catch (error) {
-        // console.log("소유 화폐 받아오기 실패", error);
-      }
-    })()
-  }
+  // const getOwnedCrypto = (email: string) => {
+  //   (async () => {
+  //     try {
+  //       const response = await axios.get(
+  //         `http://127.0.0.1:8000/get_user_ownedCrypto/${email}/`
+  //       );
+  //       dispatch(setOwnedCrypto(response.data))
+  //       console.log("반환값-소유화폐 : ", response.data)
+  //     } catch (error) {
+  //       console.log("소유 화폐 받아오기 실패", error);
+  //     }
+  //   })()
+  // }
 
   // 거래 내역에 저장될 정보를 전송(화폐 매수와 함께)
-  const addTradeHistory = (email: string, cryptoName: string, tradeCategory: string, tradeTime: Date, cryptoMarket: string, cryptoPrice: number, tradePrice: number, tradeAmount: number, isSigned: boolean) => {
-    (async (email, cryptoName, tradeTime, cryptoMarket, cryptoPrice, tradePrice, tradeAmount) => {
-      try {
-        await axios.post("http://127.0.0.1:8000/add_user_tradeHistory/", {
-          email: email,
-          crypto_name: cryptoName,
-          trade_category: tradeCategory,
-          trade_time: tradeTime,
-          crypto_market: cryptoMarket,
-          crypto_price: cryptoPrice,
-          trade_price: tradePrice,
-          trade_amount: tradeAmount,
-          is_signed: isSigned,
-        });
-        getTradeHistory(email);
-        // console.log("거래 내역 전송 성공", response.data)
-      } catch (error) {
-        // console.log("거래 내역 전송 실패", error);
-      }
-    })(email, cryptoName, tradeTime, cryptoMarket, cryptoPrice, tradePrice, tradeAmount)
+  const addTradeHistory = async (email: string, cryptoName: string, tradeCategory: string, tradeTime: Date, cryptoMarket: string, cryptoPrice: number, tradePrice: number, tradeAmount: number, isSigned: boolean) => {
+    try {
+      const response = await axios.post("http://127.0.0.1:8000/add_user_tradeHistory/", {
+        email: email,
+        crypto_name: cryptoName,
+        trade_category: tradeCategory,
+        trade_time: tradeTime,
+        crypto_market: cryptoMarket,
+        crypto_price: cryptoPrice,
+        trade_price: tradePrice,
+        trade_amount: tradeAmount,
+        is_signed: isSigned,
+      });
+      console.log("거래 내역 전송 성공", response.data);
+    } catch (error) {
+      console.log("거래 내역 전송 실패", error);
+    }
   }
 
   // 서버로부터 거래 내역을 받아옴
-  const getTradeHistory = (email: string) => {
-    (async () => {
-      try {
-        const response = await axios.get(
-          `http://127.0.0.1:8000/get_user_tradeHistory/${email}/`
-        );
-        // console.log("반환값-거래내역 : ", response.data);
+  const getTradeHistory = async (email: string) => {
+    try {
+      const response = await axios.post(
+        `http://127.0.0.1:8000/get_user_tradeHistory/${email}/`
+      );
 
-        // 서버로부터 받아온 체결 내역과 미체결 내역을 담을 임시 배열
-        const signed: { trade_time: string; is_signed: boolean; id: string; crypto_price: number; crypto_name: string; trade_amount: string; trade_price: string; }[] = [];
-        const unsigned: { trade_time: string; is_signed: boolean; id: string; crypto_price: number; crypto_name: string; trade_amount: string; trade_price: string; }[] = [];
+      // 서버로부터 받아온 체결 내역과 미체결 내역을 담을 임시 배열
+      const signed: {
+        trade_time: string;
+        is_signed: boolean;
+        id: string;
+        crypto_price: number;
+        crypto_name: string;
+        trade_amount: string;
+        trade_price: string;
+      }[] = [];
+      const unSigned: {
+        trade_time: string;
+        is_signed: boolean;
+        id: string;
+        crypto_price: number;
+        crypto_name: string;
+        trade_amount: string;
+        trade_price: string;
+      }[] = [];
 
-        // 다른 요소는 서버에서 받아온 값 그대로 유지, 거래 시간만 형식 변경해서 dispatch
-        response.data.forEach((item: { trade_time: Date, is_signed: boolean, id: string, crypto_price: number, crypto_name: string, trade_amount: string, trade_price: string, trade_category: string }, i: number) => {
-          let date = new Date(item.trade_time);
-          let formattedDate = date.getFullYear() + '.'
-            + (date.getMonth() + 1).toString().padStart(2, '0') + '.'
-            + date.getDate().toString().padStart(2, '0') + ' '
-            + date.getHours().toString().padStart(2, '0') + ':'
-            + date.getMinutes().toString().padStart(2, '0');
+      const tradeHistory = response.data.trade_history;
 
-          // 체결 여부가 true일 경우
-          if (item.is_signed) {
-            signed.push({ ...item, trade_time: formattedDate });
-          }
-          else {
-            unsigned.push({ ...item, trade_time: formattedDate });
+      // 다른 요소는 서버에서 받아온 값 그대로 유지, 거래 시간만 형식 변경해서 dispatch
+      tradeHistory.forEach((item: { trade_time: Date, is_signed: boolean, id: string, crypto_price: number, crypto_name: string, trade_amount: string, trade_price: string, trade_category: string }, i: number) => {
+        let date = new Date(item.trade_time);
+        let formattedDate = date.getFullYear() + '.'
+          + (date.getMonth() + 1).toString().padStart(2, '0') + '.'
+          + date.getDate().toString().padStart(2, '0') + ' '
+          + date.getHours().toString().padStart(2, '0') + ':'
+          + date.getMinutes().toString().padStart(2, '0');
 
-            let value = { name: item.crypto_name, price: item.crypto_price, trade_category: item.trade_category, trade_amount: Number(item.trade_amount), trade_price: Number(item.trade_price) };
-            localStorage.setItem(item.id, JSON.stringify(value));  // 체결되지 않은 구매 요청에 대한 ID를 로컬 스토리지에 추가
-          }
-        });
+        // 체결 여부가 true일 경우
+        if (item.is_signed) {
+          signed.push({ ...item, trade_time: formattedDate });
+        }
+        else {
+          unSigned.push({ ...item, trade_time: formattedDate });
 
-        dispatch(setUserTradeHistory(signed));
-        dispatch(setUserTradeHistory_unSigned(unsigned));
-      } catch (error) {
-        // console.log("거래내역 받아오기 실패", error);
-      }
-    })();
+          const value = { name: item.crypto_name, price: item.crypto_price, trade_category: item.trade_category, trade_amount: Number(item.trade_amount), trade_price: Number(item.trade_price) };
+          localStorage.setItem(item.id, JSON.stringify(value));  // 체결되지 않은 구매 요청에 대한 ID를 로컬 스토리지에 추가
+        }
+      });
+
+      dispatch(setUserTradeHistory(signed));
+      dispatch(setUserTradeHistory_unSigned(unSigned));
+    } catch (error) {
+      console.log("거래내역 받아오기 실패", error);
+    }
   }
 
   // 모든 화폐의 이름을 받아옴
@@ -306,7 +315,7 @@ export default function useFunction() {
         });
         // console.log("구매 화폐 전송 성공", response.data);
         getBalance(email);  // 매수에 사용한 금액만큼 차감되기 때문에 잔고 업데이트
-        getOwnedCrypto(email);  // 소유 화폐가 새로 추가될 수 있으니 업데이트
+        // getOwnedCrypto(email);  // 소유 화폐가 새로 추가될 수 있으니 업데이트
         getTradeHistory(email)  // 매수에 성공했으니 거래내역 업데이트
         localStorage.removeItem(key)
       } catch (error) {
@@ -327,7 +336,7 @@ export default function useFunction() {
         });
         // console.log("매도 화폐 전송 성공", response.data);
         getBalance(email);  // 매수에 사용한 금액만큼 차감되기 때문에 잔고 업데이트
-        getOwnedCrypto(email);  // 소유 화폐가 새로 추가될 수 있으니 업데이트
+        // getOwnedCrypto(email);  // 소유 화폐가 새로 추가될 수 있으니 업데이트
         getTradeHistory(email)  // 매수에 성공했으니 거래내역 업데이트
         localStorage.removeItem(key)
       } catch (error) {
@@ -467,31 +476,11 @@ export default function useFunction() {
     }
   };
 
-  // 호가와 구매가가 일치할 때
-  const buyCrypto = (email: string, cryptoName: string, cryptoQuantity: number, buyTotal: number) => {
-    (async (email, cryptoName, cryptoQuantity, buyTotal) => {
-      try {
-        await axios.post("http://127.0.0.1:8000/buy_crypto/", {
-          email: email,
-          crypto_name: cryptoName,
-          crypto_quantity: cryptoQuantity,
-          buy_total: buyTotal,
-        });
-        // console.log("구매 화폐 전송 성공", response.data);
-        getBalance(email);  // 매수에 사용한 금액만큼 차감되기 때문에 잔고 업데이트
-        getOwnedCrypto(email);  // 소유 화폐가 새로 추가될 수 있으니 업데이트
-        getTradeHistory(email)  // 매수에 성공했으니 거래내역 업데이트
-      } catch (error) {
-        // console.log("구매 화폐 전송 실패: ", error)
-      }
-    })(email, cryptoName, cryptoQuantity, buyTotal);
-  }
-
   return {
     getAllCrypto,
     getInitialData,
     getBalance,
-    getOwnedCrypto,
+    // getOwnedCrypto,
     addTradeHistory,
     getTradeHistory,
     getCryptoName,
@@ -504,7 +493,6 @@ export default function useFunction() {
     requestCandleDate,
     addCryptoToUser,
     checkLogin,
-    buyCrypto,
   };
 
 }

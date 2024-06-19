@@ -165,7 +165,6 @@ export default function PriceDetail() {
 
       }
     })
-
   }, [askingData_unSigned, completeToggleModal, user.email, sellCrypto_unSigned])
 
   return (

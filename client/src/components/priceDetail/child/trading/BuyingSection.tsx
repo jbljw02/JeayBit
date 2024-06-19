@@ -9,17 +9,17 @@ import SelectPercentage from "./SelectPercentage";
 import TradingThead from "./TradingThead";
 import LoginNavigator from "./LoginNavigator";
 import formatWithComas from "../../../../utils/formatWithComas";
+import axios from "axios";
 
 export default function BuyingSection() {
     const dispatch = useDispatch();
 
-    const { addTradeHistory, buyCrypto } = useFunction();
+    const { addTradeHistory, getTradeHistory, getBalance } = useFunction();
 
     const selectedCrypto = useSelector((state: RootState) => state.selectedCrypto);
     const user = useSelector((state: RootState) => state.user);
     const userWallet = useSelector((state: RootState) => state.userWallet);
-    const asking_data = useSelector((state: RootState) => state.asking_data);  // bid = 매수, ask = 매도
-    const theme = useSelector((state: RootState) => state.theme);
+    const asking_data = useSelector((state: RootState) => state.asking_data); // bid = 매수, ask = 매도
     const buyingPrice = useSelector((state: RootState) => state.buyingPrice);
 
     const [selectedPercentage, setSelectedPercentage] = useState<string>('');
@@ -174,6 +174,22 @@ export default function BuyingSection() {
         }
     }
 
+    // 호가와 구매가가 일치할 때
+    const buyCrypto = async (email: string, cryptoName: string, cryptoQuantity: number, buyTotal: number) => {
+        try {
+            const response = await axios.post("http://127.0.0.1:8000/buy_crypto/", {
+                email: email,
+                crypto_name: cryptoName,
+                crypto_quantity: cryptoQuantity,
+                buy_total: buyTotal,
+            });
+            console.log("구매 화폐 전송 성공", response.data);
+            getBalance(email); // 매수에 사용한 금액만큼 차감되기 때문에 잔고 업데이트
+        } catch (error) {
+            console.error("구매 화폐 전송 실패: ", error)
+        }
+    }
+
     // 지정가 구매 요청
     const designatedSubmit = () => {
         // 호가와 구매가가 일치하는지 확인
@@ -183,7 +199,7 @@ export default function BuyingSection() {
             buyCrypto(user.email, selectedCrypto.name, buyQuantity, buyTotal);
             completeToggleModal();
             addTradeHistory(user.email, selectedCrypto.name, tradeCategory, time, selectedCrypto.market, buyingPrice, buyTotal, buyQuantity, true);
-            // getTradeHistory(user.email);
+            getTradeHistory(user.email);
         }
         else {
             // 선택한 화폐에 대한 구매 대기 여부를 true로 설정
@@ -201,7 +217,7 @@ export default function BuyingSection() {
             setModalOpen(!modalOpen);
 
             addTradeHistory(user.email, selectedCrypto.name, tradeCategory, time, selectedCrypto.market, buyingPrice, buyTotal, buyQuantity, false);
-            // getTradeHistory(user.email);
+            getTradeHistory(user.email);
         }
     }
 
@@ -210,11 +226,11 @@ export default function BuyingSection() {
         // 호가와의 일치 여부를 확인하지 않고 즉시 요청 전송
         buyCrypto(user.email, selectedCrypto.name, buyQuantity, buyTotal)
         addTradeHistory(user.email, selectedCrypto.name, tradeCategory, time, selectedCrypto.market, buyingPrice, buyTotal, buyQuantity, true);
+        getTradeHistory(user.email);
     }
 
     return (
         <>
-
             {
                 // 매수 - 지정가 영역
                 bidSort === '지정가' ?
@@ -275,7 +291,7 @@ export default function BuyingSection() {
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td className={`trading-category ${theme ? 'darkMode-title' : 'lightMode-title'}`}>주문총액</td>
+                                    <td className='trading-category'>주문총액</td>
                                     <td className="td-input">
                                         <div>
                                             <TradeInput
@@ -324,9 +340,15 @@ export default function BuyingSection() {
             }
             <div className="trading-footer">
                 {
-                    user.email !== '' ?
+                    user.email ?
                         <div className="trading-submit-buy market">
-                            <span onClick={marketSubmit}>매수</span>
+                            <span onClick={() => {
+                                if (bidSort === '지정가') {
+                                    designatedSubmit();
+                                } else {
+                                    marketSubmit();
+                                }
+                            }}>매수</span>
                         </div> :
                         <LoginNavigator />
                 }

@@ -21,6 +21,7 @@ from django.http import JsonResponse
 from django.views import View
 from .models import UserCrypto
 
+
 # 1분 기준 차트
 @api_view(["GET", "POST"])
 def candle_per_minute(request):
@@ -88,9 +89,9 @@ def candle_per_week(request):
 
         response = get(url)
         data = response.json()
-        
+
         return Response(data, status=200)
-    
+
     except Exception as e:
         return Response({"error: ": "1주당 캔들 호출 실패"}, status=500)
 
@@ -458,15 +459,15 @@ def buy_crypto(request):
     buy_total = data.get("buy_total")
 
     if not email:
-        return JsonResponse({"error": "요청에 이메일이 포함되어야 합니다"}, status=400)
+        return Response({"error": "요청에 이메일이 포함되어야 합니다"}, status=400)
     if not crypto_name:
-        return JsonResponse({"error": "요청에 화폐명이 포함되어야 합니다"}, status=400)
+        return Response({"error": "요청에 화폐명이 포함되어야 합니다"}, status=400)
     if not crypto_quantity:
-        return JsonResponse(
+        return Response(
             {"error": "요청된 화폐 수량은 0이 아니어야 합니다"}, status=400
         )
     if not buy_total:
-        return JsonResponse(
+        return Response(
             {"error": "요청에 구매 금액이 포함되어야 합니다"}, status=400
         )
 
@@ -487,7 +488,7 @@ def buy_crypto(request):
 
         # 잔고량보다 주문 총액이 큰 경우
         if user.balance < buy_total:
-            return JsonResponse({"error": "잔액이 부족합니다"}, status=400)
+            return Response({"error": "잔액이 부족합니다"}, status=400)
 
         # 잔고량 업데이트
         user.balance -= buy_total
@@ -500,9 +501,9 @@ def buy_crypto(request):
 
         user_crypto.save()
 
-        return JsonResponse({"buy_crypto": "화폐 매수 및 소유 여부 업데이트 완료"})
+        return Response({"buy_crypto": "화폐 매수 및 소유 여부 업데이트 완료"})
     except CustomUser.DoesNotExist:
-        return JsonResponse({"error": "해당 이메일의 사용자가 존재하지 않습니다"})
+        return Response({"error": "해당 이메일의 사용자가 존재하지 않습니다"})
 
 
 # 화폐 매수 및 소유 여부 추가(체결되지 않았던 화폐들에 대해)
@@ -707,8 +708,7 @@ def sell_crypto_unSigned(request):
 @api_view(["POST"])
 def add_user_tradeHistory(request):
     data = request.data
-    print("거래내역 요청-받은 값 : ", data)
-
+ 
     email = data.get("email")
     crypto_name = data.get("crypto_name")
     trade_category = data.get("trade_category")
@@ -720,35 +720,23 @@ def add_user_tradeHistory(request):
     is_signed = data.get("is_signed")
 
     if not email:
-        return JsonResponse({"error": "요청에 이메일이 포함되어야 합니다"}, status=400)
+        return Response({"error": "요청에 이메일이 포함되어야 합니다"}, status=400)
     if not crypto_name:
-        return JsonResponse({"error": "요청에 화폐명이 포함되어야 합니다"}, status=400)
+        return Response({"error": "요청에 화폐명이 포함되어야 합니다"}, status=400)
     if not trade_category:
-        return JsonResponse(
+        return Response(
             {"error": "요청에 거래가 '매수'인지 '매도'인지 포함되어야 합니다"}
         )
     if not trade_time:
-        return JsonResponse(
-            {"error": "요청에 현재 시간이 포함되어야 합니다"}, status=400
-        )
+        return Response({"error": "요청에 현재 시간이 포함되어야 합니다"}, status=400)
     if not crypto_market:
-        return JsonResponse(
-            {"error": "요청에 화폐 마켓이 포함되어야 합니다."}, status=400
-        )
+        return Response({"error": "요청에 화폐 마켓이 포함되어야 합니다."}, status=400)
     if not crypto_price:
-        return JsonResponse(
-            {"error": "요청에 화폐 가격이 포함되어야 합니다."}, status=400
-        )
+        return Response({"error": "요청에 화폐 가격이 포함되어야 합니다."}, status=400)
     if not trade_price:
-        return JsonResponse(
-            {"error": "요청에 거래 가격이 포함되어야 합니다."}, status=400
-        )
+        return Response({"error": "요청에 거래 가격이 포함되어야 합니다."}, status=400)
     if not trade_amount:
-        return JsonResponse(
-            {"error": "요청에 거래 수량이 포함되어야 합니다."}, status=400
-        )
-    # if not is_signed:
-    # return JsonResponse({"error": "요청에 체결 여부가 포함되어야 합니다."}, status=400)
+        return Response({"error": "요청에 거래 수량이 포함되어야 합니다."}, status=400)
 
     try:
         user = CustomUser.objects.get(email=email)
@@ -766,21 +754,21 @@ def add_user_tradeHistory(request):
             is_signed=True if is_signed == True else False,
         )
 
-        return JsonResponse({"add_user_tradingHistory": "화폐 거래내역 업데이트 완료"})
+        return Response({"add_user_tradingHistory": "화폐 거래내역 업데이트 완료"})
 
     except CustomUser.DoesNotExist:
-        return JsonResponse({"error": "해당 이메일의 사용자가 존재하지 않습니다"})
+        return Response({"error": "해당 이메일의 사용자가 존재하지 않습니다"})
     except Crypto.DoesNotExist:
-        return JsonResponse({"error": "해당 화폐명을 가진 화폐가 존재하지 않습니다"})
+        return Response({"error": "해당 화폐명을 가진 화폐가 존재하지 않습니다"})
 
 
 # 거래내역을 클라이언트로 전송
-@api_view(["GET"])
+@api_view(["POST"])
 def get_user_tradeHistory(request, email):
     try:
         user = CustomUser.objects.get(email=email)
     except CustomUser.DoesNotExist:
-        return JsonResponse({"error": "요청에 이메일이 포함되어야 합니다"})
+        return Response({"error": "요청에 이메일이 포함되어야 합니다"}, status=400)
 
     trade_historys = TradeHistory.objects.filter(user=user)
 
@@ -800,7 +788,7 @@ def get_user_tradeHistory(request, email):
         for trade_history in trade_historys
     ]
 
-    return JsonResponse(data, safe=False)
+    return Response({"trade_history": data})
 
 
 # 모든 화폐명을 클라이언트로 전달
@@ -839,7 +827,7 @@ def cancel_order(request):
     if not email:
         return {"error": "요청에 이메일이 포함되어야 합니다"}
     if not ids:
-        return JsonResponse(
+        return Response(
             {"error": "취소할 주문의 id가 요청에 포함되어야 합니다"}, status=400
         )
 
@@ -849,9 +837,9 @@ def cancel_order(request):
         # ids 배열과 튜플의 id 필드 사이 일치하는 부분이 있으면 삭제
         trade_history = TradeHistory.objects.filter(user=user, id__in=ids).delete()
 
-        return JsonResponse({"success": "주문 취소 성공"})
+        return Response({"success": "주문 취소 성공"})
     except CustomUser.DoesNotExist:
-        JsonResponse({"error": "해당 이메일의 사용자가 존재하지 않습니다"})
+        Response({"error": "해당 이메일의 사용자가 존재하지 않습니다"})
 
 
 def check_login(self, request):

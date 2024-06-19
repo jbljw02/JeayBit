@@ -43,7 +43,7 @@ export default function SellingSectioin() {
         setCompleteModalOpen(!completeModalOpen);
     }
 
-    const { getBalance, getOwnedCrypto, addTradeHistory, getTradeHistory } = useFunction();
+    const { getBalance, addTradeHistory, getTradeHistory } = useFunction();
 
     // 매도가가 바뀌면 그에 따라 입력값도 변경
     useEffect(() => {
@@ -73,7 +73,7 @@ export default function SellingSectioin() {
                 });
                 // console.log("매도 화폐 전송 성공", response.data);
                 getBalance(user.email);  // 매수에 사용한 금액만큼 차감되기 때문에 잔고 업데이트
-                getOwnedCrypto(user.email);  // 소유 화폐가 새로 추가될 수 있으니 업데이트
+                // getOwnedCrypto(user.email);  // 소유 화폐가 새로 추가될 수 있으니 업데이트
                 getTradeHistory(user.email);  // 매도했으니 업데이트 됐을 거래내역을 가져옴 
                 completeToggleModal();
             } catch (error) {

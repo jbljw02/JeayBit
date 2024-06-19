@@ -18,6 +18,11 @@ export type Crypto = {
   owned_quantity: number,
 }
 
+export type ScheduleCancel = {
+  id: string,
+  index: number,
+}[]
+
 export type ClosedData = {
   trade_date_utc: string,
   trade_time_utc: string,
@@ -145,6 +150,7 @@ export type RootState = {
   user: User,
   allCrypto: Crypto[],
   csrfToken: string,
+  scheduledCancel: ScheduleCancel,
 }
 
 const cr_name = createSlice({
@@ -842,6 +848,16 @@ export const csrfTokenSlice = createSlice({
   }
 })
 
+export const scheduledCancelSlice = createSlice({
+  name: 'scheduledCancel',
+  initialState: [],
+  reducers: {
+    setScheduledCancel: (state, action) => {
+      return action.payload;
+    }
+  }
+})
+
 // const combinedReducer = combineReducers({
 //   listCategory: cryptoListReducers.listCategory, 
 // });
@@ -925,6 +941,7 @@ export default configureStore({
     allCrypto: allCryptoSlice.reducer,
     user: userSlice.reducer,
     csrfToken: csrfTokenSlice.reducer,
+    scheduledCancel: scheduledCancelSlice.reducer,
   }
 })
 
@@ -1012,3 +1029,4 @@ export const { setIsScrollMove } = isScrollMove.actions;
 export const { setAllCrypto } = allCryptoSlice.actions;
 export const { setUser } = userSlice.actions;
 export const { setCsrfToken } = csrfTokenSlice.actions;
+export const { setScheduledCancel } = scheduledCancelSlice.actions;

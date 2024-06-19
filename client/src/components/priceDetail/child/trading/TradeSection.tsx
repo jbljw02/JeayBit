@@ -2,12 +2,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState, setSectionChange } from "../../../../redux/store";
 import BuyingSection from "./BuyingSection";
 import SellingSection from "./SellingSection";
-import TradeHistory from "./TradeHistory";
+import TradeHistory from "./history/TradeHistory";
 
 export default function TradeSection() {
     const dispatch = useDispatch();
-
     const sectionChange = useSelector((state: RootState) => state.sectionChange);
+
     return (
         <div className="div-trading">
             <div className="trading-section lightMode-title">
