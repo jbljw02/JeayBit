@@ -56,9 +56,9 @@ export type FavoriteCrypto = {
 }
 
 export type OwnedCrypto = {
-  crypto_name: string,
-  isOwned: boolean,
-  quantity: number,
+  name: string,
+  is_owned: boolean,
+  owned_quantity: number,
 }
 
 export type UserTradeHistory = {

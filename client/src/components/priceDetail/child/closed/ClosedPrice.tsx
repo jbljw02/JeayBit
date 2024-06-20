@@ -2,8 +2,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState, setCloseHide } from "../../../../redux/store";
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import 'react-perfect-scrollbar/dist/css/styles.css';
-import adjustSize from "../../../../utils/adjustSize";
-import convertToDate from "../../../../utils/covertToDate";
+import adjustSize from "../../../../utils/asking/adjustSize";
+import convertToDate from "../../../../utils/asking/covertToDate";
 
 export default function ClosedPrice() {
     const dispatch = useDispatch();
@@ -36,7 +36,13 @@ export default function ClosedPrice() {
                                         <th>체결시간</th>
                                         <th>체결가격</th>
                                         <th>
-                                            체결량<span>({(selectedCrypto.market).slice(4)})</span>
+                                            체결량
+                                            <span>
+                                                {
+                                                    selectedCrypto && selectedCrypto.market &&
+                                                    (selectedCrypto.market).slice(4)
+                                                }
+                                            </span>
                                         </th>
                                     </tr>
                                 </thead>

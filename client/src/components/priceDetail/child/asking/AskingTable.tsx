@@ -1,7 +1,7 @@
 import { useSelector } from "react-redux";
 import { AskingData, RootState } from "../../../../redux/store";
-import convertToDate from "../../../../utils/covertToDate";
-import adjustSize from "../../../../utils/adjustSize";
+import convertToDate from "../../../../utils/asking/covertToDate";
+import adjustSize from "../../../../utils/asking/adjustSize";
 
 type Params = {
     differences: {
@@ -60,8 +60,8 @@ export default function AskingTable({ differences, size, category }: Params) {
                             <td>{trade_time}</td>
                             {
                                 category === 'bid' ?
-                                <td>{(item.bid_price).toLocaleString()}</td> :
-                                <td>{(item.ask_price).toLocaleString()}</td> 
+                                    <td>{(item.bid_price).toLocaleString()}</td> :
+                                    <td>{(item.ask_price).toLocaleString()}</td>
                             }
                             <td
                                 style={{

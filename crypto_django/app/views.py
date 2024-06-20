@@ -4,6 +4,7 @@ import time
 from django.http import JsonResponse
 import requests
 from app.models import Crypto, CustomUser, UserCrypto, TradeHistory
+from .utils import check_price_match
 from .crpyto_api import (
     candle_per_date_BTC,
     candle_per_week_BTC,
@@ -20,6 +21,9 @@ from django.contrib.auth import authenticate, login, logout
 from django.http import JsonResponse
 from django.views import View
 from .models import UserCrypto
+from .utils.buy_process import buy_process
+from .utils.check_price_match import check_price_match
+from .utils.sell_process import sell_process
 
 
 # 1분 기준 차트
@@ -119,7 +123,6 @@ def candle_per_month(request):
 # 호가내역
 @api_view(["GET", "POST"])
 def asking_price(request):
-    print("호가내역 - 요청데이터 : ", request.data)
 
     try:
         market = request.data["market"]
@@ -130,7 +133,6 @@ def asking_price(request):
         url = f"https://api.upbit.com/v1/orderbook?markets={market}"
 
         response = get(url)
-        print(response)
 
         # 업비트 api로부터 데이터 수신 실패
         if response.status_code != 200:
@@ -156,7 +158,6 @@ def closed_price(request):
         url = f"https://api.upbit.com/v1/trades/ticks?market={market}&count=50"
 
         response = get(url)
-        print(response)
 
         # 업비트 api로부터 데이터 수신 실패
         if response.status_code != 200:
@@ -164,7 +165,7 @@ def closed_price(request):
 
         data = response.json()
 
-        return Response(data)
+        return Response(data, status=200)
 
     except Exception as e:
         print("error : ", e)
@@ -193,24 +194,11 @@ def sign_up(request):
         user = CustomUser.objects.create_user(
             username=username, email=email, password=password
         )
-        print("회원가입 : ", user)
 
-    except Exception as e:
-        print(e)  # 에러 출력
-        return Response(
-            {"error": str(e)}, status=500
-        )  # 클라이언트에게 에러 메시지 반환
+    except:
+        return Response({"error": "회원가입 실패"}, status=500)  
 
-    # 사용자 생성 후 성공 메시지 반환
     return Response({"success": "회원가입 성공"}, status=201)
-
-
-from django.middleware.csrf import get_token
-
-
-def csrf_token(request):
-    return JsonResponse({"csrfToken": get_token(request)})
-
 
 class LoginView(View):
     def post(self, request):
@@ -235,10 +223,8 @@ class LoginView(View):
                 return JsonResponse(
                     {"detail": "이메일 혹은 비밀번호가 잘못되었습니다."}, status=400
                 )
-
-        except Exception as e:
-            print("에러 : ", e)
-            return JsonResponse({"detail": f"서버 내부 에러: {str(e)}"}, status=500)
+        except:
+            return JsonResponse({"detail": "로그인 실패"}, status=500)
 
 
 class LogoutView(View):
@@ -249,72 +235,24 @@ class LogoutView(View):
             if request.session.session_key is None:
                 return JsonResponse({"detail": "로그아웃 성공"}, status=200)
             else:
-                request.session.flush()  # 세션 데이터 삭제
+                request.session.flush() # 세션 데이터 삭제
                 return JsonResponse({"detail": "로그아웃 성공"}, status=200)
-        except Exception as e:
-            print("에러 : ", e)
+        except:
             return JsonResponse({"detail": "로그아웃 실패"}, status=500)
-
-
-# 로그인
-@api_view(["POST"])
-def logIn(request):
-    try:
-        data = request.data
-        email = data.get("email")
-        password = data.get("password")
-
-        user = authenticate(
-            request, email=email, password=password
-        )  # CusomterUser.authenticate로 작성하지 않아도 지정해놓은 모델에 대해 인증을 수행
-
-        if user is not None:
-            login(request, user)
-            print("키:", request.session.session_key)
-            print("로그인 상태 : ", request.user)
-            print("이메일 : ", email)
-            print("이름 : ", request.user.username)
-            return JsonResponse({"username": request.user.username, "email": email})
-        else:
-            return JsonResponse(
-                {"detail": "이메일 혹은 비밀번호가 잘못되었습니다."}, status=400
-            )
-
-    except Exception as e:
-        print("에러 : ", e)
-        return JsonResponse({"detail": f"서버 내부 에러: {str(e)}"}, status=500)
-
-
-# 로그아웃
-@api_view(["POST"])
-def logOut(request):
-    print("로그아웃 전 : ", request.session.session_key)
-
-    try:
-        logout(request)
-        if request.session.session_key is None:
-            return JsonResponse({"detail": "로그아웃 성공"}, status=200)
-        else:
-            request.session.flush()  # 세션 데이터 삭제
-            return JsonResponse({"detail": "로그아웃 성공"}, status=200)
-    except Exception as e:
-        print("에러 : ", e)
-        return JsonResponse({"detail": "로그아웃 실패"}, status=500)
 
 
 # UserCrypto 테이블에 사용자에 따른 화폐 관심 여부 추가
 @api_view(["POST"])
 def add_favoriteCrypto_to_user(request):
     data = json.loads(request.body)
-    print("관심여부 - 받은 데이터 : ", data)
 
     email = data.get("email")
     crypto_name = data.get("crypto_name")
 
     if not email:
-        return JsonResponse({"error": "요청에 이메일이 포함되어야 합니다"})
+        return Response({"error": "요청에 이메일이 포함되어야 합니다"}, status=400)
     if not crypto_name:
-        return JsonResponse({"error": "요청에 화폐명이 포함되어야 합니다"})
+        return Response({"error": "요청에 화폐명이 포함되어야 합니다"}, status=400)
 
     try:
         # 유저 테이블, 화폐 테이블과 연결하기 위한 외래키
@@ -326,9 +264,6 @@ def add_favoriteCrypto_to_user(request):
             user=user, crypto=crypto
         )
 
-        print(user_crypto)
-        print(created)
-
         # 해당 화폐에 대한 객체가 이미 생성되어 있다면 관심여부 True
         if created:
             user_crypto.is_favorited = True
@@ -338,9 +273,9 @@ def add_favoriteCrypto_to_user(request):
 
         user_crypto.save()
 
-        return JsonResponse({"is_favorited": "화폐-유저 정보 저장 완료"})
+        return Response({"is_favorited": "화폐-유저 정보 저장 완료"}, status=200)
     except CustomUser.DoesNotExist:
-        return JsonResponse({"error": "해당 이메일의 사용자가 존재하지 않습니다"})
+        return Response({"error": "해당 이메일의 사용자가 존재하지 않습니다"}, status=400)
 
 
 # 클라이언트에게 UserCrypto 테이블에 있는 사용자에 따른 화폐의 관심 여부를 전달
@@ -359,20 +294,12 @@ def get_user_favoriteCrypto(request, email):
         }
         for user_crypto in user_cryptos
     ]
-    # ==
-    # data = []
-    # for user_crypto in user_cryptos:
-    #     data.append({
-    #         "crypto_name": user_crypto.crypto.name,
-    #         "is_favorited": user_crypto.is_favorited
-    #     })
-
     # safe=False => 딕셔너리가 아닌 다른 형태도 JSON으로 변환 가능
-    return JsonResponse(data, safe=False)
+    return Response(data, status=200)
 
 
 # 클라이언트에게 UserCrypto 테이블에 있는 사용자에 따른 화폐의 소유 여부를 전달
-@api_view(["GET"])
+@api_view(["POST"])
 def get_user_ownedCrypto(request, email):
 
     user = CustomUser.objects.get(email=email)
@@ -380,14 +307,14 @@ def get_user_ownedCrypto(request, email):
 
     data = [
         {
-            "crypto_name": user_crypto.crypto.name,
+            "name": user_crypto.crypto.name,
             "is_owned": user_crypto.is_owned,
-            "quantity": float(user_crypto.owned_quantity),
+            "owned_quantity": float(user_crypto.owned_quantity),
         }
         for user_crypto in user_cryptos
     ]
 
-    return JsonResponse(data, safe=False)
+    return Response(data)
 
 
 # 사용자의 balance 컬럼에 입금량을 추가
@@ -395,12 +322,11 @@ def get_user_ownedCrypto(request, email):
 def add_balance_to_user(request):
     email = request.data.get("email")
     depositAmount = request.data.get("depositAmount")
-    print(request.data)
 
     if email is None:
-        return JsonResponse({"error": "이메일이 존재하지 않습니다"})
+        return Response({"error": "이메일이 존재하지 않습니다"}, status=400)
     if depositAmount is None:
-        return JsonResponse({"error": "입금량이 누락되었습니다"})
+        return Response({"error": "입금량이 누락되었습니다"}, status=400)
 
     try:
         user = CustomUser.objects.get(email=email)
@@ -409,9 +335,9 @@ def add_balance_to_user(request):
         else:
             user.balance += depositAmount
         user.save()
-        return JsonResponse({"detail": "잔고 업데이트 완료"})
+        return Response({"detail": "잔고 업데이트 완료"}, status=200)
     except CustomUser.DoesNotExist:
-        return JsonResponse({"error": "해당 이메일의 사용자가 존재하지 않습니다"})
+        return Response({"error": "해당 이메일의 사용자가 존재하지 않습니다"}, status=400)
 
 
 # 클라이언트로부터 받은 출금량만큼 잔고 줄이기
@@ -593,15 +519,15 @@ def sell_crypto(request):
     sell_total = data.get("sell_total")
 
     if not email:
-        return JsonResponse({"error": "요청에 이메일이 포함되어야 합니다"}, status=400)
+        return Response({"error": "요청에 이메일이 포함되어야 합니다"}, status=400)
     if not crypto_name:
-        return JsonResponse({"error": "요청에 화폐명이 포함되어야 합니다"}, status=400)
+        return Response({"error": "요청에 화폐명이 포함되어야 합니다"}, status=400)
     if not crypto_quantity:
-        return JsonResponse(
+        return Response(
             {"error": "요청된 화폐 수량은 0이 아니어야 합니다"}, status=400
         )
     if not sell_total:
-        return JsonResponse(
+        return Response(
             {"error": "요청에 구매 금액이 포함되어야 합니다"}, status=400
         )
 
@@ -616,7 +542,7 @@ def sell_crypto(request):
 
         # 사용자가 보유한 화폐의 수량보다 매도하려는 수량이 클 경우
         if user_crypto.owned_quantity < crypto_quantity:
-            return JsonResponse(
+            return Response(
                 {"error": "보유한 수량보다 매도수량이 큽니다"}, status=400
             )
 
@@ -632,9 +558,9 @@ def sell_crypto(request):
 
         user_crypto.save()
 
-        return JsonResponse({"sell_crypto": "화폐 매도 및 소유랑 업데이트 완료"})
+        return Response({"sell_crypto": "화폐 매도 및 소유랑 업데이트 완료"})
     except CustomUser.DoesNotExist:
-        return JsonResponse({"error": "해당 이메일의 사용자가 존재하지 않습니다"})
+        return Response({"error": "해당 이메일의 사용자가 존재하지 않습니다"})
 
 
 @api_view(["POST"])
@@ -717,16 +643,15 @@ def add_user_tradeHistory(request):
     crypto_price = data.get("crypto_price")
     trade_price = data.get("trade_price")
     trade_amount = data.get("trade_amount")
-    is_signed = data.get("is_signed")
+    market = data.get("market")
+    isMarketValue = data.get("isMarketValue")
 
     if not email:
         return Response({"error": "요청에 이메일이 포함되어야 합니다"}, status=400)
     if not crypto_name:
         return Response({"error": "요청에 화폐명이 포함되어야 합니다"}, status=400)
     if not trade_category:
-        return Response(
-            {"error": "요청에 거래가 '매수'인지 '매도'인지 포함되어야 합니다"}
-        )
+        return Response({"error": "요청에 거래가 '매수'인지 '매도'인지 포함되어야 합니다"}, status=400)
     if not trade_time:
         return Response({"error": "요청에 현재 시간이 포함되어야 합니다"}, status=400)
     if not crypto_market:
@@ -738,6 +663,24 @@ def add_user_tradeHistory(request):
     if not trade_amount:
         return Response({"error": "요청에 거래 수량이 포함되어야 합니다."}, status=400)
 
+    url = f"https://api.upbit.com/v1/orderbook?markets={market}"
+    response = get(url)
+    json_data = response.json()
+    
+    # 호가 데이터를 가져옴
+    orderbook_units = json_data[0]["orderbook_units"]
+
+    matched = False
+    if isMarketValue:
+        matched = True
+        print("마켓")
+    else:
+        print("지정")
+        matched = check_price_match(trade_category, crypto_price, orderbook_units)
+
+    is_signed = matched
+    print("매칭: ", matched)
+    
     try:
         user = CustomUser.objects.get(email=email)
         crypto = Crypto.objects.get(name=crypto_name)
@@ -749,17 +692,26 @@ def add_user_tradeHistory(request):
             trade_time=trade_time,
             crypto_market=crypto_market,
             crypto_price=float(crypto_price),
-            trade_price=math.floor(trade_price),
+            trade_price=math.floor(float(trade_price)),
             trade_amount=Decimal(trade_amount),
-            is_signed=True if is_signed == True else False,
+            is_signed=is_signed,
         )
 
-        return Response({"add_user_tradingHistory": "화폐 거래내역 업데이트 완료"})
-
+        if trade_category == "매수":
+            buy_total = Decimal(trade_price)
+            
+            response_data, status_code = buy_process(user, crypto, trade_amount, buy_total)
+            return Response(response_data, status=status_code)
+        elif trade_category == "매도":
+            sell_total = Decimal(trade_price)
+            
+            response_data, status_code = sell_process(user, crypto, trade_amount, sell_total)
+            return Response(response_data, status=status_code)
+            
     except CustomUser.DoesNotExist:
-        return Response({"error": "해당 이메일의 사용자가 존재하지 않습니다"})
+        return Response({"error": "해당 이메일의 사용자가 존재하지 않습니다"}, status=500)
     except Crypto.DoesNotExist:
-        return Response({"error": "해당 화폐명을 가진 화폐가 존재하지 않습니다"})
+        return Response({"error": "해당 화폐명을 가진 화폐가 존재하지 않습니다"}, status=500)
 
 
 # 거래내역을 클라이언트로 전송
@@ -788,7 +740,7 @@ def get_user_tradeHistory(request, email):
         for trade_history in trade_historys
     ]
 
-    return Response({"trade_history": data})
+    return Response({"trade_history": data}, status=200)
 
 
 # 모든 화폐명을 클라이언트로 전달
@@ -839,13 +791,13 @@ def cancel_order(request):
 
         return Response({"success": "주문 취소 성공"})
     except CustomUser.DoesNotExist:
-        Response({"error": "해당 이메일의 사용자가 존재하지 않습니다"})
+        Response({"error": "해당 이메일의 사용자가 존재하지 않습니다"}, status=500)
 
 
 def check_login(self, request):
     try:
         is_logged_in = request.user.is_authenticated
-        return JsonResponse({"is_logged_in": is_logged_in})
+        return JsonResponse({"is_logged_in": is_logged_in}, status=200)
     except Exception as e:
         print(f"로그인 체크 에러: {e}")
         return JsonResponse({"error": "로그인 체크 에러"}, status=500)
@@ -875,7 +827,6 @@ class GetAllCryptoView(View):
         try:
             # 로그인 여부 확인
             is_logged_in = request.user.is_authenticated
-            print("두번째: ", is_logged_in)
 
             headers = {"accept": "application/json"}
             url = "https://api.upbit.com/v1/market/all?isDetails=true"

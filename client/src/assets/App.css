@@ -854,7 +854,7 @@ dd span {
 }
 
 .trading-contents {
-  height: 380px;
+  height: 370px;
 }
 
 .trading-footer {
@@ -1113,34 +1113,32 @@ input[type=range]::-webkit-slider-thumb {
   outline: none;
 }
 
-.trading-submit-buy,
-.trading-submit-sell {
+.trading-submit {
+  display: flex;
   align-items: center;
   text-align: center;
   font-size: 16px;
   color: #ffffff;
 }
 
-.trading-submit-buy span,
-.trading-submit-sell span {
+.trading-submit {
   border-radius: 2px;
 }
 
-.trading-submit-buy span {
+.trading-submit span {
+  padding: 13px 165px;
+  cursor: pointer;
+}
+
+.trading-submit.buy span {
   background-color: #22ab94;
-  padding: 13px 165px;
-  /* padding: 13px 128px; */
-  cursor: pointer;
 }
 
-.trading-submit-sell span {
+.trading-submit.sell span {
   background-color: #f23645;
-  padding: 13px 165px;
-  cursor: pointer;
 }
 
-.trading-submit-nonLogIn-buy,
-.trading-submit-nonLogIn-sell {
+.trading-submit-nonLogIn {
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -1148,36 +1146,32 @@ input[type=range]::-webkit-slider-thumb {
   text-align: center;
   font-size: 16px;
   color: #ffffff;
-  margin-top: 50px;
 }
 
-.trading-submit-nonLogIn-buy span {
+.trading-submit-nonLogIn span {
   background-color: #22ab94;
   border-radius: 2px;
   cursor: pointer;
 }
 
-.trading-submit-nonLogIn-sell span {
+.trading-submit-nonLogIn span {
   background-color: #f23645;
   border-radius: 2px;
   cursor: pointer;
 }
 
-.trading-submit-nonLogIn-buy span:nth-child(1),
-.trading-submit-nonLogIn-sell span:nth-child(1) {
+.trading-submit-nonLogIn span:nth-child(1) {
   padding: 13px 96px;
   margin-right: 15px;
 }
 
-.trading-submit-nonLogIn-buy span:nth-child(2),
-.trading-submit-nonLogIn-sell span:nth-child(2) {
+.trading-submit-nonLogIn span:nth-child(2) {
   padding: 13px 30px;
 }
 
 .designate {
   /* margin-top: 50px; */
   /* margin-bottom: 57px; */
-  margin-bottom: 40px;
 }
 
 .market {

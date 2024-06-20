@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState, setBuyingPrice, setIsBuying, setScheduledCancel } from '../../../../../redux/store'
+import { RootState, setScheduledCancel } from '../../../../../redux/store'
 import useFunction from "../../../../../utils/useFuction";
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import 'react-perfect-scrollbar/dist/css/styles.css';

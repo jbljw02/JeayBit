@@ -1,3 +1,4 @@
+// 거래량의 출력 형식을 조정
 export default function formatTradeAmount(amount: string) {
     const strAmount = String(amount);
     if (strAmount.length <= 10) {

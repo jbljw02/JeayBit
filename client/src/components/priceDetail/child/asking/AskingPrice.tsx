@@ -8,7 +8,7 @@ import AskingTable from "./AskingTable";
 // bid = 매수, ask = 매도
 export default function AskingPrice() {
     const dispatch = useDispatch();
-    
+
     const asking_data = useSelector((state: RootState) => state.asking_data);
     const asking_totalAskSize = useSelector((state: RootState) => state.asking_totalAskSize);
     const asking_totalBidSize = useSelector((state: RootState) => state.asking_totalBidSize);
@@ -81,7 +81,13 @@ export default function AskingPrice() {
                                         <th>등록시간</th>
                                         <th>호가</th>
                                         <th>
-                                            수량<span>({(selectedCrypto.market).slice(4)})</span>
+                                            수량
+                                            <span>
+                                                {
+                                                    selectedCrypto && selectedCrypto.market &&
+                                                    (selectedCrypto.market).slice(4)
+                                                }
+                                            </span>
                                         </th>
                                     </tr>
                                 </thead>

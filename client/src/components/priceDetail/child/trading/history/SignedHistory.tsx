@@ -1,6 +1,6 @@
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../../redux/store";
-import formatTradeAmount from "../../../../../utils/\bformatTradeAmount";
+import formatTradeAmount from "../../../../../utils/trading/formatTradeAmount";
 
 export default function SignedHistory() {
     const userTradeHistory = useSelector((state: RootState) => state.userTradeHistory);

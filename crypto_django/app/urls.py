@@ -13,8 +13,6 @@ from .views import (
     get_user_tradeHistory,
     sell_crypto_unSigned,
     sign_up,
-    logIn,
-    logOut,
     CheckLoginView,
     add_favoriteCrypto_to_user,
     get_user_favoriteCrypto,
@@ -29,7 +27,6 @@ from .views import (
     sell_crypto,
     get_crypto_name,
     get_crypto_market,
-    csrf_token,
 )
 
 urlpatterns = [
@@ -59,6 +56,5 @@ urlpatterns = [
     path("get_crypto_name/", get_crypto_name),
     path("get_crypto_market/", get_crypto_market),
     path("cancel_order/", cancel_order),
-    path("csrf_token/", csrf_token),
     # path('admin/', admin.site.urls)
 ]

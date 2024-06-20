@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
-import { setUserWallet, RootState, setOwnedCrypto, setUserTradeHistory, setUserTradeHistory_unSigned, setIsBuying, setAsking_data, setAsking_dateTime, setAsking_totalAskSize, setAsking_totalBidSize, setAskingData_unSigned, setIsSelling, setTheme, setClosed_data, setCandle_per_minute, setCandle_per_date, setCandle_per_week, setCandle_per_month, setCr_change, setCr_change_price, setCr_change_rate, setCr_high_price, setCr_low_price, setCr_market, setCr_name, setCr_open_price, setCr_price, setCr_trade_price, setCr_trade_volume, setCandle_per_date_BTC, setCr_market_selected, setCr_name_selected, setFavoriteCrypto, setAllCrypto, setCsrfToken, AskingData, setSelectedCrypto } from "../redux/store";
+import { setUserWallet, RootState, setOwnedCrypto, setUserTradeHistory, setUserTradeHistory_unSigned, setIsBuying, setAsking_data, setAsking_dateTime, setAsking_totalAskSize, setAsking_totalBidSize, setAskingData_unSigned, setIsSelling, setTheme, setClosed_data, setCandle_per_minute, setCandle_per_date, setCandle_per_week, setCandle_per_month, setCr_change, setCr_change_price, setCr_change_rate, setCr_high_price, setCr_low_price, setCr_market, setCr_name, setCr_open_price, setCr_price, setCr_trade_price, setCr_trade_volume, setCandle_per_date_BTC, setCr_market_selected, setCr_name_selected, setFavoriteCrypto, setAllCrypto, setCsrfToken, AskingData, setSelectedCrypto, OwnedCrypto } from "../redux/store";
 import { useEffect } from "react";
 
 export default function useFunction() {
@@ -10,6 +10,7 @@ export default function useFunction() {
   const filteredData = useSelector((state: RootState) => state.filteredData);
   const chartSortDate = useSelector((state: RootState) => state.chartSortDate);
   const theme = useSelector((state: RootState) => state.theme);
+  const selectedCrypto = useSelector((state: RootState) => state.selectedCrypto);
 
   const getAllCrypto = async () => {
     try {
@@ -17,7 +18,6 @@ export default function useFunction() {
         withCredentials: true,
       });
       dispatch(setAllCrypto(response.data.all_crypto));
-      // dispatch(setSelectedCrypto(response.data.all_crypto[0]));
       dispatch(setCr_name(response.data.name));
       dispatch(setCr_price(response.data.price));
       dispatch(setCr_market(response.data.market));
@@ -47,15 +47,6 @@ export default function useFunction() {
     }
   }
 
-  // useEffect(() => {
-  //   // getAllCrypto 함수를 3초마다 실행 - 서버에서 받아오는 값을 1초마다 갱신시킴
-  //   const interval = setInterval(() => {
-  //     checkLogin();
-  //   }, 3000);
-
-  //   // setInterval이 반환하는 interval ID를 clearInterval 함수로 제거
-  //   return () => clearInterval(interval);
-  // }, []);
 
   // 서버로부터 사용자의 잔고량을 받아옴
   const getBalance = async (email: string) => {
@@ -64,9 +55,9 @@ export default function useFunction() {
         `http://127.0.0.1:8000/get_user_balance/${email}/`
       );
       dispatch(setUserWallet(response.data.user_balance));
-      console.log(user.name, "의 잔고 : ", response.data.user_balance);
+      // console.log(user.name, "의 잔고 : ", response.data.user_balance);
     } catch (error) {
-      console.error("잔고량 받기 실패: ", error)
+      // console.error("잔고량 받기 실패: ", error)
     }
   }
 
@@ -87,22 +78,30 @@ export default function useFunction() {
 
 
   // 사용자가 소유하고 있는 화폐의 정보를 받아옴
-  // const getOwnedCrypto = (email: string) => {
-  //   (async () => {
-  //     try {
-  //       const response = await axios.get(
-  //         `http://127.0.0.1:8000/get_user_ownedCrypto/${email}/`
-  //       );
-  //       dispatch(setOwnedCrypto(response.data))
-  //       console.log("반환값-소유화폐 : ", response.data)
-  //     } catch (error) {
-  //       console.log("소유 화폐 받아오기 실패", error);
-  //     }
-  //   })()
-  // }
+  const getOwnedCrypto = async (email: string) => {
+    try {
+      const response = await axios.post(
+        `http://127.0.0.1:8000/get_user_ownedCrypto/${email}/`
+      );
+
+      const resOwnedCrypto: OwnedCrypto[] = response.data;
+      const targetCrypto = resOwnedCrypto.find(item => item.name === selectedCrypto.name);
+
+      const updatedCrypto = {
+        ...selectedCrypto,
+        is_owned: targetCrypto?.is_owned,
+        owned_quantity: targetCrypto?.owned_quantity,
+      };
+
+      dispatch(setSelectedCrypto(updatedCrypto));
+      console.log("반환값-소유화폐 : ", response.data)
+    } catch (error) {
+      console.log("소유 화폐 받아오기 실패", error);
+    }
+  }
 
   // 거래 내역에 저장될 정보를 전송(화폐 매수와 함께)
-  const addTradeHistory = async (email: string, cryptoName: string, tradeCategory: string, tradeTime: Date, cryptoMarket: string, cryptoPrice: number, tradePrice: number, tradeAmount: number, isSigned: boolean) => {
+  const addTradeHistory = async (email: string, cryptoName: string, tradeCategory: string, tradeTime: Date, cryptoMarket: string, cryptoPrice: number, tradePrice: number, tradeAmount: number, market: string, isMarketValue: boolean) => {
     try {
       const response = await axios.post("http://127.0.0.1:8000/add_user_tradeHistory/", {
         email: email,
@@ -113,7 +112,8 @@ export default function useFunction() {
         crypto_price: cryptoPrice,
         trade_price: tradePrice,
         trade_amount: tradeAmount,
-        is_signed: isSigned,
+        market: market,
+        isMarketValue: isMarketValue,
       });
       console.log("거래 내역 전송 성공", response.data);
     } catch (error) {
@@ -480,7 +480,7 @@ export default function useFunction() {
     getAllCrypto,
     getInitialData,
     getBalance,
-    // getOwnedCrypto,
+    getOwnedCrypto,
     addTradeHistory,
     getTradeHistory,
     getCryptoName,

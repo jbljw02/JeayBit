@@ -2,19 +2,21 @@ import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState, setBuyingPrice, setIsBuying } from '../../../../redux/store'
 import useFunction from "../../../../utils/useFuction";
-import adjustInputValue from "../../../../utils/adjustInputValue";
+import adjustInputValue from "../../../../utils/trading/adjustInputValue";
 import PriceRange from '../../../input/PriceRange';
 import TradeInput from "../../../input/TradeInput";
 import SelectPercentage from "./SelectPercentage";
 import TradingThead from "./TradingThead";
 import LoginNavigator from "./LoginNavigator";
-import formatWithComas from "../../../../utils/formatWithComas";
+import formatWithComas from "../../../../utils/trading/formatWithComas";
 import axios from "axios";
+import calculatePercentage from "../../../../utils/trading/calculatePercentage";
+import limitDecimalPlace from "../../../../utils/trading/limitDecimalPlace";
 
 export default function BuyingSection() {
     const dispatch = useDispatch();
 
-    const { addTradeHistory, getTradeHistory, getBalance } = useFunction();
+    const { addTradeHistory, getTradeHistory, getBalance, getOwnedCrypto } = useFunction();
 
     const selectedCrypto = useSelector((state: RootState) => state.selectedCrypto);
     const user = useSelector((state: RootState) => state.user);
@@ -49,6 +51,13 @@ export default function BuyingSection() {
         setCompleteModalOpen(!completeModalOpen);
     }
 
+    const resetValue = () => {
+        setBuyQuantity(0);
+        setQuantityInputValue('0');
+        setBuyTotal(0);
+        setTotalInputValue('0');
+    }
+
     // 선택 화폐가 바뀔 때마다 매수 가격을 해당 화폐의 가격으로 변경하고, 주문 수량 및 총액을 초기화
     useEffect(() => {
         // 주문 수량
@@ -70,39 +79,16 @@ export default function BuyingSection() {
 
         // 매수가격이 0이면 주문수량/주문총액은 의미가 없으므로 
         if (buyingPrice !== 0) {
-            let percentageValue = 0;
+            const percentageValue = calculatePercentage(percentage);
 
-            // 주문총액이 구매하려는 화폐 가격에 대해 어느 정도의 비율을 가지는지 계산
-            switch (percentage) {
-                case '10%':
-                    percentageValue = 0.1;
-                    break;
-                case '25%':
-                    percentageValue = 0.25;
-                    break;
-                case '50%':
-                    percentageValue = 0.5;
-                    break;
-                case '75%':
-                    percentageValue = 0.75;
-                    break;
-                case '100%':
-                    percentageValue = 1;
-                    break;
-                default:
-                    return;
-            }
+            if (percentageValue === 0) return; // 유효하지 않은 퍼센트 값에 대해 함수 종료
 
             const dividedTotal = userWallet * percentageValue;
             setBuyTotal(Math.floor(dividedTotal));
             setTotalInputValue(Math.floor(dividedTotal).toString());
 
             let dividedQuantity = dividedTotal / buyingPrice;
-
-            // 소수점 아래 8자리로 제한
-            if ((dividedQuantity.toString().split('.')[1] || '').length > 8) {
-                dividedQuantity = parseFloat(dividedQuantity.toFixed(8));
-            }
+            dividedQuantity = limitDecimalPlace(dividedQuantity, 8);
 
             setBuyQuantity(dividedQuantity);
             setQuantityInputValue(dividedQuantity.toString());
@@ -156,7 +142,7 @@ export default function BuyingSection() {
         // 입력값이 숫자인지 확인하고, 숫자 이외의 문자가 포함되어 있는지 확인
         const isNumber = /^[0-9]*$/.test(adjustedValue);
 
-        if (buyingPrice !== 0) {
+        if (buyingPrice) {
             if (isNumber) {
                 setTotalInputValue(adjustedValue);
                 setBuyTotal(parseFloat(adjustedValue));
@@ -190,43 +176,63 @@ export default function BuyingSection() {
         }
     }
 
-    // 지정가 구매 요청
-    const designatedSubmit = () => {
+    // 지정가 매수 요청
+    const designatedSubmit = async () => {
         // 호가와 구매가가 일치하는지 확인
-        let item = asking_data.find(item => item.ask_price === buyingPrice);
-        if (item) {
-            // 일치한다면 바로 매수 요청을 전송
-            buyCrypto(user.email, selectedCrypto.name, buyQuantity, buyTotal);
-            completeToggleModal();
-            addTradeHistory(user.email, selectedCrypto.name, tradeCategory, time, selectedCrypto.market, buyingPrice, buyTotal, buyQuantity, true);
-            getTradeHistory(user.email);
-        }
-        else {
-            // 선택한 화폐에 대한 구매 대기 여부를 true로 설정
-            let buyingCrypto = localStorage.getItem(`${user.email}_IsBuying`)
-            if (buyingCrypto) {
-                let localStorage_isBuying = JSON.parse(buyingCrypto);
-                localStorage_isBuying[selectedCrypto.name] = true;
-                localStorage.setItem(`${user.email}_IsBuying`, JSON.stringify(localStorage_isBuying));
+        // let mathedItem = asking_data.find(item => item.ask_price === buyingPrice);
+        // if (mathedItem) {
+        //     // 일치한다면 바로 매수 요청을 전송
+        //     await buyCrypto(user.email, selectedCrypto.name, buyQuantity, buyTotal);
+        //     await addTradeHistory(user.email, selectedCrypto.name, tradeCategory, time, selectedCrypto.market, buyingPrice, buyTotal, buyQuantity, true);
+        //     await getTradeHistory(user.email);
+        //     await getOwnedCrypto(user.email);
+        //     resetValue();
+        //     completeToggleModal();
+        // }
+        // else {
+        //     // 선택한 화폐에 대한 구매 대기 여부를 true로 설정
+        //     let buyingCrypto = localStorage.getItem(`${user.email}_IsBuying`)
+        //     if (buyingCrypto) {
+        //         let localStorage_isBuying = JSON.parse(buyingCrypto);
+        //         localStorage_isBuying[selectedCrypto.name] = true;
+        //         localStorage.setItem(`${user.email}_IsBuying`, JSON.stringify(localStorage_isBuying));
 
-                dispatch(setIsBuying(localStorage_isBuying))
-            }
+        //         dispatch(setIsBuying(localStorage_isBuying))
+        //     }
 
-            // 일치하지 않는다면 대기 모달 팝업
-            toggleModal();
-            setModalOpen(!modalOpen);
+        //     // 일치하지 않는다면 대기 모달 팝업
+        //     toggleModal();
+        //     setModalOpen(!modalOpen);
 
-            addTradeHistory(user.email, selectedCrypto.name, tradeCategory, time, selectedCrypto.market, buyingPrice, buyTotal, buyQuantity, false);
-            getTradeHistory(user.email);
-        }
+        //     addTradeHistory(user.email, selectedCrypto.name, tradeCategory, time, selectedCrypto.market, buyingPrice, buyTotal, buyQuantity, false);
+        //     getTradeHistory(user.email);
+        // }
+
+        await addTradeHistory(user.email, selectedCrypto.name, tradeCategory, time, selectedCrypto.market, buyingPrice, buyTotal, buyQuantity, selectedCrypto.market, false);
+        resetValue();
+
     }
 
-    // 시장가 구매 요청 
-    const marketSubmit = () => {
+    // 시장가 매수 요청 
+    const marketSubmit = async () => {
         // 호가와의 일치 여부를 확인하지 않고 즉시 요청 전송
-        buyCrypto(user.email, selectedCrypto.name, buyQuantity, buyTotal)
-        addTradeHistory(user.email, selectedCrypto.name, tradeCategory, time, selectedCrypto.market, buyingPrice, buyTotal, buyQuantity, true);
-        getTradeHistory(user.email);
+        // await buyCrypto(user.email, selectedCrypto.name, buyQuantity, buyTotal)
+        await addTradeHistory(
+            user.email,
+            selectedCrypto.name,
+            tradeCategory,
+            time,
+            selectedCrypto.market,
+            selectedCrypto.price,
+            buyTotal,
+            buyQuantity,
+            selectedCrypto.market,
+            true
+        );
+        await getTradeHistory(user.email);
+        await getOwnedCrypto(user.email);
+
+        completeToggleModal();
     }
 
     return (
@@ -341,7 +347,7 @@ export default function BuyingSection() {
             <div className="trading-footer">
                 {
                     user.email ?
-                        <div className="trading-submit-buy market">
+                        <div className="trading-submit buy">
                             <span onClick={() => {
                                 if (bidSort === '지정가') {
                                     designatedSubmit();
@@ -350,7 +356,8 @@ export default function BuyingSection() {
                                 }
                             }}>매수</span>
                         </div> :
-                        <LoginNavigator />
+                        <LoginNavigator
+                            category="buy" />
                 }
             </div>
         </>

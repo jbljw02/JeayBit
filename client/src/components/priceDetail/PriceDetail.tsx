@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { AskingData, RootState, setAskHide, setAsking_dateTime, setBuyingPrice, setCloseHide, setIsBuying, setIsSelling, setSectionChange, setSellingPrice } from "../../redux/store";
+import { AskingData, RootState, setAskHide, setAsking_dateTime, setBuyingPrice, setCloseHide, setIsBuying, setIsSelling, setSectionChange, setSelectedCrypto, setSellingPrice } from "../../redux/store";
 import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom'
 import axios from "axios";
@@ -32,6 +32,7 @@ export default function PriceDetail() {
   const askingData_unSigned = useSelector((state: RootState) => state.askingData_unSigned);
   const user = useSelector((state: RootState) => state.user);
 
+  console.log("아: ", askingData_unSigned);
   const [completeModalOpen, setCompleteModalOpen] = useState<boolean>(false);
 
   const completeToggleModal = useCallback(() => {
@@ -87,12 +88,11 @@ export default function PriceDetail() {
         // 이중 for문으로 로컬 스토리지 값 하나당 모든 호가를 비교하며 가격 비교
         for (let k = 0; k < (askingData_unSigned[cryptoName]).length; k++) {
 
-          // console.log("호가 : ", askingData_unSigned[cryptoName][k].ask_price);
-
+          console.log("AA");
           // 로컬 스토리지에서 가져온 값과 호가가 일치한다면 구매 요청
           if (scheduledCrypto[j].trade_category === 'BUY' && scheduledCrypto[j].price === (askingData_unSigned[cryptoName])[k].ask_price) {
 
-            // console.log("매수 - 일치", scheduledCrypto[j].price);
+            console.log("매수 - 일치", scheduledCrypto[j].price);
             buyCrypto_unSigned(scheduledCrypto[j].id, user.email, scheduledCrypto[j].name, scheduledCrypto[j].trade_amount, scheduledCrypto[j].trade_price);
             completeToggleModal();
           }
@@ -157,7 +157,7 @@ export default function PriceDetail() {
           // 로컬 스토리지에서 가져온 값과 호가가 일치한다면 구매 요청
           if (scheduledCrypto[j].trade_category === 'SELL' && scheduledCrypto[j].price === (askingData_unSigned[cryptoName])[k].bid_price) {
 
-            // console.log("매도 - 일치", scheduledCrypto[j].price);
+            console.log("매도 - 일치", scheduledCrypto[j].price);
             sellCrypto_unSigned(scheduledCrypto[j].id, user.email, scheduledCrypto[j].name, scheduledCrypto[j].trade_amount, scheduledCrypto[j].trade_price);
             completeToggleModal();
           }
@@ -166,6 +166,7 @@ export default function PriceDetail() {
       }
     })
   }, [askingData_unSigned, completeToggleModal, user.email, sellCrypto_unSigned])
+
 
   return (
     <>

@@ -111,6 +111,13 @@ export default function ListTbody() {
         }
     }, [allCrypto]);
 
+    const updateSelectedCrypto = () => {
+        const targetCrypto = allCrypto.find(item => item.market === selectedCrypto.market);
+        if (targetCrypto) {
+            dispatch(setSelectedCrypto(targetCrypto));
+        }
+    }
+
     // 선택한 화폐가 변경 될 때
     useEffect(() => {
         // 호가 및 체결내역 호출
