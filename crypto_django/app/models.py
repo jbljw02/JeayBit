@@ -106,7 +106,7 @@ class TradeHistory(models.Model):
     crypto_price = models.FloatField()
     trade_price = models.DecimalField(max_digits=30, decimal_places=0)
     trade_amount = models.DecimalField(max_digits=30, decimal_places=8)
-    is_signed = models.BooleanField(default=False);
+    is_signed = models.BooleanField(default=False)
     
     def __str__(self):
         return f"{self.id} - {self.trade_category} - {self.trade_time} - {self.user.email} - {self.crypto.name} - {self.crypto_price} - {self.trade_price} - {self.trade_amount} - {self.is_signed}"

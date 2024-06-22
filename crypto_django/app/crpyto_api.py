@@ -82,7 +82,6 @@ def update_crypto():
         else:
             Crypto.objects.create(name=name[i], price=cur_price[i])
             
-
 def candle_per_date_BTC():
     headers = {"accept": "application/json"}
     url = "https://api.upbit.com/v1/candles/days?market=KRW-BTC&count=100"
