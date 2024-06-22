@@ -23,38 +23,39 @@ export default function UnSignedHistory() {
 
     return (
         <>
-            {userTradeHistory_unSigned && Array.isArray(userTradeHistory_unSigned) ? (
-                userTradeHistory_unSigned.map((item, i) => {
-                    const isLastItem = i === userTradeHistory_unSigned.length - 1;
-                    const isClicked = scheduledCancel.some(cancelItem => cancelItem.index === i);
-                    return (
-                        <tr
-                            key={i}
-                            className={`tr-unSigned ${isClicked ? 'unSigned-clicked' : ''}`}
-                            id={isLastItem ? 'last-row' : ''}
-                            onClick={() => clickUnSigned(item.id, i)}>
-                            <td>
-                                {item.trade_time.slice(0, 10)}
-                                <br />
-                                {item.trade_time.slice(10)}
-                            </td>
-                            <td>
-                                <span className="tradingHistory-market">{item.crypto_market || ''}</span>
-                                <br />
-                                <span className={`tradingHistory-category ${item.trade_category === 'BUY' ? 'asking-buy' : 'asking-sell'}`}>
-                                    {item.trade_category ? (item.trade_category === 'BUY' ? '매수' : '매도') : ''}
-                                </span>
-                            </td>
-                            <td>
-                                {item.crypto_price ? item.crypto_price.toLocaleString() : ''}
-                                <br />
-                                {item.trade_price ? Number(item.trade_price).toLocaleString() : ''}
-                            </td>
-                            <td>{item.trade_amount ? formatTradeAmount(item.trade_amount) : ''}</td>
-                        </tr>
-                    );
-                })
-            ) : null}
+            {
+                userTradeHistory_unSigned && Array.isArray(userTradeHistory_unSigned) ? (
+                    userTradeHistory_unSigned.map((item, i) => {
+                        const isLastItem = i === userTradeHistory_unSigned.length - 1;
+                        const isClicked = scheduledCancel.some(cancelItem => cancelItem.index === i);
+                        return (
+                            <tr
+                                key={i}
+                                className={`tr-unSigned ${isClicked ? 'unSigned-clicked' : ''}`}
+                                id={isLastItem ? 'last-row' : ''}
+                                onClick={() => clickUnSigned(item.id, i)}>
+                                <td>
+                                    {item.trade_time.slice(0, 10)}
+                                    <br />
+                                    {item.trade_time.slice(10)}
+                                </td>
+                                <td>
+                                    <span className="tradingHistory-market">{item.crypto_market || ''}</span>
+                                    <br />
+                                    <span className={`tradingHistory-category ${item.trade_category === 'BUY' ? 'asking-buy' : 'asking-sell'}`}>
+                                        {item.trade_category ? (item.trade_category === 'BUY' ? '매수' : '매도') : ''}
+                                    </span>
+                                </td>
+                                <td>
+                                    {item.crypto_price ? item.crypto_price.toLocaleString() : ''}
+                                    <br />
+                                    {item.trade_price ? Number(item.trade_price).toLocaleString() : ''}
+                                </td>
+                                <td>{item.trade_amount ? formatTradeAmount(item.trade_amount) : ''}</td>
+                            </tr>
+                        );
+                    })
+                ) : null}
         </>
     );
 }

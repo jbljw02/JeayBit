@@ -14,8 +14,8 @@ export default function CompleteModal({ isModalOpen, setIsModalOpen, category }:
                     position: 'absolute',
                     left: '50%',
                     top: '48%',
-                    width: 500,
-                    height: 155,
+                    width: 460,
+                    height: 145,
                     transform: 'translate(-50%, -50%)',
                 }
             }}>

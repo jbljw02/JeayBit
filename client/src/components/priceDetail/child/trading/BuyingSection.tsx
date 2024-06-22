@@ -12,6 +12,7 @@ import formatWithComas from "../../../../utils/trading/formatWithComas";
 import axios from "axios";
 import calculatePercentage from "../../../../utils/trading/calculatePercentage";
 import limitDecimalPlace from "../../../../utils/trading/limitDecimalPlace";
+import CompleteModal from "../../../modal/CompleteModal";
 
 export default function BuyingSection() {
     const dispatch = useDispatch();
@@ -21,7 +22,6 @@ export default function BuyingSection() {
     const selectedCrypto = useSelector((state: RootState) => state.selectedCrypto);
     const user = useSelector((state: RootState) => state.user);
     const userWallet = useSelector((state: RootState) => state.userWallet);
-    const asking_data = useSelector((state: RootState) => state.asking_data); // bid = 매수, ask = 매도
     const buyingPrice = useSelector((state: RootState) => state.buyingPrice);
 
     const [selectedPercentage, setSelectedPercentage] = useState<string>('');
@@ -34,7 +34,7 @@ export default function BuyingSection() {
     const [quantityInputValue, setQuantityInputValue] = useState('0');
     const [totalInputValue, setTotalInputValue] = useState('0');
 
-    const [modalOpen, setModalOpen] = useState<boolean>(false);
+    const [watingModalOpen, setWatingModalOpen] = useState<boolean>(false);
     const [completeModalOpen, setCompleteModalOpen] = useState<boolean>(false);
 
     // 화폐 거래내역에 '매수'로 저장할지 '매도'로 저장할지를 지정
@@ -43,19 +43,12 @@ export default function BuyingSection() {
     // 현재 시간을 저장하는 state
     const [time, setTime] = useState(new Date());
 
-    const toggleModal = () => {
-        setModalOpen(!modalOpen);
-    }
-
-    const completeToggleModal = () => {
-        setCompleteModalOpen(!completeModalOpen);
-    }
-
     const resetValue = () => {
         setBuyQuantity(0);
         setQuantityInputValue('0');
         setBuyTotal(0);
         setTotalInputValue('0');
+        setSelectedPercentage('');
     }
 
     // 선택 화폐가 바뀔 때마다 매수 가격을 해당 화폐의 가격으로 변경하고, 주문 수량 및 총액을 초기화
@@ -178,35 +171,6 @@ export default function BuyingSection() {
 
     // 지정가 매수 요청
     const designatedSubmit = async () => {
-        // 호가와 구매가가 일치하는지 확인
-        // let mathedItem = asking_data.find(item => item.ask_price === buyingPrice);
-        // if (mathedItem) {
-        //     // 일치한다면 바로 매수 요청을 전송
-        //     await buyCrypto(user.email, selectedCrypto.name, buyQuantity, buyTotal);
-        //     await addTradeHistory(user.email, selectedCrypto.name, tradeCategory, time, selectedCrypto.market, buyingPrice, buyTotal, buyQuantity, true);
-        //     await getTradeHistory(user.email);
-        //     await getOwnedCrypto(user.email);
-        //     resetValue();
-        //     completeToggleModal();
-        // }
-        // else {
-        //     // 선택한 화폐에 대한 구매 대기 여부를 true로 설정
-        //     let buyingCrypto = localStorage.getItem(`${user.email}_IsBuying`)
-        //     if (buyingCrypto) {
-        //         let localStorage_isBuying = JSON.parse(buyingCrypto);
-        //         localStorage_isBuying[selectedCrypto.name] = true;
-        //         localStorage.setItem(`${user.email}_IsBuying`, JSON.stringify(localStorage_isBuying));
-
-        //         dispatch(setIsBuying(localStorage_isBuying))
-        //     }
-
-        //     // 일치하지 않는다면 대기 모달 팝업
-        //     toggleModal();
-        //     setModalOpen(!modalOpen);
-
-        //     addTradeHistory(user.email, selectedCrypto.name, tradeCategory, time, selectedCrypto.market, buyingPrice, buyTotal, buyQuantity, false);
-        //     getTradeHistory(user.email);
-        // }
 
         await addTradeHistory(user.email, selectedCrypto.name, tradeCategory, time, selectedCrypto.market, buyingPrice, buyTotal, buyQuantity, selectedCrypto.market, false);
         resetValue();
@@ -216,7 +180,6 @@ export default function BuyingSection() {
     // 시장가 매수 요청 
     const marketSubmit = async () => {
         // 호가와의 일치 여부를 확인하지 않고 즉시 요청 전송
-        // await buyCrypto(user.email, selectedCrypto.name, buyQuantity, buyTotal)
         await addTradeHistory(
             user.email,
             selectedCrypto.name,
@@ -232,11 +195,16 @@ export default function BuyingSection() {
         await getTradeHistory(user.email);
         await getOwnedCrypto(user.email);
 
-        completeToggleModal();
+        resetValue();
+        setCompleteModalOpen(true);
     }
 
     return (
         <>
+            <CompleteModal
+                isModalOpen={completeModalOpen}
+                setIsModalOpen={setCompleteModalOpen}
+                category="buy" />
             {
                 // 매수 - 지정가 영역
                 bidSort === '지정가' ?

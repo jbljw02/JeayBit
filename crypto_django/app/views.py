@@ -630,7 +630,7 @@ def sell_crypto_unSigned(request):
         return JsonResponse({"error": "해당 이메일의 사용자가 존재하지 않습니다"})
 
 
-# 사용자, 화폐별 거래내역을 추가
+# 사용자, 화폐별 거래내역을 추가 및 매수/매도 처리
 @api_view(["POST"])
 def add_user_tradeHistory(request):
     data = request.data
@@ -673,9 +673,7 @@ def add_user_tradeHistory(request):
     matched = False
     if isMarketValue:
         matched = True
-        print("마켓")
     else:
-        print("지정")
         matched = check_price_match(trade_category, crypto_price, orderbook_units)
 
     is_signed = matched
@@ -722,25 +720,28 @@ def get_user_tradeHistory(request, email):
     except CustomUser.DoesNotExist:
         return Response({"error": "요청에 이메일이 포함되어야 합니다"}, status=400)
 
-    trade_historys = TradeHistory.objects.filter(user=user)
+    try:
+        trade_historys = TradeHistory.objects.filter(user=user)
 
-    data = [
-        {
-            "id": trade_history.id,
-            "trade_category": trade_history.trade_category,
-            "trade_time": trade_history.trade_time,
-            "user": user.email,
-            "crypto_name": trade_history.crypto.name,
-            "crypto_market": trade_history.crypto_market,
-            "crypto_price": trade_history.crypto_price,
-            "trade_price": trade_history.trade_price,
-            "trade_amount": trade_history.trade_amount,
-            "is_signed": trade_history.is_signed,
-        }
-        for trade_history in trade_historys
-    ]
+        data = [
+            {
+                "id": trade_history.id,
+                "trade_category": trade_history.trade_category,
+                "trade_time": trade_history.trade_time,
+                "user": user.email,
+                "crypto_name": trade_history.crypto.name,
+                "crypto_market": trade_history.crypto_market,
+                "crypto_price": trade_history.crypto_price,
+                "trade_price": trade_history.trade_price,
+                "trade_amount": trade_history.trade_amount,
+                "is_signed": trade_history.is_signed,
+            }
+            for trade_history in trade_historys
+        ]
 
-    return Response({"trade_history": data}, status=200)
+        return Response({"trade_history": data}, status=200)
+    except:
+        return Response({"error:": "거래내역 받아오기 실패"}, status=500)
 
 
 # 모든 화폐명을 클라이언트로 전달
@@ -777,11 +778,9 @@ def cancel_order(request):
     email = data.get("email")
 
     if not email:
-        return {"error": "요청에 이메일이 포함되어야 합니다"}
+        return Response({"error": "요청에 이메일이 포함되어야 합니다"}, status=400)
     if not ids:
-        return Response(
-            {"error": "취소할 주문의 id가 요청에 포함되어야 합니다"}, status=400
-        )
+        return Response({"error": "취소할 주문의 id가 요청에 포함되어야 합니다"}, status=400)
 
     try:
         user = CustomUser.objects.get(email=email)
@@ -789,18 +788,9 @@ def cancel_order(request):
         # ids 배열과 튜플의 id 필드 사이 일치하는 부분이 있으면 삭제
         trade_history = TradeHistory.objects.filter(user=user, id__in=ids).delete()
 
-        return Response({"success": "주문 취소 성공"})
+        return Response({"cancel_order": "주문 취소 성공"}, status=200)
     except CustomUser.DoesNotExist:
         Response({"error": "해당 이메일의 사용자가 존재하지 않습니다"}, status=500)
-
-
-def check_login(self, request):
-    try:
-        is_logged_in = request.user.is_authenticated
-        return JsonResponse({"is_logged_in": is_logged_in}, status=200)
-    except Exception as e:
-        print(f"로그인 체크 에러: {e}")
-        return JsonResponse({"error": "로그인 체크 에러"}, status=500)
 
 
 class CheckLoginView(View):
@@ -813,12 +803,13 @@ class CheckLoginView(View):
                         "is_logged_in": is_logged_in,
                         "name": request.user.username,
                         "email": request.user.email,
-                    }
+                    }, status=200
                 )
-        except Exception as e:
+        except Exception:
             return JsonResponse({"error": "로그인 체크 에러"}, status=500)
 
 
+# 화폐의 모든 정보를 전송함. 로그인 상태일 시 관심, 보유 여부에 대해서도 전송.
 class GetAllCryptoView(View):
     def post(
         self,
@@ -900,4 +891,4 @@ class GetAllCryptoView(View):
             "all_crypto": all_crypto,
         }
 
-        return JsonResponse(data)
+        return JsonResponse(data, status=200)

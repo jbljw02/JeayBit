@@ -1,7 +1,7 @@
 .container {
     display: flex;
     flex-direction: column;
-    padding: 5px 8px 5px 10px;
+    padding: 0px 8px 0px 10px;
     width: auto;
     height: 100%;
 }
@@ -13,7 +13,7 @@
 }
 
 .content {
-    font-size: 15px;
+    font-size: 15.5px;
 }
 
 button {
@@ -23,6 +23,6 @@ button {
     align-self: flex-end;
     font-weight: 600;
     font-size: 15.5px;
-    margin-top: auto;
+    margin-top: 60px;
     margin-bottom: 5px;
 }

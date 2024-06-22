@@ -13,17 +13,15 @@ import formatWithComas from "../../../../utils/trading/formatWithComas";
 import calculatePercentage from "../../../../utils/trading/calculatePercentage";
 import limitDecimalPlace from "../../../../utils/trading/limitDecimalPlace";
 import LoginNavigator from "./LoginNavigator";
+import CompleteModal from "../../../modal/CompleteModal";
 
 export default function SellingSectioin() {
     const dispatch = useDispatch();
-    const navigate = useNavigate();
 
     const { getBalance, addTradeHistory, getTradeHistory, getOwnedCrypto } = useFunction();
 
-    const allCrypto = useSelector((state: RootState) => state.allCrypto);
     const selectedCrypto = useSelector((state: RootState) => state.selectedCrypto);
     const user = useSelector((state: RootState) => state.user);
-    const asking_data = useSelector((state: RootState) => state.asking_data);  // bid = 매수, ask = 매도
 
     const [selectedPercentage, setSelectedPercentage] = useState<string>('');
     const [bidSort, setBidSort] = useState<string>('지정가');
@@ -31,11 +29,11 @@ export default function SellingSectioin() {
     const sellingPrice = useSelector((state: RootState) => state.sellingPrice);
     const [sellTotal, setSellTotal] = useState<number>(0);
     const [sellQuantity, setSellQuantity] = useState<number>(0);
-
     const [quantityInputValue, setQuantityInputValue] = useState('0');
     const [totalInputValue, setTotalInputValue] = useState('0');
     const [sellingInputValue, setSellingInputValue] = useState('0');
-    const [modalOpen, setModalOpen] = useState<boolean>(false);
+
+    const [watingModalOpen, setWatingModalOpen] = useState<boolean>(false);
     const [completeModalOpen, setCompleteModalOpen] = useState<boolean>(false);
 
     // 화폐 거래내역에 '매수'로 저장할지 '매도'로 저장할지를 지정
@@ -44,19 +42,12 @@ export default function SellingSectioin() {
     // 현재 시간을 저장하는 state
     const [time, setTime] = useState(new Date());
 
-    const toggleModal = () => {
-        setModalOpen(!modalOpen);
-    }
-
-    const completeToggleModal = () => {
-        setCompleteModalOpen(!completeModalOpen);
-    }
-
     const resetValue = () => {
         setSellQuantity(0);
         setQuantityInputValue('0');
         setSellTotal(0);
         setTotalInputValue('0');
+        setSelectedPercentage('');
     }
 
     // 선택 화폐가 바뀔 때마다 매수 가격을 해당 화폐의 가격으로 변경하고, 주문 수량 및 총액을 초기화
@@ -195,55 +186,51 @@ export default function SellingSectioin() {
 
     // 지정가 매도 요청
     const designatedSubmit = async () => {
-        // 호가와 매도가가 일치하는지 확인
-        // let mathedItem = asking_data.find(item => item.bid_price === sellingPrice);
-        // if (mathedItem) {
-        //     // 일치한다면 바로 매수 요청을 전송
-        //     await sellCrypto(user.email, selectedCrypto.name, sellQuantity, sellTotal);
-        //     await addTradeHistory(user.email, selectedCrypto.name, tradeCategory, time, selectedCrypto.market, sellingPrice, sellTotal, sellQuantity, selectedCrypto.market, false);
-        //     await getTradeHistory(user.email);
-        //     await getOwnedCrypto(user.email);
-
-        //     resetValue();
-        //     completeToggleModal();
-        // }
-        // else {
-        //     // 선택한 화폐에 대한 매도 대기 여부를 true로 설정
-        //     let sellingCrypto = localStorage.getItem(`${user.email}_IsSelling`)
-        //     if (sellingCrypto !== null) {
-        //         let localStorage_isSelling = JSON.parse(sellingCrypto);
-        //         localStorage_isSelling[selectedCrypto.name] = true;
-        //         localStorage.setItem(`${user.email}_IsSelling`, JSON.stringify(localStorage_isSelling));
-
-        //         dispatch(setIsSelling(localStorage_isSelling))
-        //     }
-
-        //     // 일치하지 않는다면 대기 모달 팝업
-        //     toggleModal();
-        //     setModalOpen(!modalOpen);
-
-        //     addTradeHistory(user.email, selectedCrypto.name, tradeCategory, time, selectedCrypto.market, sellingPrice, sellTotal, sellQuantity, selectedCrypto.market, true);
-        //     getTradeHistory(user.email);
-        // }
-
-        await addTradeHistory(user.email, selectedCrypto.name, tradeCategory, time, selectedCrypto.market, sellingPrice, sellTotal, sellQuantity, selectedCrypto.market, false);
+        await addTradeHistory(
+            user.email, 
+            selectedCrypto.name, 
+            tradeCategory, 
+            time, 
+            selectedCrypto.market, 
+            sellingPrice, 
+            sellTotal, 
+            sellQuantity, 
+            selectedCrypto.market, 
+            false
+        );
         await getTradeHistory(user.email);
         await getOwnedCrypto(user.email);
 
+        resetValue();
     }
 
     // 시장가 매도 요청 
     const marketSubmit = async () => {
-        // 호가와의 일치 여부를 확인하지 않고 즉시 요청 전송
-        // await sellCrypto(user.email, selectedCrypto.name, sellQuantity, sellTotal)
-        await addTradeHistory(user.email, selectedCrypto.name, tradeCategory, time, selectedCrypto.market, selectedCrypto.price, sellTotal, sellQuantity, selectedCrypto.market, true);
+        await addTradeHistory(
+            user.email,
+            selectedCrypto.name,
+            tradeCategory,
+            time,
+            selectedCrypto.market,
+            selectedCrypto.price,
+            sellTotal,
+            sellQuantity,
+            selectedCrypto.market,
+            true
+        );
         await getTradeHistory(user.email);
         await getOwnedCrypto(user.email);
-        completeToggleModal();
+
+        resetValue();
+        setCompleteModalOpen(true);
     }
 
     return (
         <>
+            <CompleteModal
+                isModalOpen={completeModalOpen}
+                setIsModalOpen={setCompleteModalOpen}
+                category="sell" />
             {
                 // 매도 - 지정가 영역
                 bidSort === '지정가' ?
