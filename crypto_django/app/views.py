@@ -677,7 +677,6 @@ def add_user_tradeHistory(request):
         matched = check_price_match(trade_category, crypto_price, orderbook_units)
 
     is_signed = matched
-    print("매칭: ", matched)
     
     try:
         user = CustomUser.objects.get(email=email)

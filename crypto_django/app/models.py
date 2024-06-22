@@ -68,8 +68,8 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     objects = CustomUserManager()
 
-    USERNAME_FIELD = 'email'  # 로그인 시 식별자로 사용되는 필드
-    REQUIRED_FIELDS = ['username']  # 관리자 계정 생성 시 반드시 입력해야 하는 필드  
+    USERNAME_FIELD = 'email' # 로그인 시 식별자로 사용되는 필드
+    REQUIRED_FIELDS = ['username'] # 관리자 계정 생성 시 반드시 입력해야 하는 필드  
     
     
 # 화폐의 이름과 가격을 담는 테이블

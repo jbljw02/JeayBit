@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'rest_framework',
     'crypto_app',
+    'django_celery_beat',
 ]
 
 MIDDLEWARE = [
@@ -48,6 +49,19 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware'
 ]
+
+# RabbitMQ를 브로커로 설정
+CELERY_BROKER_URL = 'amqp://guest:guest@localhost:5672//'
+# 결과 백엔드로도 RabbitMQ를 설정
+CELERY_RESULT_BACKEND = 'rpc://'
+CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
+
+# 태스크 결과를 저장할 때 사용되는 직렬화 포맷
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TIMEZONE = 'Asia/Seoul'
+CELERY_ENABLE_UTC = True
 
 CSRF_COOKIE_NAME = 'csrftoken'
 CSRF_HEADER_NAME = 'X-CSRFToken'
@@ -78,7 +92,6 @@ CSRF_COOKIE_HTTPONLY = True
 
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 
-from crypto_app.authmiddleware import CsrfExemptSessionAuthentication
 AUTHENTICATION_BACKENDS = [
     # 'app.backends.EmailLogin',  # 커스텀 인증 방식을 사용
     'django.contrib.auth.backends.ModelBackend',  # User 모델의 기본 인증 방식도 가능하도록 사용
@@ -88,7 +101,7 @@ AUTHENTICATION_BACKENDS = [
     # "crypto_app.authmiddleware.CsrfExemptSessionAuthentication"
 ]
 
-AUTH_USER_MODEL = 'app.CustomUser'  # 기본적으로 User 모델이 아닌 CustomUser 모델을 참고하도록 설정
+AUTH_USER_MODEL = 'app.CustomUser' # 기본적으로 User 모델이 아닌 CustomUser 모델을 참고하도록 설정
 
 TEMPLATES = [
     {
