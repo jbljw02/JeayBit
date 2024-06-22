@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
+import logging
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -37,6 +38,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'crypto_app',
     'django_celery_beat',
+    'django_celery_results',
 ]
 
 MIDDLEWARE = [
@@ -52,8 +54,8 @@ MIDDLEWARE = [
 
 # RabbitMQ를 브로커로 설정
 CELERY_BROKER_URL = 'amqp://guest:guest@localhost:5672//'
-# 결과 백엔드로도 RabbitMQ를 설정
-CELERY_RESULT_BACKEND = 'rpc://'
+# 결과 백엔드로는 장고 DB를 사용
+CELERY_RESULT_BACKEND = 'django-db'
 CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
 
 # 태스크 결과를 저장할 때 사용되는 직렬화 포맷
@@ -62,6 +64,9 @@ CELERY_RESULT_SERIALIZER = 'json'
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TIMEZONE = 'Asia/Seoul'
 CELERY_ENABLE_UTC = True
+
+CELERYD_HIJACK_ROOT_LOGGER = False
+CELERY_LOG_LEVEL = logging.INFO
 
 CSRF_COOKIE_NAME = 'csrftoken'
 CSRF_HEADER_NAME = 'X-CSRFToken'
