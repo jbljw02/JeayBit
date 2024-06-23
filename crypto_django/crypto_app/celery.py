@@ -4,12 +4,14 @@ from celery import Celery
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'crypto_app.settings')
 
+# 비동기 작업 큐 정의
 app = Celery('crypto_app')
 
 app.config_from_object('django.conf:settings', namespace='CELERY')
 
 app.autodiscover_tasks()
 
+# 주기적으로 실행할 작업 스케줄링
 app.conf.beat_schedule = {
     'my-task-every-5-seconds': {
         'task': 'app.tasks.check_trade_history',

@@ -43,6 +43,20 @@ export default function BuyingSection() {
     // 현재 시간을 저장하는 state
     const [time, setTime] = useState(new Date());
 
+    useEffect(() => {
+        const socket = new WebSocket('ws://localhost:8000/ws/trade_updates/');
+    
+        socket.onmessage = function (e) {
+            const data = JSON.parse(e.data);
+            console.log("Message from server:", data.message);
+        };
+    
+        socket.onerror = function (e) {
+            console.error("WebSocket error:", e);
+        };
+
+    }, [])
+
     const resetValue = () => {
         setBuyQuantity(0);
         setQuantityInputValue('0');

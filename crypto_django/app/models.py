@@ -110,3 +110,10 @@ class TradeHistory(models.Model):
     
     def __str__(self):
         return f"{self.id} - {self.trade_category} - {self.trade_time} - {self.user.email} - {self.crypto.name} - {self.crypto_price} - {self.trade_price} - {self.trade_amount} - {self.is_signed}"
+
+# 백그라운드에서 거래가 체결됐을 때 해당 이벤트를 저장할 테이블 
+class TradeEvent(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    message = models.TextField()
+    timestamp = models.DateTimeField(auto_now_add=True)
+    is_sent = models.BooleanField(default=False)

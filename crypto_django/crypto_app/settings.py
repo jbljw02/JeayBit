@@ -39,6 +39,8 @@ INSTALLED_APPS = [
     'crypto_app',
     'django_celery_beat',
     'django_celery_results',
+    'channels',
+    'daphne',
 ]
 
 MIDDLEWARE = [
@@ -53,7 +55,7 @@ MIDDLEWARE = [
 ]
 
 # RabbitMQ를 브로커로 설정
-CELERY_BROKER_URL = 'amqp://guest:guest@localhost:5672//'
+CELERY_BROKER_URL = 'redis://127.0.0.1:6379/0'
 # 결과 백엔드로는 장고 DB를 사용
 CELERY_RESULT_BACKEND = 'django-db'
 CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
@@ -67,6 +69,17 @@ CELERY_ENABLE_UTC = True
 
 CELERYD_HIJACK_ROOT_LOGGER = False
 CELERY_LOG_LEVEL = logging.INFO
+
+ASGI_APPLICATION = 'crypto_app.asgi.application'
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [('127.0.0.1', 6379)],
+        },
+    },
+}
 
 CSRF_COOKIE_NAME = 'csrftoken'
 CSRF_HEADER_NAME = 'X-CSRFToken'

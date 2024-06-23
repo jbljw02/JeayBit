@@ -42,10 +42,10 @@ export default function ListTbody() {
     useEffect(() => {
         getAllCrypto();
 
-        // getAllCrypto 함수를 1초마다 실행 - 서버에서 받아오는 값을 1초마다 갱신시킴
+        // getAllCrypto 함수를 2초마다 실행 - 서버에서 받아오는 값을 2초마다 갱신시킴
         const interval = setInterval(() => {
             getAllCrypto();
-        }, 1000);
+        }, 2000);
 
         // setInterval이 반환하는 interval ID를 clearInterval 함수로 제거
         return () => clearInterval(interval);
