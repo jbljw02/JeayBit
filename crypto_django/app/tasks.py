@@ -5,6 +5,7 @@ import requests
 import logging
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
+from celery.result import TaskResult
 
 logger = logging.getLogger(__name__)
 
@@ -47,3 +48,14 @@ def check_trade_history():
             
     
     return "Trade histories checked and updated."
+
+@shared_task
+# celery 결과가 너무 많이 쌓일 경우 정리
+def cleanup_task_results(max_results=1000):
+    total_results = TaskResult.objects.count()
+    
+    if total_results > max_results:
+        # 오래된 결과부터 정리하기 위해 정렬
+        excess_results = total_results - max_results
+        results_to_delete = TaskResult.objects.order_by('date_done')[:excess_results]
+        results_to_delete.delete()

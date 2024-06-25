@@ -124,8 +124,8 @@ export type RootState = {
   theme: boolean,
   logInUser: string,
   logInEmail: string,
-  favoriteCrypto: FavoriteCrypto[],
-  ownedCrypto: OwnedCrypto[],
+  favoriteCrypto: Crypto[],
+  ownedCrypto: Crypto[],
   isFavorited: boolean,
   userWallet: number,
   cr_clickedIndex: number,
@@ -151,6 +151,8 @@ export type RootState = {
   allCrypto: Crypto[],
   csrfToken: string,
   scheduledCancel: ScheduleCancel,
+  searchedCrypto: Crypto[],
+  sortStates: number[],
 }
 
 const cr_name = createSlice({
@@ -858,6 +860,26 @@ export const scheduledCancelSlice = createSlice({
   }
 })
 
+export const searchedCryptoSlice = createSlice({
+  name: 'searchedCrypto',
+  initialState: [],
+  reducers: {
+    setSearchedCrypto: (state, action) => {
+      return action.payload;
+    }
+  }
+})
+
+export const sortStatesSlice = createSlice({
+  name: 'sortStates',
+  initialState: [0, 0, 0, 0],
+  reducers: {
+    setSortStates: (state, action) => {
+      return action.payload;
+    }
+  }
+})
+
 // const combinedReducer = combineReducers({
 //   listCategory: cryptoListReducers.listCategory, 
 // });
@@ -942,6 +964,8 @@ export default configureStore({
     user: userSlice.reducer,
     csrfToken: csrfTokenSlice.reducer,
     scheduledCancel: scheduledCancelSlice.reducer,
+    searchedCrypto: searchedCryptoSlice.reducer,
+    sortStates: sortStatesSlice.reducer,
   }
 })
 
@@ -1030,3 +1054,5 @@ export const { setAllCrypto } = allCryptoSlice.actions;
 export const { setUser } = userSlice.actions;
 export const { setCsrfToken } = csrfTokenSlice.actions;
 export const { setScheduledCancel } = scheduledCancelSlice.actions;
+export const { setSearchedCrypto } = searchedCryptoSlice.actions;
+export const { setSortStates } = sortStatesSlice.actions;

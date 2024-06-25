@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState, setStar, setBuyingPrice, setSellingPrice, setCr_market_selected, setCr_name_selected, setFilteredData, setLogInEmail, setLogInUser, setSortedData, setSelectedCrypto } from "../../../../redux/store";
+import { RootState, setBuyingPrice, setSellingPrice, setFilteredData, setSelectedCrypto, setFavoriteCrypto, setOwnedCrypto } from "../../../../redux/store";
 import useFunction from "../../../../utils/useFuction";
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import 'react-perfect-scrollbar/dist/css/styles.css';
@@ -19,6 +19,8 @@ export default function ListTbody() {
         addCryptoToUser,
     } = useFunction();
 
+    const favoriteCrypto = useSelector((state: RootState) => state.favoriteCrypto);
+    const ownedCrypto = useSelector((state: RootState) => state.ownedCrypto);
     const filteredData = useSelector((state: RootState) => state.filteredData);
     const selectedCrypto = useSelector((state: RootState) => state.selectedCrypto);
     const chartSortTime = useSelector((state: RootState) => state.chartSortTime);
@@ -51,25 +53,71 @@ export default function ListTbody() {
         return () => clearInterval(interval);
     }, []);
 
-    // 서버로부터 받아온 화폐의 값이 바뀔 때마다 filteredData도 동시에 업데이트
     useEffect(() => {
-        // 초기에는 filteredData가 비어있기 때문에 allCrypto의 값으로 그대로 업데이트
-        if (filteredData.length === 0) {
-            dispatch(setFilteredData(allCrypto));
-        }
-        else {
-            // allCrypto의 값 전체를 업데이트 하는 게 아닌, filteredData가 가지고 있는 값들만 업데이트 함
-            const updatedData = filteredData.map(filteredItem => {
-                const updatedItem = allCrypto.find(cryptoItem => cryptoItem.name === filteredItem.name);
-                return updatedItem ?
-                    // {} => filtedItem, updatedItem의 속성을 모두 복사
-                    // 두 아이템이 동일한 키를 가지고 있으면 updatedItem으로 덮어씌움
-                    { ...filteredItem, ...updatedItem } :
-                    filteredItem;
-            });
-            dispatch(setFilteredData(updatedData));
-        }
+        const isFavorites = allCrypto.filter(item => item.is_favorited);
+        const isOwnes = allCrypto.filter(item => item.is_owned && item.owned_quantity > 0.00);
+
+        dispatch(setFavoriteCrypto(isFavorites));
+        dispatch(setOwnedCrypto(isOwnes));
     }, [allCrypto]);
+
+    // 서버로부터 받아온 화폐의 값이 바뀔 때마다 filteredData도 동시에 업데이트
+    // useEffect(() => {
+    //     if (filteredData.length === 0) {
+    //         console.log("동작");
+    //         dispatch(setFilteredData(allCrypto));
+    //     }
+    //     else {
+
+    //         const updatedData = filteredData.map(filteredItem => {
+    //             const updatedItem = allCrypto.find(cryptoItem => cryptoItem.name === filteredItem.name);
+
+    //             if (updatedItem) {
+    //                 const isDifferent = (
+    //                     filteredItem.price !== updatedItem.price ||
+    //                     filteredItem.market !== updatedItem.market ||
+    //                     filteredItem.change !== updatedItem.change ||
+    //                     filteredItem.change_rate !== updatedItem.change_rate ||
+    //                     filteredItem.change_price !== updatedItem.change_price ||
+    //                     filteredItem.trade_price !== updatedItem.trade_price ||
+    //                     filteredItem.trade_volume !== updatedItem.trade_volume ||
+    //                     filteredItem.open_price !== updatedItem.open_price ||
+    //                     filteredItem.high_price !== updatedItem.high_price ||
+    //                     filteredItem.low_price !== updatedItem.low_price
+    //                 );
+
+    //                 if (isDifferent) {
+    //                     return {
+    //                         ...filteredItem,
+    //                         price: updatedItem.price,
+    //                         market: updatedItem.market,
+    //                         change: updatedItem.change,
+    //                         change_rate: updatedItem.change_rate,
+    //                         change_price: updatedItem.change_price,
+    //                         trade_price: updatedItem.trade_price,
+    //                         trade_volume: updatedItem.trade_volume,
+    //                         open_price: updatedItem.open_price,
+    //                         high_price: updatedItem.high_price,
+    //                         low_price: updatedItem.low_price,
+    //                     };
+    //                 }
+    //             }
+
+    //             return filteredItem;
+    //         });
+
+    //         // updatedData가 기존 filteredData와 다른 경우에만 dispatch 호출
+    //         const hasChanges = updatedData.some((item, index) =>
+    //             Object.keys(item).some(key => item[key as keyof Crypto] !== filteredData[index][key as keyof Crypto])
+    //         );
+
+    //         if (hasChanges) {
+    //             console.log("아아: ", updatedData);
+    //             dispatch(setFilteredData(updatedData));
+    //         }
+    //     }
+    // }, [allCrypto, filteredData, dispatch]);
+
 
     // 화폐 가격의 변화를 감지하고 업데이트
     useEffect(() => {
@@ -101,14 +149,14 @@ export default function ListTbody() {
         }
 
         // 화폐의 가격이 업데이트 됨에 따라, 차트의 데이터를 최신화
-        if (filteredData.length > 0 && selectedCrypto) {
-            if (chartSortTime && selectedCrypto.market) {
-                requestCandleMinute(selectedCrypto.market, chartSortTime);
-            }
-            else if (!chartSortTime && selectedCrypto.market) {
-                requestCandleDate(selectedCrypto.market);
-            }
-        }
+        // if (filteredData.length > 0 && selectedCrypto) {
+        //     if (chartSortTime && selectedCrypto.market) {
+        //         requestCandleMinute(selectedCrypto.market, chartSortTime);
+        //     }
+        //     else if (!chartSortTime && selectedCrypto.market) {
+        //         requestCandleDate(selectedCrypto.market);
+        //     }
+        // }
     }, [allCrypto]);
 
     const updateSelectedCrypto = () => {

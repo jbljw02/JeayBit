@@ -222,8 +222,7 @@ export default function useFunction() {
   }
 
   // 선택된 화폐에 대한 호가내역 호출
-  const selectAskingPrice = (market: string) => {
-    (async (market) => {
+  const selectAskingPrice = async(market: string) => {
       try {
         const response = await axios.post(
           "http://127.0.0.1:8000/asking_price/",
@@ -252,7 +251,6 @@ export default function useFunction() {
       } catch (error) {
         throw error;
       }
-    })(market);
   };
 
   // useEffect(() => {
