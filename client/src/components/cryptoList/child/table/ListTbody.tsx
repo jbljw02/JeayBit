@@ -8,6 +8,12 @@ import starOn from '../../../../assets/images/star-on.png'
 import starOff from '../../../../assets/images/star-off.png'
 import { Crypto } from "../../../../redux/store";
 
+interface Differences {
+    name: string;
+    oldValue: number;
+    newValue: number;
+}
+
 export default function ListTbody() {
     const dispatch = useDispatch();
 
@@ -19,26 +25,16 @@ export default function ListTbody() {
         addCryptoToUser,
     } = useFunction();
 
-    const favoriteCrypto = useSelector((state: RootState) => state.favoriteCrypto);
-    const ownedCrypto = useSelector((state: RootState) => state.ownedCrypto);
     const filteredData = useSelector((state: RootState) => state.filteredData);
     const selectedCrypto = useSelector((state: RootState) => state.selectedCrypto);
-    const chartSortTime = useSelector((state: RootState) => state.chartSortTime);
     const listCategory = useSelector((state: RootState) => state.listCategory);
     const allCrypto = useSelector((state: RootState) => state.allCrypto);
     const user = useSelector((state: RootState) => state.user);
 
     // 화폐 가격을 업데이트 하기 전에 해당 state에 담음
-    const [prevData, setPrevData] = useState<number[]>();
-
-    // 이전 화폐 가격과 현재 화폐 가격을 비교하여 변화가 발생한 화폐를 저장할 state
-    const [differences, setDifferences] = useState<
-        {
-            index: number;
-            oldValue: number;
-            newValue: number;
-        }[]
-    >([]);
+    const [prevData, setPrevData] = useState<Record<string, number> | undefined>(undefined);
+    // 화폐 가격의 변화를 저장
+    const [differences, setDifferences] = useState<Differences[]>([]);
 
     // 초기 렌더링시 화폐 정보를 받아오고, 주기적으로 업데이트
     useEffect(() => {
@@ -61,110 +57,51 @@ export default function ListTbody() {
         dispatch(setOwnedCrypto(isOwnes));
     }, [allCrypto]);
 
-    // 서버로부터 받아온 화폐의 값이 바뀔 때마다 filteredData도 동시에 업데이트
-    // useEffect(() => {
-    //     if (filteredData.length === 0) {
-    //         console.log("동작");
-    //         dispatch(setFilteredData(allCrypto));
-    //     }
-    //     else {
-
-    //         const updatedData = filteredData.map(filteredItem => {
-    //             const updatedItem = allCrypto.find(cryptoItem => cryptoItem.name === filteredItem.name);
-
-    //             if (updatedItem) {
-    //                 const isDifferent = (
-    //                     filteredItem.price !== updatedItem.price ||
-    //                     filteredItem.market !== updatedItem.market ||
-    //                     filteredItem.change !== updatedItem.change ||
-    //                     filteredItem.change_rate !== updatedItem.change_rate ||
-    //                     filteredItem.change_price !== updatedItem.change_price ||
-    //                     filteredItem.trade_price !== updatedItem.trade_price ||
-    //                     filteredItem.trade_volume !== updatedItem.trade_volume ||
-    //                     filteredItem.open_price !== updatedItem.open_price ||
-    //                     filteredItem.high_price !== updatedItem.high_price ||
-    //                     filteredItem.low_price !== updatedItem.low_price
-    //                 );
-
-    //                 if (isDifferent) {
-    //                     return {
-    //                         ...filteredItem,
-    //                         price: updatedItem.price,
-    //                         market: updatedItem.market,
-    //                         change: updatedItem.change,
-    //                         change_rate: updatedItem.change_rate,
-    //                         change_price: updatedItem.change_price,
-    //                         trade_price: updatedItem.trade_price,
-    //                         trade_volume: updatedItem.trade_volume,
-    //                         open_price: updatedItem.open_price,
-    //                         high_price: updatedItem.high_price,
-    //                         low_price: updatedItem.low_price,
-    //                     };
-    //                 }
-    //             }
-
-    //             return filteredItem;
-    //         });
-
-    //         // updatedData가 기존 filteredData와 다른 경우에만 dispatch 호출
-    //         const hasChanges = updatedData.some((item, index) =>
-    //             Object.keys(item).some(key => item[key as keyof Crypto] !== filteredData[index][key as keyof Crypto])
-    //         );
-
-    //         if (hasChanges) {
-    //             console.log("아아: ", updatedData);
-    //             dispatch(setFilteredData(updatedData));
-    //         }
-    //     }
-    // }, [allCrypto, filteredData, dispatch]);
-
-
     // 화폐 가격의 변화를 감지하고 업데이트
     useEffect(() => {
-        // state의 업데이트는 비동기적이기 때문에 값이 즉시 바뀌지 않음
-        // 그러므로 이 useEffect() 안에서 prevData는 아직 이전의 값을 가지고 있기 때문에 cryptoPriceArray와 prevData는 다른 값을 가짐을 이용
-        // cryptoPriceArray = 현재값, prevData = 이전값
-        const cryptoPriceArray = filteredData.map(item => item.price);
-        setPrevData(cryptoPriceArray);
+        // 각 항목의 name을 키로, price를 값으로 하는 객체 생성
+        const cryptoPriceMap: Record<string, number> = filteredData.reduce((acc, item) => {
+            acc[item.name] = item.price;
+            return acc;
+        }, {} as Record<string, number>);
 
-        // 값이 변한 화폐를 판별
-        let newDifferences: {
-            index: number;
-            oldValue: number;
-            newValue: number;
-        }[] = [];
+        if (!prevData) {
+            setPrevData(cryptoPriceMap);
+            return;
+        }
 
-        // 화폐 리스트가 변할 때마다 변화 이전 값과 현재 값을 비교
+        // 이전 값과 현재 값의 차이를 저장할 배열
+        const newDifferences: Differences[] = [];
+
+        // 객체를 순회하며 변화 이전 값과 현재 값을 비교
         if (prevData) {
-            prevData.forEach((value, index) => {
-                if (value !== cryptoPriceArray[index]) {
+            Object.keys(cryptoPriceMap).forEach(name => {
+                // 값이 다를 경우, newDifferences 배열에 변화된 항목 추가
+                if (prevData[name] !== cryptoPriceMap[name]) {
                     newDifferences.push({
-                        index: index,
-                        oldValue: value,
-                        newValue: cryptoPriceArray[index],
+                        name: name,
+                        oldValue: prevData[name],
+                        newValue: cryptoPriceMap[name],
                     });
                 }
             });
+        }
+        
+        setPrevData(cryptoPriceMap);
+        if(newDifferences.length !== allCrypto.length) {
             setDifferences(newDifferences);
         }
+    }, [filteredData]);
 
-        // 화폐의 가격이 업데이트 됨에 따라, 차트의 데이터를 최신화
-        // if (filteredData.length > 0 && selectedCrypto) {
-        //     if (chartSortTime && selectedCrypto.market) {
-        //         requestCandleMinute(selectedCrypto.market, chartSortTime);
-        //     }
-        //     else if (!chartSortTime && selectedCrypto.market) {
-        //         requestCandleDate(selectedCrypto.market);
-        //     }
-        // }
-    }, [allCrypto]);
-
-    const updateSelectedCrypto = () => {
-        const targetCrypto = allCrypto.find(item => item.market === selectedCrypto.market);
-        if (targetCrypto) {
-            dispatch(setSelectedCrypto(targetCrypto));
-        }
-    }
+    // 화폐의 가격이 업데이트 됨에 따라, 차트의 데이터를 최신화
+    // if (filteredData.length > 0 && selectedCrypto) {
+    //     if (chartSortTime && selectedCrypto.market) {
+    //         requestCandleMinute(selectedCrypto.market, chartSortTime);
+    //     }
+    //     else if (!chartSortTime && selectedCrypto.market) {
+    //         requestCandleDate(selectedCrypto.market);
+    //     }
+    // }
 
     // 선택한 화폐가 변경 될 때
     useEffect(() => {
@@ -203,9 +140,10 @@ export default function ListTbody() {
                         Array.isArray(filteredData) &&
                         filteredData.map((item, i) => {
                             // 가격의 변화가 생긴 state를 테이블에서 찾아 해당 td 시각화
-                            let isChanged = differences.some((diff, index) => {
-                                return diff.index === i && diff.newValue === item.price;
+                            let isChanged = differences.some((diff) => {
+                                return diff.name === item.name && diff.newValue === item.price;
                             });
+
                             let priceClass_rise = isChanged ? "change-price-rise" : "";
                             let priceClass_fall = isChanged ? "change-price-fall" : "";
 

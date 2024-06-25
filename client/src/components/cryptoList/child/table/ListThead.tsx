@@ -1,11 +1,9 @@
 import { useDispatch, useSelector } from "react-redux";
 import { RootState, setFilteredData, setSortStates, setSortedData } from "../../../../redux/store";
+import { sortByChangeRate, sortByName, sortByPrice, sortByTradeVolume } from "../../../../utils/sort/sortData";
 import img_sort from "../../../../assets/images/sort.png";
 import img_sort_up from "../../../../assets/images/sort-up.png";
 import img_sort_down from "../../../../assets/images/sort-down.png";
-import { useEffect, useState } from "react";
-import { Crypto } from "../../../../redux/store";
-import { sortByChangeRate, sortByName, sortByPrice, sortByTradeVolume } from "../../../../utils/sort/sortData";
 
 export default function ListThead() {
     const dispatch = useDispatch();
@@ -14,8 +12,7 @@ export default function ListThead() {
     const listCategory = useSelector((state: RootState) => state.listCategory);
 
     // 차례로 화폐명, 현재가, 전일대비, 거래대금의 정렬 상태를 관리
-    const sort_images = [img_sort, img_sort_down, img_sort_up];
-
+    const sortImages = [img_sort, img_sort_down, img_sort_up];
     const sortStates = useSelector((state: RootState) => state.sortStates);
 
     // 정렬 이미지 클릭 이벤트
@@ -56,6 +53,7 @@ export default function ListThead() {
         dispatch(setFilteredData(sortedData));
         dispatch(setSortedData(sortedData));
     };
+
     return (
         <table className="list-table" id="listHead">
             <colgroup>
@@ -75,28 +73,28 @@ export default function ListThead() {
                                     화폐명
                                     <img
                                         className="sort"
-                                        src={sort_images[sortStates[0]]}
+                                        src={sortImages[sortStates[0]]}
                                         alt="화폐명" />
                                 </th>
                                 <th className="price" onClick={() => sortClick(1)}>
                                     현재가
                                     <img
                                         className="sort"
-                                        src={sort_images[sortStates[1]]}
+                                        src={sortImages[sortStates[1]]}
                                         alt="현재가" />
                                 </th>
                                 <th className="compare" onClick={() => sortClick(2)}>
                                     전일대비
                                     <img
                                         className="sort"
-                                        src={sort_images[sortStates[2]]}
+                                        src={sortImages[sortStates[2]]}
                                         alt="전일대비" />
                                 </th>
                                 <th className="volume" onClick={() => sortClick(3)}>
                                     거래대금
                                     <img
                                         className="sort"
-                                        src={sort_images[sortStates[3]]}
+                                        src={sortImages[sortStates[3]]}
                                         alt="거래대금" />
                                 </th>
                             </> :
@@ -105,28 +103,28 @@ export default function ListThead() {
                                     화폐명
                                     <img
                                         className="sort"
-                                        src={sort_images[sortStates[0]]}
+                                        src={sortImages[sortStates[0]]}
                                         alt="화폐명" />
                                 </th>
                                 <th className="price" id="owned-price" onClick={() => sortClick(1)}>
                                     현재가
                                     <img
                                         className="sort"
-                                        src={sort_images[sortStates[1]]}
+                                        src={sortImages[sortStates[1]]}
                                         alt="현재가" />
                                 </th>
                                 <th className="compare" id="owned-compare" onClick={() => sortClick(2)}>
                                     전일대비
                                     <img
                                         className="sort"
-                                        src={sort_images[sortStates[2]]}
+                                        src={sortImages[sortStates[2]]}
                                         alt="전일대비" />
                                 </th>
                                 <th className="volume" id="owned-volume" onClick={() => sortClick(2)}>
                                     보유수량
                                     <img
                                         className="sort"
-                                        src={sort_images[sortStates[2]]}
+                                        src={sortImages[sortStates[2]]}
                                         alt="보유수량" />
                                 </th>
                             </>

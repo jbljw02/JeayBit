@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Crypto, RootState, setFilteredData, setSearchedCrypto } from "../../../redux/store";
+import { Crypto, RootState, setFilteredData } from "../../../redux/store";
 import { sortData } from "../../../utils/sort/sortData";
 
 export default function ListSearch() {
@@ -10,7 +10,6 @@ export default function ListSearch() {
     const listCategory = useSelector((state: RootState) => state.listCategory);
     const favoriteCrypto = useSelector((state: RootState) => state.favoriteCrypto);
     const ownedCrypto = useSelector((state: RootState) => state.ownedCrypto);
-
     const sortStates = useSelector((state: RootState) => state.sortStates);
 
     const [searchedInput, setSearchedInput] = useState<string>("");
