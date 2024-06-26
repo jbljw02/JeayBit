@@ -7,6 +7,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from app.models import CustomUser
 
+
 @api_view(["POST"])
 def sign_up(request):
     try:
@@ -29,9 +30,10 @@ def sign_up(request):
         )
 
     except:
-        return Response({"error": "회원가입 실패"}, status=500)  
+        return Response({"error": "회원가입 실패"}, status=500)
 
     return Response({"sign_up": "회원가입 성공"}, status=201)
+
 
 class LoginView(View):
     def post(self, request):
@@ -55,6 +57,7 @@ class LoginView(View):
         except Exception:
             return JsonResponse({"error": "로그인 실패"}, status=500)
 
+
 class LogoutView(View):
     def post(self, request):
         try:
@@ -62,11 +65,12 @@ class LogoutView(View):
             if request.session.session_key is None:
                 return JsonResponse({"logout": "이미 로그아웃 된 사용자"}, status=200)
             else:
-                request.session.flush() # 세션 데이터 삭제
+                request.session.flush()  # 세션 데이터 삭제
                 return JsonResponse({"logout": "로그아웃 성공"}, status=200)
         except:
             return JsonResponse({"error": "로그아웃 실패"}, status=500)
-        
+
+
 class CheckLoginView(View):
     def post(self, request):
         try:
@@ -77,7 +81,8 @@ class CheckLoginView(View):
                         "is_logged_in": is_logged_in,
                         "name": request.user.username,
                         "email": request.user.email,
-                    }, status=200
+                    },
+                    status=200,
                 )
         except Exception:
             return JsonResponse({"error": "로그인 체크 에러"}, status=500)

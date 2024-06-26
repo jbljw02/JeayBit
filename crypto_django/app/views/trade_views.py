@@ -10,11 +10,12 @@ from app.utils.check_price_match import check_price_match
 from app.utils.sell_process import sell_process
 import math
 
+
 # 사용자, 화폐별 거래내역을 추가 및 매수/매도 처리
 @api_view(["POST"])
 def add_user_trade_history(request):
     data = request.data
- 
+
     email = data.get("email")
     crypto_name = data.get("crypto_name")
     trade_category = data.get("trade_category")
@@ -31,7 +32,10 @@ def add_user_trade_history(request):
     if not crypto_name:
         return Response({"error": "요청에 화폐명이 포함되어야 합니다"}, status=400)
     if not trade_category:
-        return Response({"error": "요청에 거래가 '매수'인지 '매도'인지 포함되어야 합니다"}, status=400)
+        return Response(
+            {"error": "요청에 거래가 '매수'인지 '매도'인지 포함되어야 합니다"},
+            status=400,
+        )
     if not trade_time:
         return Response({"error": "요청에 현재 시간이 포함되어야 합니다"}, status=400)
     if not crypto_market:
@@ -46,7 +50,7 @@ def add_user_trade_history(request):
     url = f"https://api.upbit.com/v1/orderbook?markets={market}"
     response = get(url)
     json_data = response.json()
-    
+
     # 호가 데이터를 가져옴
     orderbook_units = json_data[0]["orderbook_units"]
 
@@ -58,7 +62,7 @@ def add_user_trade_history(request):
 
     # 체결이 된다면 True, 되지 않는다면 False
     is_signed = matched
-    
+
     try:
         user = CustomUser.objects.get(email=email)
         crypto = Crypto.objects.get(name=crypto_name)
@@ -78,16 +82,81 @@ def add_user_trade_history(request):
         # 매수/매도 요청을 구분해서 처리
         if trade_category == "매수":
             buy_total = Decimal(trade_price)
-            
-            response_data, status_code = buy_process(user, crypto, trade_amount, buy_total)
+
+            response_data, status_code = buy_process(
+                user, crypto, trade_amount, buy_total
+            )
             return Response(response_data, status=status_code)
         elif trade_category == "매도":
             sell_total = Decimal(trade_price)
-            
-            response_data, status_code = sell_process(user, crypto, trade_amount, sell_total)
+
+            response_data, status_code = sell_process(
+                user, crypto, trade_amount, sell_total
+            )
             return Response(response_data, status=status_code)
-            
+
     except CustomUser.DoesNotExist:
-        return Response({"error": "해당 이메일의 사용자가 존재하지 않습니다"}, status=500)
+        return Response(
+            {"error": "해당 이메일의 사용자가 존재하지 않습니다"}, status=500
+        )
     except Crypto.DoesNotExist:
-        return Response({"error": "해당 화폐명을 가진 화폐가 존재하지 않습니다"}, status=500)
+        return Response(
+            {"error": "해당 화폐명을 가진 화폐가 존재하지 않습니다"}, status=500
+        )
+
+
+# 거래내역을 클라이언트로 전송
+@api_view(["POST"])
+def get_user_tradeHistory(request):
+    try:
+        email = request.data.get("email")
+        user = CustomUser.objects.get(email=email)
+    except CustomUser.DoesNotExist:
+        return Response({"error": "요청에 이메일이 포함되어야 합니다"}, status=400)
+
+    try:
+        trade_historys = TradeHistory.objects.filter(user=user)
+
+        data = [
+            {
+                "id": trade_history.id,
+                "trade_category": trade_history.trade_category,
+                "trade_time": trade_history.trade_time,
+                "user": user.email,
+                "crypto_name": trade_history.crypto.name,
+                "crypto_market": trade_history.crypto_market,
+                "crypto_price": trade_history.crypto_price,
+                "trade_price": trade_history.trade_price,
+                "trade_amount": trade_history.trade_amount,
+                "is_signed": trade_history.is_signed,
+            }
+            for trade_history in trade_historys
+        ]
+
+        return Response(data, status=200)
+    except:
+        return Response({"error:": "거래내역 받아오기 실패"}, status=500)
+
+
+@api_view(["POST"])
+def cancel_order(request):
+    data = request.data
+    ids = data.get("ids")
+    email = data.get("email")
+
+    if not email:
+        return Response({"error": "요청에 이메일이 포함되어야 합니다"}, status=400)
+    if not ids:
+        return Response(
+            {"error": "취소할 주문의 id가 요청에 포함되어야 합니다"}, status=400
+        )
+
+    try:
+        user = CustomUser.objects.get(email=email)
+
+        # ids 배열과 튜플의 id 필드 사이 일치하는 부분이 있으면 삭제
+        trade_history = TradeHistory.objects.filter(user=user, id__in=ids).delete()
+
+        return Response({"cancel_order": "주문 취소 성공"}, status=200)
+    except CustomUser.DoesNotExist:
+        Response({"error": "해당 이메일의 사용자가 존재하지 않습니다"}, status=500)

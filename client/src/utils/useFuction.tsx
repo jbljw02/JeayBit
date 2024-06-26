@@ -4,12 +4,11 @@ import { setUserWallet, RootState, setOwnedCrypto, setUserTradeHistory, setUserT
 import { useEffect } from "react";
 
 export default function useFunction() {
-
   const dispatch = useDispatch();
+
   const user = useSelector((state: RootState) => state.user);
   const filteredData = useSelector((state: RootState) => state.filteredData);
   const chartSortDate = useSelector((state: RootState) => state.chartSortDate);
-  const theme = useSelector((state: RootState) => state.theme);
   const selectedCrypto = useSelector((state: RootState) => state.selectedCrypto);
 
   const getAllCrypto = async () => {
@@ -18,17 +17,6 @@ export default function useFunction() {
         withCredentials: true,
       });
       dispatch(setAllCrypto(response.data.all_crypto));
-      dispatch(setCr_name(response.data.name));
-      dispatch(setCr_price(response.data.price));
-      dispatch(setCr_market(response.data.market));
-      dispatch(setCr_change(response.data.change));
-      dispatch(setCr_change_rate(response.data.change_rate));
-      dispatch(setCr_change_price(response.data.change_price));
-      dispatch(setCr_trade_price(response.data.trade_price));
-      dispatch(setCr_trade_volume(response.data.trade_volume));
-      dispatch(setCr_open_price(response.data.open_price));
-      dispatch(setCr_high_price(response.data.high_price));
-      dispatch(setCr_low_price(response.data.low_price));
 
     } catch (error) {
       throw error;
@@ -43,16 +31,16 @@ export default function useFunction() {
 
       return response.data;
     } catch (error) {
-      console.error("Error: ", error);
+      throw error;
     }
   }
-
 
   // 서버로부터 사용자의 잔고량을 받아옴
   const getBalance = async (email: string) => {
     try {
-      const response = await axios.get(
-        `http://127.0.0.1:8000/get_user_balance/${email}/`
+      const response = await axios.post(
+        `http://127.0.0.1:8000/get_user_balance/`,
+        { email: email }
       );
       dispatch(setUserWallet(response.data.user_balance));
       // console.log(user.name, "의 잔고 : ", response.data.user_balance);
@@ -76,13 +64,12 @@ export default function useFunction() {
     }
   };
 
-
   // 사용자가 소유하고 있는 화폐의 정보를 받아옴
   const getOwnedCrypto = async (email: string) => {
     try {
-      const response = await axios.post(
-        `http://127.0.0.1:8000/get_user_ownedCrypto/${email}/`
-      );
+      const response = await axios.post('http://127.0.0.1:8000/get_user_ownedCrypto/', {
+        email: email,
+      });
 
       const resOwnedCrypto: OwnedCrypto[] = response.data;
       const targetCrypto = resOwnedCrypto.find(item => item.name === selectedCrypto.name);
@@ -92,6 +79,7 @@ export default function useFunction() {
         is_owned: targetCrypto?.is_owned,
         owned_quantity: targetCrypto?.owned_quantity,
       };
+
 
       dispatch(setSelectedCrypto(updatedCrypto));
       console.log("반환값-소유화폐 : ", response.data)
@@ -124,9 +112,9 @@ export default function useFunction() {
   // 서버로부터 거래 내역을 받아옴
   const getTradeHistory = async (email: string) => {
     try {
-      const response = await axios.post(
-        `http://127.0.0.1:8000/get_user_tradeHistory/${email}/`
-      );
+      const response = await axios.post('http://127.0.0.1:8000/get_user_tradeHistory/', {
+        email: email,
+      });
 
       // 서버로부터 받아온 체결 내역과 미체결 내역을 담을 임시 배열
       const signed: {
@@ -148,7 +136,7 @@ export default function useFunction() {
         trade_price: string;
       }[] = [];
 
-      const tradeHistory = response.data.trade_history;
+      const tradeHistory = response.data;
 
       // 다른 요소는 서버에서 받아온 값 그대로 유지, 거래 시간만 형식 변경해서 dispatch
       tradeHistory.forEach((item: { trade_time: Date, is_signed: boolean, id: string, crypto_price: number, crypto_name: string, trade_amount: string, trade_price: string, trade_category: string }, i: number) => {
@@ -173,306 +161,89 @@ export default function useFunction() {
 
       dispatch(setUserTradeHistory(signed));
       dispatch(setUserTradeHistory_unSigned(unSigned));
+      console.log("거래내역 받아오기 성공: ", tradeHistory);
     } catch (error) {
       console.log("거래내역 받아오기 실패", error);
     }
   }
 
-  // 모든 화폐의 이름을 받아옴
-  const getCryptoName = (email: string) => {
-    (async () => {
-      try {
-        const response = await axios.get(
-          'http://127.0.0.1:8000/get_crypto_name/'
-        );
-
-        let cryptoNames = response.data.detail;
-
-        let localStorageItem: string[] = [];
-        for (let i = 0; i < localStorage.length; i++) {
-          let key = localStorage.key(i);
-          if (key !== null) {
-            let value = localStorage.getItem(key);
-            if (value !== null) {
-              let item = JSON.parse(value);
-              localStorageItem.push(item.name);
-            }
-          }
-        }
-
-        // 로컬 스토리지의 값에 있는(체결되지 않은) 화폐는 true로, 아니라면 false로 선언
-        let isWaitingTemp = cryptoNames.reduce((obj: { [obj: string]: boolean; }, name: string) => {
-          if (localStorageItem.includes(name)) {
-            obj[name] = true;
-          }
-          else {
-            obj[name] = false;
-          }
-          return obj;
-        }, {})
-
-        dispatch(setIsBuying(isWaitingTemp));
-        dispatch(setIsSelling(isWaitingTemp));
-        localStorage.setItem(`${email}_IsBuying`, JSON.stringify(isWaitingTemp));
-        localStorage.setItem(`${email}_IsSelling`, JSON.stringify(isWaitingTemp));
-      } catch (error) {
-        throw error;
-      }
-    })();
-  }
 
   // 선택된 화폐에 대한 호가내역 호출
-  const selectAskingPrice = async(market: string) => {
-      try {
-        const response = await axios.post(
-          "http://127.0.0.1:8000/asking_price/",
-          {
-            market: market,
-          },
-          {
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
+  const selectAskingPrice = async (market: string) => {
+    try {
+      const response = await axios.get(`http://127.0.0.1:8000/asking_price/?market=${market}`);
 
-        const orderbookUnits = response.data[0].orderbook_units;
-        const timestamp = response.data[0].timestamp;
+      const orderbookUnits = response.data[0].orderbook_units;
+      const timestamp = response.data[0].timestamp;
 
-        const askingData = orderbookUnits.map((item: AskingData) => (
-          {
-            ...item,
-            timestamp: timestamp,
-          }));
-
-        dispatch(setAsking_data(askingData));
-        dispatch(setAsking_totalAskSize(response.data[0].total_ask_size));
-        dispatch(setAsking_totalBidSize(response.data[0].total_bid_size));
-      } catch (error) {
-        throw error;
-      }
-  };
-
-  // useEffect(() => {
-  //   setInterval(() => {
-  //     selectAskingPrice('KRW-BTC')
-  //   }, 1000)
-  // }, []);
-
-  // 미체결 화폐에 대한 호가내역 호출
-  const selectAskingPrice_unSigned = (market: string) => {
-    (async (market) => {
-      try {
-        const response = await axios.post(
-          "http://127.0.0.1:8000/asking_price/",
-          {
-            market: market,
-          },
-          {
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
-
-        // console.log("호가내역-미체결 : ", response.data[0]);
-
-        let tempState = response.data[0].orderbook_units.map((item: { ask_price: number; bid_price: number; }) => ({
-          ask_price: item.ask_price,
-          bid_price: item.bid_price
+      const askingData = orderbookUnits.map((item: AskingData) => (
+        {
+          ...item,
+          timestamp: timestamp,
         }));
 
-        // dispatch(setAskingData_unSigned({ market: response.data[0].market, data: tempState }));
-
-        // 마켓명에 대응하는 화폐명을 찾음
-        let isCorresponed = filteredData.find(item => item.market === response.data[0].market);
-        let marketName = isCorresponed ? isCorresponed.name : null;
-
-        // 마켓명이 아닌 화폐명을 키로 지정
-        if (marketName) {
-          dispatch(setAskingData_unSigned({ market: marketName, data: tempState }));
-        }
-
-        // console.log("미체결 호가값 : ", askingData_unSigned);
-      } catch (error) {
-        // console.error("호가내역-미체결 전송 실패", error);
-      }
-    })(market);
+      dispatch(setAsking_data(askingData));
+      dispatch(setAsking_totalAskSize(response.data[0].total_ask_size));
+      dispatch(setAsking_totalBidSize(response.data[0].total_bid_size));
+    } catch (error) {
+      console.log("호가내역 실패: ", error);
+      throw error;
+    }
   };
 
-  // 호가와 구매가가 일치하지 않을 때
-  const buyCrypto_unSigned = (key: string, email: string, cryptoName: string, cryptoQuantity: number, buyTotal: number) => {
-    (async (key, email, cryptoName, cryptoQuantity, buyTotal) => {
-      try {
-        await axios.post("http://127.0.0.1:8000/buy_crypto_unSigned/", {
-          key: key,
-          email: email,
-          crypto_name: cryptoName,
-          crypto_quantity: cryptoQuantity,
-          buy_total: buyTotal,
-        });
-        // console.log("구매 화폐 전송 성공", response.data);
-        getBalance(email);  // 매수에 사용한 금액만큼 차감되기 때문에 잔고 업데이트
-        // getOwnedCrypto(email);  // 소유 화폐가 새로 추가될 수 있으니 업데이트
-        getTradeHistory(email)  // 매수에 성공했으니 거래내역 업데이트
-        localStorage.removeItem(key)
-      } catch (error) {
-        // console.log("구매 화폐 전송 실패: ", error)
-      }
-    })(key, email, cryptoName, cryptoQuantity, buyTotal);
-  }
-
-  const sellCrypto_unSigned = (key: string, email: string, cryptoName: string, cryptoQuantity: number, sellTotal: number) => {
-    (async (key, email, cryptoName, cryptoQuantity, sellTotal) => {
-      try {
-        await axios.post("http://127.0.0.1:8000/sell_crypto_unSigned/", {
-          key: key,
-          email: email,
-          crypto_name: cryptoName,
-          crypto_quantity: cryptoQuantity,
-          sell_total: sellTotal,
-        });
-        // console.log("매도 화폐 전송 성공", response.data);
-        getBalance(email);  // 매수에 사용한 금액만큼 차감되기 때문에 잔고 업데이트
-        // getOwnedCrypto(email);  // 소유 화폐가 새로 추가될 수 있으니 업데이트
-        getTradeHistory(email)  // 매수에 성공했으니 거래내역 업데이트
-        localStorage.removeItem(key)
-      } catch (error) {
-        // console.log("매도 화폐 전송 실패: ", error)
-      }
-    })(key, email, cryptoName, cryptoQuantity, sellTotal);
-  }
 
   // 선택된 화폐에 대한 체결내역 호출
-  const selectClosedPrice = (market: string) => {
-    (async (market) => {
-      try {
-        const response = await axios.post(
-          "http://127.0.0.1:8000/closed_price/",
-          {
-            market: market,
-          },
-          {
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
+  const selectClosedPrice = async (market: string) => {
+    try {
+      const response = await axios.get(`http://127.0.0.1:8000/closed_price/?market=${market}`);
 
-        dispatch(setClosed_data(response.data));
-      } catch (error) {
-        throw error;
-      }
-    })(market);
+      dispatch(setClosed_data(response.data));
+    } catch (error) {
+      throw error;
+    }
   };
 
   // 리스트에서 화폐를 선택하면 해당 화폐에 대한 캔들 호출(차트의 분에 따라)
-  const requestCandleMinute = (market: string, minute: string) => {
-    (async (market, minute) => {
-      if (minute !== '') {
-        try {
-          const response = await axios.post(
-            "http://127.0.0.1:8000/candle_per_minute/",
-            {
-              market: market,
-              minute: minute,
-            },
-            {
-              headers: {
-                "Content-Type": "application/json",
-              },
-            }
-          );
+  const requestCandleMinute = async (market: string, minute: string) => {
+    if (minute && market) {
+      try {
+        const response = await axios.get(`http://127.0.0.1:8000/candle_per_minute/?market=${market}&minute=${minute}`);
 
-          dispatch(setCandle_per_minute(response.data));
-        } catch (error) {
-          throw error;
-        }
+        console.log("분 캔들: ", response.data);
+        dispatch(setCandle_per_minute(response.data));
+      } catch (error) {
+        console.error("분 캔들 에러: ", error);
       }
-    })(market, minute);
+    }
   };
 
   // 리스트에서 화폐를 선택하면 해당 화폐에 대한 캔들 호출(차트의 일/주/월에 따라)
-  const requestCandleDate = (market: string) => {
-    if (chartSortDate === "1일") {
-      (async (market) => {
-        try {
-          const response = await axios.post(
-            "http://127.0.0.1:8000/candle_per_date/",
-            {
-              market: market,
-              // date: tempChartSort,
-            },
-            {
-              headers: {
-                "Content-Type": "application/json",
-              },
-            }
-          );
+  const requestCandleDate = async (market: string) => {
+    try {
+      let response;
+      let url = "http://127.0.0.1:8000/";
 
-          dispatch(setCandle_per_date(response.data));
-        } catch (error) {
-          throw error;
-        }
-      })(market);
-    } else if (chartSortDate === "1주") {
-      void (async (market) => {
-        try {
-          const response = await axios.post(
-            "http://127.0.0.1:8000/candle_per_week/",
-            {
-              market: market,
-            },
-            {
-              headers: {
-                "Content-Type": "application/json",
-              },
-            }
-          );
+      if (chartSortDate === "1일") {
+        url += `candle_per_date/?market=${market}`;
+        response = await axios.get(url);
+        dispatch(setCandle_per_date(response.data));
+      }
+      else if (chartSortDate === "1주") {
+        url += `candle_per_week/?market=${market}`;
+        response = await axios.get(url);
+        dispatch(setCandle_per_week(response.data));
+      }
+      else if (chartSortDate === "1개월") {
+        url += `candle_per_month/?market=${market}`;
+        response = await axios.get(url);
+        dispatch(setCandle_per_month(response.data));
+      }
 
-          dispatch(setCandle_per_week(response.data));
-        } catch (error) {
-          throw error;
-        }
-      })(market);
-    } else if (chartSortDate === "1개월") {
-      void (async (market) => {
-        try {
-          const response = await axios.post(
-            "http://127.0.0.1:8000/candle_per_month/",
-            {
-              market: market,
-            },
-            {
-              headers: {
-                "Content-Type": "application/json",
-              },
-            }
-          );
-
-          dispatch(setCandle_per_month(response.data));
-        } catch (error) {
-          throw error;
-        }
-      })(market);
+    } catch (error) {
+      console.error("캔들에러: ", error);
     }
   };
 
-  // 로그인한 사용자에 대해 관심 화폐를 업데이트
-  const addCryptoToUser = (email: string, cryptoName: string) => {
-    if (user.email !== "") {
-      (async (email, cryptoName) => {
-        try {
-          axios.post("http://127.0.0.1:8000/add_favoriteCrypto_to_user/", {
-            email: email,
-            crypto_name: cryptoName,
-          });
-        } catch (error) {
-          throw error;
-        }
-      })(email, cryptoName);
-    }
-  };
 
   return {
     getAllCrypto,
@@ -481,15 +252,10 @@ export default function useFunction() {
     getOwnedCrypto,
     addTradeHistory,
     getTradeHistory,
-    getCryptoName,
     selectAskingPrice,
-    selectAskingPrice_unSigned,
-    buyCrypto_unSigned,
-    sellCrypto_unSigned,
     selectClosedPrice,
     requestCandleMinute,
     requestCandleDate,
-    addCryptoToUser,
     checkLogin,
   };
 

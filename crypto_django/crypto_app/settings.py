@@ -86,6 +86,8 @@ CSRF_HEADER_NAME = 'X-CSRFToken'
 
 CORS_ALLOW_CREDENTIALS = True
 
+CORS_ALLOW_ALL_ORIGINS = True
+
 CSRF_TRUSTED_ORIGINS = (
     'http://localhost:8000',
     'http://localhost:3000'

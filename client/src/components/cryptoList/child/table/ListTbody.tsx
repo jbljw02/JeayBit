@@ -7,6 +7,7 @@ import 'react-perfect-scrollbar/dist/css/styles.css';
 import starOn from '../../../../assets/images/star-on.png'
 import starOff from '../../../../assets/images/star-off.png'
 import { Crypto } from "../../../../redux/store";
+import axios from "axios";
 
 interface Differences {
     name: string;
@@ -20,9 +21,6 @@ export default function ListTbody() {
     const { getAllCrypto,
         selectAskingPrice,
         selectClosedPrice,
-        requestCandleMinute,
-        requestCandleDate,
-        addCryptoToUser,
     } = useFunction();
 
     const filteredData = useSelector((state: RootState) => state.filteredData);
@@ -86,9 +84,9 @@ export default function ListTbody() {
                 }
             });
         }
-        
+
         setPrevData(cryptoPriceMap);
-        if(newDifferences.length !== allCrypto.length) {
+        if (newDifferences.length !== allCrypto.length) {
             setDifferences(newDifferences);
         }
     }, [filteredData]);
@@ -112,10 +110,41 @@ export default function ListTbody() {
         }
     }, [selectedCrypto]);
 
+    // 로그인한 사용자에 대해 관심 화폐를 업데이트
+    const addFavoriteCrypto = async (email: string, cryptoName: string) => {
+        if (user.email) {
+            try {
+                const response = axios.post("http://127.0.0.1:8000/add_favoriteCrypto_to_user/", {
+                    email: email,
+                    crypto_name: cryptoName,
+                });
+                console.log("관심화폐 추가: ", response);
+            } catch (error) {
+                console.log("관심화폐 추가 실패: ", error);
+            }
+        }
+    };
+
+    // 사용자의 관심 화폐 목록을 가져옴
+    const getFavoriteCrypto = async (email: string) => {
+        if (user.email) {
+            try {
+                const response = await axios.post(
+                    'http://localhost:8000/get_user_favoriteCrypto/', {
+                    email: email
+                });
+                console.log("반환값-관심화폐 : ", response.data);
+            } catch (error) {
+                console.log("관심 화폐 정보 받아오기 실패", error);
+            }
+        }
+    };
+
     // 별 이미지를 클릭하면 관심 화폐 추가 요청
     const starClick = (index: number, e: { stopPropagation: () => void; }) => {
         e.stopPropagation();
-        addCryptoToUser(user.email, filteredData[index].name);
+        addFavoriteCrypto(user.email, filteredData[index].name);
+        getFavoriteCrypto(user.email)
     };
 
     // 특정 화폐를 클릭했을 때
