@@ -182,7 +182,7 @@ class GetAllCryptoView(View):
                 if is_logged_in:
                     user_crypto_info = UserCrypto.objects.filter(
                         user=request.user,
-                        crypto__name=name[i], # Crypto 모델의 name 필드와 매칭
+                        crypto__name=name[i],  # Crypto 모델의 name 필드와 매칭
                     ).first()
                     if user_crypto_info:
                         crypto_obj["is_favorited"] = user_crypto_info.is_favorited

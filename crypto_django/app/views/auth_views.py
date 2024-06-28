@@ -84,5 +84,15 @@ class CheckLoginView(View):
                     },
                     status=200,
                 )
+            if not is_logged_in:
+                return JsonResponse(
+                    {
+                        "is_logged_in": is_logged_in,
+                        "name": "",
+                        "email": "",
+                    },
+                    status=200,
+                )
         except Exception:
-            return JsonResponse({"error": "로그인 체크 에러"}, status=500)
+            print("AA")
+            return JsonResponse({f"error": "로그인 체크 에러"}, status=500)

@@ -261,7 +261,7 @@ export default function SellingSectioin() {
                                 <td className="td-input">
                                     <div>
                                         <TradeInput
-                                            value={(Number(sellingInputValue)).toLocaleString()}
+                                            value={formatWithComas(sellingInputValue)}
                                             onChange={(e) => sellingPriceChange(e.target.value)} />
                                         <span>KRW</span>
                                     </div>

@@ -2,6 +2,7 @@ import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { setUserWallet, RootState, setOwnedCrypto, setUserTradeHistory, setUserTradeHistory_unSigned, setIsBuying, setAsking_data, setAsking_dateTime, setAsking_totalAskSize, setAsking_totalBidSize, setAskingData_unSigned, setIsSelling, setTheme, setClosed_data, setCandle_per_minute, setCandle_per_date, setCandle_per_week, setCandle_per_month, setCr_change, setCr_change_price, setCr_change_rate, setCr_high_price, setCr_low_price, setCr_market, setCr_name, setCr_open_price, setCr_price, setCr_trade_price, setCr_trade_volume, setCandle_per_date_BTC, setCr_market_selected, setCr_name_selected, setFavoriteCrypto, setAllCrypto, setCsrfToken, AskingData, setSelectedCrypto, OwnedCrypto } from "../redux/store";
 import { useEffect } from "react";
+import formatDateString from "./trading/formatDateString";
 
 export default function useFunction() {
   const dispatch = useDispatch();
@@ -139,13 +140,9 @@ export default function useFunction() {
       const tradeHistory = response.data;
 
       // 다른 요소는 서버에서 받아온 값 그대로 유지, 거래 시간만 형식 변경해서 dispatch
-      tradeHistory.forEach((item: { trade_time: Date, is_signed: boolean, id: string, crypto_price: number, crypto_name: string, trade_amount: string, trade_price: string, trade_category: string }, i: number) => {
-        let date = new Date(item.trade_time);
-        let formattedDate = date.getFullYear() + '.'
-          + (date.getMonth() + 1).toString().padStart(2, '0') + '.'
-          + date.getDate().toString().padStart(2, '0') + ' '
-          + date.getHours().toString().padStart(2, '0') + ':'
-          + date.getMinutes().toString().padStart(2, '0');
+      tradeHistory.forEach((item: { trade_time: Date | string, is_signed: boolean, id: string, crypto_price: number, crypto_name: string, trade_amount: string, trade_price: string, trade_category: string }, i: number) => {
+        const date = new Date(item.trade_time);
+        const formattedDate = formatDateString(date);
 
         // 체결 여부가 true일 경우
         if (item.is_signed) {
@@ -155,7 +152,6 @@ export default function useFunction() {
           unSigned.push({ ...item, trade_time: formattedDate });
 
           const value = { name: item.crypto_name, price: item.crypto_price, trade_category: item.trade_category, trade_amount: Number(item.trade_amount), trade_price: Number(item.trade_price) };
-          localStorage.setItem(item.id, JSON.stringify(value));  // 체결되지 않은 구매 요청에 대한 ID를 로컬 스토리지에 추가
         }
       });
 

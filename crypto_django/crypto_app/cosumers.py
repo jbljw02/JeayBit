@@ -10,8 +10,6 @@ class TradeConsumer(AsyncWebsocketConsumer):
         await self.channel_layer.group_add("trade_updates", self.channel_name)
         await self.accept()
         logger.info("WebSocket 연결 및 그룹 추가")
-        
-        await self.send_trade_update({'message': 'Test message'})
 
     async def disconnect(self):
         await self.channel_layer.group_discard("trade_updates", self.channel_name)
@@ -24,6 +22,7 @@ class TradeConsumer(AsyncWebsocketConsumer):
     async def send_trade_update(self, event):
         message = event['message']
         logger.info(f"미체결 화폐 거래 완료: {message}")
+        
         await self.send(text_data=json.dumps({
             'message': message
         }))

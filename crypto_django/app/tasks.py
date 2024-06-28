@@ -5,7 +5,7 @@ import requests
 import logging
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
-from celery.result import TaskResult
+from celery.result import AsyncResult
 
 logger = logging.getLogger(__name__)
 
@@ -14,6 +14,9 @@ logger = logging.getLogger(__name__)
 def check_trade_history():
     # 체결 여부가 False인 거래 내역을 가져옴
     trade_histories = TradeHistory.objects.filter(is_signed=False)
+
+    if not trade_histories.exists():
+        return "미체결 화폐가 없습니다."
 
     for trade_history in trade_histories:
         url = f"https://api.upbit.com/v1/orderbook?markets={trade_history.crypto_market}"
@@ -32,9 +35,15 @@ def check_trade_history():
             
             # 웹소켓으로 메시지 보내기
             channel_layer = get_channel_layer()
-            message = f"Trade {trade_history.id} has been signed."
+            
+            message = {
+                "trade_time": trade_history.trade_time.isoformat(),
+                "crypto_name": trade_history.crypto.name,
+                "trade_category": trade_history.trade_category,
+                "crypto_price": trade_history.crypto_price,
+            }
+            
             try:
-                logger.info("Attempting to send message through channel layer")
                 async_to_sync(channel_layer.group_send)(
                     'trade_updates',
                     {
@@ -42,20 +51,19 @@ def check_trade_history():
                         'message': message,
                     }
                 )
-                logger.info("WebSocket 메시지 전송 성공")
+                logger.info(f"WebSocket 메시지 전송 성공: {message}")
             except Exception as e:
                 logger.error(f"WebSocket 메시지 전송 실패: {e}")
-            
     
-    return "Trade histories checked and updated."
+    return f"미체결 화폐 검사 완료: {trade_histories}"
 
 @shared_task
 # celery 결과가 너무 많이 쌓일 경우 정리
 def cleanup_task_results(max_results=1000):
-    total_results = TaskResult.objects.count()
+    total_results = AsyncResult.objects.count()
     
     if total_results > max_results:
         # 오래된 결과부터 정리하기 위해 정렬
         excess_results = total_results - max_results
-        results_to_delete = TaskResult.objects.order_by('date_done')[:excess_results]
+        results_to_delete = AsyncResult.objects.order_by('date_done')[:excess_results]
         results_to_delete.delete()
