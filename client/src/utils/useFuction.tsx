@@ -104,9 +104,18 @@ export default function useFunction() {
         market: market,
         isMarketValue: isMarketValue,
       });
-      console.log("거래 내역 전송 성공", response.data);
+
+      console.log("거래 내역 전송 성공: ", response.status);
+      return response.status;
     } catch (error) {
-      console.log("거래 내역 전송 실패", error);
+      if (axios.isAxiosError(error)) {
+        console.log("거래 내역 전송 실패: ", error.response ? error.response.status : "알 수 없는 에러");
+        return error.response ? error.response.status : 500;
+      }
+      else {
+        console.log("거래내역 전송 실패: 알 수 없는 에러");
+        return 500;
+      }
     }
   }
 

@@ -79,21 +79,25 @@ def add_user_trade_history(request):
             is_signed=is_signed,
         )
 
-        # 매수/매도 요청을 구분해서 처리
-        if trade_category == "매수":
-            buy_total = Decimal(trade_price)
+        # 가격이 매치될 경우 즉시 매수 및 매도 처리
+        if is_signed:
+            if trade_category == "매수":
+                buy_total = Decimal(trade_price)
 
-            response_data, status_code = buy_process(
-                user, crypto, trade_amount, buy_total
-            )
-            return Response(response_data, status=status_code)
-        elif trade_category == "매도":
-            sell_total = Decimal(trade_price)
+                response_data, status_code = buy_process(
+                    user, crypto, trade_amount, buy_total
+                )
+                return Response(response_data, status=status_code)
+            elif trade_category == "매도":
+                sell_total = Decimal(trade_price)
 
-            response_data, status_code = sell_process(
-                user, crypto, trade_amount, sell_total
-            )
-            return Response(response_data, status=status_code)
+                response_data, status_code = sell_process(
+                    user, crypto, trade_amount, sell_total
+                )
+                return Response(response_data, status=status_code)
+        # 일치하지 않을 경우 대기
+        else:
+            return Response({'trade': '거래 내역 추가 및 구매 대기'}, status=202)
 
     except CustomUser.DoesNotExist:
         return Response(

@@ -14,6 +14,9 @@ import calculatePercentage from "../../../../utils/trading/calculatePercentage";
 import limitDecimalPlace from "../../../../utils/trading/limitDecimalPlace";
 import LoginNavigator from "./LoginNavigator";
 import CompleteModal from "../../../modal/CompleteModal";
+import TradeFailedModal from "../../../modal/TradeFailedModal";
+import InputWarning from "./warning/InputWarning";
+import WaitingModal from "../../../modal/WatingModal";
 
 export default function SellingSectioin() {
     const dispatch = useDispatch();
@@ -35,6 +38,9 @@ export default function SellingSectioin() {
 
     const [watingModalOpen, setWatingModalOpen] = useState<boolean>(false);
     const [completeModalOpen, setCompleteModalOpen] = useState<boolean>(false);
+    const [failedModalOpen, setFailedModalOpen] = useState<boolean>(false);
+
+    const [isExceedQuantity, setIsExceedQuantity] = useState<boolean>(false);
 
     // 화폐 거래내역에 '매수'로 저장할지 '매도'로 저장할지를 지정
     const [tradeCategory, setTradeCategory] = useState<string>('매도');
@@ -168,68 +174,65 @@ export default function SellingSectioin() {
         }
     }
 
-    // 호가와 매도가가 일치할 때
-    const sellCrypto = async (email: string, cryptoName: string, cryptoQuantity: number, sellTotal: number) => {
-        try {
-            const response = await axios.post("http://127.0.0.1:8000/sell_crypto/", {
-                email: email,
-                crypto_name: cryptoName,
-                crypto_quantity: cryptoQuantity,
-                sell_total: sellTotal,
-            });
-            console.log("매도 화폐 전송 성공", response.data);
-            getBalance(user.email); // 매도가 성공하면 잔고 업데이트
-        } catch (error) {
-            console.error("매도 화폐 전송 실패: ", error);
+    const processSellTrade = async (isMarketValue: boolean, price: number) => {
+        // 주문총액이 잔고의 잔액을 넘으면 주문을 넣을 수 없음
+        if (sellQuantity > selectedCrypto.owned_quantity) {
+            setIsExceedQuantity(true);
+            return;
         }
-    }
+        setIsExceedQuantity(false);
 
-    // 지정가 매도 요청
-    const designatedSubmit = async () => {
-        await addTradeHistory(
-            user.email, 
-            selectedCrypto.name, 
-            tradeCategory, 
-            time, 
-            selectedCrypto.market, 
-            sellingPrice, 
-            sellTotal, 
-            sellQuantity, 
-            selectedCrypto.market, 
-            false
-        );
-        await getTradeHistory(user.email);
-        await getOwnedCrypto(user.email);
-
-        resetValue();
-    }
-
-    // 시장가 매도 요청 
-    const marketSubmit = async () => {
-        await addTradeHistory(
+        const addTradeResCode = await addTradeHistory(
             user.email,
             selectedCrypto.name,
             tradeCategory,
             time,
             selectedCrypto.market,
-            selectedCrypto.price,
+            price,
             sellTotal,
             sellQuantity,
             selectedCrypto.market,
-            true
+            isMarketValue
         );
+
         await getTradeHistory(user.email);
         await getOwnedCrypto(user.email);
 
-        resetValue();
-        setCompleteModalOpen(true);
+        if (addTradeResCode === 200) {
+            resetValue();
+            setCompleteModalOpen(true);
+        } else if (addTradeResCode === 202 && !isMarketValue) {
+            resetValue();
+            setWatingModalOpen(true);
+        } else {
+            setFailedModalOpen(true);
+        }
+    };
+
+    // 지정가 매도 요청
+    const designatedSubmit = () => {
+        processSellTrade(false, sellingPrice);
     }
+
+    // 시장가 매도 요청
+    const marketSubmit = () => {
+        processSellTrade(true, selectedCrypto.price);
+    }
+
 
     return (
         <>
             <CompleteModal
                 isModalOpen={completeModalOpen}
                 setIsModalOpen={setCompleteModalOpen}
+                category="sell" />
+            <TradeFailedModal
+                isModalOpen={failedModalOpen}
+                setIsModalOpen={setFailedModalOpen}
+                category="sell" />
+            <WaitingModal
+                isModalOpen={watingModalOpen}
+                setIsModalOpen={setWatingModalOpen}
                 category="sell" />
             {
                 // 매도 - 지정가 영역
@@ -311,6 +314,18 @@ export default function SellingSectioin() {
                                         <span>KRW</span>
                                     </div>
                                 </td>
+                            </tr>
+                            <tr>
+                                {
+                                    isExceedQuantity ?
+                                        <tr>
+                                            <td></td>
+                                            <td>
+                                                <InputWarning />
+                                            </td>
+                                        </tr> :
+                                        null
+                                }
                             </tr>
                         </table>
                     </div> :

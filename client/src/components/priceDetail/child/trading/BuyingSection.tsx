@@ -13,6 +13,9 @@ import axios from "axios";
 import calculatePercentage from "../../../../utils/trading/calculatePercentage";
 import limitDecimalPlace from "../../../../utils/trading/limitDecimalPlace";
 import CompleteModal from "../../../modal/CompleteModal";
+import TradeFailedModal from "../../../modal/TradeFailedModal";
+import WaitingModal from "../../../modal/WatingModal";
+import InputWarning from "./warning/InputWarning";
 
 export default function BuyingSection() {
     const dispatch = useDispatch();
@@ -36,6 +39,10 @@ export default function BuyingSection() {
 
     const [watingModalOpen, setWatingModalOpen] = useState<boolean>(false);
     const [completeModalOpen, setCompleteModalOpen] = useState<boolean>(false);
+    const [failedModalOpen, setFailedModalOpen] = useState<boolean>(false);
+
+    // 주문총액의 값이 현재 잔고를 넘진 않았는지
+    const [isExceedWallet, setIsExceedWallet] = useState<boolean>(false);
 
     // 화폐 거래내역에 '매수'로 저장할지 '매도'로 저장할지를 지정
     const [tradeCategory, setTradeCategory] = useState<string>('매수');
@@ -153,50 +160,49 @@ export default function BuyingSection() {
         }
     }
 
-    // 호가와 구매가가 일치할 때
-    const buyCrypto = async (email: string, cryptoName: string, cryptoQuantity: number, buyTotal: number) => {
-        try {
-            const response = await axios.post("http://127.0.0.1:8000/buy_crypto/", {
-                email: email,
-                crypto_name: cryptoName,
-                crypto_quantity: cryptoQuantity,
-                buy_total: buyTotal,
-            });
-            console.log("구매 화폐 전송 성공", response.data);
-            getBalance(email); // 매수에 사용한 금액만큼 차감되기 때문에 잔고 업데이트
-        } catch (error) {
-            console.error("구매 화폐 전송 실패: ", error)
+    const tradeSubmit = async (isMarketValue: boolean, price: number) => {
+        // 주문총액이 잔고의 잔액을 넘으면 주문을 넣을 수 없음
+        if (buyTotal > userWallet) {
+            setIsExceedWallet(true);
+            return;
         }
-    }
+        setIsExceedWallet(false);
 
-    // 지정가 매수 요청
-    const designatedSubmit = async () => {
-
-        await addTradeHistory(user.email, selectedCrypto.name, tradeCategory, time, selectedCrypto.market, buyingPrice, buyTotal, buyQuantity, selectedCrypto.market, false);
-        resetValue();
-
-    }
-
-    // 시장가 매수 요청 
-    const marketSubmit = async () => {
-        // 호가와의 일치 여부를 확인하지 않고 즉시 요청 전송
-        await addTradeHistory(
+        const addTradeResCode = await addTradeHistory(
             user.email,
             selectedCrypto.name,
             tradeCategory,
             time,
             selectedCrypto.market,
-            selectedCrypto.price,
+            price,
             buyTotal,
             buyQuantity,
             selectedCrypto.market,
-            true
+            isMarketValue
         );
+
         await getTradeHistory(user.email);
         await getOwnedCrypto(user.email);
 
-        resetValue();
-        setCompleteModalOpen(true);
+        if (addTradeResCode === 200) {
+            resetValue();
+            setCompleteModalOpen(true);
+        } else if (addTradeResCode === 202 && !isMarketValue) {
+            resetValue();
+            setWatingModalOpen(true);
+        } else {
+            setFailedModalOpen(true);
+        }
+    };
+
+    // 지정가 매수 요청
+    const designatedSubmit = () => {
+        tradeSubmit(false, buyingPrice);
+    }
+
+    // 시장가 매수 요청
+    const marketSubmit = () => {
+        tradeSubmit(true, selectedCrypto.price);
     }
 
     return (
@@ -204,6 +210,14 @@ export default function BuyingSection() {
             <CompleteModal
                 isModalOpen={completeModalOpen}
                 setIsModalOpen={setCompleteModalOpen}
+                category="buy" />
+            <TradeFailedModal
+                isModalOpen={failedModalOpen}
+                setIsModalOpen={setFailedModalOpen}
+                category="buy" />
+            <WaitingModal
+                isModalOpen={watingModalOpen}
+                setIsModalOpen={setWatingModalOpen}
                 category="buy" />
             {
                 // 매수 - 지정가 영역
@@ -275,6 +289,16 @@ export default function BuyingSection() {
                                         </div>
                                     </td>
                                 </tr>
+                                {
+                                    isExceedWallet ?
+                                        <tr>
+                                            <td></td>
+                                            <td>
+                                                <InputWarning />
+                                            </td>
+                                        </tr> :
+                                        null
+                                }
                             </tbody>
                         </table>
                     </div> :

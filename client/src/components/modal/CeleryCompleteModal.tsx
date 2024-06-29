@@ -3,6 +3,7 @@ import styles from '../../styles/modal/modal.module.css'
 import { ModalProps } from './SubmitModal';
 import { CeleryData } from '../priceDetail/child/trading/TradeSection';
 import formatDateString from '../../utils/trading/formatDateString';
+import formatWithComas from '../../utils/trading/formatWithComas';
 
 type CeleryModalProps = ModalProps & {
     celeryData: CeleryData,
@@ -44,7 +45,7 @@ export default function CeleryCompleteModal({ isModalOpen, setIsModalOpen, celer
                                 거래 요청시간 : <b>{celeryData.tradeTime &&
                                     formatDateString(celeryData.tradeTime)}</b>
                             </div>
-                            <div>거래가 : <b>{celeryData.price}</b></div>
+                            <div>거래가 : <b>{formatWithComas(String(celeryData.price))} KRW</b></div>
                         </div>
                     </div>
                 }

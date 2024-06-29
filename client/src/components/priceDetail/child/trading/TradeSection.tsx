@@ -46,7 +46,7 @@ export default function TradeSection() {
             console.error("WebSocket error:", e);
         };
 
-    }, [])
+    }, []);
 
     return (
         <>
