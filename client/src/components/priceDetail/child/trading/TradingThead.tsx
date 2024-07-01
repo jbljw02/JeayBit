@@ -10,9 +10,7 @@ export default function TradingThead({ bidSort, onChange }: Params) {
         <table className="trading-head-table">
             <tbody>
                 <tr className="trading-choice">
-                    <td className='order-sort'>
-                        주문구분
-                    </td>
+                    <td className='order-sort'>주문구분</td>
                     <td>
                         <RadioInput
                             id="radio1"

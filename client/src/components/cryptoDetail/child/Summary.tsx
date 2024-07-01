@@ -21,7 +21,7 @@ function DetailContent({ title, value, suffix }: ChildParams) {
     )
 }
 
-export default function CryptoDetail() {
+export default function Summary() {
     const dispatch = useDispatch();
 
     const selectedCrypto = useSelector((state: RootState) => state.selectedCrypto);
@@ -34,6 +34,7 @@ export default function CryptoDetail() {
 
     return (
         <>
+
             <dl className="selectedDetail_dl_1 lightMode">
                 <DetailContent
                     title="거래대금"

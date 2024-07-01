@@ -28,7 +28,7 @@ def candle_per_minute(request):
 
         if not market:
             return Response({"error": "market 파라미터 X"}, status=400)
-
+        
         url = f"https://api.upbit.com/v1/candles/minutes/{minute}?market={market}&count=100"
 
         response = requests.get(url)

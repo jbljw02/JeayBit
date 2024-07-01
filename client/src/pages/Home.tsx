@@ -5,11 +5,12 @@ import { Header } from '../components/Header';
 import LogIn from '../components/LogIn';
 import PriceDetail from '../components/priceDetail/PriceDetail';
 import SignUp from '../components/SignUp';
-import TradingView from '../components/tradingView/TradingView';
 import { useEffect } from 'react';
 import useFunction from '../utils/useFuction';
 import { useDispatch } from 'react-redux';
 import { setUser } from '../redux/store';
+import Chart from '../components/chart/Chart';
+import CryptoDetail from '../components/cryptoDetail/CryptoDetail';
 
 export default function Home() {
     const dispatch = useDispatch();
@@ -52,7 +53,8 @@ export default function Home() {
                             <div className='content-container'>
                                 <div className='main'>
                                     <article className='TradingView'>
-                                        <TradingView></TradingView>
+                                        <CryptoDetail />
+                                        <Chart />
                                     </article>
                                     <article className='PriceDetail'>
                                         <PriceDetail></PriceDetail>

@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import axios from "axios";
-import { RootState, setCandlePerMinute, setCandlePerDate, setCandlePerWeek, setCandlePerMonth, setSelectedChartSort, setChartSortTime, setChartSortDate } from "../../../../redux/store";
+import { RootState, setCandlePerMinute, setCandlePerDate, setCandlePerWeek, setCandlePerMonth, setSelectedChartSort, setChartSortTime, setChartSortDate, setChartSort } from "../../../redux/store";
 
 export default function ChartHeader() {
     const dispatch = useDispatch();
@@ -55,15 +55,19 @@ export default function ChartHeader() {
             console.error("캔들에러: ", error);
         }
     };
+    const chartSort = useSelector((state: RootState) => state.chartSort);
+
+
 
     const clickChartSortTime = (value: string) => {
         dispatch(setChartSortTime(value));
-        dispatch(setChartSortDate(''));
+        dispatch(setChartSort(value))
     }
 
     const clickChartSortDate = (value: string) => {
         dispatch(setChartSortDate(value));
         dispatch(setChartSortTime(''));
+        dispatch(setChartSort(value))
     }
 
     // 선택 화폐가 변경 되거나, 시간/날짜당 캔들의 정보가 변경될 때 요청
@@ -71,7 +75,7 @@ export default function ChartHeader() {
         if (chartSortTime && selectedCrypto.market) {
             requestCandleMinute(selectedCrypto.market, chartSortTime);
         }
-        else if (chartSortDate && selectedCrypto.market) {
+        else if (chartSortDate && !chartSortTime && selectedCrypto.market) {
             requestCandleDate(selectedCrypto.market);
         }
     }, [selectedCrypto, chartSortTime, chartSortDate]);

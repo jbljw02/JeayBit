@@ -1,6 +1,6 @@
-import price_rise from '../../../../assets/images/price-up.png'
-import price_fall from '../../../../assets/images/price-down.png'
-import formatWithComas from '../../../../utils/format/formatWithComas'
+import price_rise from '../../../assets/images/price-up.png'
+import price_fall from '../../../assets/images/price-down.png'
+import formatWithComas from '../../../utils/format/formatWithComas'
 
 type Params = {
     changePrice: number,

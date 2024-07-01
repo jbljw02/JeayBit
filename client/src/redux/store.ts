@@ -79,6 +79,10 @@ export type UnsginedAskingData = {
   bid_price: number,
 }
 
+export type ChartSortDate = '1일' | '1주' | '1개월';
+
+export type ChartSortTime = '1분' | '5분' | '10분' | '30분' | '1시간' | '4시간';
+
 export type RootState = {
   cr_name: string[],
   cr_price: number[],
@@ -119,8 +123,8 @@ export type RootState = {
   asking_dateTime: string,
   asking_totalAskSize: number,
   asking_totalBidSize: number,
-  chartSortTime: string,
-  chartSortDate: string,
+  chartSortDate: ChartSortDate,
+  chartSortTime: ChartSortTime,
   theme: boolean,
   logInUser: string,
   logInEmail: string,
@@ -153,6 +157,7 @@ export type RootState = {
   scheduledCancel: ScheduleCancel,
   searchedCrypto: Crypto[],
   sortStates: number[],
+  chartSort: ChartSortDate | ChartSortTime,
 }
 
 const cr_name = createSlice({
@@ -880,6 +885,16 @@ export const sortStatesSlice = createSlice({
   }
 })
 
+export const chartSortSlice = createSlice({
+  name: 'chartSort',
+  initialState: '1일',
+  reducers: {
+    setChartSort: (state, action) => {
+      return action.payload;
+    }
+  }
+})
+
 // const combinedReducer = combineReducers({
 //   listCategory: cryptoListReducers.listCategory, 
 // });
@@ -966,6 +981,7 @@ export default configureStore({
     scheduledCancel: scheduledCancelSlice.reducer,
     searchedCrypto: searchedCryptoSlice.reducer,
     sortStates: sortStatesSlice.reducer,
+    chartSort: chartSortSlice.reducer,
   }
 })
 
@@ -1056,3 +1072,4 @@ export const { setCsrfToken } = csrfTokenSlice.actions;
 export const { setScheduledCancel } = scheduledCancelSlice.actions;
 export const { setSearchedCrypto } = searchedCryptoSlice.actions;
 export const { setSortStates } = sortStatesSlice.actions;
+export const { setChartSort } = chartSortSlice.actions;
