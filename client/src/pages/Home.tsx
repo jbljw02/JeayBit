@@ -5,7 +5,7 @@ import { Header } from '../components/Header';
 import LogIn from '../components/LogIn';
 import PriceDetail from '../components/priceDetail/PriceDetail';
 import SignUp from '../components/SignUp';
-import TradingView from '../components/TradingView';
+import TradingView from '../components/tradingView/TradingView';
 import { useEffect } from 'react';
 import useFunction from '../utils/useFuction';
 import { useDispatch } from 'react-redux';

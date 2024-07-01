@@ -1,7 +1,7 @@
 import { useSelector } from "react-redux";
 import { AskingData, RootState } from "../../../../redux/store";
-import convertToDate from "../../../../utils/asking/covertToDate";
-import adjustSize from "../../../../utils/asking/adjustSize";
+import convertToDate from "../../../../utils/date/covertToDate";
+import adjustSize from "../../../../utils/format/adjustSize";
 
 type Params = {
     differences: {

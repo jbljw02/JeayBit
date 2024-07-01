@@ -1,7 +1,7 @@
 import { useDispatch, useSelector, } from "react-redux";
 import { RootState, setScheduledCancel } from "../../../../../redux/store";
 import { useState } from "react";
-import formatTradeAmount from "../../../../../utils/trading/formatTradeAmount";
+import formatTradeAmount from "../../../../../utils/format/formatTradeAmount";
 
 export default function UnSignedHistory() {
     const dispatch = useDispatch();

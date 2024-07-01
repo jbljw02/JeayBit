@@ -2,8 +2,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState, setCloseHide } from "../../../../redux/store";
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import 'react-perfect-scrollbar/dist/css/styles.css';
-import adjustSize from "../../../../utils/asking/adjustSize";
-import convertToDate from "../../../../utils/asking/covertToDate";
+import adjustSize from "../../../../utils/format/adjustSize";
+import convertToDate from "../../../../utils/date/covertToDate";
 
 export default function ClosedPrice() {
     const dispatch = useDispatch();

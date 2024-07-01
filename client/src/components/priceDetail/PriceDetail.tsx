@@ -11,7 +11,6 @@ import ClosedPrice from "./child/closed/ClosedPrice";
 import TradeSection from "./child/trading/TradeSection";
 
 export default function PriceDetail() {
-
   const { selectAskingPrice, selectClosedPrice } = useFunction();
 
   const allCrypto = useSelector((state: RootState) => state.allCrypto);

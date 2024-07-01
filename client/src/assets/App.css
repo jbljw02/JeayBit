@@ -451,15 +451,16 @@
 }
 
 .trading-header {
-  /* padding-top: 50px; */
   padding: 5px;
   border-bottom: 1px solid #E3E8EC;
   border-top: 1px solid #E3E8EC;
 }
 
-.table-delimited {
+.div-delimited {
   font-size: 14px;
   padding-left: 12px;
+  display: flex;
+  align-items: center;
 }
 
 .td-delimited {
@@ -477,12 +478,9 @@
 }
 
 .td-delimited:hover {
-  /* background-color: rgb(228, 228, 228); */
-  /* color: #2962FF; */
   font-weight: bold;
 }
 
-/* 드롭다운 css */
 .dropDown {
   display: inline-block;
   position: relative;
@@ -517,18 +515,7 @@
   font-weight: bold;
 }
 
-.chartSortDate-selected {
-  border-radius: 3px;
-  padding-left: 5px;
-  padding-right: 1px;
-  color: #2962FF;
-  font-weight: bold;
-  cursor: pointer;
-}
-
 .chartSortDate-selected:hover {
-  /* background-color: rgb(228, 228, 228); */
-  /* color: #2962FF; */
   font-weight: bold;
 }
 
@@ -556,8 +543,6 @@
 }
 
 .dd-menu-li {
-  color: #2962FF;
-  font-weight: bold;
 }
 
 .dd-input+.dd-menu {
@@ -627,7 +612,6 @@ dl {
 dt {
   font-size: 13px;
   margin-top: 10px;
-  margin-bottom: 10px;
   padding-bottom: 6px;
   border-bottom: 1px solid #E3E8EC;
 }

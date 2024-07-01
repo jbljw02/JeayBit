@@ -6,12 +6,12 @@ import { RootState, setIsSelling, setSelectedCrypto, setSellingPrice } from "../
 import useFunction from "../../../../utils/useFuction";
 import TradingThead from "./TradingThead";
 import SelectPercentage from "./SelectPercentage";
-import adjustInputValue from "../../../../utils/trading/adjustInputValue";
+import adjustInputValue from "../../../../utils/format/adjustInputValue";
 import TradeInput from "../../../input/TradeInput";
 import PriceRange from "../../../input/PriceRange";
-import formatWithComas from "../../../../utils/trading/formatWithComas";
-import calculatePercentage from "../../../../utils/trading/calculatePercentage";
-import limitDecimalPlace from "../../../../utils/trading/limitDecimalPlace";
+import formatWithComas from "../../../../utils/format/formatWithComas";
+import calculatePercentage from "../../../../utils/calculatePercentage";
+import limitDecimalPlace from "../../../../utils/format/limitDecimalPlace";
 import LoginNavigator from "./LoginNavigator";
 import CompleteModal from "../../../modal/CompleteModal";
 import TradeFailedModal from "../../../modal/TradeFailedModal";

@@ -108,11 +108,11 @@ export type RootState = {
   sortedData: Crypto[],
   delimitedTime: string[],
   delimitedDate: string[],
-  candle_per_minute: Market[],
-  candle_per_date: Market[],
-  candle_per_date_BTC: Market[],
-  candle_per_week: Market[],
-  candle_per_month: Market[],
+  candlePerMinute: Market[],
+  candlePerDate: Market[],
+  candlePerDate_BTC: Market[],
+  candlePerWeek: Market[],
+  candlePerMonth: Market[],
   selectedChartSort: string,
   closed_data: ClosedData[],
   asking_data: AskingData[],
@@ -442,51 +442,51 @@ const delimitedDate = createSlice({
   }
 })
 
-const candle_per_minute = createSlice({
-  name: 'candle_per_minute',
+const candlePerMinute = createSlice({
+  name: 'candlePerMinute',
   initialState: [],
   reducers: {
-    setCandle_per_minute: (state, action) => {
+    setCandlePerMinute: (state, action) => {
       return action.payload;
     }
   }
 })
 
-const candle_per_date = createSlice({
-  name: 'candle_per_date',
+const candlePerDate = createSlice({
+  name: 'candlePerDate',
   initialState: [] as Market[],
   reducers: {
-    setCandle_per_date: (state, action) => {
+    setCandlePerDate: (state, action) => {
       return action.payload;
     }
   }
 })
 
-const candle_per_date_BTC = createSlice({
-  name: 'candle_per_date_BTC',
+const candlePerDate_BTC = createSlice({
+  name: 'candlePerDate_BTC',
   initialState: [] as Market[],
   reducers: {
-    setCandle_per_date_BTC: (state, action) => {
+    setCandlePerDate_BTC: (state, action) => {
       return action.payload;
     }
   }
 })
 
-const candle_per_week = createSlice({
-  name: 'candle_per_week',
+const candlePerWeek = createSlice({
+  name: 'candlePerWeek',
   initialState: [],
   reducers: {
-    setCandle_per_week: (state, action) => {
+    setCandlePerWeek: (state, action) => {
       return action.payload;
     }
   }
 })
 
-const candle_per_month = createSlice({
-  name: 'candle_per_month',
+const candlePerMonth = createSlice({
+  name: 'candlePerMonth',
   initialState: [],
   reducers: {
-    setCandle_per_month: (state, action) => {
+    setCandlePerMonth: (state, action) => {
       return action.payload;
     }
   }
@@ -922,11 +922,11 @@ export default configureStore({
     sortedData: sortedData.reducer,
     delimitedTime: delimitedTime.reducer,
     delimitedDate: delimitedDate.reducer,
-    candle_per_minute: candle_per_minute.reducer,
-    candle_per_date: candle_per_date.reducer,
-    candle_per_date_BTC: candle_per_date_BTC.reducer,
-    candle_per_week: candle_per_week.reducer,
-    candle_per_month: candle_per_month.reducer,
+    candlePerMinute: candlePerMinute.reducer,
+    candlePerDate: candlePerDate.reducer,
+    candlePerDate_BTC: candlePerDate_BTC.reducer,
+    candlePerWeek: candlePerWeek.reducer,
+    candlePerMonth: candlePerMonth.reducer,
     selectedChartSort: selectedChartSort.reducer,
     chartSortTime: chartSortTime.reducer,
     closed_data: closed_data.reducer,
@@ -1013,11 +1013,11 @@ export const { setCr_low_price_selected } = cr_low_price_selected.actions;
 export const { setSortedData } = sortedData.actions;
 export const { setDelimitedTime } = delimitedTime.actions;
 export const { setDelimitedDate } = delimitedDate.actions;
-export const { setCandle_per_minute } = candle_per_minute.actions;
-export const { setCandle_per_date } = candle_per_date.actions;
-export const { setCandle_per_date_BTC } = candle_per_date_BTC.actions;
-export const { setCandle_per_week } = candle_per_week.actions;
-export const { setCandle_per_month } = candle_per_month.actions;
+export const { setCandlePerMinute } = candlePerMinute.actions;
+export const { setCandlePerDate } = candlePerDate.actions;
+export const { setCandlePerDate_BTC } = candlePerDate_BTC.actions;
+export const { setCandlePerWeek } = candlePerWeek.actions;
+export const { setCandlePerMonth } = candlePerMonth.actions;
 export const { setSelectedChartSort } = selectedChartSort.actions;
 export const { setClosed_data } = closed_data.actions;
 export const { setAsking_data } = asking_data.actions;
