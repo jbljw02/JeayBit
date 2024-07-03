@@ -8,6 +8,7 @@ import starOn from '../../../../assets/images/star-on.png'
 import starOff from '../../../../assets/images/star-off.png'
 import { Crypto } from "../../../../redux/store";
 import axios from "axios";
+import formatWithComas from "../../../../utils/format/formatWithComas";
 
 interface Differences {
     name: string;
@@ -91,16 +92,6 @@ export default function ListTbody() {
         }
     }, [filteredData]);
 
-    // 화폐의 가격이 업데이트 됨에 따라, 차트의 데이터를 최신화
-    // if (filteredData.length > 0 && selectedCrypto) {
-    //     if (chartSortTime && selectedCrypto.market) {
-    //         requestCandleMinute(selectedCrypto.market, chartSortTime);
-    //     }
-    //     else if (!chartSortTime && selectedCrypto.market) {
-    //         requestCandleDate(selectedCrypto.market);
-    //     }
-    // }
-
     // 선택한 화폐가 변경 될 때
     useEffect(() => {
         // 호가 및 체결내역 호출
@@ -176,9 +167,9 @@ export default function ListTbody() {
                             let priceClass_rise = isChanged ? "change-price-rise" : "";
                             let priceClass_fall = isChanged ? "change-price-fall" : "";
 
-                            const cryptoPrice = item.price.toLocaleString(); // 화폐 가격
+                            const cryptoPrice = formatWithComas(item.price); // 화폐 가격
                             const changeRate = (item.change_rate * 100).toFixed(2); // 화폐 변화율
-                            const changePrice = item.change_price.toLocaleString(); // 화폐 변화량
+                            const changePrice = formatWithComas(item.change_price); // 화폐 변화량
 
                             // 화폐의 보유량 설정
                             let userOwnedQuantity;
@@ -244,7 +235,7 @@ export default function ListTbody() {
                                             <td className="lightMode">
                                                 <span className="td-rise">
                                                     +{changeRate}% <br />
-                                                    {changePrice}
+                                                    +{changePrice}
                                                 </span>
                                             </td>
                                         ) :
@@ -252,7 +243,7 @@ export default function ListTbody() {
                                                 <td className="lightMode">
                                                     <span className="td-fall">
                                                         -{changeRate}% <br />
-                                                        {changePrice}
+                                                        -{changePrice}
                                                     </span>
                                                 </td>
                                             ) :

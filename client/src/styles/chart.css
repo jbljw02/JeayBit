@@ -1,0 +1,11 @@
+.apexchart-tooltip {
+    padding: 5px;
+    font-size: 12px;
+}
+
+.apexchart-tooltip div {
+}
+
+.apexchart-tooltip span {
+    font-weight: bold;
+}

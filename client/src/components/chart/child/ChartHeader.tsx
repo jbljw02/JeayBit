@@ -55,9 +55,6 @@ export default function ChartHeader() {
             console.error("캔들에러: ", error);
         }
     };
-    const chartSort = useSelector((state: RootState) => state.chartSort);
-
-
 
     const clickChartSortTime = (value: string) => {
         dispatch(setChartSortTime(value));

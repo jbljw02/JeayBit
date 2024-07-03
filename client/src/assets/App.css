@@ -352,7 +352,7 @@
 
 /* TradingView 컴포넌트 CSS */
 .TradingView {
-  height: 95%;
+  height: 100vh;
   /* height: 80vh; */
   /* height: 1422.98px; */
   /* width: 65%; */
@@ -592,9 +592,8 @@
   padding-right: 3px;
 }
 
-.trading-chart {
-  height: 80%;
-  color: #000000;
+#chart {
+  height: 100%;
 }
 
 .selectedDetail_dl_2 {

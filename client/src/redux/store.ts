@@ -48,6 +48,7 @@ export type Market = {
   high_price: number,
   low_price: number,
   trade_price: number,
+  timestamp: number,
 }
 
 export type FavoriteCrypto = {

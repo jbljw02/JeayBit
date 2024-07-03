@@ -1,69 +1,40 @@
-import { useEffect, useState } from 'react';
-import ReactApexChart from 'react-apexcharts';
+import React, { useEffect, useRef, useState } from 'react';
+import Chart from 'react-apexcharts';
 import { useSelector } from 'react-redux';
-import { Market, RootState, ChartSortDate, ChartSortTime, setChartSort } from '../../../redux/store';
+import { Market, RootState } from '../../../redux/store';
+import formatWithComas from '../../../utils/format/formatWithComas';
 
-type SeriesData = {
-  x: string | number;
-  y: number[];
-}
-
-type Series = {
-  name: string;
-  data: SeriesData[];
-}
-
-export default function TradingChart() {
+export default function ApexChart() {
   const candlePerDate = useSelector((state: RootState) => state.candlePerDate);
   const candlePerMinute = useSelector((state: RootState) => state.candlePerMinute);
+  const selectedCrypto = useSelector((state: RootState) => state.selectedCrypto);
   const chartSortTime = useSelector((state: RootState) => state.chartSortTime);
   const chartSortDate = useSelector((state: RootState) => state.chartSortDate);
 
-  // console.log("chartSortTime: ", chartSortTime);
-  // console.log("chartSortDate: ", chartSortDate);
+  const [format, setFormat] = useState<string>(chartSortTime ? chartSortTime : chartSortDate);
 
-  const [format, setFormat] = useState<string>(chartSortTime ? chartSortTime : chartSortDate); // 초기값을 null로 설정
+  const formatRef = useRef(format);
 
-  useEffect(() => {
-    console.log("초기 chartSortTime: ", chartSortTime);
-    console.log("초기 chartSortDate: ", chartSortDate);
-    if (chartSortTime) {
-      setFormat(chartSortTime);
-    } else if (chartSortDate) {
-      setFormat(chartSortDate);
-    }
-  }, []); // 빈 의존성 배열로 처음 마운트될 때만 실행
-
-  useEffect(() => {
-    if (chartSortTime) {
-      setFormat(chartSortTime);
-    }
-  }, [chartSortTime]);
-
-  useEffect(() => {
-    if (!chartSortTime && chartSortDate) {
-      setFormat(chartSortDate);
-    }
-  }, [chartSortDate, chartSortTime]);
-
+  const getDecimalPlaces = (num: number): number => {
+    if (num === undefined || num === null) return 0;
+    const match = num.toString().match(/(?:\.(\d+))?(?:[eE]([+-]?\d+))?$/);
+    if (!match) { return 0; }
+    return Math.max(0, (match[1] ? match[1].length : 0) - (match[2] ? +match[2] : 0));
+  };
 
   const getXValue = (timeStamp: string | number, format: string) => {
     const dateObj = new Date(timeStamp);
-
     const pad = (num: number) => num.toString().padStart(2, '0');
-
     const year = dateObj.getFullYear();
     const month = pad(dateObj.getMonth() + 1);
     const day = pad(dateObj.getDate());
     const hour = pad(dateObj.getHours());
     const minute = pad(dateObj.getMinutes());
 
-    console.log("포맷: ", format);
     switch (format) {
       case '1일':
       case '1주':
       case '1개월':
-        console.log(`년월일: ${year}-${month}-${day}`);
         return `${year}-${month}-${day}`;
       case '1분':
       case '5분':
@@ -71,143 +42,110 @@ export default function TradingChart() {
       case '30분':
       case '1시간':
       case '4시간':
-        console.log(`월: ${month}-${day} ${hour}:${minute}`);
         return `${month}-${day} ${hour}:${minute}`;
       default:
-        console.log(`기본: ${year}-${month}-${day} ${hour}:${minute}`);
         return `${year}-${month}-${day} ${hour}:${minute}`;
     }
-
   };
 
-  // eslint-disable-next-line
-  const [options, setOptions] = useState<any>({
+  useEffect(() => {
+    formatRef.current = format;
+  }, [format]);
+
+  const [series, setSeries] = useState<{ data: { x: Date; y: number[] }[] }[]>([
+    { data: [] },
+  ]);
+
+  const [chartOptions, setChartOptions] = useState<any>({
     chart: {
+      type: 'candlestick' as const,
       height: '100%',
-      type: 'candlestick',
+      id: 'crypto-chart',
     },
-    title: {
-      // text: 'cr_names_selected',
-      align: 'left'
+    xaxis: {
+      type: 'datetime' as const,
+      labels: {
+        formatter: function (value: number) {
+          const rawDate = new Date(value).getTime();
+          const x = getXValue(rawDate, formatRef.current);
+          return x;
+        },
+      },
     },
-    annotations: {
-      xaxis: [
-        {
-          x: 'Oct 06 14:00',
-          borderColor: '#00E396',
-          label: {
-            borderColor: '#00E396',
-            style: {
-              fontSize: '12px',
-              color: '#fff',
-              background: '#00E396'
-            },
-            orientation: 'horizontal',
-            offsetY: 7,
-            // text: 'Annotation Test'
-          }
-        }
-      ]
+    yaxis: {
+      labels: {
+        formatter: function (value: number) {
+          return formatWithComas(value);
+        },
+      },
+      tooltip: {
+        enabled: true,
+      },
     },
     tooltip: {
       enabled: true,
+      shared: true,
+      followCursor: true,
+      intersect: false,
       custom: function ({ series, seriesIndex, dataPointIndex, w }: { series: any, seriesIndex: number, dataPointIndex: number, w: any }) {
+        if (seriesIndex === -1 || dataPointIndex === -1) return;
+
         const o = w.globals.seriesCandleO[seriesIndex][dataPointIndex];
         const h = w.globals.seriesCandleH[seriesIndex][dataPointIndex];
         const l = w.globals.seriesCandleL[seriesIndex][dataPointIndex];
         const c = w.globals.seriesCandleC[seriesIndex][dataPointIndex];
         const rawDate = new Date(w.globals.seriesX[seriesIndex][dataPointIndex]).getTime();
-        const x = getXValue(rawDate, format); // getXValue 함수 사용
+        const x = getXValue(rawDate, formatRef.current);
+
         return `
-          <div class="apexcharts-tooltip-candlestick">
+          <div class="apexchart-tooltip">
             <div>날짜: <span>${x}</span></div>
-            <div>시가: <span>${o}</span></div>
-            <div>고가: <span>${h}</span></div>
-            <div>저가: <span>${l}</span></div>
-            <div>종가: <span>${c}</span></div>
+            <div>시가: <span>${formatWithComas(o)}</span></div>
+            <div>고가: <span>${formatWithComas(h)}</span></div>
+            <div>저가: <span>${formatWithComas(l)}</span></div>
+            <div>종가: <span>${formatWithComas(c)}</span></div>
           </div>
         `;
-      }
-    },
-    xaxis: {
-      type: 'datetime', // 추가된 부분
-      tickAmount: 6,
-      labels: {
-        style: {
-          colors: '#7f7f7f',
-        }
-      }
-    },
-    yaxis: {
-      labels: {
-        style: {
-          colors: '#7f7f7f',
-        }
       },
-      tooltip: { enabled: false }
-    }
+    },
   });
 
-  const series: Series[] = [
-    {
-      name: 'candle',
-      data: []
+  useEffect(() => {
+    let data: { x: Date; y: number[] }[] = [];
+    if (chartSortTime) {
+      setFormat(chartSortTime);
+      data = candlePerMinute.map((candle: Market) => ({
+        x: new Date(candle.candle_date_time_kst),
+        y: [
+          candle.opening_price,
+          candle.high_price,
+          candle.low_price,
+          candle.trade_price,
+        ],
+      }));
+    } else if (chartSortDate) {
+      setFormat(chartSortDate);
+      data = candlePerDate.map((candle: Market) => ({
+        x: new Date(candle.candle_date_time_kst),
+        y: [
+          candle.opening_price,
+          candle.high_price,
+          candle.low_price,
+          candle.trade_price,
+        ],
+      }));
     }
-  ];
-
-  const isChartSortDate = (value: string): value is ChartSortDate => {
-    return value === '1일' || value === '1주' || value === '1개월';
-  };
-
-  const isChartSortTime = (value: string): value is ChartSortTime => {
-    return value === '1분' || value === '5분' || value === '10분' || value === '30분' || value === '1시간' || value === '4시간';
-  };
-
-  const updateSeriesData = (chartSortDate: string, series: Series[], candlePerSort: Market[]) => {
-    for (let i = series[0].data.length - 1; i >= 0; i--) {
-      if (series[0].data[i] && candlePerSort[candlePerSort.length - 1 - i]) {
-        const candleData = candlePerSort[candlePerSort.length - 1 - i];
-        const x = new Date(candleData.candle_date_time_kst).getTime();
-        // console.log("dd: ", dd);
-        series[0].data[i].x = x;
-        // console.log("이거: ", series[0].data[i].x);
-        series[0].data[i].y[0] = candleData.opening_price;
-        series[0].data[i].y[1] = candleData.high_price;
-        series[0].data[i].y[2] = candleData.low_price;
-        series[0].data[i].y[3] = candleData.trade_price;
-      }
-    }
-  }
-
-  // X축(날짜)을 지정
-  for (let i = candlePerDate.length - 1; i >= 0; i--) {
-    const item = {
-      x: candlePerDate[i] ? candlePerDate[i].candle_date_time_kst.slice(5, 10) : '',
-      y: [] // 시가, 고가, 저가, 종가순
-    };
-    series[0].data.push(item);
-
-  }
-
-  // chartSortDate와 chartSortTime 타입 검사
-  if (isChartSortDate(chartSortDate)) {
-    if (!chartSortTime) {
-      updateSeriesData(chartSortDate, series, candlePerDate);
-    } else if (isChartSortTime(chartSortTime)) {
-      updateSeriesData(chartSortTime, series, candlePerMinute);
-    }
-  } else {
-    console.error('chartSortDate가 올바른 값이 아닙니다.');
-  }
+    setSeries([{ data }]);
+  }, [candlePerDate, candlePerMinute, chartSortTime, chartSortDate]);
 
   return (
-    <div className='trading-chart'>
-
-      <ReactApexChart
-        options={options}
+    <div id="chart">
+      <Chart
+        options={chartOptions}
         series={series}
         type="candlestick"
-        height={'100%'} />
+        height='62%'
+      />
     </div>
   );
-};
+}

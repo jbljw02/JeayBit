@@ -46,7 +46,6 @@ export default function CryptoDetail() {
                         <ChangePrice
                             changePrice={selectedCrypto.change_price}
                             change={selectedCrypto.change} />
-
                     )
                 }
             </div>
