@@ -156,20 +156,23 @@ class GetAllCryptoView(View):
             all_crypto = []
 
             for i in range(len(data)):
+                trade_price = data[i].get("trade_price")
+                change_price = data[i].get("change_price")
+
                 crypto_obj = {
                     "name": name[i],
                     "market": unJoin_market[i],
                     "price": (
-                        int(data[i]["trade_price"])
-                        if data[i]["trade_price"] % 1 == 0
-                        else data[i]["trade_price"]
+                        int(trade_price)
+                        if trade_price and trade_price % 1 == 0
+                        else trade_price
                     ),
                     "change": data[i]["change"],
                     "change_rate": float(data[i]["change_rate"]),
                     "change_price": (
-                        int(data[i]["change_price"])
-                        if data[i]["change_price"] % 1 == 0
-                        else data[i]["change_price"]
+                        int(change_price)
+                        if change_price and change_price % 1 == 0
+                        else change_price
                     ),
                     "trade_price": data[i]["acc_trade_price_24h"],
                     "trade_volume": data[i]["acc_trade_volume_24h"],
