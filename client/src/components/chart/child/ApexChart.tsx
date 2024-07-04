@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import Chart from 'react-apexcharts';
 import { useSelector } from 'react-redux';
+import moment from 'moment-timezone';
 import { Market, RootState } from '../../../redux/store';
 import formatWithComas from '../../../utils/format/formatWithComas';
 
@@ -15,38 +16,28 @@ export default function ApexChart() {
 
   const formatRef = useRef(format);
 
-  const getDecimalPlaces = (num: number): number => {
-    if (num === undefined || num === null) return 0;
-    const match = num.toString().match(/(?:\.(\d+))?(?:[eE]([+-]?\d+))?$/);
-    if (!match) { return 0; }
-    return Math.max(0, (match[1] ? match[1].length : 0) - (match[2] ? +match[2] : 0));
-  };
-
-  const getXValue = (timeStamp: string | number, format: string) => {
-    const dateObj = new Date(timeStamp);
-    const pad = (num: number) => num.toString().padStart(2, '0');
-    const year = dateObj.getFullYear();
-    const month = pad(dateObj.getMonth() + 1);
-    const day = pad(dateObj.getDate());
-    const hour = pad(dateObj.getHours());
-    const minute = pad(dateObj.getMinutes());
+  const xLabelFormat = (dateTime: number, format: string) => {
+    const dateObj = moment.tz(dateTime, 'Asia/Seoul');
 
     switch (format) {
       case '1일':
+        return dateObj.format('MM/DD');
       case '1주':
+        return dateObj.format('MM/DD');
       case '1개월':
-        return `${year}-${month}-${day}`;
+        return dateObj.format('YYYY. MM');
       case '1분':
       case '5분':
       case '10분':
       case '30분':
       case '1시간':
       case '4시간':
-        return `${month}-${day} ${hour}:${minute}`;
+        return dateObj.format('MM/DD hh:mm')
       default:
-        return `${year}-${month}-${day} ${hour}:${minute}`;
+        return dateObj.format('YYYY. MM/DD hh:mm');
     }
   };
+
 
   useEffect(() => {
     formatRef.current = format;
@@ -64,11 +55,11 @@ export default function ApexChart() {
     },
     xaxis: {
       type: 'datetime' as const,
+      tickAmount: 6,
       labels: {
         formatter: function (value: number) {
-          const rawDate = new Date(value).getTime();
-          const x = getXValue(rawDate, formatRef.current);
-          return x;
+          const label = xLabelFormat(value, formatRef.current);
+          return label;
         },
       },
     },
@@ -94,12 +85,9 @@ export default function ApexChart() {
         const h = w.globals.seriesCandleH[seriesIndex][dataPointIndex];
         const l = w.globals.seriesCandleL[seriesIndex][dataPointIndex];
         const c = w.globals.seriesCandleC[seriesIndex][dataPointIndex];
-        const rawDate = new Date(w.globals.seriesX[seriesIndex][dataPointIndex]).getTime();
-        const x = getXValue(rawDate, formatRef.current);
 
         return `
           <div class="apexchart-tooltip">
-            <div>날짜: <span>${x}</span></div>
             <div>시가: <span>${formatWithComas(o)}</span></div>
             <div>고가: <span>${formatWithComas(h)}</span></div>
             <div>저가: <span>${formatWithComas(l)}</span></div>
@@ -111,11 +99,11 @@ export default function ApexChart() {
   });
 
   useEffect(() => {
-    let data: { x: Date; y: number[] }[] = [];
+    let data: { x: any; y: number[] }[] = [];
     if (chartSortTime) {
       setFormat(chartSortTime);
       data = candlePerMinute.map((candle: Market) => ({
-        x: new Date(candle.candle_date_time_kst),
+        x: moment.tz(candle.candle_date_time_kst, 'Asia/Seoul').toDate(),
         y: [
           candle.opening_price,
           candle.high_price,
@@ -126,7 +114,7 @@ export default function ApexChart() {
     } else if (chartSortDate) {
       setFormat(chartSortDate);
       data = candlePerDate.map((candle: Market) => ({
-        x: new Date(candle.candle_date_time_kst),
+        x: moment.tz(candle.candle_date_time_kst, 'Asia/Seoul').toDate(),
         y: [
           candle.opening_price,
           candle.high_price,
