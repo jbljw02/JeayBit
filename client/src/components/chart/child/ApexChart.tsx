@@ -9,24 +9,75 @@ import '../../../styles/chart.css'
 export default function ApexChart() {
   const candlePerDate = useSelector((state: RootState) => state.candlePerDate);
   const candlePerMinute = useSelector((state: RootState) => state.candlePerMinute);
-  const selectedCrypto = useSelector((state: RootState) => state.selectedCrypto);
   const chartSortTime = useSelector((state: RootState) => state.chartSortTime);
   const chartSortDate = useSelector((state: RootState) => state.chartSortDate);
 
   const [format, setFormat] = useState<string>(chartSortTime ? chartSortTime : chartSortDate);
-
   const formatRef = useRef(format);
 
   const [savedChartState, setSavedChartState] = useState<{ xaxis: any, yaxis: any } | null>(null);
+
+  const [series, setSeries] = useState<{ data: { x: Date; y: number[] }[] }[]>([
+    { data: [] },
+  ]);
+
+  useEffect(() => {
+    formatRef.current = format;
+  }, [format]);
 
   const saveChartState = (state: { xaxis: any, yaxis: any }) => {
     setSavedChartState(state);
   };
 
+  useEffect(() => {
+    let data: { x: Date; y: number[] }[] = [];
+    if (chartSortTime) {
+      setFormat(chartSortTime);
+      data = candlePerMinute.map((candle: Market) => ({
+        x: moment.tz(candle.candle_date_time_kst, 'Asia/Seoul').toDate(),
+        y: [
+          candle.opening_price,
+          candle.high_price,
+          candle.low_price,
+          candle.trade_price,
+        ],
+      }));
+    }
+    else if (chartSortDate) {
+      setFormat(chartSortDate);
+      data = candlePerDate.map((candle: Market) => ({
+        x: moment.tz(candle.candle_date_time_kst, 'Asia/Seoul').toDate(),
+        y: [
+          candle.opening_price,
+          candle.high_price,
+          candle.low_price,
+          candle.trade_price,
+        ],
+      }));
+    }
+    setSeries([{ data }]);
+  }, [candlePerDate, candlePerMinute, chartSortTime, chartSortDate]);
+
+  // 차트가 리렌더링 되더라도 확대 및 축소 상태를 보존
+  useEffect(() => {
+    if (savedChartState) {
+      const chart = ApexCharts.getChartByID('crypto-chart');
+      if (chart) {
+
+        chart.zoomX(savedChartState.xaxis.min, savedChartState.xaxis.max);
+        chart.updateOptions({
+          yaxis: {
+            min: savedChartState.yaxis.min,
+            max: savedChartState.yaxis.max
+          }
+        });
+      }
+    }
+  }, [series]);
+
+  // X 레이블과 툴팁의 값을 포맷
   const xLabelFormat = (dateTime: number, format: string) => {
     const dateObj = moment.tz(dateTime, 'Asia/Seoul');
-
-    console.log("datao: ", dateObj);
 
     switch (format) {
       case '1일':
@@ -47,14 +98,6 @@ export default function ApexChart() {
     }
   };
 
-  useEffect(() => {
-    formatRef.current = format;
-  }, [format]);
-
-  const [series, setSeries] = useState<{ data: { x: Date; y: number[] }[] }[]>([
-    { data: [] },
-  ]);
-
   const [chartOptions, setChartOptions] = useState<any>({
     chart: {
       type: 'candlestick' as const,
@@ -64,10 +107,10 @@ export default function ApexChart() {
         enabled: true,
       },
       events: {
-        zoomed: (chartContext: any, { xaxis, yaxis }: any) => {
+        zoomed: ({ xaxis, yaxis }: any) => {
           saveChartState({ xaxis, yaxis });
         },
-        scrolled: (chartContext: any, { xaxis, yaxis }: any) => {
+        scrolled: ({ xaxis, yaxis }: any) => {
           saveChartState({ xaxis, yaxis });
         }
       }
@@ -125,51 +168,6 @@ export default function ApexChart() {
       },
     },
   });
-
-  useEffect(() => {
-    let data: { x: Date; y: number[] }[] = [];
-    if (chartSortTime) {
-      setFormat(chartSortTime);
-      data = candlePerMinute.map((candle: Market) => ({
-        x: moment.tz(candle.candle_date_time_kst, 'Asia/Seoul').toDate(),
-        y: [
-          candle.opening_price,
-          candle.high_price,
-          candle.low_price,
-          candle.trade_price,
-        ],
-      }));
-    } else if (chartSortDate) {
-      setFormat(chartSortDate);
-      data = candlePerDate.map((candle: Market) => ({
-        x: moment.tz(candle.candle_date_time_kst, 'Asia/Seoul').toDate(),
-        y: [
-          candle.opening_price,
-          candle.high_price,
-          candle.low_price,
-          candle.trade_price,
-        ],
-      }));
-    }
-    setSeries([{ data }]);
-  }, [candlePerDate, candlePerMinute, chartSortTime, chartSortDate]);
-
-  useEffect(() => {
-    if (savedChartState) {
-      const chart = ApexCharts.getChartByID('crypto-chart');
-      if(chart) {
-        
-        chart.zoomX(savedChartState.xaxis.min, savedChartState.xaxis.max);
-        chart.updateOptions({
-          yaxis: {
-            min: savedChartState.yaxis.min,
-            max: savedChartState.yaxis.max
-          }
-        });
-      }
-    }
-  }, [series]);
-
 
   return (
     <Chart

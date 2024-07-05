@@ -2,7 +2,7 @@ import { HeaderNav } from "./Header";
 import { SetStateAction, useState } from "react";
 import axios, { AxiosError } from "axios";
 import { useNavigate } from "react-router-dom";
-import title from '../assets/images/title.png';
+import favicon from '../assets/images/favicon.png';
 
 export default function SignUp() {
 
@@ -138,7 +138,7 @@ export default function SignUp() {
       <HeaderNav />
       <div className="div-signUp">
         <span className='signUp-title'>
-          <img src={title} className="signUp-title-img-light" alt='제목'></img>
+          <img src={favicon} className="signUp-title-img-light" alt='제목'></img>
           <span className="signUp-title-name">JeayBit</span>
         </span>
         {/* <span className="title-signUp">회원가입</span> */}

@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import title from "../assets/images/title.png";
+import favicon from "../assets/images/favicon.png";
 import { RootState, setBalanceUpdate, setCsrfToken, setLogInEmail, setTransferSort, setUserTradeHistory, setUserTradeHistory_unSigned } from "../redux/store";
 import { useEffect, useState } from "react";
 import axios from "axios";
@@ -171,7 +171,7 @@ const Header = () => {
       </style>
       <div className="div-title">
         <span className="title">
-          <img src={title} className="title-img-light" alt="제목"></img>
+          <img src={favicon} className="title-img-light" alt="제목"></img>
           <span
             onClick={() => {
               navigate("/");
