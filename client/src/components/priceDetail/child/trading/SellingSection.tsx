@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { RootState, setIsSelling, setSelectedCrypto, setSellingPrice } from "../../../../redux/store";
-import useFunction from "../../../../utils/useFuction";
+import useFunction from "../../../useFuction";
 import TradingThead from "./TradingThead";
 import SelectPercentage from "./SelectPercentage";
 import adjustInputValue from "../../../../utils/format/adjustInputValue";

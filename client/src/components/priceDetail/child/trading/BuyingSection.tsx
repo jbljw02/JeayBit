@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState, setBuyingPrice, setIsBuying } from '../../../../redux/store'
-import useFunction from "../../../../utils/useFuction";
+import useFunction from "../../../useFuction";
 import adjustInputValue from "../../../../utils/format/adjustInputValue";
 import PriceRange from '../../../input/PriceRange';
 import TradeInput from "../../../input/TradeInput";

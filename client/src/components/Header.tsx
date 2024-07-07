@@ -4,7 +4,7 @@ import { RootState, setBalanceUpdate, setCsrfToken, setLogInEmail, setTransferSo
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import useFunction from "../utils/useFuction";
+import useFunction from "./useFuction";
 import { setUser } from "../redux/features/userSlice";
 
 const Header = () => {

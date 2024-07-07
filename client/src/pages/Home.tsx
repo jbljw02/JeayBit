@@ -2,11 +2,11 @@ import CryptoList from '../components/cryptoList/CryptoList';
 import '../assets/App.css';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { Header } from '../components/Header';
-import LogIn from '../components/LogIn';
+import LogIn from '../components/auth/LogIn';
 import PriceDetail from '../components/priceDetail/PriceDetail';
-import SignUp from '../components/SignUp';
+import SignUp from '../components/auth/SignUp';
 import { useEffect } from 'react';
-import useFunction from '../utils/useFuction';
+import useFunction from '../components/useFuction';
 import { useDispatch } from 'react-redux';
 import { setUser } from '../redux/store';
 import Chart from '../components/chart/Chart';
@@ -68,7 +68,7 @@ export default function Home() {
                             </div>
                         </>
                     } />
-                    <Route path="/logIn" element={<LogIn />} />
+                    <Route path="/login" element={<LogIn />} />
                     <Route path="/signUp" element={<SignUp />} />
                 </Routes>
             </BrowserRouter>

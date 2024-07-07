@@ -1,11 +1,13 @@
 type Params = {
-    isInvalid: boolean,
+    isEmpty: boolean,
     warningString: string,
+    isSubmitted: boolean,
+    isInvalid?: boolean,
 }
 
-export default function InputWarning({ isInvalid, warningString }: Params) {
+export default function InputWarning({ isEmpty, warningString, isSubmitted, isInvalid }: Params) {
     return (
-        isInvalid ?
+        (isInvalid || isEmpty) && isSubmitted ?
             <div className="inValid-alert">{warningString}</div> :
             null
     )

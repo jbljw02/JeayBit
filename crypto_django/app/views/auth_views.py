@@ -15,12 +15,14 @@ def sign_up(request):
         email = request.data.get("email")
         password = request.data.get("password")
 
+        if not username and not password and not email:
+            return Response({"error": "이름, 비밀번호, 이메일 모두 존재하지 않음"}, status=400)
         if not username:
-            return Response({"error": "이름을 설정하지 않음"}, status=400)
+            return Response({"error": "이름이 존재하지 않음"}, status=400)
         if not password:
-            return Response({"error": "비밀번호를 설정하지 않음"}, status=400)
+            return Response({"error": "비밀번호가 존재하지 않음"}, status=400)
         if not email:
-            return Response({"error": "이메일을 설정하지 않음"}, status=400)
+            return Response({"error": "이메일이 존재하지 않음"}, status=400)
 
         if CustomUser.objects.filter(email=email).exists():
             return Response({"error": "이미 사용중인 이메일"}, status=400)
@@ -28,7 +30,6 @@ def sign_up(request):
         user = CustomUser.objects.create_user(
             username=username, email=email, password=password
         )
-
     except:
         return Response({"error": "회원가입 실패"}, status=500)
 
@@ -41,20 +42,27 @@ class LoginView(View):
             data = json.loads(request.body)
             email = data.get("email")
             password = data.get("password")
-
-            # CusomterUser.authenticate로 작성하지 않아도 지정해놓은 모델에 대해 인증을 수행
+            
+            if not email and not password:
+                return JsonResponse({"error": "이메일, 비밀번호 모두 존재하지 않음"}, status=400)
+            if not email:
+                return JsonResponse({"error": "이메일이 존재하지 않음"}, status=400)
+            if not password:
+                return JsonResponse({"error": "비밀번호가 존재하지 않음"}, status=400)
+            
+            # CustomerUser.authenticate로 작성하지 않아도 지정해놓은 모델에 대해 인증을 수행
             user = authenticate(request, email=email, password=password)
 
             if user is not None:
                 login(request, user)
                 return JsonResponse(
-                    {"username": request.user.username, "email": email}, status=200
+                    {"name": request.user.username, "email": email}, status=200
                 )
             else:
                 return JsonResponse(
                     {"error": "잘못된 이메일 혹은 비밀번호"}, status=400
                 )
-        except Exception:
+        except Exception as e:
             return JsonResponse({"error": "로그인 실패"}, status=500)
 
 
@@ -94,5 +102,4 @@ class CheckLoginView(View):
                     status=200,
                 )
         except Exception:
-            print("AA")
             return JsonResponse({f"error": "로그인 체크 에러"}, status=500)

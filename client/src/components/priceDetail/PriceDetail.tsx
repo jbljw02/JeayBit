@@ -3,7 +3,7 @@ import { AskingData, RootState, setAskHide, setAsking_dateTime, setBuyingPrice, 
 import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom'
 import axios from "axios";
-import useFunction from "../../utils/useFuction";
+import useFunction from "../useFuction";
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import 'react-perfect-scrollbar/dist/css/styles.css';
 import AskingPrice from "./child/asking/AskingPrice";
