@@ -896,6 +896,10 @@ export const chartSortSlice = createSlice({
   }
 })
 
+// export const realTimePriceSlice = createSlice({
+//   name: 'realTimePrice',
+// })
+
 // const combinedReducer = combineReducers({
 //   listCategory: cryptoListReducers.listCategory, 
 // });

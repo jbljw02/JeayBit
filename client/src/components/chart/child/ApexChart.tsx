@@ -6,6 +6,11 @@ import { Market, RootState } from '../../../redux/store';
 import formatWithComas from '../../../utils/format/formatWithComas';
 import '../../../styles/chart.css'
 
+type Axis = {
+  min: number,
+  max: number,
+}
+
 export default function ApexChart() {
   const candlePerDate = useSelector((state: RootState) => state.candlePerDate);
   const candlePerMinute = useSelector((state: RootState) => state.candlePerMinute);
@@ -25,7 +30,7 @@ export default function ApexChart() {
     formatRef.current = format;
   }, [format]);
 
-  const saveChartState = (state: { xaxis: any, yaxis: any }) => {
+  const saveChartState = (state: { xaxis: Axis, yaxis: Axis }) => {
     setSavedChartState(state);
   };
 
@@ -63,7 +68,6 @@ export default function ApexChart() {
     if (savedChartState) {
       const chart = ApexCharts.getChartByID('crypto-chart');
       if (chart) {
-
         chart.zoomX(savedChartState.xaxis.min, savedChartState.xaxis.max);
         chart.updateOptions({
           yaxis: {
@@ -107,11 +111,29 @@ export default function ApexChart() {
         enabled: true,
       },
       events: {
-        zoomed: ({ xaxis, yaxis }: any) => {
-          saveChartState({ xaxis, yaxis });
+        zoomed: (chartContext: any, { xaxis, yaxis }: any) => {
+          saveChartState({
+            xaxis: {
+              min: xaxis.min,
+              max: xaxis.max,
+            },
+            yaxis: {
+              min: yaxis.min,
+              max: yaxis.max,
+            }
+          });
         },
-        scrolled: ({ xaxis, yaxis }: any) => {
-          saveChartState({ xaxis, yaxis });
+        scrolled: (chartContext: any, { xaxis, yaxis }: any) => {
+          saveChartState({
+            xaxis: {
+              min: xaxis.min,
+              max: xaxis.max,
+            },
+            yaxis: {
+              min: yaxis.min,
+              max: yaxis.max,
+            }
+          });
         }
       }
     },
