@@ -2,14 +2,11 @@ import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import formatDateString from "../utils/date/formatDateString";
-import { RootState, setAllCrypto, setUserWallet, setSelectedCrypto, OwnedCrypto, setUserTradeHistory, setUserTradeHistory_unSigned, AskingData, setAsking_data, setAsking_totalAskSize, setAsking_totalBidSize, setClosed_data } from "../redux/store";
+import { RootState, setAllCrypto, setUserWallet, setSelectedCrypto, OwnedCrypto, setUserTradeHistory, setUserTradeHistory_unSigned, AskingData, setAsking_data, setAsking_totalAskSize, setAsking_totalBidSize, setClosed_data, setCryptoRealTime } from "../redux/store";
 
 export default function useFunction() {
   const dispatch = useDispatch();
 
-  const user = useSelector((state: RootState) => state.user);
-  const filteredData = useSelector((state: RootState) => state.filteredData);
-  const chartSortDate = useSelector((state: RootState) => state.chartSortDate);
   const selectedCrypto = useSelector((state: RootState) => state.selectedCrypto);
 
   const getAllCrypto = async () => {
@@ -17,24 +14,12 @@ export default function useFunction() {
       const response = await axios.post("http://127.0.0.1:8000/get_all_crypto/", {}, {
         withCredentials: true,
       });
-      dispatch(setAllCrypto(response.data.all_crypto));
 
+      dispatch(setAllCrypto(response.data.all_crypto));
     } catch (error) {
       throw error;
     }
   };
-
-  const checkLogin = async () => {
-    try {
-      const response = await axios.post("http://127.0.0.1:8000/check_login/", {}, {
-        withCredentials: true
-      });
-
-      return response.data;
-    } catch (error) {
-      throw error;
-    }
-  }
 
   // 서버로부터 사용자의 잔고량을 받아옴
   const getBalance = async (email: string) => {
@@ -49,21 +34,6 @@ export default function useFunction() {
       // console.error("잔고량 받기 실패: ", error)
     }
   }
-
-  // 화면에 보여질 초기 화폐의 차트(비트코인)
-  const getInitialData = async () => {
-    try {
-      const response = await axios.post("http://127.0.0.1:8000/get_all_crypto/", {}, {
-        withCredentials: true,
-      });
-      dispatch(setSelectedCrypto(response.data.all_crypto[0]));
-      // dispatch(setCandle_per_date_BTC(response.data.candle_btc_date));
-      // dispatch(setCr_market_selected(response.data.market[0]));
-      // dispatch(setCr_name_selected(response.data.name[0]));
-    } catch (error) {
-      throw error;
-    }
-  };
 
   // 사용자가 소유하고 있는 화폐의 정보를 받아옴
   const getOwnedCrypto = async (email: string) => {
@@ -80,7 +50,6 @@ export default function useFunction() {
         is_owned: targetCrypto?.is_owned,
         owned_quantity: targetCrypto?.owned_quantity,
       };
-
 
       dispatch(setSelectedCrypto(updatedCrypto));
       console.log("반환값-소유화폐 : ", response.data)
@@ -196,7 +165,6 @@ export default function useFunction() {
     }
   };
 
-
   // 선택된 화폐에 대한 체결내역 호출
   const selectClosedPrice = async (market: string) => {
     try {
@@ -210,14 +178,12 @@ export default function useFunction() {
 
   return {
     getAllCrypto,
-    getInitialData,
     getBalance,
     getOwnedCrypto,
     addTradeHistory,
     getTradeHistory,
     selectAskingPrice,
     selectClosedPrice,
-    checkLogin,
   };
 
 }

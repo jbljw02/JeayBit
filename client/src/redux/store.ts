@@ -159,6 +159,7 @@ export type RootState = {
   searchedCrypto: Crypto[],
   sortStates: number[],
   chartSort: ChartSortDate | ChartSortTime,
+  cryptoRealTime: Crypto,
 }
 
 const cr_name = createSlice({
@@ -896,9 +897,16 @@ export const chartSortSlice = createSlice({
   }
 })
 
-// export const realTimePriceSlice = createSlice({
-//   name: 'realTimePrice',
-// })
+
+export const cryptoRealTimeSlice = createSlice({
+  name: 'cryptoRealTime',
+  initialState: {},
+  reducers: {
+    setCryptoRealTime: (state, action) => {
+      return action.payload;
+    }
+  }
+})
 
 // const combinedReducer = combineReducers({
 //   listCategory: cryptoListReducers.listCategory, 
@@ -987,6 +995,7 @@ export default configureStore({
     searchedCrypto: searchedCryptoSlice.reducer,
     sortStates: sortStatesSlice.reducer,
     chartSort: chartSortSlice.reducer,
+    cryptoRealTime: cryptoRealTimeSlice.reducer,
   }
 })
 
@@ -1078,3 +1087,4 @@ export const { setScheduledCancel } = scheduledCancelSlice.actions;
 export const { setSearchedCrypto } = searchedCryptoSlice.actions;
 export const { setSortStates } = sortStatesSlice.actions;
 export const { setChartSort } = chartSortSlice.actions;
+export const { setCryptoRealTime } = cryptoRealTimeSlice.actions;

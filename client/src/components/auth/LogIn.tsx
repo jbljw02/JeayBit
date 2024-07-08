@@ -1,4 +1,3 @@
-import { HeaderNav } from "../Header";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
@@ -8,6 +7,7 @@ import FormInput from "../input/FormInput";
 import InputWarning from "../input/InputWarning";
 import FaviconTitle from "./child/FaviconTitle";
 import formValueChange from "../../utils/formValueChange";
+import HeaderNav from "../../header/HeaderNav";
 
 export default function LogIn() {
   const navigate = useNavigate();

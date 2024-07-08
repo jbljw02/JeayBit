@@ -1,0 +1,108 @@
+import { useDispatch, useSelector } from "react-redux";
+import favicon from "../assets/images/favicon.png";
+import { RootState, setBalanceUpdate, setCsrfToken, setLogInEmail, setTransferSort, setUserTradeHistory, setUserTradeHistory_unSigned } from "../redux/store";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import useFunction from "../components/useFuction";
+import { setUser } from "../redux/features/userSlice";
+import Wallet from "./wallet/Wallet";
+
+export default function Header() {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const user = useSelector((state: RootState) => state.user);
+  const balanceUpdate = useSelector((state: RootState) => state.balanceUpdate);
+
+  const [walletHover, setWalletHover] = useState<boolean>(false);
+  const transferSort = useSelector((state: RootState) => state.transferSort);
+
+  const logOut = async () => {
+    try {
+      const response = await axios.post("http://127.0.0.1:8000/logOut/",
+        {},
+        {
+          withCredentials: true,
+        });
+
+      dispatch(setUser({
+        name: '',
+        email: '',
+      }));
+      dispatch(setUserTradeHistory([]))
+      dispatch(setUserTradeHistory_unSigned([]))
+    } catch (error) {
+      console.error("로그아웃 정보 전송 실패");
+    }
+  };
+
+  return (
+    <>
+      {/* 제목 폰트를 사용하기 위한 구글 폰트 api */}
+      <style>
+        @import
+        url('https://fonts.googleapis.com/css2?family=Asap+Condensed:wght@300&family=Barlow:ital@1&family=Fira+Sans:ital,wght@1,300&family=Gowun+Batang&family=Hind&display=swap');
+      </style>
+      <style>
+        @import
+        url('https://fonts.googleapis.com/css2?family=Asap+Condensed:wght@300&family=Barlow:ital@1&family=Fira+Sans:ital,wght@1,300&family=Gowun+Batang&family=Roboto+Flex&display=swap');
+      </style>
+      <div className="div-title">
+        <span className="title">
+          <img src={favicon} className="title-img-light" alt="제목" />
+          <span
+            onClick={() => navigate("/")}
+            className="title-name">
+            JeayBit
+          </span>
+        </span>
+        {
+          !user.email || !user.name ? (
+            <div className="member-nav-unLogIn">
+              <span
+                onClick={() => {
+                  navigate("/login");
+                }}
+                className="logIn">
+                로그인
+              </span>
+              <span
+                onClick={() => {
+                  navigate("/signUp");
+                }}
+                className="signUp">
+                회원가입
+              </span>
+            </div>
+          ) :
+            (
+              <div className="member-nav-LogIn">
+                <span className="user.name">
+                  <u>{user.name}</u>님
+                </span>
+                <span
+                  onClick={() => {
+                    logOut();
+                  }}
+                  className="logOut">
+                  로그아웃
+                </span>
+                <span
+                  onMouseEnter={() => setWalletHover(true)}
+                  onMouseLeave={() => setWalletHover(false)}
+                  className="wallet">
+                  지갑관리
+                  {
+                    walletHover &&
+                    <Wallet
+                      isVisible={walletHover}
+                      setIsVisible={setWalletHover} />
+                  }
+                </span>
+              </div>
+            )}
+      </div >
+    </>
+  );
+};

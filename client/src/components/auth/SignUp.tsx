@@ -1,4 +1,3 @@
-import { HeaderNav } from "../Header";
 import { SetStateAction, useState } from "react";
 import axios, { AxiosError } from "axios";
 import { useNavigate } from "react-router-dom";
@@ -8,6 +7,7 @@ import InputWarning from "../input/InputWarning";
 import FormInput from "../input/FormInput";
 import formValueChange from "../../utils/formValueChange";
 import SignUpModal from "../modal/SignUpModal";
+import HeaderNav from "../../header/HeaderNav";
 
 export default function SignUp() {
   const navigate = useNavigate();

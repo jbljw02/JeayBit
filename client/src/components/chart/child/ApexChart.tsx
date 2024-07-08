@@ -110,6 +110,9 @@ export default function ApexChart() {
       zoom: {
         enabled: true,
       },
+      toolbar: {
+        show: true,
+      },
       events: {
         zoomed: (chartContext: any, { xaxis, yaxis }: any) => {
           saveChartState({

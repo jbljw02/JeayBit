@@ -13,15 +13,16 @@ import TradeSection from "./child/trading/TradeSection";
 export default function PriceDetail() {
   const { selectAskingPrice, selectClosedPrice } = useFunction();
 
-  const allCrypto = useSelector((state: RootState) => state.allCrypto);
-  const selectedCrypto = useSelector((state: RootState) => state.selectedCrypto);
+  const cryptoRealTime = useSelector((state: RootState) => state.cryptoRealTime);
 
+  // 선택한 화폐가 변경 될 때
   useEffect(() => {
-    if (selectedCrypto.market) {
-      selectAskingPrice(selectedCrypto.market);
-      selectClosedPrice(selectedCrypto.market);
+    // 호가 및 체결내역 호출
+    if (cryptoRealTime.market) {
+      selectClosedPrice(cryptoRealTime.market);
+      selectAskingPrice(cryptoRealTime.market);
     }
-  }, [allCrypto]);
+  }, [cryptoRealTime]);
 
   return (
     <>

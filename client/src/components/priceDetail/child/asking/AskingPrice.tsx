@@ -83,10 +83,10 @@ export default function AskingPrice() {
                                         <th>
                                             수량
                                             <span>
-                                                {
+                                                ({
                                                     selectedCrypto && selectedCrypto.market &&
                                                     (selectedCrypto.market).slice(4)
-                                                }
+                                                })
                                             </span>
                                         </th>
                                     </tr>
@@ -100,13 +100,11 @@ export default function AskingPrice() {
                                                 <AskingTable
                                                     differences={differences_bid}
                                                     size={asking_totalBidSize}
-                                                    category={'bid'}
-                                                />
+                                                    category={'bid'} />
                                                 <AskingTable
                                                     differences={differences_ask}
                                                     size={asking_totalAskSize}
-                                                    category={'ask'}
-                                                />
+                                                    category={'ask'} />
                                             </>
                                         }
                                     </tbody>

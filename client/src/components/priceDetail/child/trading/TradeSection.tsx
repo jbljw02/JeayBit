@@ -4,8 +4,8 @@ import BuyingSection from "./BuyingSection";
 import SellingSection from "./SellingSection";
 import TradeHistory from "./history/TradeHistory";
 import { useState, useEffect } from "react";
-import CeleryCompleteModal from "../../../modal/CeleryCompleteModal";
-import CompleteModal from "../../../modal/CompleteModal";
+import CeleryCompleteModal from "../../../modal/trade/CeleryCompleteModal";
+import CompleteModal from "../../../modal/trade/TradeModal";
 
 export type CeleryData = {
     name: string,

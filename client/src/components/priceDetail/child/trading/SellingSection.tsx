@@ -13,10 +13,10 @@ import formatWithComas from "../../../../utils/format/formatWithComas";
 import calculatePercentage from "../../../../utils/calculatePercentage";
 import limitDecimalPlace from "../../../../utils/format/limitDecimalPlace";
 import LoginNavigator from "./LoginNavigator";
-import CompleteModal from "../../../modal/CompleteModal";
-import TradeFailedModal from "../../../modal/TradeFailedModal";
+import CompleteModal from "../../../modal/trade/TradeModal";
+import TradeFailedModal from "../../../modal/trade/TradeFailedModal";
 import InputWarning from "./warning/InputWarning";
-import WaitingModal from "../../../modal/WatingModal";
+import WaitingModal from "../../../modal/trade/WatingModal";
 
 export default function SellingSectioin() {
     const dispatch = useDispatch();

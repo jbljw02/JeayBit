@@ -12,9 +12,9 @@ import formatWithComas from "../../../../utils/format/formatWithComas";
 import axios from "axios";
 import calculatePercentage from "../../../../utils/calculatePercentage";
 import limitDecimalPlace from "../../../../utils/format/limitDecimalPlace";
-import CompleteModal from "../../../modal/CompleteModal";
-import TradeFailedModal from "../../../modal/TradeFailedModal";
-import WaitingModal from "../../../modal/WatingModal";
+import CompleteModal from "../../../modal/trade/TradeModal";
+import TradeFailedModal from "../../../modal/trade/TradeFailedModal";
+import WaitingModal from "../../../modal/trade/WatingModal";
 import InputWarning from "./warning/InputWarning";
 
 export default function BuyingSection() {

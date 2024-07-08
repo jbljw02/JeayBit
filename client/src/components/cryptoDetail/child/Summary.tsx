@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { RootState, setSelectedCrypto } from "../../../redux/store";
+import { RootState, setCryptoRealTime, setSelectedCrypto } from "../../../redux/store";
 import formatCryptoDetail from "../../../utils/format/formatCryptoDetail";
 import { useEffect } from "react";
 
@@ -24,40 +24,39 @@ function DetailContent({ title, value, suffix }: ChildParams) {
 export default function Summary() {
     const dispatch = useDispatch();
 
-    const selectedCrypto = useSelector((state: RootState) => state.selectedCrypto);
     const allCrypto = useSelector((state: RootState) => state.allCrypto);
+    const cryptoRealTime = useSelector((state: RootState) => state.cryptoRealTime);
 
     useEffect(() => {
-        const targetCrypto = allCrypto.find(item => item.market === selectedCrypto.market);
-        dispatch(setSelectedCrypto(targetCrypto));
+        const targetCrypto = allCrypto.find(item => item.market === cryptoRealTime.market);
+        dispatch(setCryptoRealTime(targetCrypto));
     }, [allCrypto]);
 
     return (
         <>
-
             <dl className="selectedDetail_dl_1 lightMode">
                 <DetailContent
                     title="거래대금"
-                    value={selectedCrypto.trade_price}
+                    value={cryptoRealTime.trade_price}
                     suffix="KRW" />
                 <DetailContent
                     title="종가"
-                    value={selectedCrypto.price} />
+                    value={cryptoRealTime.price} />
                 <DetailContent
                     title="고가"
-                    value={selectedCrypto.high_price} />
+                    value={cryptoRealTime.high_price} />
             </dl>
             <dl className="selectedDetail_dl_2 lightMode">
                 <DetailContent
                     title="거래량"
-                    value={selectedCrypto.trade_volume}
-                    suffix={selectedCrypto.market.slice(4)} />
+                    value={cryptoRealTime.trade_volume}
+                    suffix={cryptoRealTime.market.slice(4)} />
                 <DetailContent
                     title="시가"
-                    value={selectedCrypto.open_price} />
+                    value={cryptoRealTime.open_price} />
                 <DetailContent
                     title="저가"
-                    value={selectedCrypto.low_price} />
+                    value={cryptoRealTime.low_price} />
             </dl>
         </>
     );

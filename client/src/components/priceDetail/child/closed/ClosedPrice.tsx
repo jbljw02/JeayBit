@@ -38,10 +38,10 @@ export default function ClosedPrice() {
                                         <th>
                                             체결량
                                             <span>
-                                                {
+                                                ({
                                                     selectedCrypto && selectedCrypto.market &&
                                                     (selectedCrypto.market).slice(4)
-                                                }
+                                                })
                                             </span>
                                         </th>
                                     </tr>

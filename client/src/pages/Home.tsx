@@ -1,21 +1,44 @@
 import CryptoList from '../components/cryptoList/CryptoList';
 import '../assets/App.css';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import { Header } from '../components/Header';
 import LogIn from '../components/auth/LogIn';
 import PriceDetail from '../components/priceDetail/PriceDetail';
 import SignUp from '../components/auth/SignUp';
 import { useEffect } from 'react';
 import useFunction from '../components/useFuction';
 import { useDispatch } from 'react-redux';
-import { setUser } from '../redux/store';
+import { setCryptoRealTime, setSelectedCrypto, setUser } from '../redux/store';
 import Chart from '../components/chart/Chart';
 import CryptoDetail from '../components/cryptoDetail/CryptoDetail';
+import Header from '../header/Header';
+import axios from 'axios';
 
 export default function Home() {
     const dispatch = useDispatch();
 
-    const { checkLogin, getInitialData } = useFunction();
+    const checkLogin = async () => {
+        try {
+            const response = await axios.post("http://127.0.0.1:8000/check_login/", {}, {
+                withCredentials: true
+            });
+
+            return response.data;
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    const getInitialData = async () => {
+        try {
+            const response = await axios.post("http://127.0.0.1:8000/get_all_crypto/", {}, {
+                withCredentials: true,
+            });
+            dispatch(setSelectedCrypto(response.data.all_crypto[0]));
+            dispatch(setCryptoRealTime(response.data.all_crypto[0]));
+        } catch (error) {
+            throw error;
+        }
+    };
 
     // 마운트 초기에 사용자의 로그인 여부를 체크
     useEffect(() => {
@@ -48,7 +71,7 @@ export default function Home() {
                     <Route path="/" element={
                         <>
                             <header className="header">
-                                <Header></Header>
+                                <Header />
                             </header>
                             <div className='content-container'>
                                 <div className='main'>
@@ -57,12 +80,12 @@ export default function Home() {
                                         <Chart />
                                     </article>
                                     <article className='PriceDetail'>
-                                        <PriceDetail></PriceDetail>
+                                        <PriceDetail />
                                     </article>
                                 </div>
                                 <aside className='aside'>
                                     <article className="CryptoList">
-                                        <CryptoList></CryptoList>
+                                        <CryptoList />
                                     </article>
                                 </aside>
                             </div>

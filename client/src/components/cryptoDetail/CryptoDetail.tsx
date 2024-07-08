@@ -7,6 +7,7 @@ import Summary from "./child/Summary";
 
 export default function CryptoDetail() {
     const selectedCrypto = useSelector((state: RootState) => state.selectedCrypto);
+    const cryptoRealTime = useSelector((state: RootState) => state.cryptoRealTime)
     const priceClassName = selectedCrypto.change === 'RISE' ? 'crypto-price-rise' : selectedCrypto.change === 'FALL' ? 'crypto-price-fall' : 'crypto-price-even';
 
     return (
@@ -21,31 +22,31 @@ export default function CryptoDetail() {
                     onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }}
                     alt="" />
                 {
-                    selectedCrypto && selectedCrypto.name &&
-                    selectedCrypto.name
+                    cryptoRealTime && cryptoRealTime.name &&
+                    cryptoRealTime.name
                 }
                 <span className="crypto-market lightMode">
                     {
-                        selectedCrypto && selectedCrypto.market &&
-                        selectedCrypto.market
+                        cryptoRealTime && cryptoRealTime.market &&
+                        cryptoRealTime.market
                     }
                 </span>
             </div>
             <div className="trading-detail lightMode">
                 {
-                    selectedCrypto && selectedCrypto.change && (
+                    cryptoRealTime && cryptoRealTime.change && (
                         <div className={priceClassName}>
-                            {formatWithComas(selectedCrypto.price)}
+                            {formatWithComas(cryptoRealTime.price)}
                             <ChangeRate />
                             <Summary />
                         </div>
                     )
                 }
                 {
-                    selectedCrypto && selectedCrypto.change_price !== undefined && selectedCrypto.change && (
+                    cryptoRealTime && cryptoRealTime.change_price !== undefined && cryptoRealTime.change && (
                         <ChangePrice
-                            changePrice={selectedCrypto.change_price}
-                            change={selectedCrypto.change} />
+                            changePrice={cryptoRealTime.change_price}
+                            change={cryptoRealTime.change} />
                     )
                 }
             </div>

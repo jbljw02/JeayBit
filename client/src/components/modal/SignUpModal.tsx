@@ -1,7 +1,7 @@
 import Modal from 'react-modal';
 import styles from '../../styles/modal/modal.module.css'
-import { ModalProps } from './SubmitModal';
 import { useNavigate } from 'react-router-dom';
+import { ModalProps } from './type/ModalProps';
 
 export default function SignUpModal({ isModalOpen, setIsModalOpen }: ModalProps) {
     const navigate = useNavigate();
@@ -11,7 +11,8 @@ export default function SignUpModal({ isModalOpen, setIsModalOpen }: ModalProps)
             isOpen={isModalOpen}
             style={{
                 overlay: {
-                    backgroundColor: 'rgba(0, 0, 0, 0.5)'
+                    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                    zIndex: 1000,
                 },
                 content: {
                     position: 'absolute',
@@ -20,6 +21,7 @@ export default function SignUpModal({ isModalOpen, setIsModalOpen }: ModalProps)
                     width: 460,
                     height: 145,
                     transform: 'translate(-50%, -50%)',
+                    zIndex: 1001,
                 }
             }}>
             <div className={styles.container}>

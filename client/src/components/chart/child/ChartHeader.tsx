@@ -12,10 +12,7 @@ export default function ChartHeader() {
     const chartSortTime = useSelector((state: RootState) => state.chartSortTime);
     const chartSortDate = useSelector((state: RootState) => state.chartSortDate);
 
-    const candlePerMinute = useSelector((state: RootState) => state.candlePerMinute)
-    const candlePerDate = useSelector((state: RootState) => state.candlePerDate);
-
-    const selectedCrypto = useSelector((state: RootState) => state.selectedCrypto);
+    const cryptoRealTime = useSelector((state: RootState) => state.cryptoRealTime);
 
     // 리스트에서 화폐를 선택하면 해당 화폐에 대한 캔들 호출(차트의 분에 따라)
     const requestCandleMinute = async (market: string, minute: string) => {
@@ -69,13 +66,13 @@ export default function ChartHeader() {
 
     // 선택 화폐가 변경 되거나, 시간/날짜당 캔들의 정보가 변경될 때 요청
     useEffect(() => {
-        if (chartSortTime && selectedCrypto.market) {
-            requestCandleMinute(selectedCrypto.market, chartSortTime);
+        if (chartSortTime && cryptoRealTime.market) {
+            requestCandleMinute(cryptoRealTime.market, chartSortTime);
         }
-        else if (chartSortDate && !chartSortTime && selectedCrypto.market) {
-            requestCandleDate(selectedCrypto.market);
+        else if (chartSortDate && !chartSortTime && cryptoRealTime.market) {
+            requestCandleDate(cryptoRealTime.market);
         }
-    }, [selectedCrypto, chartSortTime, chartSortDate]);
+    }, [cryptoRealTime, chartSortTime, chartSortDate]);
 
     return (
         <div className="trading-header lightMode">

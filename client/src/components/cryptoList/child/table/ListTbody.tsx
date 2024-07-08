@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState, setBuyingPrice, setSellingPrice, setFilteredData, setSelectedCrypto, setFavoriteCrypto, setOwnedCrypto } from "../../../../redux/store";
+import { RootState, setBuyingPrice, setSellingPrice, setFilteredData, setSelectedCrypto, setFavoriteCrypto, setOwnedCrypto, setCryptoRealTime } from "../../../../redux/store";
 import useFunction from "../../../useFuction";
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import 'react-perfect-scrollbar/dist/css/styles.css';
@@ -19,13 +19,9 @@ interface Differences {
 export default function ListTbody() {
     const dispatch = useDispatch();
 
-    const { getAllCrypto,
-        selectAskingPrice,
-        selectClosedPrice,
-    } = useFunction();
+    const { getAllCrypto } = useFunction();
 
     const filteredData = useSelector((state: RootState) => state.filteredData);
-    const selectedCrypto = useSelector((state: RootState) => state.selectedCrypto);
     const listCategory = useSelector((state: RootState) => state.listCategory);
     const allCrypto = useSelector((state: RootState) => state.allCrypto);
     const user = useSelector((state: RootState) => state.user);
@@ -92,15 +88,6 @@ export default function ListTbody() {
         }
     }, [filteredData]);
 
-    // 선택한 화폐가 변경 될 때
-    useEffect(() => {
-        // 호가 및 체결내역 호출
-        if (selectedCrypto.market) {
-            selectClosedPrice(selectedCrypto.market);
-            selectAskingPrice(selectedCrypto.market);
-        }
-    }, [selectedCrypto]);
-
     // 로그인한 사용자에 대해 관심 화폐를 업데이트
     const addFavoriteCrypto = async (email: string, cryptoName: string) => {
         if (user.email) {
@@ -141,8 +128,7 @@ export default function ListTbody() {
     // 특정 화폐를 클릭했을 때
     const cryptoClick = (value: Crypto) => {
         dispatch(setSelectedCrypto(value));
-        dispatch(setBuyingPrice(value.price)); // 특정 화폐를 클릭하면 해당 화폐의 값으로 '매수가격'이 업데이트 됨
-        dispatch(setSellingPrice(value.price)); // 특정 화폐를 클릭하면 해당 화폐의 값으로 '매도가격'이 업데이트 됨
+        dispatch(setCryptoRealTime(value));
     }
 
     return (
