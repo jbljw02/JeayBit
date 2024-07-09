@@ -5,7 +5,8 @@ import SellingSection from "./SellingSection";
 import TradeHistory from "./history/TradeHistory";
 import { useState, useEffect } from "react";
 import CeleryCompleteModal from "../../../modal/trade/CeleryCompleteModal";
-import CompleteModal from "../../../modal/trade/TradeModal";
+import useFunction from "../../../useFuction";
+import '../../../../styles/priceDetail/trading/tradeSection.css'
 
 export type CeleryData = {
     name: string,
@@ -14,9 +15,18 @@ export type CeleryData = {
     price: number,
 }
 
+export const bidSortOptions = [
+    { id: 'radio1', value: '지정가', label: '지정가' },
+    { id: 'radio2', value: '시장가', label: '시장가' },
+];
+
 export default function TradeSection() {
     const dispatch = useDispatch();
+
+    const { getBalance } = useFunction();
+
     const sectionChange = useSelector((state: RootState) => state.sectionChange);
+    const user = useSelector((state: RootState) => state.user);
 
     const [celeryModal, setCeleryModal] = useState(false);
     const [celeryData, setCeleryData] = useState<CeleryData>({
@@ -27,11 +37,16 @@ export default function TradeSection() {
     });
 
     useEffect(() => {
+        if (user.email && user.name) {
+            getBalance(user.email);
+        }
+    }, [user])
+
+    useEffect(() => {
         const socket = new WebSocket('ws://localhost:8000/ws/trade_updates/');
 
         socket.onmessage = function (e) {
             const data = JSON.parse(e.data);
-            console.log("거래 체결: ", data.message);
             const celeryMessage = data.message;
             setCeleryData({
                 name: celeryMessage.crypto_name,
@@ -45,7 +60,6 @@ export default function TradeSection() {
         socket.onerror = function (e) {
             console.error("WebSocket error:", e);
         };
-
     }, []);
 
     return (
@@ -54,25 +68,22 @@ export default function TradeSection() {
                 isModalOpen={celeryModal}
                 setIsModalOpen={setCeleryModal}
                 celeryData={celeryData} />
-            <div className="div-trading">
-                <div className="trading-section lightMode-title">
+            <div className="trade-section">
+                <div className="trade-header">
                     <span
                         className={`${sectionChange === '매수' ?
-                            'buyingSection' :
-                            ''
-                            }`}
+                            'buying-section' :
+                            ''}`}
                         onClick={() => dispatch(setSectionChange('매수'))}>매수</span>
                     <span
                         className={`${sectionChange === '매도' ?
-                            'sellingSection' :
-                            ''
-                            }`}
+                            'selling-section' :
+                            ''}`}
                         onClick={() => dispatch(setSectionChange('매도'))}>매도</span>
                     <span
                         className={`${sectionChange === '거래내역' ?
-                            'tradingHistorySection' :
-                            ''
-                            }`}
+                            'trading-history-section' :
+                            ''}`}
                         onClick={() => dispatch(setSectionChange('거래내역'))}>거래내역</span>
                 </div>
                 {

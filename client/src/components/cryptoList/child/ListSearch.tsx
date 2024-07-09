@@ -42,7 +42,7 @@ export default function ListSearch() {
     }, [listCategory, favoriteCrypto, ownedCrypto, allCrypto, searchedInput, sortStates, dispatch]);
 
     return (
-        <div className="list-search lightMode">
+        <div className="list-search">
             <svg
                 className="img-search"
                 xmlns="http://www.w3.org/2000/svg"

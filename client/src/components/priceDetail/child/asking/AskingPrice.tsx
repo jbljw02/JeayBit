@@ -4,6 +4,7 @@ import { RootState, AskingData, setAsking_dateTime, setAskHide } from "../../../
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import 'react-perfect-scrollbar/dist/css/styles.css';
 import AskingTable from "./AskingTable";
+import '../../../../styles/priceDetail/asking/asking.css'
 
 // bid = 매수, ask = 매도
 export default function AskingPrice() {
@@ -60,7 +61,7 @@ export default function AskingPrice() {
     return (
         <>
             <div className="asking-section">
-                <div className="priceDetail-title askingTitle lightMode">
+                <div className="priceDetail-title">
                     호가내역
                     <svg className="arrow-hide" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 5"
                         onClick={() => dispatch(setAskHide(!askHide))}
@@ -75,8 +76,8 @@ export default function AskingPrice() {
                 {
                     !askHide ?
                         <>
-                            <table className="askingPrice-table lightMode">
-                                <thead className="lightMode-title">
+                            <table className="asking-table">
+                                <thead>
                                     <tr>
                                         <th>등록시간</th>
                                         <th>호가</th>
@@ -93,7 +94,7 @@ export default function AskingPrice() {
                                 </thead>
                             </table>
                             <PerfectScrollbar id="scrollBar-askingPriceTable">
-                                <table className="askingPrice-table lightMode">
+                                <table className="asking-table lightMode">
                                     <tbody>
                                         {
                                             <>

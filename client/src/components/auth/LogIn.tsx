@@ -8,6 +8,8 @@ import InputWarning from "../input/InputWarning";
 import FaviconTitle from "./child/FaviconTitle";
 import formValueChange from "../../utils/formValueChange";
 import HeaderNav from "../../header/HeaderNav";
+import '../../styles/auth/login.css'
+import AuthButton from "../button/AuthButton";
 
 export default function LogIn() {
   const navigate = useNavigate();
@@ -78,11 +80,11 @@ export default function LogIn() {
   };
 
   return (
-    <div className="container-logIn">
+    <>
       <HeaderNav />
-      <div className="div-logIn">
+      <div className="container-login">
         <FaviconTitle />
-        <form onSubmit={submitLogin} className="view-logIn" noValidate>
+        <form onSubmit={submitLogin} className="form-login" noValidate>
           <div className="section-email">
             <FormInput
               type="email"
@@ -100,7 +102,7 @@ export default function LogIn() {
             <InputWarning
               isEmpty={isEmailEmpty}
               isSubmitted={isSubmitted}
-              warningString="이메일을 입력해주세요" />
+              label="이메일을 입력해주세요" />
           </div>
           <div className="section-password">
             <FormInput
@@ -121,21 +123,20 @@ export default function LogIn() {
             <InputWarning
               isEmpty={isPasswordEmpty}
               isSubmitted={isSubmitted}
-              warningString="비밀번호를 입력해주세요" />
+              label="비밀번호를 입력해주세요" />
           </div>
           <InputWarning
             isEmpty={invalidSubmit}
-            warningString="이메일 혹은 비밀번호가 일치하지 않습니다"
+            label="이메일 혹은 비밀번호가 일치하지 않습니다"
             isSubmitted={isSubmitted} />
-          <button type="submit" className="logIn-submit">
-            로그인
-          </button>
-          <div className="logIn-etc">
+          <AuthButton
+            label="로그인" />
+          <div className="login-footer">
             <span onClick={() => navigate('/signUp')}>회원가입</span>
             <span>비밀번호를 잊으셨나요?</span>
           </div>
         </form>
       </div>
-    </div>
+    </>
   )
 }

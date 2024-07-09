@@ -75,7 +75,7 @@ export default function ChartHeader() {
     }, [cryptoRealTime, chartSortTime, chartSortDate]);
 
     return (
-        <div className="trading-header lightMode">
+        <div className="trading-header">
             <div className="div-delimited">
                 {
                     delimitedTime.map((item, i) => (

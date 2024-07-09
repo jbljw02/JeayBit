@@ -4,6 +4,7 @@ import PerfectScrollbar from 'react-perfect-scrollbar';
 import 'react-perfect-scrollbar/dist/css/styles.css';
 import adjustSize from "../../../../utils/format/adjustSize";
 import convertToDate from "../../../../utils/date/covertToDate";
+import '../../../../styles/priceDetail/asking/asking.css'
 
 export default function ClosedPrice() {
     const dispatch = useDispatch();
@@ -15,7 +16,7 @@ export default function ClosedPrice() {
     return (
         <>
             <div className="closed-section">
-                <div className="priceDetail-title closedTitle lightMode">
+                <div className="priceDetail-title closed">
                     체결내역
                     <svg className="arrow-hide" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 5"
                         onClick={() => dispatch(setCloseHide(!closeHide))}
@@ -30,7 +31,7 @@ export default function ClosedPrice() {
                 {
                     !closeHide ?
                         <>
-                            <table className="closedPrice-table lightMode-title">
+                            <table className="asking-table">
                                 <thead>
                                     <tr>
                                         <th>체결시간</th>
@@ -48,7 +49,7 @@ export default function ClosedPrice() {
                                 </thead>
                             </table>
                             <PerfectScrollbar id="scrollBar-closedPriceTable">
-                                <table className="closedPrice-table">
+                                <table className="asking-table">
                                     <tbody>
                                         {
                                             closed_data.map((item, i) => {

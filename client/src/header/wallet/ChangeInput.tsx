@@ -11,7 +11,7 @@ export function ChangeInput({  amount, market }: ChangeInputProps) {
             <div>전환량</div>
             <div className="change-input-div">
                 <input value={amount} readOnly />
-                <span className="change-input-span">{market}</span>
+                <span className="change-input-market">{market}</span>
             </div>
         </div>
     );

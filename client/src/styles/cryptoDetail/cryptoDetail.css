@@ -1,0 +1,141 @@
+.crypto-name {
+    padding: 25px 30px;
+    font-weight: bold;
+    font-size: 26px;
+    border-bottom: 1px solid rgb(228, 229, 230);
+}
+
+.crypto-img {
+    position: relative;
+    width: 24px;
+    margin-right: 7px;
+    top: 2px;
+}
+
+.crypto-market {
+    margin-left: 5px;
+    font-size: 16px;
+    font-weight: bold;
+    color: rgba(0, 0, 0, 0.4);
+}
+
+.trading-detail {
+    height: 155px;
+}
+
+.crypto-change_rate-rise {
+    margin-left: 4px;
+    font-size: 18px;
+    font-weight: lighter;
+}
+
+.crypto-change_rate-fall {
+    margin-left: 4px;
+    font-size: 18px;
+    font-weight: lighter;
+}
+
+.crypto-change_rate-even {
+    margin-left: 4px;
+    font-size: 18px;
+    font-weight: lighter;
+}
+
+.crypto-change_price-rise {
+    padding: 10px 43px 0px;
+    font-size: 20px;
+    color: #22ab94;
+}
+
+.crypto-change_price-even {
+    padding: 10px 43px 0px;
+    font-size: 20px;
+    color: black;
+}
+
+.crypto-change_price-fall {
+    padding: 10px 43px 0px;
+    font-size: 20px;
+    color: #f23645;
+}
+
+.crypto-price-rise {
+    padding: 30px 40px 0px;
+    font-weight: bold;
+    font-size: 36px;
+    color: #22ab94;
+}
+
+.crypto-price-fall {
+    padding: 30px 40px 0px;
+    font-weight: bold;
+    font-size: 36px;
+    color: #f23645;
+}
+
+.crypto-price-even {
+    padding: 30px 40px 0px;
+    font-weight: bold;
+    font-size: 36px;
+    color: black;
+}
+
+dl {
+    margin-top: -9px;
+    float: right;
+    font-weight: lighter;
+    color: rgba(0, 0, 0, 0.6);
+    margin-left: 25px;
+}
+
+dt {
+    font-size: 13px;
+    margin-top: 10px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid #E3E8EC;
+}
+
+dd {
+    font-size: 15px;
+    float: right;
+    display: inline;
+    color: black;
+    padding-left: 10px;
+}
+
+dd span {
+    color: rgba(0, 0, 0, 0.3);
+    font-size: 13px;
+    font-weight: bold;
+}
+
+.dd-high_price {
+    font-size: 15px;
+    color: #22ab94;
+    font-weight: lighter;
+}
+
+.dd-low_price {
+    font-size: 15px;
+    color: #f23645;
+    font-weight: lighter;
+}
+
+.img-price_rise {
+    filter: invert(48%) sepia(100%) saturate(349%) hue-rotate(120deg) brightness(95%) contrast(84%);
+    width: 10px;
+    padding-right: 3px;
+    padding-left: 1px;
+}
+
+.img-price_fall {
+    filter: invert(56%) sepia(93%) saturate(4750%) hue-rotate(329deg) brightness(88%) contrast(118%);
+    width: 10px;
+    padding-right: 3px;
+    padding-left: 3px;
+}
+
+.img-price_even {
+    width: 10px;
+    padding-right: 3px;
+}

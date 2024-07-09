@@ -8,6 +8,8 @@ import 'react-perfect-scrollbar/dist/css/styles.css';
 import RadioInput from "../../../../input/RadioInput";
 import SignedHistory from "./SignedHistory";
 import UnSignedHistory from "./UnSignedHistory";
+import '../../../../../styles/priceDetail/trading/tradeHistory.css'
+import TradingThead from "../TradingThead";
 
 export default function TradeHistory() {
     const dispatch = useDispatch();
@@ -20,6 +22,10 @@ export default function TradeHistory() {
     const [completeModalOpen, setCompleteModalOpen] = useState<boolean>(false);
 
     const [historySort, setHistorySort] = useState<string>('체결');
+    const historySortOptions = [
+        { id: 'radio-signed', value: '체결', label: '체결' },
+        { id: 'radio-unSigned', value: '미체결', label: '미체결' },
+    ];
 
     const completeToggleModal = () => {
         setCompleteModalOpen(!completeModalOpen);
@@ -72,18 +78,12 @@ export default function TradeHistory() {
 
     return (
         <>
-            <div>
-                <div className="radio">체결구분</div>
-                <RadioInput
-                    id="radio-signed"
-                    checked={historySort === '체결'}
-                    onChange={() => setHistorySort('체결')}
-                    label="체결" />
-                <RadioInput
-                    id="radio-unSigned"
-                    checked={historySort === '미체결'}
-                    onChange={() => setHistorySort('미체결')}
-                    label="미체결" />
+            <div className="history-head">
+                <TradingThead
+                    options={historySortOptions}
+                    selectedValue={historySort}
+                    onChange={setHistorySort}
+                    label="체결구분" />
                 <div
                     id="trading-history-cancel"
                     style={{ visibility: historySort === '미체결' ? 'visible' : 'hidden' }}
@@ -92,7 +92,7 @@ export default function TradeHistory() {
                 </div>
             </div>
             <div className="div-trading-table">
-                <table className="table-tradingHistory" id={`${user.email !== '' ? 'historyHead' : ''}`}>
+                <table className="table-trading-history" id={`${user.email !== '' ? 'historyHead' : ''}`}>
                     <thead>
                         <tr>
                             <th>주문시간</th>
@@ -108,8 +108,8 @@ export default function TradeHistory() {
                         </tr>
                     </thead>
                 </table>
-                <PerfectScrollbar id="scrollBar-tradingHistoryTable">
-                    <table className="table-tradingHistory" id="historyBody">
+                <PerfectScrollbar id="scrollBar-trading-history-table">
+                    <table className="table-trading-history" id="historyBody">
                         <tbody>
                             {
                                 // 체결된 화폐들의 거래내역

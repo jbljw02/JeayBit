@@ -1,0 +1,85 @@
+.priceDetail-title {
+    border-bottom: 1px solid #E3E8EC;
+    padding: 16px 50px;
+    align-items: center;
+    text-align: center;
+    font-size: 16px;
+    position: relative;
+}
+
+.priceDetail-title.closed {
+    border-top: 1px solid #E3E8EC;
+}
+
+.arrow-hide {
+    position: relative;
+    width: 9px;
+    top: 2px;
+    left: 4px;
+    cursor: pointer;
+    pointer-events: none;
+    padding: 5px;
+}
+
+.hide-element {
+    padding-left: 8px;
+    padding-bottom: 3px;
+    font-size: 17px;
+}
+
+.asking-table {
+    table-layout: fixed;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.asking-table thead tr {
+    border-bottom: 1px solid #E3E8EC;
+}
+
+.asking-table th:nth-child(1),
+.asking-table td:nth-child(1) {
+    text-align: left;
+}
+
+.asking-table th:nth-child(2),
+.asking-table td:nth-child(2) {
+    text-align: right;
+}
+
+.asking-table th:nth-child(3),
+.asking-table td:nth-child(3) {
+    text-align: right;
+}
+
+.asking-table thead th {
+    font-size: 14px;
+    padding: 10px 0px;
+    white-space: nowrap;
+}
+
+.asking-table th:nth-child(1),
+.asking-table td:nth-child(1) {
+    padding-left: 13px;
+}
+
+.asking-table th:nth-child(3),
+.asking-table td:nth-child(3) {
+    padding-right: 13px;
+}
+
+.asking-table td:nth-child(3) {
+    direction: rtl;
+}
+
+.asking-table thead span {
+    font-size: 13.5px;
+    font-weight: lighter;
+    padding-left: 1px;
+}
+
+.asking-table tbody td {
+    padding: 5px 0px;
+    font-size: 13.5px;
+    white-space: nowrap;
+}

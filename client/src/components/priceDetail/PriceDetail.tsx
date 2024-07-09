@@ -1,14 +1,12 @@
-import { useDispatch, useSelector } from "react-redux";
-import { AskingData, RootState, setAskHide, setAsking_dateTime, setBuyingPrice, setCloseHide, setIsBuying, setIsSelling, setSectionChange, setSelectedCrypto, setSellingPrice } from "../../redux/store";
-import { useCallback, useEffect, useState } from "react";
-import { useNavigate } from 'react-router-dom'
-import axios from "axios";
+import { useSelector } from "react-redux";
+import { useEffect } from "react";
 import useFunction from "../useFuction";
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import 'react-perfect-scrollbar/dist/css/styles.css';
 import AskingPrice from "./child/asking/AskingPrice";
 import ClosedPrice from "./child/closed/ClosedPrice";
 import TradeSection from "./child/trading/TradeSection";
+import { RootState } from "../../redux/store";
 
 export default function PriceDetail() {
   const { selectAskingPrice, selectClosedPrice } = useFunction();
@@ -27,7 +25,7 @@ export default function PriceDetail() {
   return (
     <>
       <PerfectScrollbar
-        className='scrollBar-priceDetail hide-scrollBar'>
+        className='scrollBar-priceDetail'>
         <AskingPrice />
         <ClosedPrice />
         <TradeSection />

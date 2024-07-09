@@ -1,0 +1,19 @@
+.header-nav {
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    margin-left: 10px;
+    margin-top: 30px;
+}
+
+.back {
+    position: absolute;
+    left: 30px;
+    cursor: pointer;
+}
+
+.home {
+    position: absolute;
+    right: 30px;
+    cursor: pointer;
+}

@@ -1,0 +1,139 @@
+.trading-header {
+    padding: 5px;
+    border-bottom: 1px solid #E3E8EC;
+    border-top: 1px solid #E3E8EC;
+}
+
+.div-delimited {
+    font-size: 14px;
+    padding-left: 12px;
+    display: flex;
+    align-items: center;
+}
+
+.td-delimited {
+    padding-left: 4px;
+    padding-right: 4px;
+    cursor: pointer;
+}
+
+.td-delimited-selected {
+    padding-left: 4px;
+    padding-right: 4px;
+    cursor: pointer;
+    color: #2962FF;
+    font-weight: bold;
+}
+
+.td-delimited:hover {
+    font-weight: bold;
+}
+
+.dropDown {
+    display: inline-block;
+    position: relative;
+    font-size: 14px;
+    z-index: 1;
+}
+
+.chartSortDate {
+    padding-left: 5px;
+    padding-right: 1px;
+    cursor: pointer;
+}
+
+.chartSortDate-selected {
+    padding-left: 5px;
+    padding-right: 1px;
+    cursor: pointer;
+    color: #2962FF;
+    font-weight: bold;
+}
+
+.chartSortDate:hover {
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.chartSortDate-selected:hover {
+    font-weight: bold;
+}
+
+.dd-button {
+    display: inline-block;
+    border: none;
+    padding: 10px 0px;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.img-dd {
+    width: 9px;
+    margin-bottom: 2px;
+    margin-left: 5px;
+}
+
+.dd-input {
+    display: none;
+}
+
+.dd-menu {
+    position: absolute;
+    top: 100%;
+    left: 12px;
+    border: 1px solid rgb(228, 229, 230);
+    border-radius: 2px;
+    padding: 0;
+    margin: 2px 0 0 0;
+    box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.1);
+    background-color: #ffffff;
+    list-style-type: none;
+}
+
+.dd-input+.dd-menu {
+    display: none;
+}
+
+.dd-input:checked+.dd-menu {
+    display: block;
+}
+
+.dd-menu li {
+    padding: 10px 13px;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.dd-menu button {
+    padding: 10px 20px;
+    cursor: pointer;
+    white-space: nowrap;
+    background-color: white;
+    border: none;
+}
+
+.dd-menu li:hover {
+    color: #2962FF;
+    font-weight: bold;
+}
+
+.apexchart-tooltip {
+    display: flex;
+    flex-direction: row;
+    padding: 7px 8px 5px 8px;
+    font-size: 12.5px;
+    background: #fff !important;
+    border: 1px solid transparent !important;
+}
+
+.open-close {
+    margin-right: 7px;
+}
+
+.apexchart-tooltip div {
+    margin-bottom: 3px;
+}
+
+.apexchart-tooltip div:last-child {
+    margin-bottom: 0px;
+}

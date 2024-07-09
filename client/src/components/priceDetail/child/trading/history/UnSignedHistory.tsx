@@ -31,7 +31,7 @@ export default function UnSignedHistory() {
                         return (
                             <tr
                                 key={i}
-                                className={`tr-unSigned ${isClicked ? 'unSigned-clicked' : ''}`}
+                                className={`tr-un-signed ${isClicked ? 'un-signed-clicked' : ''}`}
                                 id={isLastItem ? 'last-row' : ''}
                                 onClick={() => clickUnSigned(item.id, i)}>
                                 <td>

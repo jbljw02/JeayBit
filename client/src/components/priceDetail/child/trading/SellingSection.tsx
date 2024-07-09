@@ -15,8 +15,8 @@ import limitDecimalPlace from "../../../../utils/format/limitDecimalPlace";
 import LoginNavigator from "./LoginNavigator";
 import CompleteModal from "../../../modal/trade/TradeModal";
 import TradeFailedModal from "../../../modal/trade/TradeFailedModal";
-import InputWarning from "./warning/InputWarning";
 import WaitingModal from "../../../modal/trade/WatingModal";
+import { bidSortOptions } from "./TradeSection";
 
 export default function SellingSectioin() {
     const dispatch = useDispatch();
@@ -239,12 +239,14 @@ export default function SellingSectioin() {
                 bidSort === '지정가' ?
                     <div className="trading-contents">
                         <TradingThead
-                            bidSort={bidSort}
-                            onChange={setBidSort} />
+                            options={bidSortOptions}
+                            selectedValue={bidSort}
+                            onChange={setBidSort}
+                            label="주문구분" />
                         <table className="trading-table">
                             <tr>
                                 <td className='trading-category'>주문가능</td>
-                                <td className="trading-availableTrade">
+                                <td className="trading-available-trade">
                                     {
                                         selectedCrypto.is_owned ?
                                             selectedCrypto.owned_quantity :
@@ -262,13 +264,10 @@ export default function SellingSectioin() {
                             <tr>
                                 <td className='trading-category'>매도가격</td>
                                 <td className="td-input">
-                                    <div>
-                                        <TradeInput
-                                            value={formatWithComas(sellingInputValue)}
-                                            onChange={(e) => sellingPriceChange(e.target.value)} />
-                                        <span>KRW</span>
-                                    </div>
-
+                                    <TradeInput
+                                        value={formatWithComas(sellingInputValue)}
+                                        onChange={(e) => sellingPriceChange(e.target.value)}
+                                        suffix="KRW" />
                                 </td>
                             </tr>
                             <tr>
@@ -276,24 +275,18 @@ export default function SellingSectioin() {
                                 <td>
                                     <PriceRange
                                         rangeValue={sellingPrice}
-                                        onChange={handlePriceRange} />
+                                        onChange={handlePriceRange}
+                                        category="sell" />
                                 </td>
                             </tr>
                             <tr>
                                 <td className='trading-category'>주문수량</td>
                                 <td className="td-input">
-                                    <div>
-                                        <TradeInput
-                                            value={formatWithComas(quantityInputValue)}
-                                            onChange={(e) => orderQuantityChange(e.target.value)} />
-                                        <span>
-                                            {
-                                                selectedCrypto && selectedCrypto.market ?
-                                                    (selectedCrypto.market).slice(4) :
-                                                    null
-                                            }
-                                        </span>
-                                    </div>
+                                    <TradeInput
+                                        value={formatWithComas(quantityInputValue)}
+                                        onChange={(e) => orderQuantityChange(e.target.value)}
+                                        suffix={selectedCrypto && selectedCrypto.market &&
+                                            (selectedCrypto.market).slice(4)} />
                                 </td>
                             </tr>
                             <tr>
@@ -307,12 +300,10 @@ export default function SellingSectioin() {
                             <tr>
                                 <td className='trading-category'>주문총액</td>
                                 <td className="td-input">
-                                    <div>
-                                        <TradeInput
-                                            value={formatWithComas(totalInputValue)}
-                                            onChange={(e) => totalValueChange(e.target.value)} />
-                                        <span>KRW</span>
-                                    </div>
+                                    <TradeInput
+                                        value={formatWithComas(totalInputValue)}
+                                        onChange={(e) => totalValueChange(e.target.value)}
+                                        suffix="KRW" />
                                 </td>
                             </tr>
                             <tr>
@@ -321,7 +312,6 @@ export default function SellingSectioin() {
                                         <tr>
                                             <td></td>
                                             <td>
-                                                <InputWarning />
                                             </td>
                                         </tr> :
                                         null
@@ -332,12 +322,14 @@ export default function SellingSectioin() {
                     // 매도 - 시장가 영역
                     <div className="trading-contents">
                         <TradingThead
-                            bidSort={bidSort}
-                            onChange={setBidSort} />
+                            options={bidSortOptions}
+                            selectedValue={bidSort}
+                            onChange={setBidSort}
+                            label="주문구분" />
                         <table className="trading-table">
                             <tr>
                                 <td className='trading-category'>주문가능</td>
-                                <td className="trading-availableTrade">
+                                <td className="trading-available-trade">
                                     {
                                         selectedCrypto.is_owned ?
                                             selectedCrypto.owned_quantity :
@@ -355,18 +347,11 @@ export default function SellingSectioin() {
                             <tr>
                                 <td className='trading-category'>주문수량</td>
                                 <td className="td-input">
-                                    <div>
-                                        <TradeInput
-                                            value={formatWithComas(quantityInputValue)}
-                                            onChange={(e) => orderQuantityChange(e.target.value)} />
-                                        <span>
-                                            {
-                                                selectedCrypto && selectedCrypto.market ?
-                                                    (selectedCrypto.market).slice(4) :
-                                                    null
-                                            }
-                                        </span>
-                                    </div>
+                                    <TradeInput
+                                        value={formatWithComas(quantityInputValue)}
+                                        onChange={(e) => orderQuantityChange(e.target.value)}
+                                        suffix={selectedCrypto && selectedCrypto.market &&
+                                            (selectedCrypto.market).slice(4)} />
                                 </td>
                             </tr>
                             <tr>
@@ -390,7 +375,7 @@ export default function SellingSectioin() {
                                 } else {
                                     marketSubmit();
                                 }
-                            }}>매수</span>
+                            }}>매도</span>
                         </div> :
                         <LoginNavigator
                             category="sell" />

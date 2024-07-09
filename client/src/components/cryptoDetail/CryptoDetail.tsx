@@ -4,15 +4,16 @@ import ChangePrice from "./child/ChangePrice";
 import formatWithComas from "../../utils/format/formatWithComas";
 import ChangeRate from "./child/ChangeRate";
 import Summary from "./child/Summary";
+import '../../styles/cryptoDetail/cryptoDetail.css'
 
 export default function CryptoDetail() {
     const selectedCrypto = useSelector((state: RootState) => state.selectedCrypto);
     const cryptoRealTime = useSelector((state: RootState) => state.cryptoRealTime)
-    const priceClassName = selectedCrypto.change === 'RISE' ? 'crypto-price-rise' : selectedCrypto.change === 'FALL' ? 'crypto-price-fall' : 'crypto-price-even';
+    const priceClassName = cryptoRealTime.change === 'RISE' ? 'crypto-price-rise' : selectedCrypto.change === 'FALL' ? 'crypto-price-fall' : 'crypto-price-even';
 
     return (
         <>
-            <div className="crypto-name lightMode-title">
+            <div className="crypto-name">
                 <img
                     className="crypto-img"
                     src={
@@ -25,14 +26,14 @@ export default function CryptoDetail() {
                     cryptoRealTime && cryptoRealTime.name &&
                     cryptoRealTime.name
                 }
-                <span className="crypto-market lightMode">
+                <span className="crypto-market">
                     {
                         cryptoRealTime && cryptoRealTime.market &&
                         cryptoRealTime.market
                     }
                 </span>
             </div>
-            <div className="trading-detail lightMode">
+            <div className="trading-detail">
                 {
                     cryptoRealTime && cryptoRealTime.change && (
                         <div className={priceClassName}>

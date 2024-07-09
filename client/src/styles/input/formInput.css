@@ -1,0 +1,27 @@
+.container-input {
+    border-radius: 7px;
+}
+
+.nonClick {
+    border: 1px solid #c7c6c6;
+}
+
+.click {
+    border: 1px solid #111111;
+}
+
+.input-invalid {
+    border-color: red;
+}
+
+.icon-email,
+.icon-password {
+    position: relative;
+    top: 10px;
+    left: 10px;
+}
+
+.icon-password {
+    cursor: pointer;
+    left: 22px;
+}

@@ -7,15 +7,19 @@ type ChildParams = {
     title: string,
     value: number | string,
     suffix?: string,
+    category?: string,
 }
 
-function DetailContent({ title, value, suffix }: ChildParams) {
+function DetailContent({ title, value, suffix, category }: ChildParams) {
     return (
-        <dt className="lightMode">
+        <dt>
             {title}
-            <dd className="lightMode-title">
+            <dd className={`${category === 'high' ? 'dd-high_price' : (
+                category === 'low' ? 'dd-low_price' :
+                    ''
+            )}`}>
                 {formatCryptoDetail(value)}
-                {suffix && <span className="lightMode">&nbsp;{suffix}</span>}
+                {suffix && <span>&nbsp;{suffix}</span>}
             </dd>
         </dt>
     )
@@ -34,7 +38,7 @@ export default function Summary() {
 
     return (
         <>
-            <dl className="selectedDetail_dl_1 lightMode">
+            <dl>
                 <DetailContent
                     title="거래대금"
                     value={cryptoRealTime.trade_price}
@@ -44,9 +48,10 @@ export default function Summary() {
                     value={cryptoRealTime.price} />
                 <DetailContent
                     title="고가"
-                    value={cryptoRealTime.high_price} />
+                    value={cryptoRealTime.high_price}
+                    category="high" />
             </dl>
-            <dl className="selectedDetail_dl_2 lightMode">
+            <dl>
                 <DetailContent
                     title="거래량"
                     value={cryptoRealTime.trade_volume}
@@ -56,7 +61,8 @@ export default function Summary() {
                     value={cryptoRealTime.open_price} />
                 <DetailContent
                     title="저가"
-                    value={cryptoRealTime.low_price} />
+                    value={cryptoRealTime.low_price}
+                    category="low" />
             </dl>
         </>
     );

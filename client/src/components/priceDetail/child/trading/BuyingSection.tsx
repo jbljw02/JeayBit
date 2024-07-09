@@ -9,13 +9,12 @@ import SelectPercentage from "./SelectPercentage";
 import TradingThead from "./TradingThead";
 import LoginNavigator from "./LoginNavigator";
 import formatWithComas from "../../../../utils/format/formatWithComas";
-import axios from "axios";
 import calculatePercentage from "../../../../utils/calculatePercentage";
 import limitDecimalPlace from "../../../../utils/format/limitDecimalPlace";
 import CompleteModal from "../../../modal/trade/TradeModal";
 import TradeFailedModal from "../../../modal/trade/TradeFailedModal";
 import WaitingModal from "../../../modal/trade/WatingModal";
-import InputWarning from "./warning/InputWarning";
+import { bidSortOptions } from "./TradeSection";
 
 export default function BuyingSection() {
     const dispatch = useDispatch();
@@ -224,25 +223,25 @@ export default function BuyingSection() {
                 bidSort === '지정가' ?
                     <div className="trading-contents">
                         <TradingThead
-                            bidSort={bidSort}
-                            onChange={setBidSort} />
+                            options={bidSortOptions}
+                            selectedValue={bidSort}
+                            onChange={setBidSort}
+                            label="주문구분" />
                         <table className="trading-table">
                             <tbody>
                                 <tr>
                                     <td className="trading-category">주문가능</td>
-                                    <td className="trading-availableTrade">{(Number(userWallet).toLocaleString())}
+                                    <td className="trading-available-trade">{formatWithComas(userWallet)}
                                         <span>KRW</span>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td className="trading-category">매수가격</td>
                                     <td className="td-input">
-                                        <div>
-                                            <TradeInput
-                                                value={formatWithComas(buyingInputValue)}
-                                                onChange={(e) => buyingPriceChange(e.target.value)} />
-                                            <span>KRW</span>
-                                        </div>
+                                        <TradeInput
+                                            value={formatWithComas(buyingInputValue)}
+                                            onChange={(e) => buyingPriceChange(e.target.value)}
+                                            suffix="KRW" />
                                     </td>
                                 </tr>
                                 <tr>
@@ -250,24 +249,18 @@ export default function BuyingSection() {
                                     <td>
                                         <PriceRange
                                             rangeValue={buyingPrice}
-                                            onChange={handlePriceRange} />
+                                            onChange={handlePriceRange}
+                                            category="buy" />
                                     </td>
                                 </tr>
                                 <tr>
                                     <td className="trading-category">주문수량</td>
                                     <td className="td-input">
-                                        <div>
-                                            <TradeInput
-                                                value={formatWithComas(quantityInputValue)}
-                                                onChange={(e) => orderQuantityChange(e.target.value)} />
-                                            <span>
-                                                {
-                                                    selectedCrypto && selectedCrypto.market ?
-                                                        (selectedCrypto.market).slice(4) :
-                                                        null
-                                                }
-                                            </span>
-                                        </div>
+                                        <TradeInput
+                                            value={formatWithComas(quantityInputValue)}
+                                            onChange={(e) => orderQuantityChange(e.target.value)}
+                                            suffix={selectedCrypto && selectedCrypto.market &&
+                                                (selectedCrypto.market).slice(4)} />
                                     </td>
                                 </tr>
                                 <tr>
@@ -281,12 +274,10 @@ export default function BuyingSection() {
                                 <tr>
                                     <td className='trading-category'>주문총액</td>
                                     <td className="td-input">
-                                        <div>
-                                            <TradeInput
-                                                value={formatWithComas(totalInputValue)}
-                                                onChange={(e) => totalValueChange(e.target.value)} />
-                                            <span>KRW</span>
-                                        </div>
+                                        <TradeInput
+                                            value={formatWithComas(totalInputValue)}
+                                            onChange={(e) => totalValueChange(e.target.value)}
+                                            suffix="KRW" />
                                     </td>
                                 </tr>
                                 {
@@ -294,35 +285,34 @@ export default function BuyingSection() {
                                         <tr>
                                             <td></td>
                                             <td>
-                                                <InputWarning />
                                             </td>
                                         </tr> :
                                         null
                                 }
                             </tbody>
                         </table>
-                    </div> :
+                    </div > :
                     // 매수 - 시장가 영역
                     <div className="trading-contents">
                         <TradingThead
-                            bidSort={bidSort}
-                            onChange={setBidSort} />
+                            options={bidSortOptions}
+                            selectedValue={bidSort}
+                            onChange={setBidSort}
+                            label="주문구분" />
                         <table className="trading-table">
                             <tr>
                                 <td className='trading-category'>주문가능</td>
-                                <td className="trading-availableTrade">{(Number(userWallet).toLocaleString())}
+                                <td className="trading-available-trade">{(Number(userWallet).toLocaleString())}
                                     <span>KRW</span>
                                 </td>
                             </tr>
                             <tr>
                                 <td className='trading-category'>주문총액</td>
                                 <td className="td-input">
-                                    <div>
-                                        <TradeInput
-                                            value={formatWithComas(totalInputValue)}
-                                            onChange={(e) => totalValueChange(e.target.value)} />
-                                        <span>KRW</span>
-                                    </div>
+                                    <TradeInput
+                                        value={formatWithComas(totalInputValue)}
+                                        onChange={(e) => totalValueChange(e.target.value)}
+                                        suffix="KRW" />
                                 </td>
                             </tr>
                             <tr>

@@ -140,7 +140,7 @@ export default function ListTbody() {
                     <col width={90} />
                     <col width={90} />
                 </colgroup>
-                <tbody className="scrollable-tbody">
+                <tbody>
                     {/* 검색값을 반환한 filteredData 함수를 다시 반복문을 이용하여 출력 */}
                     {
                         Array.isArray(filteredData) &&
@@ -180,7 +180,7 @@ export default function ListTbody() {
                                 <tr
                                     key={i}
                                     onClick={() => cryptoClick(filteredData[i])}>
-                                    <td className="td-name lightMode">
+                                    <td className="td-name">
                                         <span className="span-star">
                                             <img
                                                 onClick={(e) => { starClick(i, e) }}
@@ -197,28 +197,28 @@ export default function ListTbody() {
                                     {
                                         // 가격
                                         item.change === "RISE" ? (
-                                            <td className="lightMode">
+                                            <td>
                                                 <span className={`td-rise ${priceClass_rise}`}>
                                                     {cryptoPrice}
                                                 </span>
                                             </td>
                                         ) :
                                             item.change === "FALL" ? (
-                                                <td className="lightMode">
+                                                <td>
                                                     <span className={`td-fall ${priceClass_fall}`}>
                                                         {cryptoPrice}
                                                     </span>
                                                 </td>
                                             ) :
                                                 (
-                                                    <td className="lightMode">
+                                                    <td>
                                                         <span>{cryptoPrice}</span>
                                                     </td>
                                                 )}
                                     {
                                         // 변화율 및 변화량
                                         item.change === "RISE" ? (
-                                            <td className="lightMode">
+                                            <td>
                                                 <span className="td-rise">
                                                     +{changeRate}% <br />
                                                     +{changePrice}
@@ -226,7 +226,7 @@ export default function ListTbody() {
                                             </td>
                                         ) :
                                             item.change === "FALL" ? (
-                                                <td className="lightMode">
+                                                <td>
                                                     <span className="td-fall">
                                                         -{changeRate}% <br />
                                                         -{changePrice}
@@ -234,7 +234,7 @@ export default function ListTbody() {
                                                 </td>
                                             ) :
                                                 (
-                                                    <td className="lightMode">
+                                                    <td>
                                                         <span>
                                                             {changeRate}% <br />
                                                             {changePrice}
@@ -242,7 +242,7 @@ export default function ListTbody() {
                                                     </td>
                                                 )}
                                     {/* 보유수량 혹은 거래대금 */}
-                                    <td className="lightMode">
+                                    <td>
                                         {
                                             listCategory === '보유' ?
                                                 <span className="td-volume">

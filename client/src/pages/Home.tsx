@@ -5,7 +5,6 @@ import LogIn from '../components/auth/LogIn';
 import PriceDetail from '../components/priceDetail/PriceDetail';
 import SignUp from '../components/auth/SignUp';
 import { useEffect } from 'react';
-import useFunction from '../components/useFuction';
 import { useDispatch } from 'react-redux';
 import { setCryptoRealTime, setSelectedCrypto, setUser } from '../redux/store';
 import Chart from '../components/chart/Chart';
@@ -28,6 +27,7 @@ export default function Home() {
         }
     }
 
+    // 초기 데이터를 비트코인으로 설정
     const getInitialData = async () => {
         try {
             const response = await axios.post("http://127.0.0.1:8000/get_all_crypto/", {}, {
@@ -73,18 +73,18 @@ export default function Home() {
                             <header className="header">
                                 <Header />
                             </header>
-                            <div className='content-container'>
+                            <div className='contents-container'>
                                 <div className='main'>
-                                    <article className='TradingView'>
+                                    <article className='cryptoDetail'>
                                         <CryptoDetail />
                                         <Chart />
                                     </article>
-                                    <article className='PriceDetail'>
+                                    <article className='priceDetail'>
                                         <PriceDetail />
                                     </article>
                                 </div>
                                 <aside className='aside'>
-                                    <article className="CryptoList">
+                                    <article className="cryptoList">
                                         <CryptoList />
                                     </article>
                                 </aside>

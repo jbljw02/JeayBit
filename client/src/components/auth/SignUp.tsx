@@ -1,13 +1,14 @@
-import { SetStateAction, useState } from "react";
-import axios, { AxiosError } from "axios";
+import { useState } from "react";
+import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import favicon from '../../assets/images/favicon.png';
 import FaviconTitle from "./child/FaviconTitle";
 import InputWarning from "../input/InputWarning";
 import FormInput from "../input/FormInput";
 import formValueChange from "../../utils/formValueChange";
 import SignUpModal from "../modal/SignUpModal";
 import HeaderNav from "../../header/HeaderNav";
+import AuthButton from "../button/AuthButton";
+import '../../styles/auth/signUp.css'
 
 export default function SignUp() {
   const navigate = useNavigate();
@@ -118,97 +119,92 @@ export default function SignUp() {
       <SignUpModal
         isModalOpen={signUpModal}
         setIsModalOpen={setSignUpModal} />
+      <HeaderNav />
       <div className="container-signUp">
-        <HeaderNav />
-        <div className="div-signUp">
-          <FaviconTitle />
-          <form onSubmit={submitSignUp} className="view-signUp">
-            <div className="section-name">
-              <FormInput
-                type="text"
-                value={name}
-                placeholder="이름"
-                isActive={activeInput === 'name'}
-                isEmpty={isNameEmpty}
-                onChange={(e) => formValueChange(e.target.value,
-                  isSubmitted,
-                  setName,
-                  setIsNameEmpty)}
-                onClick={() => setActiveInput('name')}
-                isSubmitted={isSubmitted} />
-              <InputWarning
-                isEmpty={isNameEmpty}
-                warningString="이름을 입력해주세요"
-                isSubmitted={isSubmitted} />
-            </div>
-            <div className="section-email">
-              <FormInput
-                type="email"
-                value={email}
-                placeholder="이메일"
-                isActive={activeInput === 'email'}
-                isEmpty={isEmailEmpty}
-                onChange={(e) => formValueChange(e.target.value,
-                  isSubmitted,
-                  setEmail,
-                  setIsEmailEmpty,
-                  setEmailInvalid,
-                  emailPattern)}
-                onClick={() => setActiveInput('email')}
-                invalidSubmit={isEmailDuplicate}
-                isSubmitted={isSubmitted}
-                invalidPattern={emailInvalid} />
-              <InputWarning
-                isEmpty={emailInvalid}
-                warningString="유효한 이메일을 입력해주세요"
-                isSubmitted={isSubmitted}
-                isInvalid={emailInvalid} />
-              <InputWarning
-                isEmpty={isEmailDuplicate}
-                warningString="이미 존재하는 이메일입니다"
-                isSubmitted={isSubmitted}
-                isInvalid={isEmailDuplicate} />
-              <InputWarning
-                isEmpty={isEmailEmpty}
-                warningString="이메일을 입력해주세요"
-                isSubmitted={isSubmitted} />
-            </div>
-            <div className="section-password">
-              <FormInput
-                type="password"
-                value={password}
-                placeholder="비밀번호"
-                isActive={activeInput === 'password'}
-                isEmpty={isPasswordEmpty}
-                onChange={(e) => formValueChange(e.target.value,
-                  isSubmitted,
-                  setPassword,
-                  setIsPasswordEmpty,
-                  setPasswordInvalid,
-                  passwordPattern)}
-                onClick={() => setActiveInput('password')}
-                isPasswordVisible={visiblePassword}
-                onPasswordClick={() => setVisiblePassword(!visiblePassword)}
-                isSubmitted={isSubmitted}
-                invalidPattern={passwordInvalid} />
-              <InputWarning
-                isEmpty={passwordInvalid}
-                warningString="비밀번호는 8자 이상, 특수문자를 포함해야 합니다"
-                isSubmitted={isSubmitted}
-                isInvalid={passwordInvalid} />
-              <InputWarning
-                isEmpty={isPasswordEmpty}
-                warningString="비밀번호를 입력해주세요"
-                isSubmitted={isSubmitted} />
-            </div>
-            <button
-              type="submit"
-              className="signUp-submit">
-              회원가입
-            </button>
-            <span onClick={() => { navigate('/logIn') }} className="signUp-etc">이미 계정이 있으신가요?</span>
-          </form>
-        </div>
+        <FaviconTitle />
+        <form onSubmit={submitSignUp} className="form-signUp">
+          <div className="section-name">
+            <FormInput
+              type="text"
+              value={name}
+              placeholder="이름"
+              isActive={activeInput === 'name'}
+              isEmpty={isNameEmpty}
+              onChange={(e) => formValueChange(e.target.value,
+                isSubmitted,
+                setName,
+                setIsNameEmpty)}
+              onClick={() => setActiveInput('name')}
+              isSubmitted={isSubmitted} />
+            <InputWarning
+              isEmpty={isNameEmpty}
+              label="이름을 입력해주세요"
+              isSubmitted={isSubmitted} />
+          </div>
+          <div className="section-email">
+            <FormInput
+              type="email"
+              value={email}
+              placeholder="이메일"
+              isActive={activeInput === 'email'}
+              isEmpty={isEmailEmpty}
+              onChange={(e) => formValueChange(e.target.value,
+                isSubmitted,
+                setEmail,
+                setIsEmailEmpty,
+                setEmailInvalid,
+                emailPattern)}
+              onClick={() => setActiveInput('email')}
+              invalidSubmit={isEmailDuplicate}
+              isSubmitted={isSubmitted}
+              invalidPattern={emailInvalid} />
+            <InputWarning
+              isEmpty={emailInvalid}
+              label="유효한 이메일을 입력해주세요"
+              isSubmitted={isSubmitted}
+              isInvalid={emailInvalid} />
+            <InputWarning
+              isEmpty={isEmailDuplicate}
+              label="이미 존재하는 이메일입니다"
+              isSubmitted={isSubmitted}
+              isInvalid={isEmailDuplicate} />
+            <InputWarning
+              isEmpty={isEmailEmpty}
+              label="이메일을 입력해주세요"
+              isSubmitted={isSubmitted} />
+          </div>
+          <div className="section-password">
+            <FormInput
+              type="password"
+              value={password}
+              placeholder="비밀번호"
+              isActive={activeInput === 'password'}
+              isEmpty={isPasswordEmpty}
+              onChange={(e) => formValueChange(e.target.value,
+                isSubmitted,
+                setPassword,
+                setIsPasswordEmpty,
+                setPasswordInvalid,
+                passwordPattern)}
+              onClick={() => setActiveInput('password')}
+              isPasswordVisible={visiblePassword}
+              onPasswordClick={() => setVisiblePassword(!visiblePassword)}
+              isSubmitted={isSubmitted}
+              invalidPattern={passwordInvalid} />
+            <InputWarning
+              isEmpty={passwordInvalid}
+              label="비밀번호는 8자 이상, 특수문자를 포함해야 합니다"
+              isSubmitted={isSubmitted}
+              isInvalid={passwordInvalid} />
+            <InputWarning
+              isEmpty={isPasswordEmpty}
+              label="비밀번호를 입력해주세요"
+              isSubmitted={isSubmitted} />
+          </div>
+          <AuthButton
+            label="회원가입" />
+          <span onClick={() => { navigate('/logIn') }} className="signUp-footer">이미 계정이 있으신가요?</span>
+        </form>
       </div>
     </>
   )

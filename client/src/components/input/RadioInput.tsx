@@ -1,3 +1,5 @@
+import '../../styles/input/radioInput.css'
+
 type Params = {
     id: string;
     checked: boolean;

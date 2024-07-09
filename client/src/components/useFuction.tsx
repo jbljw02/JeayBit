@@ -160,8 +160,8 @@ export default function useFunction() {
       dispatch(setAsking_totalAskSize(response.data[0].total_ask_size));
       dispatch(setAsking_totalBidSize(response.data[0].total_bid_size));
     } catch (error) {
+      
       console.log("호가내역 실패: ", error);
-      throw error;
     }
   };
 

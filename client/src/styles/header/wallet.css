@@ -1,0 +1,188 @@
+.wallet-hover {
+    position: absolute;
+    top: 30px;
+    right: 10px;
+    width: 430px;
+    height: 430px;
+    background-color: #FFFFFF;
+    border-radius: 2px;
+    box-shadow: 2px 2px 10px rgba(107, 107, 107, 0.3);
+    cursor: auto;
+    z-index: 999 !important;
+}
+
+.balance {
+    height: 178px;
+}
+
+.transfer-section {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    border-bottom: 1px solid #E3E8EC;
+}
+
+.transfer-section span {
+    font-size: 16px;
+    font-weight: lighter;
+    flex: 1;
+    text-align: center;
+    padding: 17px 0px;
+    cursor: pointer;
+}
+
+.transfer-section span:hover {
+    text-decoration: underline;
+}
+
+#deposit-section {
+    color: #22ab94;
+    border-bottom: 4px solid #22ab94;
+}
+
+#withdraw-section {
+    color: #f23645;
+    border-bottom: 4px solid #f23645;
+}
+
+.transfer-input,
+.change-input {
+    background-color: #F5F5F5;
+    border-radius: 4px;
+    margin-top: 20px;
+    margin-left: 10px;
+    width: 91%;
+    height: 95px;
+    padding-left: 12px;
+}
+
+.warning-border {
+    border: 1px solid red;
+}
+
+.warning-KRW {
+    margin-top: 10px;
+    margin-left: 16px;
+    font-size: 14px;
+    font-weight: lighter;
+    color: red;
+}
+
+.change-input-div {
+    display: flex;
+}
+
+.transfer-input div,
+.change-input div {
+    padding-top: 12px;
+    font-size: 13.5px;
+    font-weight: lighter;
+}
+
+.transfer-input span {
+    font-size: 17px;
+    color: rgba(0, 0, 0, 0.4);
+    margin-left: 6px;
+}
+
+.transfer-input input,
+.change-input input {
+    width: 83%;
+    height: 60%;
+    border: none;
+    font-size: 20px;
+    background-color: #F5F5F5;
+}
+
+.transfer-input input::placeholder,
+.change-input input::placeholder {
+    color: rgba(0, 0, 0, 0.4);
+    font-weight: bold;
+    font-size: 22.5px;
+}
+
+.transfer-input input:focus,
+.change-input input:focus {
+    outline: none;
+}
+
+.change-input-market {
+    font-size: 17px;
+    color: rgba(0, 0, 0, 0.4);
+    margin-left: 57px;
+    text-align: end;
+    margin-right: 20px;
+    font-weight: bold;
+}
+
+.transfer-submit {
+    position: absolute;
+    align-items: center;
+    text-align: center;
+    font-size: 16px;
+    color: #ffffff;
+    top: 380px;
+    width: 100%;
+}
+
+.transfer-submit span {
+    background-color: #22ab94;
+    border-radius: 2px;
+    padding: 13px 186px;
+    margin-right: 3px;
+    cursor: pointer;
+}
+
+.transfer-submit.deposit span {
+    background-color: #22ab94;
+}
+
+.transfer-submit.withdraw span {
+    background-color: #f23645;
+}
+
+#balance-section {
+    color: #000000;
+    border-bottom: 4px solid #000000;
+}
+
+.img-transfer-crypto {
+    position: relative;
+    width: 24px;
+    top: 6px;
+}
+
+.balance-content {
+    display: flex;
+    flex-direction: row;
+    margin-top: 26px;
+    font-weight: lighter;
+}
+
+.balance-title {
+    flex: 1;
+    margin-left: 30px;
+    font-size: 16px;
+}
+
+.balance-title span {
+    font-weight: bold;
+}
+
+.balance-amount {
+    text-align: end;
+    margin-right: 20px;
+    font-size: 16px;
+    border-bottom: 1px solid #dddddd;
+}
+
+.balance-amount span {
+    color: rgba(0, 0, 0, 0.3);
+}
+
+.balance-notice {
+    margin-top: 21px;
+    margin-left: -10px;
+    font-weight: lighter;
+    color: #6d6d6d;
+}

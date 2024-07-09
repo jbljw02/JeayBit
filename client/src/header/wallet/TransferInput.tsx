@@ -5,11 +5,16 @@ type TransferInputProps = {
     amount: number | undefined;
     onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
     limitReached: boolean;
+    amountEmpty: boolean;
 };
 
-export default function TransferInput({ label, amount, onChange, limitReached }: TransferInputProps) {
+export default function TransferInput({ label,
+    amount,
+    onChange,
+    limitReached,
+    amountEmpty, }: TransferInputProps) {
     return (
-        <div className={`transfer-input ${limitReached ? "alert-border" : ""}`}>
+        <div className={`transfer-input ${limitReached || amountEmpty ? "warning-border" : ""}`}>
             <div>{label}</div>
             <input
                 onChange={onChange}

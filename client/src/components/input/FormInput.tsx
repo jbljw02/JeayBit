@@ -1,4 +1,5 @@
 import React from 'react';
+import '../../styles/input/formInput.css';
 
 type InputFieldProps = {
     type: string;
@@ -31,9 +32,8 @@ export default function FormInput({
     return (
         <div
             onClick={onClick}
-            className={`logIn-input
-            ${isActive ? 'container-input-click' : 'container-input-nonClick'} 
-            ${(isEmpty || invalidSubmit || invalidPattern) ? 'input-inValid' : ''}`}>
+            className={`${isActive ? 'container-input click' : 'container-input nonClick'} 
+            ${(isEmpty || invalidSubmit || invalidPattern) ? 'input-invalid' : ''}`}>
             {
                 type === 'email' ? (
                     <svg className="icon-email" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 29" width="30" height="29">
@@ -46,7 +46,6 @@ export default function FormInput({
                 value={value}
                 onChange={onChange}
                 onFocus={onClick}
-                className="input"
                 placeholder={placeholder} />
             {
                 type === 'password' && (
