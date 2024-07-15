@@ -1,20 +1,25 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState, setBuyingPrice, setSellingPrice, setFilteredData, setSelectedCrypto, setFavoriteCrypto, setOwnedCrypto, setCryptoRealTime } from "../../../../redux/store";
+import { RootState, setBuyingPrice, setSellingPrice, setFilteredData, setSelectedCrypto, setFavoriteCrypto, setOwnedCrypto, setCryptoRealTime, setAllCrypto } from "../../../../redux/store";
 import useFunction from "../../../useFuction";
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import 'react-perfect-scrollbar/dist/css/styles.css';
 import starOn from '../../../../assets/images/star-on.png'
 import starOff from '../../../../assets/images/star-off.png'
 import { Crypto } from "../../../../redux/store";
-import axios from "axios";
+import axios, { all } from "axios";
 import formatWithComas from "../../../../utils/format/formatWithComas";
 
-interface Differences {
+type Differences = {
     name: string;
     oldValue: number;
     newValue: number;
 }
+
+type FavoritedCrypto = {
+    crypto_name: string,
+    is_favorited: boolean,
+}[]
 
 export default function ListTbody() {
     const dispatch = useDispatch();
@@ -24,6 +29,8 @@ export default function ListTbody() {
     const filteredData = useSelector((state: RootState) => state.filteredData);
     const listCategory = useSelector((state: RootState) => state.listCategory);
     const allCrypto = useSelector((state: RootState) => state.allCrypto);
+    const favoriteCrypto = useSelector((state: RootState) => state.favoriteCrypto);
+    const ownedCrypto = useSelector((state: RootState) => state.ownedCrypto);
     const user = useSelector((state: RootState) => state.user);
 
     // 화폐 가격을 업데이트 하기 전에 해당 state에 담음
@@ -103,26 +110,11 @@ export default function ListTbody() {
         }
     };
 
-    // 사용자의 관심 화폐 목록을 가져옴
-    const getFavoriteCrypto = async (email: string) => {
-        if (user.email) {
-            try {
-                const response = await axios.post(
-                    'http://localhost:8000/get_user_favoriteCrypto/', {
-                    email: email
-                });
-                console.log("반환값-관심화폐 : ", response.data);
-            } catch (error) {
-                console.log("관심 화폐 정보 받아오기 실패", error);
-            }
-        }
-    };
-
     // 별 이미지를 클릭하면 관심 화폐 추가 요청
-    const starClick = (index: number, e: { stopPropagation: () => void; }) => {
+    const starClick = async (index: number, market: string, e: { stopPropagation: () => void; }) => {
         e.stopPropagation();
-        addFavoriteCrypto(user.email, filteredData[index].name);
-        getFavoriteCrypto(user.email)
+        await addFavoriteCrypto(user.email, filteredData[index].name);
+        await getAllCrypto();
     };
 
     // 특정 화폐를 클릭했을 때
@@ -183,10 +175,9 @@ export default function ListTbody() {
                                     <td className="td-name">
                                         <span className="span-star">
                                             <img
-                                                onClick={(e) => { starClick(i, e) }}
+                                                onClick={(e) => { starClick(i, item.market, e) }}
                                                 src={item.is_favorited ? starOn : starOff}
-                                                alt="star"
-                                            />
+                                                alt="star" />
                                         </span>
                                         <div className="div-name">
                                             <div>{item.name}</div>

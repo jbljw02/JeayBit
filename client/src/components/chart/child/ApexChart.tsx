@@ -196,6 +196,7 @@ export default function ApexChart() {
 
   return (
     <Chart
+      id="#chart"
       options={chartOptions}
       series={series}
       type="candlestick"

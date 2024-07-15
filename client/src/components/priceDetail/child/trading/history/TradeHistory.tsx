@@ -10,11 +10,12 @@ import SignedHistory from "./SignedHistory";
 import UnSignedHistory from "./UnSignedHistory";
 import '../../../../../styles/priceDetail/trading/tradeHistory.css'
 import TradingThead from "../TradingThead";
+import LoginPrompt from "../../../../LoginPrompt";
 
 export default function TradeHistory() {
     const dispatch = useDispatch();
 
-    const { getTradeHistory } = useFunction();
+    const { getTradeHistory, checkLogin } = useFunction();
 
     const user = useSelector((state: RootState) => state.user);
     const scheduledCancel = useSelector((state: RootState) => state.scheduledCancel);
@@ -49,32 +50,11 @@ export default function TradeHistory() {
             dispatch(setScheduledCancel([]));
             completeToggleModal();
 
-            let localStorageKeys: string[] = [];
-            for (let i = 0; i < localStorage.length; i++) {
-                let key = localStorage.key(i);
-                if (key !== null) {
-                    localStorageKeys.push(key);
-                }
-            }
-
-            // ids와 로컬 스토리지에 있는 값 사이 id가 겹치는 것
-            let intersection = ids.filter(item => localStorageKeys.includes(item));
-
-            // 교집합 배열의 특정 요소와 같은 로컬 스토리지의 키를 삭제(주문 취소 요청된 로컬 스토리지 삭제)
-            intersection.forEach((item) => {
-                localStorage.removeItem(item);
-            })
             console.log("주문 취소 정보 전송 성공", response.data);
         } catch (error) {
             console.error("주문 취소 정보 전송 실패");
         }
     }
-
-    useEffect(() => {
-        if (user && user.email) {
-            getTradeHistory(user.email);
-        }
-    }, []);
 
     return (
         <>
@@ -92,7 +72,9 @@ export default function TradeHistory() {
                 </div>
             </div>
             <div className="div-trading-table">
-                <table className="table-trading-history" id={`${user.email !== '' ? 'historyHead' : ''}`}>
+                <table
+                    className="table-trading-history"
+                    id={`${user.email !== '' ? 'historyHead' : ''}`}>
                     <thead>
                         <tr>
                             <th>주문시간</th>

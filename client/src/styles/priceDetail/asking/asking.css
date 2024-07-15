@@ -31,6 +31,7 @@
     table-layout: fixed;
     border-collapse: collapse;
     width: 100%;
+    height: 100%;
 }
 
 .asking-table thead tr {

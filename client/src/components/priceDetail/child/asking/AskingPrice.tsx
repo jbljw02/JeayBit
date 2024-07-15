@@ -5,6 +5,7 @@ import PerfectScrollbar from 'react-perfect-scrollbar';
 import 'react-perfect-scrollbar/dist/css/styles.css';
 import AskingTable from "./AskingTable";
 import '../../../../styles/priceDetail/asking/asking.css'
+import { Scrollbars } from 'react-custom-scrollbars-2';
 
 // bid = 매수, ask = 매도
 export default function AskingPrice() {
@@ -94,20 +95,18 @@ export default function AskingPrice() {
                                 </thead>
                             </table>
                             <PerfectScrollbar id="scrollBar-askingPriceTable">
-                                <table className="asking-table lightMode">
+                                <table className="asking-table">
                                     <tbody>
-                                        {
-                                            <>
-                                                <AskingTable
-                                                    differences={differences_bid}
-                                                    size={asking_totalBidSize}
-                                                    category={'bid'} />
-                                                <AskingTable
-                                                    differences={differences_ask}
-                                                    size={asking_totalAskSize}
-                                                    category={'ask'} />
-                                            </>
-                                        }
+                                        <>
+                                            <AskingTable
+                                                differences={differences_bid}
+                                                size={asking_totalBidSize}
+                                                category={'bid'} />
+                                            <AskingTable
+                                                differences={differences_ask}
+                                                size={asking_totalAskSize}
+                                                category={'ask'} />
+                                        </>
                                     </tbody>
                                 </table>
                             </PerfectScrollbar>

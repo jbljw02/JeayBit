@@ -19,7 +19,7 @@ import { bidSortOptions } from "./TradeSection";
 export default function BuyingSection() {
     const dispatch = useDispatch();
 
-    const { addTradeHistory, getTradeHistory, getBalance, getOwnedCrypto } = useFunction();
+    const { addTradeHistory, getTradeHistory, getBalance, getOwnedCrypto, getAllCrypto } = useFunction();
 
     const selectedCrypto = useSelector((state: RootState) => state.selectedCrypto);
     const user = useSelector((state: RootState) => state.user);
@@ -182,14 +182,18 @@ export default function BuyingSection() {
 
         await getTradeHistory(user.email);
         await getOwnedCrypto(user.email);
+        await getBalance(user.email);
+        await getAllCrypto();
 
         if (addTradeResCode === 200) {
             resetValue();
             setCompleteModalOpen(true);
-        } else if (addTradeResCode === 202 && !isMarketValue) {
+        }
+        else if (addTradeResCode === 202 && !isMarketValue) {
             resetValue();
             setWatingModalOpen(true);
-        } else {
+        }
+        else {
             setFailedModalOpen(true);
         }
     };

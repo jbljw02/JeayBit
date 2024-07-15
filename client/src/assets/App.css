@@ -26,11 +26,13 @@
 
 .main {
   display: flex;
+  flex-direction: row;
   width: 100%;
   height: 100%;
 }
 
 .cryptoDetail {
+  flex: 1;
   height: 100%;
 }
 
@@ -39,18 +41,14 @@
   flex-direction: column;
   height: 100%;
   width: 390px;
-  margin-left: auto;
-  border-left: 1px solid #E3E8EC;
-}
-
-.aside {
-  width: 420px;
-  margin-left: auto;
-  height: 100%;
   border-left: 1px solid #E3E8EC;
 }
 
 .cryptoList {
+  width: 420px;
+  margin-left: auto;
+  height: 100%;
+  border-left: 1px solid #E3E8EC;
   background-color: white;
 }
 
@@ -66,11 +64,6 @@
 #scrollBar-askingPriceTable {
   width: 100%;
   max-height: 360px;
-  /* max-height: calc(100vh - 1090px); */
-  /* max-height: 100%; */
-  /* max-height: 30%; */
-  /* max-height: 415px; */
-  /* overflow-x: hidden; */
 }
 
 #scrollBar-askingPriceTable .ps__thumb-y {
@@ -88,10 +81,6 @@
 #scrollBar-closedPriceTable {
   width: 100%;
   max-height: 360px;
-  /* max-height: 100%; */
-  /* max-height: calc(100vh - 1090px); */
-  /* max-height: 415px; */
-  /* overflow-x: hidden; */
 }
 
 #scrollBar-closedPriceTable .ps__thumb-y {
@@ -119,43 +108,6 @@
 /* 스크롤바 색 지정 */
 .simplebar-scrollbar:before {
   background-color: #727272;
-}
-
-
-/* footer CSS */
-.footer {
-  height: 90px;
-  border-top: 1px solid #E3E8EC;
-  margin: 0 10px;
-}
-
-.footer div {
-  font-size: 16px;
-  line-height: 90px;
-  text-align: center;
-}
-
-.custom-input {
-  border: none;
-}
-
-.footer span {
-  color: blue;
-  font-weight: bold;
-  cursor: pointer;
-}
-
-.darkMode {
-  border-color: rgb(156, 153, 153, 0.2);
-  background-color: #161A1E;
-  /* color: #B7BDC6; */
-  color: #b3b4b6;
-}
-
-.darkMode-title {
-  border-color: rgb(156, 153, 153, 0.2);
-  background-color: #161A1E;
-  color: #e1e1e1;
 }
 
 .cursor-pointer {

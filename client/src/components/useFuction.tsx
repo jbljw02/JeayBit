@@ -9,6 +9,18 @@ export default function useFunction() {
 
   const selectedCrypto = useSelector((state: RootState) => state.selectedCrypto);
 
+  const checkLogin = async () => {
+    try {
+      const response = await axios.post("http://127.0.0.1:8000/check_login/", {}, {
+        withCredentials: true
+      });
+
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  }
+
   const getAllCrypto = async () => {
     try {
       const response = await axios.post("http://127.0.0.1:8000/get_all_crypto/", {}, {
@@ -160,7 +172,7 @@ export default function useFunction() {
       dispatch(setAsking_totalAskSize(response.data[0].total_ask_size));
       dispatch(setAsking_totalBidSize(response.data[0].total_bid_size));
     } catch (error) {
-      
+
       console.log("호가내역 실패: ", error);
     }
   };
@@ -177,6 +189,7 @@ export default function useFunction() {
   };
 
   return {
+    checkLogin,
     getAllCrypto,
     getBalance,
     getOwnedCrypto,

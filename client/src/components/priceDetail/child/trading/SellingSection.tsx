@@ -21,7 +21,7 @@ import { bidSortOptions } from "./TradeSection";
 export default function SellingSectioin() {
     const dispatch = useDispatch();
 
-    const { getBalance, addTradeHistory, getTradeHistory, getOwnedCrypto } = useFunction();
+    const { getBalance, addTradeHistory, getTradeHistory, getOwnedCrypto, getAllCrypto } = useFunction();
 
     const selectedCrypto = useSelector((state: RootState) => state.selectedCrypto);
     const user = useSelector((state: RootState) => state.user);
@@ -197,6 +197,8 @@ export default function SellingSectioin() {
 
         await getTradeHistory(user.email);
         await getOwnedCrypto(user.email);
+        await getBalance(user.email);
+        await getAllCrypto();
 
         if (addTradeResCode === 200) {
             resetValue();
@@ -218,7 +220,6 @@ export default function SellingSectioin() {
     const marketSubmit = () => {
         processSellTrade(true, selectedCrypto.price);
     }
-
 
     return (
         <>

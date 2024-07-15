@@ -11,21 +11,12 @@ import Chart from '../components/chart/Chart';
 import CryptoDetail from '../components/cryptoDetail/CryptoDetail';
 import Header from '../header/Header';
 import axios from 'axios';
+import useFunction from '../components/useFuction';
 
 export default function Home() {
     const dispatch = useDispatch();
 
-    const checkLogin = async () => {
-        try {
-            const response = await axios.post("http://127.0.0.1:8000/check_login/", {}, {
-                withCredentials: true
-            });
-
-            return response.data;
-        } catch (error) {
-            throw error;
-        }
-    }
+    const { checkLogin } = useFunction();
 
     // 초기 데이터를 비트코인으로 설정
     const getInitialData = async () => {
@@ -74,19 +65,15 @@ export default function Home() {
                                 <Header />
                             </header>
                             <div className='contents-container'>
-                                <div className='main'>
-                                    <article className='cryptoDetail'>
-                                        <CryptoDetail />
-                                        <Chart />
-                                    </article>
-                                    <article className='priceDetail'>
-                                        <PriceDetail />
-                                    </article>
-                                </div>
-                                <aside className='aside'>
-                                    <article className="cryptoList">
-                                        <CryptoList />
-                                    </article>
+                                <article className='cryptoDetail'>
+                                    <CryptoDetail />
+                                    <Chart />
+                                </article>
+                                <article className='priceDetail'>
+                                    <PriceDetail />
+                                </article>
+                                <aside className="cryptoList">
+                                    <CryptoList />
                                 </aside>
                             </div>
                         </>
