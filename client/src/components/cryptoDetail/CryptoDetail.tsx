@@ -9,7 +9,14 @@ import '../../styles/cryptoDetail/cryptoDetail.css'
 export default function CryptoDetail() {
     const selectedCrypto = useSelector((state: RootState) => state.selectedCrypto);
     const cryptoRealTime = useSelector((state: RootState) => state.cryptoRealTime)
-    const priceClassName = cryptoRealTime.change === 'RISE' ? 'crypto-price-rise' : selectedCrypto.change === 'FALL' ? 'crypto-price-fall' : 'crypto-price-even';
+    const priceClassName = `crypto-price 
+    ${cryptoRealTime.change === 'RISE'
+            ? 'rise'
+            : (
+                selectedCrypto.change === 'FALL'
+                    ? 'fall'
+                    : 'even'
+            )}`;
 
     return (
         <>

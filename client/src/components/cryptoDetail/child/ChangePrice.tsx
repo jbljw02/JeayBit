@@ -8,13 +8,13 @@ type Params = {
 }
 
 export default function ChangePrice({ changePrice, change }: Params) {
-    const changePriceClassName = change === 'RISE' ?
-        'crypto-change_price-rise' :
-        (
-            change === 'FALL' ?
-                'crypto-change_price-fall' :
-                'crypto-change_price-even'
-        )
+    const changePriceClassName = `crypto-change_price 
+    ${change === 'RISE'
+            ? 'rise'
+            : (change === 'FALL'
+                ? 'fall'
+                : 'even'
+            )}`;
     const changeImg = change === 'RISE' ?
         price_rise : (
             change === 'FALL' ?

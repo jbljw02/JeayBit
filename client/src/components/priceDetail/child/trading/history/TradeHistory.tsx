@@ -10,7 +10,6 @@ import SignedHistory from "./SignedHistory";
 import UnSignedHistory from "./UnSignedHistory";
 import '../../../../../styles/priceDetail/trading/tradeHistory.css'
 import TradingThead from "../TradingThead";
-import LoginPrompt from "../../../../LoginPrompt";
 
 export default function TradeHistory() {
     const dispatch = useDispatch();
@@ -20,17 +19,11 @@ export default function TradeHistory() {
     const user = useSelector((state: RootState) => state.user);
     const scheduledCancel = useSelector((state: RootState) => state.scheduledCancel);
 
-    const [completeModalOpen, setCompleteModalOpen] = useState<boolean>(false);
-
     const [historySort, setHistorySort] = useState<string>('체결');
     const historySortOptions = [
         { id: 'radio-signed', value: '체결', label: '체결' },
         { id: 'radio-unSigned', value: '미체결', label: '미체결' },
     ];
-
-    const completeToggleModal = () => {
-        setCompleteModalOpen(!completeModalOpen);
-    }
 
     const cancelSubmit = () => {
         let ids: string[] = scheduledCancel.map(item => item.id);
@@ -48,13 +41,18 @@ export default function TradeHistory() {
             });
             getTradeHistory(user.email);
             dispatch(setScheduledCancel([]));
-            completeToggleModal();
 
             console.log("주문 취소 정보 전송 성공", response.data);
         } catch (error) {
             console.error("주문 취소 정보 전송 실패");
         }
     }
+
+    useEffect(() => {
+        if (user.email) {
+            getTradeHistory(user.email);
+        }
+    }, [user]);
 
     return (
         <>

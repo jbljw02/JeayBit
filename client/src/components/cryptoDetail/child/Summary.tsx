@@ -51,7 +51,7 @@ export default function Summary() {
                     value={cryptoRealTime.high_price}
                     category="high" />
             </dl>
-            <dl>
+            <dl className="first-dl">
                 <DetailContent
                     title="거래량"
                     value={cryptoRealTime.trade_volume}

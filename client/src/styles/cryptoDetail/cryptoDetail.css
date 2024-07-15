@@ -20,67 +20,40 @@
 }
 
 .trading-detail {
-    height: 155px;
+    height: 125px;
+    padding: 30px 25px 0px 40px;
 }
 
-.crypto-change_rate-rise {
+.crypto-change_rate {
     margin-left: 4px;
     font-size: 18px;
     font-weight: lighter;
 }
 
-.crypto-change_rate-fall {
-    margin-left: 4px;
-    font-size: 18px;
-    font-weight: lighter;
-}
-
-.crypto-change_rate-even {
-    margin-left: 4px;
-    font-size: 18px;
-    font-weight: lighter;
-}
-
-.crypto-change_price-rise {
-    padding: 10px 43px 0px;
+.crypto-change_price {
+    margin-top: 4px;
     font-size: 20px;
+}
+
+.crypto-price {
+    font-weight: bold;
+    font-size: 36px;
+}
+
+.rise {
     color: #22ab94;
 }
 
-.crypto-change_price-even {
-    padding: 10px 43px 0px;
-    font-size: 20px;
-    color: black;
-}
-
-.crypto-change_price-fall {
-    padding: 10px 43px 0px;
-    font-size: 20px;
+.fall {
     color: #f23645;
 }
 
-.crypto-price-rise {
-    padding: 30px 40px 0px;
-    font-weight: bold;
-    font-size: 36px;
-    color: #22ab94;
-}
-
-.crypto-price-fall {
-    padding: 30px 40px 0px;
-    font-weight: bold;
-    font-size: 36px;
-    color: #f23645;
-}
-
-.crypto-price-even {
-    padding: 30px 40px 0px;
-    font-weight: bold;
-    font-size: 36px;
+.even {
     color: black;
 }
 
 dl {
+    position: relative;
     margin-top: -9px;
     float: right;
     font-weight: lighter;

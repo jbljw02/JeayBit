@@ -92,7 +92,7 @@
 #scrollBar-trading-history-table {
   width: 100%;
   /* max-height: calc(100vh - 1150px); */
-  max-height: 259px !important;
+  height: 450px !important;
   overflow-x: hidden;
   /* margin-top: -6px; */
   /* padding-top: -6px; */
