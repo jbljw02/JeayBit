@@ -1,6 +1,7 @@
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../../redux/store";
 import formatTradeAmount from "../../../../../utils/format/formatTradeAmount";
+import formatWithComas from "../../../../../utils/format/formatWithComas";
 
 export default function SignedHistory() {
     const userTradeHistory = useSelector((state: RootState) => state.userTradeHistory);
@@ -24,10 +25,10 @@ export default function SignedHistory() {
                                 </span>
                             </td>
                             <td>
-                                {item.crypto_price.toLocaleString()} <br />
-                                {Number(item.trade_price).toLocaleString()}
+                                {formatWithComas(item.crypto_price)} <br />
+                                {formatWithComas(item.trade_price)}
                             </td>
-                            <td>{formatTradeAmount(item.trade_amount)}</td>
+                            <td>{formatWithComas(formatTradeAmount(item.trade_amount))}</td>
                         </tr>
                     );
                 })}

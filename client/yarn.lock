@@ -2377,10 +2377,10 @@
   resolved "https://registry.npmjs.org/@types/range-parser/-/range-parser-1.2.6.tgz"
   integrity sha512-+0autS93xyXizIYiyL02FCY8N+KkKPhILhcUSA276HxzreZ16kl+cmwvV2qAM/PuCCwPXzOXOWhiPcw20uSFcA==
 
-"@types/react-custom-scrollbars@^4.0.12":
-  version "4.0.12"
-  resolved "https://registry.npmjs.org/@types/react-custom-scrollbars/-/react-custom-scrollbars-4.0.12.tgz"
-  integrity sha512-PuD+qYAE/OiosHFTudP2uK/mQUR612lJ722/n3y8Dun4fBjEppix1vlMhLuO1OlKZeelSpgBQRWNoYItD2UzrA==
+"@types/react-custom-scrollbars@^4.0.13":
+  version "4.0.13"
+  resolved "https://registry.npmjs.org/@types/react-custom-scrollbars/-/react-custom-scrollbars-4.0.13.tgz"
+  integrity sha512-t+15reWgAE1jXlrhaZoxjuH/SQf+EG0rzAzSCzTIkSiP5CDT7KhoExNPwIa6uUxtPkjc3gdW/ry7GetLEwCfGA==
   dependencies:
     "@types/react" "*"
 

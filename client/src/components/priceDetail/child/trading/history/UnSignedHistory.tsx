@@ -2,6 +2,7 @@ import { useDispatch, useSelector, } from "react-redux";
 import { RootState, setScheduledCancel } from "../../../../../redux/store";
 import { useState } from "react";
 import formatTradeAmount from "../../../../../utils/format/formatTradeAmount";
+import formatWithComas from "../../../../../utils/format/formatWithComas";
 
 export default function UnSignedHistory() {
     const dispatch = useDispatch();
@@ -40,18 +41,16 @@ export default function UnSignedHistory() {
                                     {item.trade_time.slice(10)}
                                 </td>
                                 <td>
-                                    <span className="tradingHistory-market">{item.crypto_market || ''}</span>
-                                    <br />
+                                    <span className="tradingHistory-market">{item.crypto_market}</span> <br />
                                     <span className={`tradingHistory-category ${item.trade_category === 'BUY' ? 'asking-buy' : 'asking-sell'}`}>
                                         {item.trade_category ? (item.trade_category === 'BUY' ? '매수' : '매도') : ''}
                                     </span>
                                 </td>
                                 <td>
-                                    {item.crypto_price ? item.crypto_price.toLocaleString() : ''}
-                                    <br />
-                                    {item.trade_price ? Number(item.trade_price).toLocaleString() : ''}
+                                    {formatWithComas(item.crypto_price)} <br />
+                                    {formatWithComas(item.trade_price)}
                                 </td>
-                                <td>{item.trade_amount ? formatTradeAmount(item.trade_amount) : ''}</td>
+                                <td>{formatWithComas(formatTradeAmount(item.trade_amount))}</td>
                             </tr>
                         );
                     })

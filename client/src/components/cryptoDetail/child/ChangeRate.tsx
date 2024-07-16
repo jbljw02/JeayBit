@@ -16,7 +16,7 @@ export default function ChangeRate() {
               </span> :
               (
                 cryptoRealTime.change === 'FALL' ?
-                  <span className="crypto-change_rate- fall">
+                  <span className="crypto-change_rate fall">
                     &nbsp; -{((cryptoRealTime.change_rate) * 100).toFixed(2)}%
                   </span> :
                   <span className="crypto-change_rate even">

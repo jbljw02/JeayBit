@@ -12,6 +12,10 @@
     table-layout: fixed;
 }
 
+.table-trading-history tbody {
+    height: 100%;
+}
+
 #historyHead {
     border-bottom: 1px solid #E3E8EC;
 }
@@ -32,7 +36,6 @@
 }
 
 .div-trading-table {
-    height: 100%;
 }
 
 .table-trading-history thead th {

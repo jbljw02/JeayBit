@@ -9,6 +9,7 @@ import starOff from '../../../../assets/images/star-off.png'
 import { Crypto } from "../../../../redux/store";
 import axios, { all } from "axios";
 import formatWithComas from "../../../../utils/format/formatWithComas";
+import CustomScrollbars from "../../../scrollbar/CustomScorllbars";
 
 type Differences = {
     name: string;
@@ -124,7 +125,9 @@ export default function ListTbody() {
     }
 
     return (
-        <PerfectScrollbar className="scrollBar-listTable">
+        <CustomScrollbars
+            className="scrollBar-listTable"
+            style={{ width: '100%' }}>
             <table className="list-table">
                 <colgroup>
                     <col width={150} />
@@ -253,6 +256,6 @@ export default function ListTbody() {
                         })}
                 </tbody>
             </table>
-        </PerfectScrollbar>
+        </CustomScrollbars>
     )
 }

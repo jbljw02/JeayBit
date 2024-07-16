@@ -74,7 +74,6 @@
 
 .scrollBar-priceDetail .ps__thumb-y {
   width: 10px !important;
-  height: 300px !important;
   display: none !important;
 }
 
@@ -91,13 +90,45 @@
 
 #scrollBar-trading-history-table {
   width: 100%;
+  /* max-height: 350px; */
   /* max-height: calc(100vh - 1150px); */
-  height: 450px !important;
-  overflow-x: hidden;
-  /* margin-top: -6px; */
-  /* padding-top: -6px; */
+  /* overflow-x: hidden; */
   border-bottom: 1px solid #E3E8EC;
 }
+
+.track-vertical {
+  width: 10px;
+  right: 2px;
+  bottom: 2px;
+  top: 2px;
+  border-radius: 4px;
+  background-color: #f1f1f1;
+  opacity: 0;
+  /* 기본값은 보이지 않도록 */
+  transition: opacity 0.3s ease;
+}
+
+.thumb-vertical {
+  background-color: red;
+  border-radius: 4px;
+  width: 10px;
+  transition: opacity 0.3s ease;
+  opacity: 0;
+  /* 기본값은 보이지 않도록 */
+}
+
+.track-horizontal,
+.thumb-horizontal {
+  display: none;
+  /* 수평 스크롤바 숨기기 */
+}
+
+.scrollbar-container:hover .thumb-vertical,
+.scrollbar-container:hover .track-vertical {
+  opacity: 1;
+  /* 마우스 오버 시 보이도록 */
+}
+
 
 #scrollBar-trading-history-table .ps__thumb-y {
   width: 6px !important;

@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { CSSProperties, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState, setScheduledCancel } from '../../../../../redux/store'
 import useFunction from "../../../../useFuction";
@@ -10,6 +10,8 @@ import SignedHistory from "./SignedHistory";
 import UnSignedHistory from "./UnSignedHistory";
 import '../../../../../styles/priceDetail/trading/tradeHistory.css'
 import TradingThead from "../TradingThead";
+import CustomScrollbars from "../../../../scrollbar/CustomScorllbars";
+import Scrollbars from "react-custom-scrollbars-2";
 
 export default function TradeHistory() {
     const dispatch = useDispatch();
@@ -19,11 +21,40 @@ export default function TradeHistory() {
     const user = useSelector((state: RootState) => state.user);
     const scheduledCancel = useSelector((state: RootState) => state.scheduledCancel);
 
+    const tableRef = useRef<HTMLTableElement | null>(null);
+    const [scrollHeight, setScrollHeight] = useState<number>(0); // 초기값 설정
+
     const [historySort, setHistorySort] = useState<string>('체결');
     const historySortOptions = [
         { id: 'radio-signed', value: '체결', label: '체결' },
         { id: 'radio-unSigned', value: '미체결', label: '미체결' },
     ];
+
+    useEffect(() => {
+        if (tableRef.current) {
+            // MutationObserver를 통해 DOM이 변화할 때마다 높이 확인
+            const observer = new MutationObserver(() => {
+                if (tableRef.current) {
+                    const tableHeight = tableRef.current.clientHeight;
+                    setScrollHeight(tableHeight > 305 ? 305 : tableHeight);
+                }
+            });
+
+            // tableRef.current 요소의 자식 목록과 하위 트리를 관찰
+            observer.observe(tableRef.current, { childList: true, subtree: true });
+
+            return () => {
+                observer.disconnect();
+            };
+        }
+    }, []);
+
+    useEffect(() => {
+        if (tableRef.current) {
+            const tableHeight = tableRef.current.offsetHeight;
+            setScrollHeight(tableHeight > 305 ? 305 : tableHeight);
+        }
+    }, [historySort]);
 
     const cancelSubmit = () => {
         let ids: string[] = scheduledCancel.map(item => item.id);
@@ -54,6 +85,10 @@ export default function TradeHistory() {
         }
     }, [user]);
 
+    const handleScroll = (event: { stopPropagation: () => void; }) => {
+        event.stopPropagation();
+    };
+
     return (
         <>
             <div className="history-head">
@@ -77,30 +112,37 @@ export default function TradeHistory() {
                         <tr>
                             <th>주문시간</th>
                             <th>
-                                <div>마켓</div>
+                                <div>화폐명</div>
                                 <div>구분</div>
                             </th>
                             <th>
-                                <div>체결가격</div>
-                                <div>체결금액</div>
+                                <div>매수가격</div>
+                                <div>주문총액</div>
                             </th>
                             <th>수량</th>
                         </tr>
                     </thead>
                 </table>
-                <PerfectScrollbar id="scrollBar-trading-history-table">
-                    <table className="table-trading-history" id="historyBody">
-                        <tbody>
-                            {
-                                // 체결된 화폐들의 거래내역
-                                historySort === '체결' ?
-                                    <SignedHistory /> :
-                                    // 체결되지 않은 화폐들의 거래내역
-                                    <UnSignedHistory />
-                            }
-                        </tbody>
-                    </table>
-                </PerfectScrollbar>
+                <div>
+                    <CustomScrollbars
+                        id="scrollBar-trading-history-table"
+                        style={{ width: '100%', height: scrollHeight }}>
+                        <table
+                            className="table-trading-history"
+                            id="historyBody"
+                            ref={tableRef}>
+                            <tbody>
+                                {
+                                    // 체결된 화폐들의 거래내역
+                                    historySort === '체결' ?
+                                        <SignedHistory /> :
+                                        // 체결되지 않은 화폐들의 거래내역
+                                        <UnSignedHistory />
+                                }
+                            </tbody>
+                        </table>
+                    </CustomScrollbars>
+                </div>
             </div>
         </>
     )

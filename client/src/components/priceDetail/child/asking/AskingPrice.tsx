@@ -6,6 +6,7 @@ import 'react-perfect-scrollbar/dist/css/styles.css';
 import AskingTable from "./AskingTable";
 import '../../../../styles/priceDetail/asking/asking.css'
 import { Scrollbars } from 'react-custom-scrollbars-2';
+import CustomScrollbars from "../../../scrollbar/CustomScorllbars";
 
 // bid = 매수, ask = 매도
 export default function AskingPrice() {
@@ -94,7 +95,9 @@ export default function AskingPrice() {
                                     </tr>
                                 </thead>
                             </table>
-                            <PerfectScrollbar id="scrollBar-askingPriceTable">
+                            <CustomScrollbars
+                                id="scrollBar-askingPriceTable"
+                                style={{ width: '100%', height: '360px' }}>
                                 <table className="asking-table">
                                     <tbody>
                                         <>
@@ -109,7 +112,7 @@ export default function AskingPrice() {
                                         </>
                                     </tbody>
                                 </table>
-                            </PerfectScrollbar>
+                            </CustomScrollbars>
                         </> :
                         <div className="hide-element">...</div>
                 }

@@ -5,6 +5,7 @@ import 'react-perfect-scrollbar/dist/css/styles.css';
 import adjustSize from "../../../../utils/format/adjustSize";
 import convertToDate from "../../../../utils/date/covertToDate";
 import '../../../../styles/priceDetail/asking/asking.css'
+import CustomScrollbars from "../../../scrollbar/CustomScorllbars";
 
 export default function ClosedPrice() {
     const dispatch = useDispatch();
@@ -48,7 +49,9 @@ export default function ClosedPrice() {
                                     </tr>
                                 </thead>
                             </table>
-                            <PerfectScrollbar id="scrollBar-closedPriceTable">
+                            <CustomScrollbars
+                                id="scrollBar-closedPriceTable"
+                                style={{ width: '100%', height: '360px' }}>
                                 <table className="asking-table">
                                     <tbody>
                                         {
@@ -72,7 +75,7 @@ export default function ClosedPrice() {
                                         }
                                     </tbody>
                                 </table>
-                            </PerfectScrollbar>
+                            </CustomScrollbars>
                         </> :
                         <div className="hide-element">...</div>
                 }
