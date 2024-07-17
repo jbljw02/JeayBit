@@ -8,7 +8,7 @@ export default function ListCategory() {
     const listCategory = useSelector((state: RootState) => state.listCategory);
     return (
         <>
-            <div className="list-category">
+            <div className="list-category no-drag">
                 <span
                     className={`${listCategory === "원화" ?
                         "list-category-clicked" :

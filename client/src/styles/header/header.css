@@ -42,7 +42,8 @@
     content: "";
     position: absolute;
     top: 100%;
-    left: 0;
+    left: 115px;
     right: 0;
-    height: 30px;
+    width: 50px;
+    height: 40px;
   }

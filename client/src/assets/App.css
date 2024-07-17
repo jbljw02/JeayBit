@@ -46,99 +46,9 @@
 
 .cryptoList {
   width: 420px;
-  margin-left: auto;
   height: 100%;
   border-left: 1px solid #E3E8EC;
   background-color: white;
-}
-
-.ps__rail-y {
-  width: 0px !important;
-}
-
-.ps__thumb-y {
-  width: 5px !important;
-  background-color: #9e9e9e !important;
-}
-
-#scrollBar-askingPriceTable {
-  width: 100%;
-  max-height: 360px;
-}
-
-#scrollBar-askingPriceTable .ps__thumb-y {
-  width: 6px !important;
-  height: 99px !important;
-  display: block !important;
-}
-
-.scrollBar-priceDetail .ps__thumb-y {
-  width: 10px !important;
-  display: none !important;
-}
-
-#scrollBar-closedPriceTable {
-  width: 100%;
-  max-height: 360px;
-}
-
-#scrollBar-closedPriceTable .ps__thumb-y {
-  width: 6px !important;
-  height: 99px !important;
-  display: block !important;
-}
-
-#scrollBar-trading-history-table {
-  width: 100%;
-  /* max-height: 350px; */
-  /* max-height: calc(100vh - 1150px); */
-  /* overflow-x: hidden; */
-  border-bottom: 1px solid #E3E8EC;
-}
-
-.track-vertical {
-  width: 10px;
-  right: 2px;
-  bottom: 2px;
-  top: 2px;
-  border-radius: 4px;
-  background-color: #f1f1f1;
-  opacity: 0;
-  /* 기본값은 보이지 않도록 */
-  transition: opacity 0.3s ease;
-}
-
-.thumb-vertical {
-  background-color: red;
-  border-radius: 4px;
-  width: 10px;
-  transition: opacity 0.3s ease;
-  opacity: 0;
-  /* 기본값은 보이지 않도록 */
-}
-
-.track-horizontal,
-.thumb-horizontal {
-  display: none;
-  /* 수평 스크롤바 숨기기 */
-}
-
-.scrollbar-container:hover .thumb-vertical,
-.scrollbar-container:hover .track-vertical {
-  opacity: 1;
-  /* 마우스 오버 시 보이도록 */
-}
-
-
-#scrollBar-trading-history-table .ps__thumb-y {
-  width: 6px !important;
-  /* height: 80px !important; */
-  display: block !important;
-}
-
-/* 스크롤바 색 지정 */
-.simplebar-scrollbar:before {
-  background-color: #727272;
 }
 
 .cursor-pointer {

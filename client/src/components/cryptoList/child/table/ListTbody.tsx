@@ -126,7 +126,7 @@ export default function ListTbody() {
 
     return (
         <CustomScrollbars
-            className="scrollBar-listTable"
+            id="scrollbar-list-table"
             style={{ width: '100%' }}>
             <table className="list-table">
                 <colgroup>
@@ -192,14 +192,14 @@ export default function ListTbody() {
                                         // 가격
                                         item.change === "RISE" ? (
                                             <td>
-                                                <span className={`td-rise ${priceClass_rise}`}>
+                                                <span className={`rise ${priceClass_rise}`}>
                                                     {cryptoPrice}
                                                 </span>
                                             </td>
                                         ) :
                                             item.change === "FALL" ? (
                                                 <td>
-                                                    <span className={`td-fall ${priceClass_fall}`}>
+                                                    <span className={`fall ${priceClass_fall}`}>
                                                         {cryptoPrice}
                                                     </span>
                                                 </td>
@@ -213,7 +213,7 @@ export default function ListTbody() {
                                         // 변화율 및 변화량
                                         item.change === "RISE" ? (
                                             <td>
-                                                <span className="td-rise">
+                                                <span className="rise">
                                                     +{changeRate}% <br />
                                                     +{changePrice}
                                                 </span>
@@ -221,7 +221,7 @@ export default function ListTbody() {
                                         ) :
                                             item.change === "FALL" ? (
                                                 <td>
-                                                    <span className="td-fall">
+                                                    <span className="fall">
                                                         -{changeRate}% <br />
                                                         -{changePrice}
                                                     </span>

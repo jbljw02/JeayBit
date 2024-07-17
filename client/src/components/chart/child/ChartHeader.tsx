@@ -75,7 +75,7 @@ export default function ChartHeader() {
     }, [cryptoRealTime, chartSortTime, chartSortDate]);
 
     return (
-        <div className="trading-header">
+        <div className="trading-header no-drag">
             <div className="div-delimited">
                 {
                     delimitedTime.map((item, i) => (
@@ -89,17 +89,18 @@ export default function ChartHeader() {
                 }
                 <label className="dropDown">
                     <span
-                        onClick={() => chartSortTime ? clickChartSortDate(chartSortDate) : null}
                         className={`chartSortDate ${chartSortTime ? '' : 'chartSortDate-selected'}`}>
                         {chartSortDate}
                     </span>
-                    <span className="dd-button">
+                    <span
+                        className="dd-button"
+                        onClick={() => chartSortTime ? clickChartSortDate(chartSortDate) : null}>
                         <svg className="img-dd" xmlns='http://www.w3.org/2000/svg' viewBox="0 0 16 8">
                             <path fill="currentColor" d="M0 1.475l7.396 6.04.596.485.593-.49L16 1.39 14.807 0 7.393 6.122 8.58 6.12 1.186.08z"></path>
                         </svg>
                     </span>
                     <input type="checkbox" className="dd-input" />
-                    <ul className="dd-menu lightMode">
+                    <ul className="dd-menu">
                         {
                             delimitedDate.map((item, i) => (
                                 <li

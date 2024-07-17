@@ -70,7 +70,7 @@ export default function TradeSection() {
                 setIsModalOpen={setCeleryModal}
                 celeryData={celeryData} />
             <div className="trade-section">
-                <div className="trade-header">
+                <div className="trade-header no-drag">
                     <span
                         className={`${sectionChange === '매수' ?
                             'buying-section' :

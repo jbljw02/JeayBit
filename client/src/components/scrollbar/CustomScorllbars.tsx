@@ -1,54 +1,45 @@
-import React, { ReactNode } from 'react';
+import React, { ReactNode, useState } from 'react';
 import { Scrollbars } from 'react-custom-scrollbars-2';
 
 type CustomScrollbarsProps = {
   children: ReactNode;
   style?: React.CSSProperties;
+  hideScrollBar?: boolean;
   [key: string]: any;
 };
 
-const CustomScrollbars: React.FC<CustomScrollbarsProps> = ({ children, ...props }) => {
+const CustomScrollbars: React.FC<CustomScrollbarsProps> = ({ children, hideScrollBar = false, ...props }) => {
+  const [isHovered, setIsHovered] = useState(false);
+
   const renderThumb = ({ style, ...props }: { style: React.CSSProperties }) => {
     const thumbStyle = {
-      backgroundColor: 'red',
+      backgroundColor: '#727272',
       borderRadius: '4px',
-      width: '10px', // 스크롤바의 너비 설정
+      width: '5px', // 스크롤바의 너비 설정
       height: '30px', // 스크롤바의 높이 설정
-      opacity: 0,
-      transition: 'opacity 0.3s ease'
+      marginLeft: '1px',
+      opacity: hideScrollBar || !isHovered ? 0 : 1, // 파라미터와 호버 상태에 따라 스크롤바 숨기기
+      transition: 'opacity 0.3s ease', // 애니메이션 효과 추가
     };
     return <div style={{ ...style, ...thumbStyle }} {...props} />;
   };
 
-  const renderTrackVertical = ({ style, ...props }: { style: React.CSSProperties }) => {
-    const trackStyle = {
-      width: '10px', // 트랙의 너비 설정
-      right: '2px', // 트랙의 위치 조정 (optional)
-      bottom: '2px', // 트랙의 위치 조정 (optional)
-      top: '2px', // 트랙의 위치 조정 (optional)
-      borderRadius: '4px',
-      backgroundColor: '#f1f1f1',
-      opacity: 0,
-      transition: 'opacity 0.3s ease'
-    };
-    return <div style={{ ...style, ...trackStyle }} {...props} />;
+  const handleScroll = () => {
+    setIsHovered(true);
+    setTimeout(() => {
+      setIsHovered(false);
+    }, 1000); // 스크롤 후 1초 동안 스크롤바 보이기
   };
 
   return (
     <div
-      className="scrollbar-container"
-      onMouseEnter={() => {
-        document.querySelectorAll('.thumb-vertical, .track-vertical').forEach(el => {
-          (el as HTMLElement).style.opacity = '1';
-        });
-      }}
-      onMouseLeave={() => {
-        document.querySelectorAll('.thumb-vertical, .track-vertical').forEach(el => {
-          (el as HTMLElement).style.opacity = '0';
-        });
-      }}
-    >
-      <Scrollbars renderThumbVertical={renderThumb} renderTrackVertical={renderTrackVertical} {...props}>
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      onScroll={handleScroll}
+      style={{ height: '100%' }}>
+      <Scrollbars
+        renderThumbVertical={renderThumb}
+        {...props}>
         {children}
       </Scrollbars>
     </div>

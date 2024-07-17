@@ -18,11 +18,10 @@ export default function SignedHistory() {
                                 {item.trade_time.slice(10)}
                             </td>
                             <td>
-                                <span className="tradingHistory-market">{item.crypto_market}</span>
-                                <br />
-                                <span className={`tradingHistory-category ${item.trade_category === 'BUY' ? 'asking-buy' : 'asking-sell'}`}>
+                                <div className="trading-history-market">{item.crypto_market}</div>
+                                <div className={`trading-history-category ${item.trade_category === 'BUY' ? 'asking-buy' : 'asking-sell'}`}>
                                     {item.trade_category === 'BUY' ? '매수' : '매도'}
-                                </span>
+                                </div>
                             </td>
                             <td>
                                 {formatWithComas(item.crypto_price)} <br />

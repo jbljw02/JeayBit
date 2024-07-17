@@ -12,6 +12,7 @@ import CryptoDetail from '../components/cryptoDetail/CryptoDetail';
 import Header from '../header/Header';
 import axios from 'axios';
 import useFunction from '../components/useFuction';
+import '../styles/scrollbar/scrollbar.css'
 
 export default function Home() {
     const dispatch = useDispatch();

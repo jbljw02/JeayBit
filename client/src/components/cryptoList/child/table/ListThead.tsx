@@ -62,7 +62,7 @@ export default function ListThead() {
                 <col width={90} />
                 <col width={90} />
             </colgroup>
-            <thead className="list-thead">
+            <thead className="list-thead no-drag">
                 <tr className="list-title">
                     {
                         listCategory !== '보유' ?

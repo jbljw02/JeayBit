@@ -7,7 +7,6 @@ import AskingPrice from "./child/asking/AskingPrice";
 import ClosedPrice from "./child/closed/ClosedPrice";
 import TradeSection from "./child/trading/TradeSection";
 import { RootState } from "../../redux/store";
-import Scrollbars from "react-custom-scrollbars-2";
 import CustomScrollbars from "../scrollbar/CustomScorllbars";
 
 export default function PriceDetail() {
@@ -26,8 +25,9 @@ export default function PriceDetail() {
 
   return (
     <>
-      <CustomScrollbars
-        className='scrollBar-priceDetail'>
+      <CustomScrollbars 
+      hideScrollBar={true}
+      style={{ width: '100%', height: '100%' }}>
         <AskingPrice />
         <ClosedPrice />
         <TradeSection />

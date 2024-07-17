@@ -11,15 +11,16 @@ import UnSignedHistory from "./UnSignedHistory";
 import '../../../../../styles/priceDetail/trading/tradeHistory.css'
 import TradingThead from "../TradingThead";
 import CustomScrollbars from "../../../../scrollbar/CustomScorllbars";
-import Scrollbars from "react-custom-scrollbars-2";
+import NoticeModal from "../../../../modal/common/NoticeModal";
 
 export default function TradeHistory() {
     const dispatch = useDispatch();
 
-    const { getTradeHistory, checkLogin } = useFunction();
+    const { getTradeHistory } = useFunction();
 
     const user = useSelector((state: RootState) => state.user);
     const scheduledCancel = useSelector((state: RootState) => state.scheduledCancel);
+    const [cancelCompleteModal, setCancelCompleteModal] = useState(false);
 
     const tableRef = useRef<HTMLTableElement | null>(null);
     const [scrollHeight, setScrollHeight] = useState<number>(0); // 초기값 설정
@@ -56,10 +57,11 @@ export default function TradeHistory() {
         }
     }, [historySort]);
 
-    const cancelSubmit = () => {
+    const cancelSubmit = async () => {
         let ids: string[] = scheduledCancel.map(item => item.id);
         if (ids.length > 0) {
-            cancelOrder(user.email, ids);
+            await cancelOrder(user.email, ids);
+            setCancelCompleteModal(true);
         }
     }
 
@@ -85,12 +87,12 @@ export default function TradeHistory() {
         }
     }, [user]);
 
-    const handleScroll = (event: { stopPropagation: () => void; }) => {
-        event.stopPropagation();
-    };
-
     return (
         <>
+            <NoticeModal
+                isModalOpen={cancelCompleteModal}
+                setIsModalOpen={setCancelCompleteModal}
+                content="주문 취소가 완료되었습니다." />
             <div className="history-head">
                 <TradingThead
                     options={historySortOptions}
@@ -123,9 +125,8 @@ export default function TradeHistory() {
                         </tr>
                     </thead>
                 </table>
-                <div>
+                <div style={{ borderBottom: '1px solid #E3E8EC' }}>
                     <CustomScrollbars
-                        id="scrollBar-trading-history-table"
                         style={{ width: '100%', height: scrollHeight }}>
                         <table
                             className="table-trading-history"

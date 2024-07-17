@@ -1,0 +1,7 @@
+#scrollbar-list-table {
+    width: 100%;
+    /* 100vh에서 테이블을 제외한 다른 요소들의 값을 빼줘야 잘리지 않고 출력됨 */
+    max-height: calc(100vh - 180px); 
+    overflow-x: hidden;
+}
+

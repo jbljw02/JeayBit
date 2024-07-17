@@ -49,9 +49,7 @@ export default function ClosedPrice() {
                                     </tr>
                                 </thead>
                             </table>
-                            <CustomScrollbars
-                                id="scrollBar-closedPriceTable"
-                                style={{ width: '100%', height: '360px' }}>
+                            <CustomScrollbars style={{ width: '100%', height: '335px' }}>
                                 <table className="asking-table">
                                     <tbody>
                                         {

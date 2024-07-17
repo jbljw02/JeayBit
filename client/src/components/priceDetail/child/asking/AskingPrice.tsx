@@ -95,9 +95,7 @@ export default function AskingPrice() {
                                     </tr>
                                 </thead>
                             </table>
-                            <CustomScrollbars
-                                id="scrollBar-askingPriceTable"
-                                style={{ width: '100%', height: '360px' }}>
+                            <CustomScrollbars style={{ width: '100%', height: '335px' }}>
                                 <table className="asking-table">
                                     <tbody>
                                         <>
@@ -116,7 +114,7 @@ export default function AskingPrice() {
                         </> :
                         <div className="hide-element">...</div>
                 }
-            </div>
+            </div >
 
         </>
     )

@@ -139,13 +139,6 @@
     background-color: #e6e6e6;
 }
 
-
-.scrollBar-listTable {
-    width: 100%;
-    max-height: calc(100vh - 135px);
-    overflow-x: hidden;
-}
-
 .td-name {
     padding-left: 10px;
 }
@@ -158,6 +151,10 @@
 .div-name {
     padding-left: 13px;
     display: inline-block;
+}
+
+.div-name div:nth-child(2) {
+    font-size: 11px;
 }
 
 .td-rise {
