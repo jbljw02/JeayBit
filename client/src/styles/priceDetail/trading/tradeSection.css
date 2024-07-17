@@ -5,12 +5,19 @@
     height: 480px;
 }
 
+.asking-section {
+    border-bottom: 1px solid #E3E8EC;
+}
+
+.closed-section {
+    border-bottom: 1px solid #E3E8EC;
+}
+
 .trade-header {
     display: flex;
     flex-direction: row;
     font-size: 16px;
     width: 100%;
-    border-top: 1px solid #E3E8EC;
     border-bottom: 1px solid #E3E8EC;
 }
 

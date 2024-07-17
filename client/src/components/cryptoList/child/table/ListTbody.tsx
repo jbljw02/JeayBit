@@ -55,6 +55,9 @@ export default function ListTbody() {
         dispatch(setOwnedCrypto(isOwnes));
     }, [allCrypto]);
 
+    console.log("페이: ", favoriteCrypto);
+    console.log("보유: ", ownedCrypto);
+
     // 화폐 가격의 변화를 감지하고 업데이트
     useEffect(() => {
         // 각 항목의 name을 키로, price를 값으로 하는 객체 생성

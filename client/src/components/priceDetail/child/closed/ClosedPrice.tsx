@@ -6,7 +6,7 @@ import adjustSize from "../../../../utils/format/adjustSize";
 import convertToDate from "../../../../utils/date/covertToDate";
 import '../../../../styles/priceDetail/asking/asking.css'
 import CustomScrollbars from "../../../scrollbar/CustomScorllbars";
-import AskingTitle from "../AskingTitle";
+import AskingTitle from "../asking/AskingTitle";
 import { useState } from "react";
 
 export default function ClosedPrice() {

@@ -7,7 +7,7 @@ import { useState, useEffect } from "react";
 import CeleryCompleteModal from "../../../modal/trade/CeleryCompleteModal";
 import useFunction from "../../../useFuction";
 import '../../../../styles/priceDetail/trading/tradeSection.css'
-import LoginPrompt from "../../../LoginPrompt";
+import PlaceholderDisplay from "../../../placeholder/PlaceholderDisplay";
 
 export type CeleryData = {
     name: string,
@@ -96,7 +96,7 @@ export default function TradeSection() {
                                 (
                                     user.name && user.email ?
                                         <TradeHistory /> :
-                                        <LoginPrompt />
+                                        <PlaceholderDisplay content="로그인 후 확인하실 수 있습니다." />
                                 )
                         )
                 }

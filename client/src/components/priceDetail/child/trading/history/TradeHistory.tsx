@@ -3,15 +3,14 @@ import { CSSProperties, useEffect, useLayoutEffect, useRef, useState } from "rea
 import { useDispatch, useSelector } from "react-redux";
 import { RootState, setScheduledCancel } from '../../../../../redux/store'
 import useFunction from "../../../../useFuction";
-import PerfectScrollbar from 'react-perfect-scrollbar';
 import 'react-perfect-scrollbar/dist/css/styles.css';
-import RadioInput from "../../../../input/RadioInput";
 import SignedHistory from "./SignedHistory";
 import UnSignedHistory from "./UnSignedHistory";
 import '../../../../../styles/priceDetail/trading/tradeHistory.css'
 import TradingThead from "../TradingThead";
 import CustomScrollbars from "../../../../scrollbar/CustomScorllbars";
 import NoticeModal from "../../../../modal/common/NoticeModal";
+import PlaceholderDisplay from "../../../../placeholder/PlaceholderDisplay";
 
 export default function TradeHistory() {
     const dispatch = useDispatch();
@@ -20,6 +19,9 @@ export default function TradeHistory() {
 
     const user = useSelector((state: RootState) => state.user);
     const scheduledCancel = useSelector((state: RootState) => state.scheduledCancel);
+    const userTradeHistory = useSelector((state: RootState) => state.userTradeHistory);
+    const userTradeHistory_unSigned = useSelector((state: RootState) => state.userTradeHistory_unSigned);
+
     const [cancelCompleteModal, setCancelCompleteModal] = useState(false);
 
     const tableRef = useRef<HTMLTableElement | null>(null);
@@ -136,9 +138,21 @@ export default function TradeHistory() {
                                 {
                                     // 체결된 화폐들의 거래내역
                                     historySort === '체결' ?
-                                        <SignedHistory /> :
-                                        // 체결되지 않은 화폐들의 거래내역
-                                        <UnSignedHistory />
+                                        (
+                                            userTradeHistory.length > 0 ?
+                                                <SignedHistory /> :
+                                                <div style={{ height: '302px' }}>
+                                                    <PlaceholderDisplay content="체결 내역이 없습니다." />
+                                                </div>
+
+                                        ) :
+                                        (
+                                            userTradeHistory_unSigned.length > 0 ?
+                                                <UnSignedHistory /> :
+                                                <div style={{ height: '302px' }}>
+                                                    <PlaceholderDisplay content="미체결 내역이 없습니다." />
+                                                </div>
+                                        )
                                 }
                             </tbody>
                         </table>

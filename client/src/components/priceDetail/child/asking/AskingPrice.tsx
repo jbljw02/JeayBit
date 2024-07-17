@@ -7,7 +7,7 @@ import AskingTable from "./AskingTable";
 import '../../../../styles/priceDetail/asking/asking.css'
 import { Scrollbars } from 'react-custom-scrollbars-2';
 import CustomScrollbars from "../../../scrollbar/CustomScorllbars";
-import AskingTitle from "../AskingTitle";
+import AskingTitle from "./AskingTitle";
 
 // bid = 매수, ask = 매도
 export default function AskingPrice() {
@@ -88,24 +88,22 @@ export default function AskingPrice() {
                                     </tr>
                                 </thead>
                             </table>
-                            <div style={{ borderBottom: '1px solid #E3E8EC' }}>
-                                <CustomScrollbars style={{ width: '100%', height: '335px' }}>
-                                    <table className="asking-table">
-                                        <tbody>
-                                            <>
-                                                <AskingTable
-                                                    differences={differences_bid}
-                                                    size={asking_totalBidSize}
-                                                    category={'bid'} />
-                                                <AskingTable
-                                                    differences={differences_ask}
-                                                    size={asking_totalAskSize}
-                                                    category={'ask'} />
-                                            </>
-                                        </tbody>
-                                    </table>
-                                </CustomScrollbars>
-                            </div>
+                            <CustomScrollbars style={{ width: '100%', height: '335px' }}>
+                                <table className="asking-table">
+                                    <tbody>
+                                        <>
+                                            <AskingTable
+                                                differences={differences_bid}
+                                                size={asking_totalBidSize}
+                                                category={'bid'} />
+                                            <AskingTable
+                                                differences={differences_ask}
+                                                size={asking_totalAskSize}
+                                                category={'ask'} />
+                                        </>
+                                    </tbody>
+                                </table>
+                            </CustomScrollbars>
                         </> :
                         <div className="hide-element">...</div>
                 }

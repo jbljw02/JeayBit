@@ -7,10 +7,6 @@
     position: relative;
 }
 
-.priceDetail-title.closed {
-    border-top: 1px solid #E3E8EC;
-}
-
 .arrow-hide {
     position: relative;
     width: 9px;

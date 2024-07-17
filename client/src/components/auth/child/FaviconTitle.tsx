@@ -1,5 +1,5 @@
 import favicon from '../../../assets/images/favicon.png';
-import '../../../styles/faviconTitle.css'
+import '../../../styles/favicon/faviconTitle.css'
 
 export default function FaviconTitle() {
     return (
