@@ -1,7 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
 import { RootState, setCloseHide } from "../../../../redux/store";
-import PerfectScrollbar from 'react-perfect-scrollbar';
-import 'react-perfect-scrollbar/dist/css/styles.css';
 import adjustSize from "../../../../utils/format/adjustSize";
 import convertToDate from "../../../../utils/date/covertToDate";
 import '../../../../styles/priceDetail/asking/asking.css'

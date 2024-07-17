@@ -1,8 +1,6 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState, AskingData, setAsking_dateTime, setAskHide } from "../../../../redux/store";
-import PerfectScrollbar from 'react-perfect-scrollbar';
-import 'react-perfect-scrollbar/dist/css/styles.css';
 import AskingTable from "./AskingTable";
 import '../../../../styles/priceDetail/asking/asking.css'
 import { Scrollbars } from 'react-custom-scrollbars-2';

@@ -3,7 +3,6 @@ import { CSSProperties, useEffect, useLayoutEffect, useRef, useState } from "rea
 import { useDispatch, useSelector } from "react-redux";
 import { RootState, setScheduledCancel } from '../../../../../redux/store'
 import useFunction from "../../../../useFuction";
-import 'react-perfect-scrollbar/dist/css/styles.css';
 import SignedHistory from "./SignedHistory";
 import UnSignedHistory from "./UnSignedHistory";
 import '../../../../../styles/priceDetail/trading/tradeHistory.css'

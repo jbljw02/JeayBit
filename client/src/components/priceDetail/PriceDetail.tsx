@@ -1,8 +1,6 @@
 import { useSelector } from "react-redux";
 import { useEffect } from "react";
 import useFunction from "../useFuction";
-import PerfectScrollbar from 'react-perfect-scrollbar';
-import 'react-perfect-scrollbar/dist/css/styles.css';
 import AskingPrice from "./child/asking/AskingPrice";
 import ClosedPrice from "./child/closed/ClosedPrice";
 import TradeSection from "./child/trading/TradeSection";
