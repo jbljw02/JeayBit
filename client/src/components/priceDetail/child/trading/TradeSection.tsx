@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import { RootState, setSectionChange } from "../../../../redux/store";
-import BuyingSection from "./BuyingSection";
-import SellingSection from "./SellingSection";
+import BuyingSection from "./section/BuyingSection";
+import SellingSection from "./section/SellingSection";
 import TradeHistory from "./history/TradeHistory";
 import { useState, useEffect } from "react";
 import CeleryCompleteModal from "../../../modal/trade/CeleryCompleteModal";

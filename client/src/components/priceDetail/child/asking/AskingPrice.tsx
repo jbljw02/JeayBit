@@ -7,6 +7,7 @@ import AskingTable from "./AskingTable";
 import '../../../../styles/priceDetail/asking/asking.css'
 import { Scrollbars } from 'react-custom-scrollbars-2';
 import CustomScrollbars from "../../../scrollbar/CustomScorllbars";
+import AskingTitle from "../AskingTitle";
 
 // bid = 매수, ask = 매도
 export default function AskingPrice() {
@@ -16,7 +17,7 @@ export default function AskingPrice() {
     const asking_totalAskSize = useSelector((state: RootState) => state.asking_totalAskSize);
     const asking_totalBidSize = useSelector((state: RootState) => state.asking_totalBidSize);
     const selectedCrypto = useSelector((state: RootState) => state.selectedCrypto);
-    const askHide = useSelector((state: RootState) => state.askHide);
+    const [askHide, setAskHide] = useState(false);
 
     const [prevData, setPrevData] = useState<AskingData[]>();
 
@@ -63,18 +64,10 @@ export default function AskingPrice() {
     return (
         <>
             <div className="asking-section">
-                <div className="priceDetail-title">
-                    호가내역
-                    <svg className="arrow-hide" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 5"
-                        onClick={() => dispatch(setAskHide(!askHide))}
-                        style={{
-                            pointerEvents: 'all',
-                            transformOrigin: askHide ? '50% 50%' : undefined,
-                            transform: askHide ? 'rotate(270deg)' : undefined
-                        }}>
-                        <path d="M5.016 0 0 .003 2.506 2.5 5.016 5l2.509-2.5L10.033.003 5.016 0z" />
-                    </svg>
-                </div>
+                <AskingTitle
+                    contentsHide={askHide}
+                    setContentsHide={setAskHide}
+                    title='호가내역' />
                 {
                     !askHide ?
                         <>
@@ -95,22 +88,24 @@ export default function AskingPrice() {
                                     </tr>
                                 </thead>
                             </table>
-                            <CustomScrollbars style={{ width: '100%', height: '335px' }}>
-                                <table className="asking-table">
-                                    <tbody>
-                                        <>
-                                            <AskingTable
-                                                differences={differences_bid}
-                                                size={asking_totalBidSize}
-                                                category={'bid'} />
-                                            <AskingTable
-                                                differences={differences_ask}
-                                                size={asking_totalAskSize}
-                                                category={'ask'} />
-                                        </>
-                                    </tbody>
-                                </table>
-                            </CustomScrollbars>
+                            <div style={{ borderBottom: '1px solid #E3E8EC' }}>
+                                <CustomScrollbars style={{ width: '100%', height: '335px' }}>
+                                    <table className="asking-table">
+                                        <tbody>
+                                            <>
+                                                <AskingTable
+                                                    differences={differences_bid}
+                                                    size={asking_totalBidSize}
+                                                    category={'bid'} />
+                                                <AskingTable
+                                                    differences={differences_ask}
+                                                    size={asking_totalAskSize}
+                                                    category={'ask'} />
+                                            </>
+                                        </tbody>
+                                    </table>
+                                </CustomScrollbars>
+                            </div>
                         </> :
                         <div className="hide-element">...</div>
                 }

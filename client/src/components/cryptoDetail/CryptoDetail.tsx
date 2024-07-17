@@ -11,9 +11,8 @@ export default function CryptoDetail() {
     const cryptoRealTime = useSelector((state: RootState) => state.cryptoRealTime)
     const priceClassName = `crypto-price 
     ${cryptoRealTime.change === 'RISE'
-            ? 'rise'
-            : (
-                selectedCrypto.change === 'FALL'
+            ? 'rise' : (
+                cryptoRealTime.change === 'FALL'
                     ? 'fall'
                     : 'even'
             )}`;

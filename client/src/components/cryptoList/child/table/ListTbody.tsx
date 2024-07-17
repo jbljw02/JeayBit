@@ -17,11 +17,6 @@ type Differences = {
     newValue: number;
 }
 
-type FavoritedCrypto = {
-    crypto_name: string,
-    is_favorited: boolean,
-}[]
-
 export default function ListTbody() {
     const dispatch = useDispatch();
 
@@ -145,9 +140,6 @@ export default function ListTbody() {
                                 return diff.name === item.name && diff.newValue === item.price;
                             });
 
-                            let priceClass_rise = isChanged ? "change-price-rise" : "";
-                            let priceClass_fall = isChanged ? "change-price-fall" : "";
-
                             const cryptoPrice = formatWithComas(item.price); // 화폐 가격
                             const changeRate = (item.change_rate * 100).toFixed(2); // 화폐 변화율
                             const changePrice = formatWithComas(item.change_price); // 화폐 변화량
@@ -192,14 +184,14 @@ export default function ListTbody() {
                                         // 가격
                                         item.change === "RISE" ? (
                                             <td>
-                                                <span className={`rise ${priceClass_rise}`}>
+                                                <span className='rise'>
                                                     {cryptoPrice}
                                                 </span>
                                             </td>
                                         ) :
                                             item.change === "FALL" ? (
                                                 <td>
-                                                    <span className={`fall ${priceClass_fall}`}>
+                                                    <span className='fall'>
                                                         {cryptoPrice}
                                                     </span>
                                                 </td>

@@ -1,20 +1,20 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState, setBuyingPrice, setIsBuying } from '../../../../redux/store'
-import useFunction from "../../../useFuction";
-import adjustInputValue from "../../../../utils/format/adjustInputValue";
-import PriceRange from '../../../input/PriceRange';
-import TradeInput from "../../../input/TradeInput";
-import SelectPercentage from "./SelectPercentage";
-import TradingThead from "./TradingThead";
-import LoginNavigator from "./LoginNavigator";
-import formatWithComas from "../../../../utils/format/formatWithComas";
-import calculatePercentage from "../../../../utils/calculatePercentage";
-import limitDecimalPlace from "../../../../utils/format/limitDecimalPlace";
-import CompleteModal from "../../../modal/trade/TradeModal";
-import TradeFailedModal from "../../../modal/trade/TradeFailedModal";
-import WaitingModal from "../../../modal/trade/WatingModal";
-import { bidSortOptions } from "./TradeSection";
+import { RootState, setBuyingPrice, setIsBuying } from '../../../../../redux/store'
+import useFunction from "../../../../useFuction";
+import adjustInputValue from "../../../../../utils/format/adjustInputValue";
+import PriceRange from '../../../../input/PriceRange';
+import TradeInput from "../../../../input/TradeInput";
+import SelectPercentage from "../SelectPercentage";
+import TradingThead from "../TradingThead";
+import LoginNavigator from "../LoginNavigator";
+import formatWithComas from "../../../../../utils/format/formatWithComas";
+import calculatePercentage from "../../../../../utils/calculatePercentage";
+import limitDecimalPlace from "../../../../../utils/format/limitDecimalPlace";
+import CompleteModal from "../../../../modal/trade/TradeModal";
+import TradeFailedModal from "../../../../modal/trade/TradeFailedModal";
+import WaitingModal from "../../../../modal/trade/WatingModal";
+import { bidSortOptions } from "../TradeSection";
 
 export default function BuyingSection() {
     const dispatch = useDispatch();
