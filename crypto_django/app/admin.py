@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import CustomUser
+from .models import CustomUser, TradeEvent
 from .models import Crypto
 from .models import UserCrypto
 from .models import TradeHistory
@@ -15,3 +15,4 @@ admin.site.register(CustomUser, CustomUserAdmin)
 admin.site.register(Crypto)
 admin.site.register(UserCrypto)
 admin.site.register(TradeHistory)
+admin.site.register(TradeEvent)

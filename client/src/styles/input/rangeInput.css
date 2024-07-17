@@ -1,0 +1,29 @@
+.slider {
+    width: 100%;
+    margin-bottom: 7px;
+  }
+  
+  input[type=range] {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 95%;
+    height: 1.5px;
+    background: #d3d3d3;
+  }
+  
+  .slider.buy:hover::-webkit-slider-thumb {
+    background-color: #22ab94;
+  }
+  
+  .slider.sell:hover::-webkit-slider-thumb {
+    background-color: #f23645;
+  }
+  
+  input[type=range]::-webkit-slider-thumb {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: #a8a8a8;
+  }

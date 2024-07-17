@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
+import logging
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -24,10 +25,7 @@ SECRET_KEY = 'django-insecure-dp2dyhvazi=*3q459+8exg^8lzs3l3&k(5(p(ndl415eu(r)@9
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
-
 # Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -39,21 +37,56 @@ INSTALLED_APPS = [
     'corsheaders',
     'rest_framework',
     'crypto_app',
+    'django_celery_beat',
+    'django_celery_results',
+    'channels',
+    'daphne',
 ]
 
 MIDDLEWARE = [
-    # 'django.middleware.csrf.CsrfViewMiddleware',  # 클라이언트 실행할 때 임시 해제
-    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
+    # 'django.middleware.csrf.CsrfViewMiddleware', # 클라이언트 실행할 때 임시 해제
+    'corsheaders.middleware.CorsMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware'
 ]
 
-# CSRF_COOKIE_NAME = 'csrftoken'
-# CSRF_HEADER_NAME = 'X-CSRFToken'
+# RabbitMQ를 브로커로 설정
+CELERY_BROKER_URL = 'redis://127.0.0.1:6379/0'
+# 결과 백엔드로는 장고 DB를 사용
+CELERY_RESULT_BACKEND = 'django-db'
+CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
+
+# 태스크 결과를 저장할 때 사용되는 직렬화 포맷
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TIMEZONE = 'Asia/Seoul'
+CELERY_ENABLE_UTC = True
+
+CELERYD_HIJACK_ROOT_LOGGER = False
+CELERY_LOG_LEVEL = logging.INFO
+
+ASGI_APPLICATION = 'crypto_app.asgi.application'
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [('127.0.0.1', 6379)],
+        },
+    },
+}
+
+CSRF_COOKIE_NAME = 'csrftoken'
+CSRF_HEADER_NAME = 'X-CSRFToken'
+
+CORS_ALLOW_CREDENTIALS = True
+
+CORS_ALLOW_ALL_ORIGINS = True
 
 CSRF_TRUSTED_ORIGINS = (
     'http://localhost:8000',
@@ -67,41 +100,18 @@ CORS_ORIGIN_WHITELIST = (
 
 CORS_ALLOWED_ORIGINS = CORS_ORIGIN_WHITELIST
 
-# CORS_ALLOW_HEADERS = (
-#     'access-control-allow-credentials',
-#     'access-control-allow-origin',
-#     'access-control-request-method',
-#     'access-control-request-headers',
-#     'accept',
-#     'accept-encoding',
-#     'accept-language',
-#     'authorization',
-#     'connection',
-#     'content-type',
-#     'dnt',
-#     'credentials',
-#     'host',
-#     'origin',
-#     'user-agent',
-#     'X-CSRFToken',
-#     'csrftoken',
-#     'x-requested-with',
-# )
-
 CORS_ALLOW_CREDENTIALS = True  # 서버가 클라이언트의 자격증명(예: 쿠키)를 받을 준비가 됨 - 클라이언트는 서버에 쿠키를 보낼 수 있음을 뜻함
-CORS_ALLOW_ALL_ORIGINS = True  # 모든 출처에서 오는 요청을 허용 - 어떤 웹사이트에서 오든 상관없이 서버 리소스에 접근 가능
 ROOT_URLCONF = 'crypto_app.urls'
 
-# CSRF_TRUSTED_ORIGINS = [
-#    "http://localhost:3000",
-# ]
-
-SESSION_COOKIE_SAMESITE = 'None'  # 'None': 모든 컨텍스트(다른 사이트)에서 쿠키 전송 가능
-SESSION_COOKIE_SECURE = True  # 'True': HTTPS 연결시에만 쿠키 전송
-CSRF_COOKIE_SAMESITE = 'None'
+SESSION_COOKIE_NAME = 'sessionKey'
+SESSION_COOKIE_SAMESITE = 'None' # 'None': 모든 컨텍스트(다른 사이트)에서 쿠키 전송 가능
+SESSION_COOKIE_SECURE = True # 'True': HTTPS 연결시에만 쿠키 전송
+CSRF_COOKIE_SAMESITE = 'Lax'
 CSRF_COOKIE_SECURE = True
+CSRF_COOKIE_HTTPONLY = True
 
-from crypto_app.authmiddleware import CsrfExemptSessionAuthentication
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'
+
 AUTHENTICATION_BACKENDS = [
     # 'app.backends.EmailLogin',  # 커스텀 인증 방식을 사용
     'django.contrib.auth.backends.ModelBackend',  # User 모델의 기본 인증 방식도 가능하도록 사용
@@ -111,7 +121,7 @@ AUTHENTICATION_BACKENDS = [
     # "crypto_app.authmiddleware.CsrfExemptSessionAuthentication"
 ]
 
-AUTH_USER_MODEL = 'app.CustomUser'  # 기본적으로 User 모델이 아닌 CustomUser 모델을 참고하도록 설정
+AUTH_USER_MODEL = 'app.CustomUser' # 기본적으로 User 모델이 아닌 CustomUser 모델을 참고하도록 설정
 
 TEMPLATES = [
     {

@@ -1,0 +1,188 @@
+.list-search {
+    height: 36px;
+    border-bottom: 1px solid #E3E8EC;
+}
+
+.img-search {
+    position: relative;
+    color: gray;
+    height: 16.5px;
+    left: 7px;
+    top: 3px;
+}
+
+.crypto-search {
+    margin: 10px 6px;
+    border: none;
+    width: 80%;
+    outline: none;
+    height: 17px;
+    line-height: 17px;
+}
+
+.list-category {
+    font-size: 15px;
+    display: flex;
+    border-bottom: 1px solid #E3E8EC;
+}
+
+.list-category span {
+    flex: 1;
+    text-align: center;
+    cursor: pointer;
+    padding: 12px 0px;
+}
+
+.list-category span:hover {
+    text-decoration: underline;
+}
+
+.list-category-clicked {
+    font-weight: bold;
+    color: #111111;
+    border-bottom: 3px solid #111111;
+}
+
+.list-thead {
+    width: 100%;
+    border-bottom: 1px solid #E3E8EC;
+}
+
+.list-title {
+    border-color: #E3E8EC;
+}
+
+.list-table {
+    flex-direction: column;
+    border-collapse: collapse;
+    table-layout: fixed;
+    width: 100%;
+}
+
+.list-table th {
+    padding-top: 11px;
+    padding-bottom: 11px;
+    font-size: 12px;
+    white-space: nowrap;
+}
+
+.list-table th div {
+    display: inline-block;
+    cursor: pointer;
+    user-select: none;
+}
+
+.sort {
+    position: relative;
+    top: 1px;
+    left: 3.5px;
+}
+
+.list-table tr {
+    width: 100%;
+}
+
+.list-table tr td:nth-child(2) {
+    text-align: right;
+    padding-right: 8px;
+}
+
+.list-table tr td:nth-child(3) {
+    text-align: right;
+    padding-right: 13px;
+}
+
+.list-table tr td:nth-child(4) {
+    text-align: right;
+    padding-right: 8px;
+}
+
+.list-table td {
+    font-size: 12px;
+    border-bottom: 1px solid #E3E8EC;
+    padding-top: 9.5px;
+    padding-bottom: 9.5px;
+    white-space: nowrap;
+}
+
+.name {
+    padding-left: 36.5px;
+    text-align: left;
+}
+
+.price,
+.compare,
+.volume {
+    text-align: right;
+    padding-right: 11px;
+}
+
+.change-price-rise {
+    border-bottom: 1.5px solid #22ab94 !important;
+    font-weight: bold;
+}
+
+.change-price-fall {
+    border-bottom: 1.5px solid #f23645 !important;
+    font-weight: bold;
+}
+
+.list-table tbody tr {
+    cursor: pointer;
+}
+
+.list-table tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.list-table tbody tr:hover {
+    background-color: #e6e6e6;
+}
+
+.td-name {
+    padding-left: 10px;
+}
+
+.span-star {
+    position: relative;
+    bottom: 6px;
+}
+
+.div-name {
+    padding-left: 13px;
+    display: inline-block;
+}
+
+.div-name div:nth-child(2) {
+    font-size: 11px;
+}
+
+.td-rise {
+    color: #22ab94;
+}
+
+.td-fall {
+    color: #f23645;
+}
+
+.td-even {
+    color: black;
+}
+
+.change-bid {
+    font-weight: bold;
+    color: #22ab94;
+}
+
+.change-ask {
+    font-weight: bold;
+    color: #f23645;
+}
+
+.asking-buy {
+    color: #22ab94;
+}
+
+.asking-sell {
+    color: #f23645;
+}

@@ -2,10 +2,10 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, Permis
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 import uuid
+from django.utils import timezone
 
 # 모델과 관련된 DB 작업을 담당하는 매니저 클래스
 class CustomUserManager(BaseUserManager):
-    
     # 회원가입 기능은 DB와 밀접하게 관련이 있기 때문에 해당 위치에 정의
     def create_user(self, username, email, password):
         if not email:
@@ -37,6 +37,10 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(unique=True)
     balance = models.DecimalField(max_digits=200, decimal_places=0, default=0) 
     
+    first_name = models.CharField(max_length=30, blank=True)
+    last_name = models.CharField(max_length=30, blank=True)
+    date_joined = models.DateTimeField(default=timezone.now)
+    
     is_staff = models.BooleanField(default=False)  # 관리자 사이트에 로그인 가능한지 여부
     is_superuser = models.BooleanField(default=False)  # 슈퍼유저인지 여부
     is_active = models.BooleanField(default=True)  # 계정 활성화 여부
@@ -64,8 +68,8 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     objects = CustomUserManager()
 
-    USERNAME_FIELD = 'email'  # 로그인 시 식별자로 사용되는 필드
-    REQUIRED_FIELDS = ['username']  # 관리자 계정 생성 시 반드시 입력해야 하는 필드  
+    USERNAME_FIELD = 'email' # 로그인 시 식별자로 사용되는 필드
+    REQUIRED_FIELDS = ['username'] # 관리자 계정 생성 시 반드시 입력해야 하는 필드  
     
     
 # 화폐의 이름과 가격을 담는 테이블
@@ -102,7 +106,14 @@ class TradeHistory(models.Model):
     crypto_price = models.FloatField()
     trade_price = models.DecimalField(max_digits=30, decimal_places=0)
     trade_amount = models.DecimalField(max_digits=30, decimal_places=8)
-    is_signed = models.BooleanField(default=False);
+    is_signed = models.BooleanField(default=False)
     
     def __str__(self):
         return f"{self.id} - {self.trade_category} - {self.trade_time} - {self.user.email} - {self.crypto.name} - {self.crypto_price} - {self.trade_price} - {self.trade_amount} - {self.is_signed}"
+
+# 백그라운드에서 거래가 체결됐을 때 해당 이벤트를 저장할 테이블 
+class TradeEvent(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    message = models.TextField()
+    timestamp = models.DateTimeField(auto_now_add=True)
+    is_sent = models.BooleanField(default=False)
