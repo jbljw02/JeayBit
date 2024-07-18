@@ -7,6 +7,7 @@ import { setSelectedCrypto } from "../redux/features/selectedCryptoSlice";
 import { setUserTradeHistory, setUserTradeHistory_unSigned } from "../redux/features/tradeSlice";
 import { setUserWallet } from "../redux/features/walletSlice";
 import { RootState } from "../redux/store";
+import { setErrorModal } from "../redux/features/modalSlice";
 
 export default function useFunction() {
   const dispatch = useDispatch();
@@ -33,6 +34,7 @@ export default function useFunction() {
 
       dispatch(setAllCrypto(response.data.all_crypto));
     } catch (error) {
+      dispatch(setErrorModal(true));
       throw error;
     }
   };
@@ -45,9 +47,8 @@ export default function useFunction() {
         { email: email }
       );
       dispatch(setUserWallet(response.data.user_balance));
-      // console.log(user.name, "의 잔고 : ", response.data.user_balance);
     } catch (error) {
-      // console.error("잔고량 받기 실패: ", error)
+      throw error;
     }
   }
 
@@ -68,9 +69,8 @@ export default function useFunction() {
       };
 
       dispatch(setSelectedCrypto(updatedCrypto));
-      console.log("반환값-소유화폐 : ", response.data)
     } catch (error) {
-      console.log("소유 화폐 받아오기 실패", error);
+      throw error;
     }
   }
 
@@ -89,16 +89,12 @@ export default function useFunction() {
         market: market,
         isMarketValue: isMarketValue,
       });
-
-      console.log("거래 내역 전송 성공: ", response.status);
       return response.status;
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        console.log("거래 내역 전송 실패: ", error.response ? error.response.status : "알 수 없는 에러");
         return error.response ? error.response.status : 500;
       }
       else {
-        console.log("거래내역 전송 실패: 알 수 없는 에러");
         return 500;
       }
     }
@@ -144,16 +140,13 @@ export default function useFunction() {
         }
         else {
           unSigned.push({ ...item, trade_time: formattedDate });
-
-          const value = { name: item.crypto_name, price: item.crypto_price, trade_category: item.trade_category, trade_amount: Number(item.trade_amount), trade_price: Number(item.trade_price) };
         }
       });
 
       dispatch(setUserTradeHistory(signed));
       dispatch(setUserTradeHistory_unSigned(unSigned));
-      console.log("거래내역 받아오기 성공: ", tradeHistory);
     } catch (error) {
-      console.log("거래내역 받아오기 실패", error);
+      throw error;
     }
   }
 
@@ -176,8 +169,8 @@ export default function useFunction() {
       dispatch(setTotalAskSize(response.data[0].total_ask_size));
       dispatch(setTotalBidSize(response.data[0].total_bid_size));
     } catch (error) {
-
-      console.log("호가내역 실패: ", error);
+      dispatch(setErrorModal(true));
+      throw error;
     }
   };
 
@@ -185,9 +178,9 @@ export default function useFunction() {
   const selectClosedPrice = async (market: string) => {
     try {
       const response = await axios.get(`http://127.0.0.1:8000/closed_price/?market=${market}`);
-
       dispatch(setClosedData(response.data));
     } catch (error) {
+      dispatch(setErrorModal(true));
       throw error;
     }
   };

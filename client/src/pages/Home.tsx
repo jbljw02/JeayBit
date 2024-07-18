@@ -5,7 +5,7 @@ import LogIn from '../components/auth/LogIn';
 import PriceDetail from '../components/priceDetail/PriceDetail';
 import SignUp from '../components/auth/SignUp';
 import { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Chart from '../components/chart/Chart';
 import CryptoDetail from '../components/cryptoDetail/CryptoDetail';
 import Header from '../header/Header';
@@ -14,11 +14,16 @@ import useFunction from '../components/useFuction';
 import '../styles/scrollbar/scrollbar.css'
 import { setUser } from '../redux/features/userSlice';
 import { setSelectedCrypto, setCryptoRealTime } from '../redux/features/selectedCryptoSlice';
+import NoticeModal from '../components/modal/common/NoticeModal';
+import { RootState } from '../redux/store';
+import { setErrorModal } from '../redux/features/modalSlice';
 
 export default function Home() {
     const dispatch = useDispatch();
 
     const { checkLogin } = useFunction();
+
+    const errorModal = useSelector((state: RootState) => state.errorModal)
 
     // 초기 데이터를 비트코인으로 설정
     const getInitialData = async () => {
@@ -29,6 +34,7 @@ export default function Home() {
             dispatch(setSelectedCrypto(response.data.all_crypto[0]));
             dispatch(setCryptoRealTime(response.data.all_crypto[0]));
         } catch (error) {
+            dispatch(setErrorModal(true));
             throw error;
         }
     };
@@ -59,6 +65,10 @@ export default function Home() {
 
     return (
         <div className="container">
+            <NoticeModal
+                isModalOpen={errorModal}
+                setIsModalOpen={() => dispatch(setErrorModal(false))}
+                content='네트워크 오류가 발생했습니다. 잠시 후 다시 시도해주세요.' />
             <BrowserRouter>
                 <Routes>
                     <Route path="/" element={

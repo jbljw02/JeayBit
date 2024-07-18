@@ -1,4 +1,4 @@
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { RootState } from "../../../../redux/store";
 import BuyingSection from "./section/BuyingSection";
 import SellingSection from "./section/SellingSection";
@@ -22,8 +22,6 @@ export const bidSortOptions = [
 ];
 
 export default function TradeSection() {
-    const dispatch = useDispatch();
-
     const { getBalance } = useFunction();
 
     const [sectionChange, setSectionChange] = useState<'매수' | '매도' | '거래내역'>('매수');
@@ -41,8 +39,9 @@ export default function TradeSection() {
         if (user.email && user.name) {
             getBalance(user.email);
         }
-    }, [user])
+    }, [user, getBalance]);
 
+    // 미체결 거래가 체결될 시 웹소켓을 통해 결과를 받음
     useEffect(() => {
         const socket = new WebSocket('ws://localhost:8000/ws/trade_updates/');
 
@@ -59,7 +58,7 @@ export default function TradeSection() {
         };
 
         socket.onerror = function (e) {
-            console.error("WebSocket error:", e);
+            throw e;
         };
     }, []);
 

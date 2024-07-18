@@ -55,9 +55,6 @@ export default function ListTbody() {
         dispatch(setOwnedCrypto(isOwnes));
     }, [allCrypto]);
 
-    console.log("페이: ", favoriteCrypto);
-    console.log("보유: ", ownedCrypto);
-
     // 화폐 가격의 변화를 감지하고 업데이트
     useEffect(() => {
         // 각 항목의 name을 키로, price를 값으로 하는 객체 생성
@@ -98,13 +95,12 @@ export default function ListTbody() {
     const addFavoriteCrypto = async (email: string, cryptoName: string) => {
         if (user.email) {
             try {
-                const response = axios.post("http://127.0.0.1:8000/add_favoriteCrypto_to_user/", {
+                axios.post("http://127.0.0.1:8000/add_favoriteCrypto_to_user/", {
                     email: email,
                     crypto_name: cryptoName,
                 });
-                console.log("관심화폐 추가: ", response);
             } catch (error) {
-                console.log("관심화폐 추가 실패: ", error);
+                throw error;
             }
         }
     };

@@ -79,11 +79,9 @@ export default function Wallet() {
 
         if (isSubmitted) {
             if (value) {
-                console.log('존재');
                 setIsEmpty(false);
             }
             else {
-                console.log("미존재");
                 setIsEmpty(true);
             }
         }

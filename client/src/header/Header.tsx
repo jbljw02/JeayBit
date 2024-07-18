@@ -35,7 +35,6 @@ export default function Header() {
 
       window.location.reload();
     } catch (error) {
-      console.error("로그아웃 정보 전송 실패");
       throw error;
     }
   };

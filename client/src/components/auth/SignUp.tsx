@@ -81,17 +81,14 @@ export default function SignUp() {
       setIsEmailDuplicate(false);
       setIsPasswordEmpty(false);
 
-      const response = await axios.post('http://127.0.0.1:8000/sign_up/', data, {
+      await axios.post('http://127.0.0.1:8000/sign_up/', data, {
         withCredentials: true,
       });
 
       setInvalidSubmit(false);
       setIsSubmitted(false);
       setSignUpModal(true);
-
-      console.log("회원가입 성공: ", response);
     } catch (error) {
-      console.error("에러: ", error)
       if (axios.isAxiosError(error) && error.response) {
         if (error.response.data.error === '이름, 비밀번호, 이메일 모두 존재하지 않음') {
           setIsNameEmpty(true);

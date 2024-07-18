@@ -1,8 +1,9 @@
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import axios from "axios";
 import { RootState } from "../../../redux/store";
 import { setCandlePerDate, setCandlePerMinute, setChartSortDate, setChartSortTime } from "../../../redux/features/chartSlice";
+import { setErrorModal } from "../../../redux/features/modalSlice";
 
 export default function ChartHeader() {
     const dispatch = useDispatch();
@@ -19,19 +20,20 @@ export default function ChartHeader() {
     const dropdownRef = useRef<HTMLLabelElement>(null);
 
     // 리스트에서 화폐를 선택하면 해당 화폐에 대한 캔들 호출(차트의 분에 따라)
-    const requestCandleMinute = async (market: string, minute: string) => {
+    const requestCandleMinute = useCallback(async (market: string, minute: string) => {
         if (minute && market) {
             try {
                 const response = await axios.get(`http://127.0.0.1:8000/candle_per_minute/?market=${market}&minute=${minute}`);
                 dispatch(setCandlePerMinute(response.data));
             } catch (error) {
-                console.error("분 캔들 에러: ", error);
+                dispatch(setErrorModal(true));
+                throw error;
             }
         }
-    };
+    }, [dispatch]);
 
     // 리스트에서 화폐를 선택하면 해당 화폐에 대한 캔들 호출(차트의 일/주/월에 따라)
-    const requestCandleDate = async (market: string) => {
+    const requestCandleDate = useCallback(async (market: string) => {
         try {
             let response;
             let url = "http://127.0.0.1:8000/";
@@ -50,9 +52,10 @@ export default function ChartHeader() {
                 dispatch(setCandlePerDate(response.data));
             }
         } catch (error) {
-            console.error("캔들에러: ", error);
+            dispatch(setErrorModal(true));
+            throw error;
         }
-    };
+    }, [chartSortDate, dispatch]);
 
     const clickChartSortTime = (value: string) => {
         dispatch(setChartSortTime(value));
@@ -71,7 +74,7 @@ export default function ChartHeader() {
         } else if (chartSortDate && !chartSortTime && cryptoRealTime.market) {
             requestCandleDate(cryptoRealTime.market);
         }
-    }, [cryptoRealTime, chartSortTime, chartSortDate]);
+    }, [cryptoRealTime, chartSortTime, chartSortDate, requestCandleDate, requestCandleMinute]);
 
     // 드롭다운 외부 클릭 감지
     useEffect(() => {

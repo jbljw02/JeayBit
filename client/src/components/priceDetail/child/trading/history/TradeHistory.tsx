@@ -70,16 +70,14 @@ export default function TradeHistory() {
     // 주문을 취소할 화폐를 서버로 전송
     const cancelOrder = async (email: string, ids: string[]) => {
         try {
-            const response = await axios.post("http://127.0.0.1:8000/cancel_order/", {
+            await axios.post("http://127.0.0.1:8000/cancel_order/", {
                 ids: ids,
                 email: email,
             });
             getTradeHistory(user.email);
             dispatch(setScheduledCancel([]));
-
-            console.log("주문 취소 정보 전송 성공", response.data);
         } catch (error) {
-            console.error("주문 취소 정보 전송 실패");
+            throw error;
         }
     }
 

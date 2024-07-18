@@ -1,4 +1,4 @@
-import { combineReducers, configureStore, createSlice } from '@reduxjs/toolkit'
+import { combineReducers, configureStore } from '@reduxjs/toolkit'
 import { User } from './features/userSlice'
 import { ChartSortDate, ChartSortTime, Market } from './features/chartSlice';
 import { AskingData, ClosedData } from './features/askingSlice';
@@ -12,6 +12,7 @@ import selectedCryptoReducers from './features/selectedCryptoSlice';
 import tradeReducers from './features/tradeSlice';
 import userCryptoReducers from './features/userCryptoSlice';
 import walletReducers from './features/walletSlice';
+import modalReducers from './features/modalSlice';
 
 export type RootState = {
   filteredData: Crypto[],
@@ -45,8 +46,8 @@ export type RootState = {
   scheduledCancel: ScheduleCancel,
   searchedCrypto: Crypto[],
   sortStates: number[],
-  chartSort: ChartSortDate | ChartSortTime,
   cryptoRealTime: Crypto,
+  errorModal: boolean,
 }
 
 const combinedReducer = combineReducers({
@@ -79,6 +80,7 @@ const combinedReducer = combineReducers({
   userWallet: walletReducers.userWallet,
   balanceUpdate: walletReducers.balanceUpdate,
   transferSort: walletReducers.transferSort,
+  errorModal: modalReducers.errorModal,
 });
 
 export const makeStore = () => {
