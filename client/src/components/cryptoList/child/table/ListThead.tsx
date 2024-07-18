@@ -1,9 +1,10 @@
 import { useDispatch, useSelector } from "react-redux";
-import { RootState, setFilteredData, setSortStates, setSortedData } from "../../../../redux/store";
 import { sortByChangeRate, sortByName, sortByPrice, sortByTradeVolume } from "../../../../utils/sort/sortData";
 import img_sort from "../../../../assets/images/sort.png";
 import img_sort_up from "../../../../assets/images/sort-up.png";
 import img_sort_down from "../../../../assets/images/sort-down.png";
+import { setSortStates, setFilteredData, setSortedData } from "../../../../redux/features/cryptoListSlice";
+import { RootState } from "../../../../redux/store";
 
 export default function ListThead() {
     const dispatch = useDispatch();

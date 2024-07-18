@@ -1,8 +1,8 @@
 import { useDispatch, useSelector, } from "react-redux";
-import { RootState, setScheduledCancel } from "../../../../../redux/store";
-import { useState } from "react";
 import formatTradeAmount from "../../../../../utils/format/formatTradeAmount";
 import formatWithComas from "../../../../../utils/format/formatWithComas";
+import { setScheduledCancel } from "../../../../../redux/features/tradeSlice";
+import { RootState } from "../../../../../redux/store";
 
 export default function UnSignedHistory() {
     const dispatch = useDispatch();

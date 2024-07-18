@@ -1,7 +1,8 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState, useRef } from "react";
 import axios from "axios";
-import { RootState, setCandlePerMinute, setCandlePerDate, setChartSortTime, setChartSortDate, setChartSort } from "../../../redux/store";
+import { RootState } from "../../../redux/store";
+import { setCandlePerDate, setCandlePerMinute, setChartSortDate, setChartSortTime } from "../../../redux/features/chartSlice";
 
 export default function ChartHeader() {
     const dispatch = useDispatch();
@@ -55,13 +56,11 @@ export default function ChartHeader() {
 
     const clickChartSortTime = (value: string) => {
         dispatch(setChartSortTime(value));
-        dispatch(setChartSort(value));
     };
 
     const clickChartSortDate = (value: string) => {
         dispatch(setChartSortDate(value));
         dispatch(setChartSortTime(''));
-        dispatch(setChartSort(value));
         setIsDropdownOpen(false);
     };
 

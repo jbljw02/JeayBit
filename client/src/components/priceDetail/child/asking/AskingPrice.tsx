@@ -1,19 +1,17 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState, AskingData, setAsking_dateTime, setAskHide } from "../../../../redux/store";
 import AskingTable from "./AskingTable";
 import '../../../../styles/priceDetail/asking/asking.css'
-import { Scrollbars } from 'react-custom-scrollbars-2';
 import CustomScrollbars from "../../../scrollbar/CustomScorllbars";
 import AskingTitle from "./AskingTitle";
+import { AskingData } from "../../../../redux/features/askingSlice";
+import { RootState } from "../../../../redux/store";
 
 // bid = 매수, ask = 매도
 export default function AskingPrice() {
-    const dispatch = useDispatch();
-
-    const asking_data = useSelector((state: RootState) => state.asking_data);
-    const asking_totalAskSize = useSelector((state: RootState) => state.asking_totalAskSize);
-    const asking_totalBidSize = useSelector((state: RootState) => state.asking_totalBidSize);
+    const askingData = useSelector((state: RootState) => state.askingData);
+    const totalAskSize = useSelector((state: RootState) => state.totalAskSize);
+    const totalBidSize = useSelector((state: RootState) => state.totalBidSize);
     const selectedCrypto = useSelector((state: RootState) => state.selectedCrypto);
     const [askHide, setAskHide] = useState(false);
 
@@ -33,7 +31,7 @@ export default function AskingPrice() {
     useEffect(() => {
         // state의 업데이트는 비동기적이기 때문에 값이 즉시 바뀌지 않음. 
         // 그러므로 이 useEffect() 안에서 prevData는 아직 이전의 값을 가지고 있음.
-        setPrevData(asking_data);
+        setPrevData(askingData);
 
         let newDifferences_ask: {
             new_ask_price: number,
@@ -46,18 +44,18 @@ export default function AskingPrice() {
 
         if (prevData) {
             prevData.forEach((value, index) => {
-                if (value.ask_size !== asking_data[index].ask_size) {
-                    newDifferences_ask.push({ new_ask_price: asking_data[index].ask_price, new_ask_size: asking_data[index].ask_size });
+                if (value.ask_size !== askingData[index].ask_size) {
+                    newDifferences_ask.push({ new_ask_price: askingData[index].ask_price, new_ask_size: askingData[index].ask_size });
                 }
-                if (value.bid_size !== asking_data[index].bid_size) {
-                    newDifferences_bid.push({ new_bid_price: asking_data[index].bid_price, new_bid_size: asking_data[index].bid_size });
+                if (value.bid_size !== askingData[index].bid_size) {
+                    newDifferences_bid.push({ new_bid_price: askingData[index].bid_price, new_bid_size: askingData[index].bid_size });
                 }
             })
         }
 
         setDifferences_ask(newDifferences_ask);
         setDifferences_bid(newDifferences_bid);
-    }, [asking_data, prevData]);
+    }, [askingData, prevData]);
 
     return (
         <>
@@ -92,11 +90,11 @@ export default function AskingPrice() {
                                         <>
                                             <AskingTable
                                                 differences={differences_bid}
-                                                size={asking_totalBidSize}
+                                                size={totalBidSize}
                                                 category={'bid'} />
                                             <AskingTable
                                                 differences={differences_ask}
-                                                size={asking_totalAskSize}
+                                                size={totalAskSize}
                                                 category={'ask'} />
                                         </>
                                     </tbody>

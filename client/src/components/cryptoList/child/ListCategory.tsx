@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
-import { setListCategory } from "../../../redux/features/cryptoListSlice";
 import { RootState } from "../../../redux/store";
+import { setListCategory } from "../../../redux/features/cryptoListSlice";
 
 export default function ListCategory() {
     const dispatch = useDispatch();

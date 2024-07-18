@@ -1,6 +1,44 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+export type Crypto = {
+    name: string,
+    price: number,
+    market: string,
+    change: string,
+    change_rate: number,
+    change_price: number,
+    trade_price: number,
+    trade_volume: number,
+    open_price: number,
+    high_price: number,
+    low_price: number,
+    is_favorited: boolean,
+    is_owned: boolean,
+    owned_quantity: number,
+}
+
 export type ListCategory = '원화' | '보유' | '관심'
+
+export type FavoriteCrypto = {
+    crypto_name: string,
+    isFavorited: boolean
+}
+
+export type OwnedCrypto = {
+    name: string,
+    is_owned: boolean,
+    owned_quantity: number,
+}
+
+export const allCryptoSlice = createSlice({
+    name: 'allCrypto',
+    initialState: [],
+    reducers: {
+        setAllCrypto: (state, action) => {
+            return action.payload;
+        }
+    }
+})
 
 export const listCategorySlice = createSlice({
     name: 'listCategory',
@@ -12,10 +50,60 @@ export const listCategorySlice = createSlice({
     }
 });
 
+const filteredDataSlice = createSlice({
+    name: 'filteredData',
+    initialState: [] as Crypto[],
+    reducers: {
+        setFilteredData: (state, action) => {
+            return action.payload;
+        }
+    }
+})
+
+const sortedDataSlice = createSlice({
+    name: 'sortedData',
+    initialState: [] as Crypto[],
+    reducers: {
+        setSortedData: (state, action) => {
+            return action.payload;
+        }
+    }
+})
+
+export const searchedCryptoSlice = createSlice({
+    name: 'searchedCrypto',
+    initialState: [],
+    reducers: {
+        setSearchedCrypto: (state, action) => {
+            return action.payload;
+        }
+    }
+})
+
+export const sortStatesSlice = createSlice({
+    name: 'sortStates',
+    initialState: [0, 0, 0, 0],
+    reducers: {
+        setSortStates: (state, action) => {
+            return action.payload;
+        }
+    }
+})
+
+export const { setFilteredData } = filteredDataSlice.actions;
+export const { setSortedData } = sortedDataSlice.actions;
+export const { setAllCrypto } = allCryptoSlice.actions;
+export const { setSearchedCrypto } = searchedCryptoSlice.actions;
+export const { setSortStates } = sortStatesSlice.actions;
 export const { setListCategory } = listCategorySlice.actions;
 
 const reducers = {
+    allCrypto: allCryptoSlice.reducer,
     listCategory: listCategorySlice.reducer,
-};
+    filteredData: filteredDataSlice.reducer,
+    sortedData: sortedDataSlice.reducer,
+    searchedCrypto: searchedCryptoSlice.reducer,
+    sortStates: sortStatesSlice.reducer,
+}
 
 export default reducers;

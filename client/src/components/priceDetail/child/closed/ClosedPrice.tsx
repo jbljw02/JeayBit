@@ -1,5 +1,5 @@
-import { useDispatch, useSelector } from "react-redux";
-import { RootState, setCloseHide } from "../../../../redux/store";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../../redux/store";
 import adjustSize from "../../../../utils/format/adjustSize";
 import convertToDate from "../../../../utils/date/covertToDate";
 import '../../../../styles/priceDetail/asking/asking.css'
@@ -8,9 +8,7 @@ import AskingTitle from "../asking/AskingTitle";
 import { useState } from "react";
 
 export default function ClosedPrice() {
-    const dispatch = useDispatch();
-
-    const closed_data = useSelector((state: RootState) => state.closed_data);
+    const closedData = useSelector((state: RootState) => state.closedData);
     const selectedCrypto = useSelector((state: RootState) => state.selectedCrypto);
     const [closeHide, setCloseHide] = useState(false);
 
@@ -45,7 +43,7 @@ export default function ClosedPrice() {
                                 <table className="asking-table">
                                     <tbody>
                                         {
-                                            closed_data.map((item, i) => {
+                                            closedData.map((item, i) => {
                                                 const trade_time = convertToDate(item.timestamp)
                                                 const str_trade_volume = adjustSize(item.trade_volume);
 

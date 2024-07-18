@@ -1,7 +1,6 @@
 import axios from "axios";
-import { CSSProperties, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState, setScheduledCancel } from '../../../../../redux/store'
 import useFunction from "../../../../useFuction";
 import SignedHistory from "./SignedHistory";
 import UnSignedHistory from "./UnSignedHistory";
@@ -10,6 +9,8 @@ import TradingThead from "../TradingThead";
 import CustomScrollbars from "../../../../scrollbar/CustomScorllbars";
 import NoticeModal from "../../../../modal/common/NoticeModal";
 import PlaceholderDisplay from "../../../../placeholder/PlaceholderDisplay";
+import { RootState } from "../../../../../redux/store";
+import { setScheduledCancel } from "../../../../../redux/features/tradeSlice";
 
 export default function TradeHistory() {
     const dispatch = useDispatch();

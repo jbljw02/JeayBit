@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Crypto, RootState, setFilteredData } from "../../../redux/store";
 import { sortData } from "../../../utils/sort/sortData";
+import { RootState } from "../../../redux/store";
+import { Crypto, setFilteredData } from "../../../redux/features/cryptoListSlice";
 
 export default function ListSearch() {
     const dispatch = useDispatch();

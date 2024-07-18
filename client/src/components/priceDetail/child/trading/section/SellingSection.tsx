@@ -1,8 +1,5 @@
-import axios from "axios";
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import { RootState, setIsSelling, setSelectedCrypto, setSellingPrice } from "../../../../../redux/store";
 import useFunction from "../../../../useFuction";
 import TradingThead from "../TradingThead";
 import SelectPercentage from "../SelectPercentage";
@@ -17,6 +14,8 @@ import CompleteModal from "../../../../modal/trade/TradeModal";
 import TradeFailedModal from "../../../../modal/trade/TradeFailedModal";
 import WaitingModal from "../../../../modal/trade/WatingModal";
 import { bidSortOptions } from "../TradeSection";
+import { RootState } from "../../../../../redux/store";
+import { setSellingPrice } from "../../../../../redux/features/tradeSlice";
 
 export default function SellingSectioin() {
     const dispatch = useDispatch();

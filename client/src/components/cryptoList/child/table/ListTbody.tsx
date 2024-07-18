@@ -1,13 +1,15 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState, setBuyingPrice, setSellingPrice, setFilteredData, setSelectedCrypto, setFavoriteCrypto, setOwnedCrypto, setCryptoRealTime, setAllCrypto } from "../../../../redux/store";
 import useFunction from "../../../useFuction";
 import starOn from '../../../../assets/images/star-on.png'
 import starOff from '../../../../assets/images/star-off.png'
-import { Crypto } from "../../../../redux/store";
-import axios, { all } from "axios";
+import axios from "axios";
 import formatWithComas from "../../../../utils/format/formatWithComas";
 import CustomScrollbars from "../../../scrollbar/CustomScorllbars";
+import { RootState } from "../../../../redux/store";
+import { setFavoriteCrypto, setOwnedCrypto } from "../../../../redux/features/userCryptoSlice";
+import { setCryptoRealTime, setSelectedCrypto } from "../../../../redux/features/selectedCryptoSlice";
+import { Crypto } from "../../../../redux/features/cryptoListSlice";
 
 type Differences = {
     name: string;
@@ -167,7 +169,7 @@ export default function ListTbody() {
                             return (
                                 <tr
                                     key={i}
-                                    onClick={() => cryptoClick(filteredData[i])}>
+                                    onClick={() => cryptoClick(item)}>
                                     <td className="td-name">
                                         <span className="span-star">
                                             <img

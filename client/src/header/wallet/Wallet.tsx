@@ -2,13 +2,13 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import useFunction from "../../components/useFuction";
-import { RootState, setTransferSort, setBalanceUpdate } from "../../redux/store";
 import TransferInput from "./TransferInput";
 import { ChangeInput } from "./ChangeInput";
 import TransferWarning from "./TransferWarning";
 import NoticeModal from "../../components/modal/common/NoticeModal";
 import '../../styles/header/wallet.css'
-import InputWarning from "../../components/input/InputWarning";
+import { setBalanceUpdate, setTransferSort } from "../../redux/features/walletSlice";
+import { RootState } from "../../redux/store";
 
 export default function Wallet() {
     const dispatch = useDispatch();

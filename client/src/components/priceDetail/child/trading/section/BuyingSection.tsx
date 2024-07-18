@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState, setBuyingPrice, setIsBuying } from '../../../../../redux/store'
 import useFunction from "../../../../useFuction";
 import adjustInputValue from "../../../../../utils/format/adjustInputValue";
 import PriceRange from '../../../../input/PriceRange';
@@ -15,6 +14,8 @@ import CompleteModal from "../../../../modal/trade/TradeModal";
 import TradeFailedModal from "../../../../modal/trade/TradeFailedModal";
 import WaitingModal from "../../../../modal/trade/WatingModal";
 import { bidSortOptions } from "../TradeSection";
+import { setBuyingPrice } from "../../../../../redux/features/tradeSlice";
+import { RootState } from "../../../../../redux/store";
 
 export default function BuyingSection() {
     const dispatch = useDispatch();

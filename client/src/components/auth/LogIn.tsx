@@ -2,7 +2,6 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
 import { useDispatch } from "react-redux";
-import { setUser } from "../../redux/features/userSlice";
 import FormInput from "../input/FormInput";
 import InputWarning from "../input/InputWarning";
 import FaviconTitle from "./child/FaviconTitle";
@@ -10,6 +9,7 @@ import formValueChange from "../../utils/formValueChange";
 import HeaderNav from "../../header/HeaderNav";
 import '../../styles/auth/login.css'
 import AuthButton from "../button/AuthButton";
+import { setUser } from "../../redux/features/userSlice";
 
 export default function LogIn() {
   const navigate = useNavigate();

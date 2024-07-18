@@ -6,13 +6,14 @@ import PriceDetail from '../components/priceDetail/PriceDetail';
 import SignUp from '../components/auth/SignUp';
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { setCryptoRealTime, setSelectedCrypto, setUser } from '../redux/store';
 import Chart from '../components/chart/Chart';
 import CryptoDetail from '../components/cryptoDetail/CryptoDetail';
 import Header from '../header/Header';
 import axios from 'axios';
 import useFunction from '../components/useFuction';
 import '../styles/scrollbar/scrollbar.css'
+import { setUser } from '../redux/features/userSlice';
+import { setSelectedCrypto, setCryptoRealTime } from '../redux/features/selectedCryptoSlice';
 
 export default function Home() {
     const dispatch = useDispatch();

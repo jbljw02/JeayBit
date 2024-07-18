@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { RootState, setSectionChange } from "../../../../redux/store";
+import { RootState } from "../../../../redux/store";
 import BuyingSection from "./section/BuyingSection";
 import SellingSection from "./section/SellingSection";
 import TradeHistory from "./history/TradeHistory";
@@ -26,7 +26,7 @@ export default function TradeSection() {
 
     const { getBalance } = useFunction();
 
-    const sectionChange = useSelector((state: RootState) => state.sectionChange);
+    const [sectionChange, setSectionChange] = useState<'매수' | '매도' | '거래내역'>('매수');
     const user = useSelector((state: RootState) => state.user);
 
     const [celeryModal, setCeleryModal] = useState(false);
@@ -75,17 +75,17 @@ export default function TradeSection() {
                         className={`${sectionChange === '매수' ?
                             'buying-section' :
                             ''}`}
-                        onClick={() => dispatch(setSectionChange('매수'))}>매수</span>
+                        onClick={() => setSectionChange('매수')}>매수</span>
                     <span
                         className={`${sectionChange === '매도' ?
                             'selling-section' :
                             ''}`}
-                        onClick={() => dispatch(setSectionChange('매도'))}>매도</span>
+                        onClick={() => setSectionChange('매도')}>매도</span>
                     <span
                         className={`${sectionChange === '거래내역' ?
                             'trading-history-section' :
                             ''}`}
-                        onClick={() => dispatch(setSectionChange('거래내역'))}>거래내역</span>
+                        onClick={() => setSectionChange('거래내역')}>거래내역</span>
                 </div>
                 {
                     sectionChange === '매수' ?

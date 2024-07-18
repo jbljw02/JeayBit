@@ -1,11 +1,12 @@
 import { useDispatch, useSelector } from "react-redux";
 import favicon from "../assets/images/favicon.png";
-import { RootState, setUserTradeHistory, setUserTradeHistory_unSigned } from "../redux/store";
 import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { setUser } from "../redux/features/userSlice";
 import Wallet from "./wallet/Wallet";
+import { setUser } from "../redux/features/userSlice";
+import { setUserTradeHistory, setUserTradeHistory_unSigned } from "../redux/features/tradeSlice";
+import { RootState } from "../redux/store";
 import '../styles/header/header.css'
 
 export default function Header() {
@@ -28,7 +29,7 @@ export default function Header() {
         name: '',
         email: '',
       }));
-      
+
       dispatch(setUserTradeHistory([]));
       dispatch(setUserTradeHistory_unSigned([]));
 

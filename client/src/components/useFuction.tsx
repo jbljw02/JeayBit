@@ -1,8 +1,12 @@
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect } from "react";
 import formatDateString from "../utils/date/formatDateString";
-import { RootState, setAllCrypto, setUserWallet, setSelectedCrypto, OwnedCrypto, setUserTradeHistory, setUserTradeHistory_unSigned, AskingData, setAsking_data, setAsking_totalAskSize, setAsking_totalBidSize, setClosed_data, setCryptoRealTime } from "../redux/store";
+import { AskingData, setAskingData, setTotalAskSize, setTotalBidSize, setClosedData } from "../redux/features/askingSlice";
+import { setAllCrypto, OwnedCrypto } from "../redux/features/cryptoListSlice";
+import { setSelectedCrypto } from "../redux/features/selectedCryptoSlice";
+import { setUserTradeHistory, setUserTradeHistory_unSigned } from "../redux/features/tradeSlice";
+import { setUserWallet } from "../redux/features/walletSlice";
+import { RootState } from "../redux/store";
 
 export default function useFunction() {
   const dispatch = useDispatch();
@@ -168,9 +172,9 @@ export default function useFunction() {
           timestamp: timestamp,
         }));
 
-      dispatch(setAsking_data(askingData));
-      dispatch(setAsking_totalAskSize(response.data[0].total_ask_size));
-      dispatch(setAsking_totalBidSize(response.data[0].total_bid_size));
+      dispatch(setAskingData(askingData));
+      dispatch(setTotalAskSize(response.data[0].total_ask_size));
+      dispatch(setTotalBidSize(response.data[0].total_bid_size));
     } catch (error) {
 
       console.log("호가내역 실패: ", error);
@@ -182,7 +186,7 @@ export default function useFunction() {
     try {
       const response = await axios.get(`http://127.0.0.1:8000/closed_price/?market=${market}`);
 
-      dispatch(setClosed_data(response.data));
+      dispatch(setClosedData(response.data));
     } catch (error) {
       throw error;
     }

@@ -1,7 +1,8 @@
 import { useSelector } from "react-redux";
-import { AskingData, RootState } from "../../../../redux/store";
 import convertToDate from "../../../../utils/date/covertToDate";
 import adjustSize from "../../../../utils/format/adjustSize";
+import { RootState } from "../../../../redux/store";
+import { AskingData } from "../../../../redux/features/askingSlice";
 
 type Params = {
     differences: {
@@ -15,7 +16,7 @@ type Params = {
 }
 
 export default function AskingTable({ differences, size, category }: Params) {
-    const asking_data = useSelector((state: RootState) => state.asking_data);
+    const askingData = useSelector((state: RootState) => state.askingData);
 
     // 이전 호가와 현재 호가를 비교한 값을 이용 - 변경된 호가가 현재 state를 순회하면서 일치하는 값에 대해서 스타일 지정
     const isChange = (item: AskingData) => {
@@ -49,7 +50,7 @@ export default function AskingTable({ differences, size, category }: Params) {
     return (
         <>
             {
-                asking_data.map((item, i) => {
+                askingData.map((item, i) => {
                     const change = isChange(item);
                     const styleClass = getStyleClass(change);
                     const percentage = getPercentage(item);

@@ -1,5 +1,3 @@
-import React from 'react';
-
 type ChangeInputProps = {
     amount: number;
     market: string;

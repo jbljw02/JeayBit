@@ -1,10 +1,11 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Chart from 'react-apexcharts';
 import { useSelector } from 'react-redux';
 import moment from 'moment-timezone';
-import { Market, RootState } from '../../../redux/store';
+import { RootState } from '../../../redux/store';
 import formatWithComas from '../../../utils/format/formatWithComas';
 import '../../../styles/chart/chart.css'
+import { Market } from '../../../redux/features/chartSlice';
 
 type Axis = {
   min: number,
