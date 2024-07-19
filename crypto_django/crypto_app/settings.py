@@ -16,14 +16,19 @@ import logging
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+secrets_path = os.path.join(BASE_DIR, 'secrets.json')
+
+with open(secrets_path) as f:
+    secrets = json.load(f)
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-dp2dyhvazi=*3q459+8exg^8lzs3l3&k(5(p(ndl415eu(r)@9'
+SECRET_KEY = secrets['SECRET_KEY']
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 # Application definition
 INSTALLED_APPS = [
@@ -47,7 +52,7 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    # 'django.middleware.csrf.CsrfViewMiddleware', # 클라이언트 실행할 때 임시 해제
+    # 'django.middleware.csrf.CsrfViewMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
@@ -84,21 +89,10 @@ CHANNEL_LAYERS = {
 CSRF_COOKIE_NAME = 'csrftoken'
 CSRF_HEADER_NAME = 'X-CSRFToken'
 
+ALLOWED_HOSTS = ['*', '.pythonanywhere.com']
+
 CORS_ALLOW_CREDENTIALS = True
-
 CORS_ALLOW_ALL_ORIGINS = True
-
-CSRF_TRUSTED_ORIGINS = (
-    'http://localhost:8000',
-    'http://localhost:3000'
-)
-
-CORS_ORIGIN_WHITELIST = (
-    'http://localhost:8000',
-    'http://localhost:3000'
-)
-
-CORS_ALLOWED_ORIGINS = CORS_ORIGIN_WHITELIST
 
 CORS_ALLOW_CREDENTIALS = True  # 서버가 클라이언트의 자격증명(예: 쿠키)를 받을 준비가 됨 - 클라이언트는 서버에 쿠키를 보낼 수 있음을 뜻함
 ROOT_URLCONF = 'crypto_app.urls'
