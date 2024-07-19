@@ -11,12 +11,12 @@ import CryptoDetail from '../components/cryptoDetail/CryptoDetail';
 import Header from '../header/Header';
 import axios from 'axios';
 import useFunction from '../components/useFuction';
-import '../styles/scrollbar/scrollbar.css'
 import { setUser } from '../redux/features/userSlice';
 import { setSelectedCrypto, setCryptoRealTime } from '../redux/features/selectedCryptoSlice';
 import NoticeModal from '../components/modal/common/NoticeModal';
 import { RootState } from '../redux/store';
 import { setErrorModal } from '../redux/features/modalSlice';
+import '../styles/scrollbar/scrollbar.css'
 
 export default function Home() {
     const dispatch = useDispatch();
