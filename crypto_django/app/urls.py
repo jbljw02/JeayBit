@@ -29,8 +29,6 @@ urlpatterns = [
     path("add_balance_to_user/", add_balance_to_user),
     path("minus_balance_from_user/", minus_balance_from_user),
     path("get_user_balance/", get_user_balance),
-    
     path("get_all_crypto/", GetAllCryptoView.as_view()),
-
     # path('admin/', admin.site.urls)
 ]
