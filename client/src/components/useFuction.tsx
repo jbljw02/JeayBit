@@ -16,7 +16,7 @@ export default function useFunction() {
 
   const checkLogin = async () => {
     try {
-      const response = await axios.post("http://127.0.0.1:8000/check_login/", {}, {
+      const response = await axios.post("https://jeaybit-daphne-server-502f69a34a39.herokuapp.com/check_login/", {}, {
         withCredentials: true
       });
 
@@ -28,7 +28,7 @@ export default function useFunction() {
 
   const getAllCrypto = async () => {
     try {
-      const response = await axios.post("http://127.0.0.1:8000/get_all_crypto/", {}, {
+      const response = await axios.post("https://jeaybit-daphne-server-502f69a34a39.herokuapp.com/get_all_crypto/", {}, {
         withCredentials: true,
       });
 
@@ -43,7 +43,7 @@ export default function useFunction() {
   const getBalance = async (email: string) => {
     try {
       const response = await axios.post(
-        `http://127.0.0.1:8000/get_user_balance/`,
+        `https://jeaybit-daphne-server-502f69a34a39.herokuapp.com/get_user_balance/`,
         { email: email }
       );
       dispatch(setUserWallet(response.data.user_balance));
@@ -55,7 +55,7 @@ export default function useFunction() {
   // 사용자가 소유하고 있는 화폐의 정보를 받아옴
   const getOwnedCrypto = async (email: string) => {
     try {
-      const response = await axios.post('http://127.0.0.1:8000/get_user_ownedCrypto/', {
+      const response = await axios.post('https://jeaybit-daphne-server-502f69a34a39.herokuapp.com/get_user_ownedCrypto/', {
         email: email,
       });
 
@@ -77,7 +77,7 @@ export default function useFunction() {
   // 거래 내역에 저장될 정보를 전송(화폐 매수와 함께)
   const addTradeHistory = async (email: string, cryptoName: string, tradeCategory: string, tradeTime: Date, cryptoMarket: string, cryptoPrice: number, tradePrice: number, tradeAmount: number, market: string, isMarketValue: boolean) => {
     try {
-      const response = await axios.post("http://127.0.0.1:8000/add_user_tradeHistory/", {
+      const response = await axios.post("https://jeaybit-daphne-server-502f69a34a39.herokuapp.com/add_user_tradeHistory/", {
         email: email,
         crypto_name: cryptoName,
         trade_category: tradeCategory,
@@ -103,7 +103,7 @@ export default function useFunction() {
   // 서버로부터 거래 내역을 받아옴
   const getTradeHistory = async (email: string) => {
     try {
-      const response = await axios.post('http://127.0.0.1:8000/get_user_tradeHistory/', {
+      const response = await axios.post('https://jeaybit-daphne-server-502f69a34a39.herokuapp.com/get_user_tradeHistory/', {
         email: email,
       });
 
@@ -154,7 +154,7 @@ export default function useFunction() {
   // 선택된 화폐에 대한 호가내역 호출
   const selectAskingPrice = async (market: string) => {
     try {
-      const response = await axios.get(`http://127.0.0.1:8000/asking_price/?market=${market}`);
+      const response = await axios.get(`https://jeaybit-daphne-server-502f69a34a39.herokuapp.com/asking_price/?market=${market}`);
 
       const orderbookUnits = response.data[0].orderbook_units;
       const timestamp = response.data[0].timestamp;
@@ -177,7 +177,7 @@ export default function useFunction() {
   // 선택된 화폐에 대한 체결내역 호출
   const selectClosedPrice = async (market: string) => {
     try {
-      const response = await axios.get(`http://127.0.0.1:8000/closed_price/?market=${market}`);
+      const response = await axios.get(`https://jeaybit-daphne-server-502f69a34a39.herokuapp.com/closed_price/?market=${market}`);
       dispatch(setClosedData(response.data));
     } catch (error) {
       dispatch(setErrorModal(true));

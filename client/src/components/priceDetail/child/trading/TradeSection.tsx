@@ -56,10 +56,6 @@ export default function TradeSection() {
             })
             setCeleryModal(true);
         };
-
-        socket.onerror = function (e) {
-            throw e;
-        };
     }, []);
 
     return (

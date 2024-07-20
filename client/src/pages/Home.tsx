@@ -28,7 +28,7 @@ export default function Home() {
     // 초기 데이터를 비트코인으로 설정
     const getInitialData = async () => {
         try {
-            const response = await axios.post("http://127.0.0.1:8000/get_all_crypto/", {}, {
+            const response = await axios.post("https://jeaybit-daphne-server-502f69a34a39.herokuapp.com/get_all_crypto/", {}, {
                 withCredentials: true,
             });
             dispatch(setSelectedCrypto(response.data.all_crypto[0]));

@@ -19,7 +19,7 @@ export default function Header() {
 
   const logOut = async () => {
     try {
-      await axios.post("http://127.0.0.1:8000/logOut/",
+      await axios.post("https://jeaybit-daphne-server-502f69a34a39.herokuapp.com/logOut/",
         {},
         {
           withCredentials: true,
