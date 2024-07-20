@@ -91,7 +91,7 @@ export default function Wallet() {
     const addBalanceToUser = async (email: string, depositAmount: number) => {
         if (user.email && user.name) {
             try {
-                await axios.post("https://jeaybit-daphne-server-502f69a34a39.herokuapp.com/add_balance_to_user/", {
+                await axios.post("https://jeaybit.onrender.com/add_balance_to_user/", {
                     email: email,
                     depositAmount: depositAmount,
                 });
@@ -109,7 +109,7 @@ export default function Wallet() {
         if (user.email && user.name) {
             try {
                 await axios.post(
-                    "https://jeaybit-daphne-server-502f69a34a39.herokuapp.com/minus_balance_from_user/",
+                    "https://jeaybit.onrender.com/minus_balance_from_user/",
                     {
                         email: email,
                         withdrawAmount: withdrawAmount,

@@ -95,7 +95,7 @@ export default function ListTbody() {
     const addFavoriteCrypto = async (email: string, cryptoName: string) => {
         if (user.email) {
             try {
-                axios.post("https://jeaybit-daphne-server-502f69a34a39.herokuapp.com/add_favoriteCrypto_to_user/", {
+                axios.post("https://jeaybit.onrender.com/add_favoriteCrypto_to_user/", {
                     email: email,
                     crypto_name: cryptoName,
                 });

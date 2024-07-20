@@ -19,7 +19,7 @@ export default function Header() {
 
   const logOut = async () => {
     try {
-      await axios.post("https://jeaybit-daphne-server-502f69a34a39.herokuapp.com/logOut/",
+      await axios.post("https://jeaybit.onrender.com/logOut/",
         {},
         {
           withCredentials: true,

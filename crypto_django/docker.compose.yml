@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  celery:
+    build:
+      context: .
+      dockerfile: Dockerfile.celery
+    command: celery -A crypto_app worker --loglevel=info
+    volumes:
+      - .:/app
+    depends_on:
+      - redis
+
+  celery-beat:
+    build:
+      context: .
+      dockerfile: Dockerfile.beat
+    command: celery -A crypto_app beat --loglevel=info
+    volumes:
+      - .:/app
+    depends_on:
+      - redis
+
+  redis:
+    image: "redis:alpine"
+    ports:
+      - "6379:6379"

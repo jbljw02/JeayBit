@@ -81,7 +81,7 @@ export default function SignUp() {
       setIsEmailDuplicate(false);
       setIsPasswordEmpty(false);
 
-      await axios.post('https://jeaybit-daphne-server-502f69a34a39.herokuapp.com/sign_up/', data, {
+      await axios.post('https://jeaybit.onrender.com/sign_up/', data, {
         withCredentials: true,
       });
 

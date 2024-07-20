@@ -70,7 +70,7 @@ export default function TradeHistory() {
     // 주문을 취소할 화폐를 서버로 전송
     const cancelOrder = async (email: string, ids: string[]) => {
         try {
-            await axios.post("https://jeaybit-daphne-server-502f69a34a39.herokuapp.com/cancel_order/", {
+            await axios.post("https://jeaybit.onrender.com/cancel_order/", {
                 ids: ids,
                 email: email,
             });

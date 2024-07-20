@@ -48,7 +48,7 @@ export default function LogIn() {
       setIsPasswordEmpty(false);
 
       const data = { email, password };
-      const response = await axios.post('https://jeaybit-daphne-server-502f69a34a39.herokuapp.com/logIn/', data, {
+      const response = await axios.post('https://jeaybit.onrender.com/logIn/', data, {
         withCredentials: true,
       });
 
