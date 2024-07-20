@@ -6,4 +6,4 @@ COPY . /app
 
 RUN pip install -r requirements.txt
 
-CMD ["celery", "-A", "crypto_app", "beat", "l", "info"]
+CMD ["celery", "-A", "crypto_app", "beat", "-l", "info"]
