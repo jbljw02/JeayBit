@@ -12,16 +12,25 @@ app.config_from_object('django.conf:settings', namespace='CELERY')
 
 app.autodiscover_tasks()
 
+# SSL 설정 추가
+app.conf.update(
+    broker_url=os.getenv('REDIS_URL'),
+    broker_use_ssl={
+        'ssl_cert_reqs': None
+    },
+)
+
+
 # 주기적으로 실행할 작업 스케줄링
 app.conf.beat_schedule = {
     # 미체결 화폐 호가 비교
     'check-trade-history-5-seconds': {
         'task': 'app.tasks.check_trade_history',
-        'schedule': 5.0, # 5초 주기로 task를 실행
+        'schedule': 5.0,  # 5초 주기로 task를 실행
     },
     # celery 결과 정리
     'cleanup-task-results': {
-        'task': 'myapp.tasks.periodic_cleanup_task_results',
+        'task': 'app.tasks.periodic_cleanup_task_results',
         'schedule': crontab(hour=0, minute=0), # 매일 자정에 실행
     },
 }
