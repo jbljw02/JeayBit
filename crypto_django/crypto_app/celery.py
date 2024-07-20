@@ -2,6 +2,10 @@ from __future__ import absolute_import, unicode_literals
 import os
 from celery import Celery
 from celery.schedules import crontab
+from dotenv import load_dotenv
+
+dotenv_path = os.path.join(os.path.dirname(__file__), '..', '.env')
+load_dotenv(dotenv_path)
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'crypto_app.settings')
 
@@ -12,15 +16,14 @@ app.config_from_object('django.conf:settings', namespace='CELERY')
 
 app.autodiscover_tasks()
 
-# SSL 설정 추가
+redis_url = os.getenv('REDIS_URL')
+
 app.conf.update(
-    broker_url=os.getenv('REDIS_URL'),
+    broker_url=redis_url,
     broker_use_ssl={
-        'ssl_cert_reqs': None
+        'ssl_cert_reqs': 'none'  # SSL 인증서 검증을 비활성화
     },
 )
-
-
 # 주기적으로 실행할 작업 스케줄링
 app.conf.beat_schedule = {
     # 미체결 화폐 호가 비교

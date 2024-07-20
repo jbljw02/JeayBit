@@ -43,7 +43,7 @@ export default function TradeSection() {
 
     // 미체결 거래가 체결될 시 웹소켓을 통해 결과를 받음
     useEffect(() => {
-        const socket = new WebSocket('ws://localhost:8000/ws/trade_updates/');
+        const socket = new WebSocket('wss://https://jeaybit.onrender.com/ws/trade_updates/');
 
         socket.onmessage = function (e) {
             const data = JSON.parse(e.data);
