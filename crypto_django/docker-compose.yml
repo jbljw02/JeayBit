@@ -17,7 +17,7 @@ services:
   celery-beat:
     build:
       context: .
-      dockerfile: Dockerfile.celery.beat
+      dockerfile: Dockerfile.beat
     command: celery -A crypto_app beat -l info
     environment:
       - REDIS_URL=${REDIS_URL}
