@@ -13,8 +13,6 @@ services:
     command: celery -A crypto_app worker -l info
     env_file:
       - .env
-    volumes:
-      - ./crypto_django/db.sqlite3:/app/db.sqlite3
     depends_on:
       - redis
 
@@ -25,7 +23,5 @@ services:
     command: celery -A crypto_app beat -l info
     env_file:
       - .env
-    volumes:
-      - ./crypto_django/db.sqlite3:/app/db.sqlite3
     depends_on:
       - redis
