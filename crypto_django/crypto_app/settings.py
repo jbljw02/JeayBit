@@ -92,8 +92,7 @@ CHANNEL_LAYERS = {
     },
 }
 
-CSRF_COOKIE_NAME = 'csrftoken'
-CSRF_HEADER_NAME = 'X-CSRFToken'
+CSRF_TRUSTED_ORIGINS = ['https://jeaybit.onrender.com']
 
 ALLOWED_HOSTS = ['*']
 

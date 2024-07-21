@@ -45,17 +45,37 @@ export default function TradeSection() {
     useEffect(() => {
         const socket = new WebSocket('wss://jeaybit.onrender.com/ws/trade_updates/');
 
-        socket.onmessage = function (e) {
+        socket.onopen = () => {
+            console.log("WebSocket 연결 성공");
+        };
+
+        socket.onmessage = (e) => {
             const data = JSON.parse(e.data);
-            console.log("연결: ", data);
+            console.log("메시지 수신: ", data);
             const celeryMessage = data.message;
             setCeleryData({
                 name: celeryMessage.crypto_name,
                 tradeTime: celeryMessage.trade_time,
                 tradeCategory: celeryMessage.trade_category,
                 price: celeryMessage.crypto_price,
-            })
+            });
             setCeleryModal(true);
+        };
+
+        socket.onerror = (error) => {
+            console.log("WebSocket 에러: ", error);
+        };
+
+        socket.onclose = (event) => {
+            if (event.wasClean) {
+                console.log(`WebSocket 연결이 깨끗하게 종료됨, 코드=${event.code} 이유=${event.reason}`);
+            } else {
+                console.log('WebSocket 연결이 비정상적으로 종료됨');
+            }
+        };
+
+        return () => {
+            socket.close();
         };
     }, []);
 

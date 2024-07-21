@@ -6,7 +6,6 @@ logger = logging.getLogger(__name__)
 
 # 웹소켓 관리를 위한 클래스
 class TradeConsumer(AsyncWebsocketConsumer):
-    logger.info("동작")
     async def connect(self):
         await self.channel_layer.group_add("trade_updates", self.channel_name)
         await self.accept()
