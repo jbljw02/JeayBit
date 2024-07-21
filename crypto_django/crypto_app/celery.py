@@ -21,7 +21,7 @@ redis_url = os.getenv('REDIS_URL')
 app.conf.update(
     broker_url=redis_url,
     broker_use_ssl={
-        'ssl_cert_reqs': 'none'  # SSL 인증서 검증을 비활성화
+        'ssl_cert_reqs': 'none'
     },
 )
 # 주기적으로 실행할 작업 스케줄링

@@ -7,9 +7,12 @@ from dotenv import load_dotenv
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Load environment variables from the .env file
 env = environ.Env()
-environ.Env.read_env(os.path.join(BASE_DIR, 'crypto_django/.env'))
+dotenv_path = os.path.join(BASE_DIR, '.env')
+load_dotenv(dotenv_path)
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
@@ -65,13 +68,12 @@ SESSION_COOKIE_SECURE = False
 CSRF_COOKIE_SECURE = False
 X_FRAME_OPTIONS = 'DENY'
 
-CELERY_BROKER_URL = os.getenv('REDIS_URL')
+redis_url = env('REDIS_URL', default='')
 
-# 결과 백엔드로는 장고 DB를 사용
+CELERY_BROKER_URL = redis_url
 CELERY_RESULT_BACKEND = 'django-db'
 CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
 
-# 태스크 결과를 저장할 때 사용되는 직렬화 포맷
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_ACCEPT_CONTENT = ['json']
@@ -87,24 +89,21 @@ CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-             "hosts": [os.environ.get('REDIS_URL')],
+             "hosts": [redis_url],
         },
     },
 }
 
 CSRF_TRUSTED_ORIGINS = ['https://jeaybit.onrender.com']
 
-ALLOWED_HOSTS = ['*']
-
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOW_ALL_ORIGINS = True
 
-CORS_ALLOW_CREDENTIALS = True  # 서버가 클라이언트의 자격증명(예: 쿠키)를 받을 준비가 됨 - 클라이언트는 서버에 쿠키를 보낼 수 있음을 뜻함
 ROOT_URLCONF = 'crypto_app.urls'
 
 SESSION_COOKIE_NAME = 'sessionKey'
-SESSION_COOKIE_SAMESITE = 'None' # 'None': 모든 컨텍스트(다른 사이트)에서 쿠키 전송 가능
-SESSION_COOKIE_SECURE = True # 'True': HTTPS 연결시에만 쿠키 전송
+SESSION_COOKIE_SAMESITE = 'None'
+SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SAMESITE = 'Lax'
 CSRF_COOKIE_SECURE = True
 CSRF_COOKIE_HTTPONLY = True
@@ -112,15 +111,10 @@ CSRF_COOKIE_HTTPONLY = True
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 
 AUTHENTICATION_BACKENDS = [
-    # 'app.backends.EmailLogin',  # 커스텀 인증 방식을 사용
-    'django.contrib.auth.backends.ModelBackend',  # User 모델의 기본 인증 방식도 가능하도록 사용
-    # 'rest_framework.authentication.SessionAuthentication',
-    # 'rest_framework.authentication.BasicAuthentication',
-    # 'rest_framework.authentication.TokenAuthentication',
-    # "crypto_app.authmiddleware.CsrfExemptSessionAuthentication"
+    'django.contrib.auth.backends.ModelBackend',
 ]
 
-AUTH_USER_MODEL = 'app.CustomUser' # 기본적으로 User 모델이 아닌 CustomUser 모델을 참고하도록 설정
+AUTH_USER_MODEL = 'app.CustomUser'
 
 TEMPLATES = [
     {
@@ -140,35 +134,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'crypto_app.wsgi.application'
 
-# Database
-# https://docs.djangoproject.com/en/4.2/ref/settings/#databases
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
-
-# Password validation
-# https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
-
-AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
-]
-
-
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
@@ -179,12 +144,6 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_TZ = True
-
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/4.2/howto/static-files/
-
-STATIC_URL = '/static/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
