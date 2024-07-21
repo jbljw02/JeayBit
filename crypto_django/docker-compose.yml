@@ -14,7 +14,7 @@ services:
     env_file:
       - .env
     volumes:
-      - ./db.sqlite3:/app/db.sqlite3
+      - ./crypto_django/db.sqlite3:/app/db.sqlite3
     depends_on:
       - redis
 
@@ -26,6 +26,6 @@ services:
     env_file:
       - .env
     volumes:
-      - ./db.sqlite3:/app/db.sqlite3
+      - ./crypto_django/db.sqlite3:/app/db.sqlite3
     depends_on:
       - redis
