@@ -23,4 +23,4 @@ yarn-debug.log*
 yarn-error.log*
 
 /crypto_django/.env
-/crypto_djano/db.splite3
+/crypto_django/db.splite3
