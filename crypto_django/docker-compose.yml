@@ -11,13 +11,13 @@ services:
       context: .
       dockerfile: Dockerfile.celery
     command: celery -A crypto_app worker -l info
-    environment:
-      - REDIS_URL=${REDIS_URL}
+    env_file:
+      - .env
 
   celery-beat:
     build:
       context: .
       dockerfile: Dockerfile.beat
     command: celery -A crypto_app beat -l info
-    environment:
-      - REDIS_URL=${REDIS_URL}
+    env_file:
+      - .env
