@@ -19,7 +19,7 @@ export default function Header() {
 
   const logOut = async () => {
     try {
-      await axios.post("https://jeaybit.onrender.com/logOut/",
+      await axios.post("http://127.0.0.1:8000/logOut/",
         {},
         {
           withCredentials: true,

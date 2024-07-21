@@ -48,7 +48,7 @@ export default function LogIn() {
       setIsPasswordEmpty(false);
 
       const data = { email, password };
-      const response = await axios.post('https://jeaybit.onrender.com/logIn/', data, {
+      const response = await axios.post('http://127.0.0.1:8000/logIn/', data, {
         withCredentials: true,
       });
 
