@@ -16,6 +16,7 @@ def check_trade_history():
     trade_histories = TradeHistory.objects.filter(is_signed=False)
 
     if not trade_histories.exists():
+        logger.info(trade_histories)
         return "미체결 화폐가 없습니다."
 
     for trade_history in trade_histories:
