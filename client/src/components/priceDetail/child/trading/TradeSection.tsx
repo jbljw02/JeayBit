@@ -39,7 +39,7 @@ export default function TradeSection() {
         if (user.email && user.name) {
             getBalance(user.email);
         }
-    }, [user, getBalance]);
+    }, [user]);
 
     // 미체결 거래가 체결될 시 웹소켓을 통해 결과를 받음
     useEffect(() => {
