@@ -81,7 +81,7 @@ export default function SignUp() {
       setIsEmailDuplicate(false);
       setIsPasswordEmpty(false);
 
-      await axios.post('http://127.0.0.1:8000/sign_up/', data, {
+      await axios.post('https://jeaybit.onrender.com/sign_up/', data, {
         withCredentials: true,
       });
 

@@ -10,6 +10,7 @@ import requests
 from asgiref.sync import sync_to_async
 import aiohttp
 import logging
+from django.db.models import Prefetch
 
 logger = logging.getLogger(__name__)
 
@@ -130,6 +131,16 @@ class GetAllCryptoView(View):
                     data = await response2.json()
 
             all_crypto = []
+
+            # 로그인된 경우 UserCrypto 데이터를 미리 가져오기
+            if is_logged_in:
+                user_cryptos = await sync_to_async(list)(
+                    UserCrypto.objects.filter(user=request.user, crypto__name__in=name)
+                )
+                user_crypto_dict = {uc.crypto.name: uc for uc in user_cryptos}
+            else:
+                user_crypto_dict = {}
+
             for i in range(len(data)):
                 trade_price = data[i].get("trade_price")
                 change_price = data[i].get("change_price")
@@ -157,11 +168,7 @@ class GetAllCryptoView(View):
                 }
 
                 if is_logged_in:
-                    user_crypto_info = await sync_to_async(
-                        UserCrypto.objects.filter(
-                            user=request.user, crypto__name=name[i]
-                        ).first
-                    )()
+                    user_crypto_info = user_crypto_dict.get(name[i])
                     if user_crypto_info:
                         crypto_obj["is_favorited"] = user_crypto_info.is_favorited
                         crypto_obj["is_owned"] = user_crypto_info.is_owned
@@ -182,6 +189,7 @@ class GetAllCryptoView(View):
         }
 
         return JsonResponse(data, status=200)
+
 
 
 # 호가내역

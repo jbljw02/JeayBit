@@ -23,7 +23,7 @@ export default function ChartHeader() {
     const requestCandleMinute = useCallback(async (market: string, minute: string) => {
         if (minute && market) {
             try {
-                const response = await axios.get(`http://127.0.0.1:8000/candle_per_minute/?market=${market}&minute=${minute}`);
+                const response = await axios.get(`https://jeaybit.onrender.com/candle_per_minute/?market=${market}&minute=${minute}`);
                 dispatch(setCandlePerMinute(response.data));
             } catch (error) {
                 dispatch(setErrorModal(true));
@@ -36,7 +36,7 @@ export default function ChartHeader() {
     const requestCandleDate = useCallback(async (market: string) => {
         try {
             let response;
-            let url = "http://127.0.0.1:8000/";
+            let url = "https://jeaybit.onrender.com/";
 
             if (chartSortDate === "1일") {
                 url += `candle_per_date/?market=${market}`;
