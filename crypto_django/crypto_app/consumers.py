@@ -4,6 +4,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+
 # 웹소켓 관리를 위한 클래스
 class TradeConsumer(AsyncWebsocketConsumer):
     async def connect(self):
@@ -11,18 +12,16 @@ class TradeConsumer(AsyncWebsocketConsumer):
         await self.accept()
         logger.info("WebSocket 연결 및 그룹 추가")
 
-    async def disconnect(self):
+    async def disconnect(self, close_code):
         await self.channel_layer.group_discard("trade_updates", self.channel_name)
         logger.info("WebSocket 연결 해제 및 그룹 삭제")
 
-    async def receive(self):
+    async def receive(self, text_data):
         pass
 
     # 클라이언트에게 화폐가 거래 완료됐음을 알림
     async def send_trade_update(self, event):
-        message = event['message']
+        message = event["message"]
         logger.info(f"미체결 화폐 거래 완료: {message}")
-        
-        await self.send(text_data=json.dumps({
-            'message': message
-        }))
+
+        await self.send(text_data=json.dumps({"message": message}))
