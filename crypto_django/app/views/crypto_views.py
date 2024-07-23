@@ -191,7 +191,6 @@ class GetAllCryptoView(View):
         return JsonResponse(data, status=200)
 
 
-
 # 호가내역
 @api_view(["GET"])
 def asking_price(request):
