@@ -12,6 +12,8 @@ env = environ.Env()
 dotenv_path = os.path.join(BASE_DIR, ".env")
 load_dotenv(dotenv_path)
 
+os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = 'true'
+
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
