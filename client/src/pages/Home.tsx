@@ -17,13 +17,19 @@ import NoticeModal from '../components/modal/common/NoticeModal';
 import { RootState } from '../redux/store';
 import { setErrorModal } from '../redux/features/modalSlice';
 import '../styles/scrollbar/scrollbar.css'
+import LoadingSpinner from '../components/placeholder/LoadingSpinner';
+import CryptoHeader from '../components/cryptoDetail/CryptoHeader';
 
 export default function Home() {
     const dispatch = useDispatch();
 
-    const { checkLogin } = useFunction();
+    const { checkLogin, getAllCrypto, getTradeHistory } = useFunction();
 
     const errorModal = useSelector((state: RootState) => state.errorModal)
+    const user = useSelector((state: RootState) => state.user);
+    const allCrypto = useSelector((state: RootState) => state.allCrypto);
+    const candlePerDate = useSelector((state: RootState) => state.candlePerDate);
+    const candlePerMinute = useSelector((state: RootState) => state.candlePerMinute);
 
     // 초기 데이터를 비트코인으로 설정
     const getInitialData = async () => {
@@ -38,6 +44,25 @@ export default function Home() {
             throw error;
         }
     };
+
+    // 초기 렌더링시 화폐 정보를 받아오고, 주기적으로 업데이트
+    useEffect(() => {
+        getAllCrypto();
+
+        // getAllCrypto 함수를 2초마다 실행 - 서버에서 받아오는 값을 2초마다 갱신시킴
+        const interval = setInterval(() => {
+            getAllCrypto();
+        }, 2000);
+
+        return () => clearInterval(interval);
+    }, []);
+
+
+    useEffect(() => {
+        if (user.email) {
+            getTradeHistory(user.email);
+        }
+    }, [user]);
 
     // 마운트 초기에 사용자의 로그인 여부를 체크
     useEffect(() => {
@@ -78,6 +103,7 @@ export default function Home() {
                             </header>
                             <div className='contents-container'>
                                 <article className='cryptoDetail'>
+                                    <CryptoHeader />
                                     <CryptoDetail />
                                     <Chart />
                                 </article>

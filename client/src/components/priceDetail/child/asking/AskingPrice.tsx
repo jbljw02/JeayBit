@@ -6,6 +6,7 @@ import CustomScrollbars from "../../../scrollbar/CustomScorllbars";
 import AskingTitle from "./AskingTitle";
 import { AskingData } from "../../../../redux/features/askingSlice";
 import { RootState } from "../../../../redux/store";
+import SkeletonUI from "../../../placeholder/SkeletonUI";
 
 // bid = 매수, ask = 매도
 export default function AskingPrice() {
@@ -84,27 +85,32 @@ export default function AskingPrice() {
                                     </tr>
                                 </thead>
                             </table>
-                            <CustomScrollbars style={{ width: '100%', height: '335px' }}>
-                                <table className="asking-table">
-                                    <tbody>
-                                        <>
-                                            <AskingTable
-                                                differences={differences_bid}
-                                                size={totalBidSize}
-                                                category={'bid'} />
-                                            <AskingTable
-                                                differences={differences_ask}
-                                                size={totalAskSize}
-                                                category={'ask'} />
-                                        </>
-                                    </tbody>
-                                </table>
-                            </CustomScrollbars>
+                            {
+                                askingData.length ?
+                                    <CustomScrollbars style={{ width: '100%', height: '335px' }}>
+                                        <table className="asking-table">
+                                            <tbody>
+                                                <>
+                                                    <AskingTable
+                                                        differences={differences_bid}
+                                                        size={totalBidSize}
+                                                        category={'bid'} />
+                                                    <AskingTable
+                                                        differences={differences_ask}
+                                                        size={totalAskSize}
+                                                        category={'ask'} />
+                                                </>
+                                            </tbody>
+                                        </table>
+                                    </CustomScrollbars> :
+                                    <SkeletonUI
+                                        containerHeight="335px"
+                                        elementsHeight={20} />
+                            }
                         </> :
                         <div className="hide-element">...</div>
                 }
-            </div >
-
+            </div>
         </>
     )
 }

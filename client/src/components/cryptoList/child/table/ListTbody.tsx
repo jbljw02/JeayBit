@@ -34,19 +34,6 @@ export default function ListTbody() {
     // 화폐 가격의 변화를 저장
     const [differences, setDifferences] = useState<Differences[]>([]);
 
-    // 초기 렌더링시 화폐 정보를 받아오고, 주기적으로 업데이트
-    useEffect(() => {
-        getAllCrypto();
-
-        // getAllCrypto 함수를 2초마다 실행 - 서버에서 받아오는 값을 2초마다 갱신시킴
-        const interval = setInterval(() => {
-            getAllCrypto();
-        }, 2000);
-
-        // setInterval이 반환하는 interval ID를 clearInterval 함수로 제거
-        return () => clearInterval(interval);
-    }, []);
-
     useEffect(() => {
         const isFavorites = allCrypto.filter(item => item.is_favorited);
         const isOwnes = allCrypto.filter(item => item.is_owned && item.owned_quantity > 0.00);

@@ -81,12 +81,6 @@ export default function TradeHistory() {
         }
     }
 
-    useEffect(() => {
-        if (user.email) {
-            getTradeHistory(user.email);
-        }
-    }, [user]);
-
     return (
         <>
             <NoticeModal

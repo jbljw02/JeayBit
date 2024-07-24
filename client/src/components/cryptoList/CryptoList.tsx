@@ -6,14 +6,24 @@ import '../../styles/cryptoList/cryptoList.css'
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 import PlaceholderDisplay from "../placeholder/PlaceholderDisplay";
+import SkeletonUI from "../placeholder/SkeletonUI";
 
 export default function CryptoList() {
     const user = useSelector((state: RootState) => state.user);
     const listCategory = useSelector((state: RootState) => state.listCategory);
     const favoriteCrypto = useSelector((state: RootState) => state.favoriteCrypto);
     const ownedCrypto = useSelector((state: RootState) => state.ownedCrypto);
+    const allCrypto = useSelector((state: RootState) => state.allCrypto);
 
     const renderContent = () => {
+        if (!allCrypto.length) {
+            return <div style={{ height: '100%' }}>
+                <SkeletonUI
+                    containerHeight="100%"
+                    elementsHeight={30} />
+            </div>;
+        }
+
         if (user.name && user.email) {
             if (listCategory === '원화') {
                 return <ListTbody />;

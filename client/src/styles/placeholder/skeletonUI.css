@@ -1,0 +1,11 @@
+.skeleton-table {
+    display: flex;
+    flex-direction: column;
+    height: auto; 
+    margin: 8px 10px;
+    overflow: hidden;
+}
+
+.skeleton-table-row {
+    margin-bottom: 8px; 
+}

@@ -3,6 +3,7 @@ import formatCryptoDetail from "../../../utils/format/formatCryptoDetail";
 import { useEffect } from "react";
 import { RootState } from "../../../redux/store";
 import { setCryptoRealTime } from "../../../redux/features/selectedCryptoSlice";
+import SkeletonUI from "../../placeholder/SkeletonUI";
 
 type ChildParams = {
     title: string,
@@ -12,17 +13,23 @@ type ChildParams = {
 }
 
 function DetailContent({ title, value, suffix, category }: ChildParams) {
+    const cryptoRealTime = useSelector((state: RootState) => state.cryptoRealTime);
+
     return (
-        <dt>
-            {title}
-            <dd className={`${category === 'high' ? 'dd-high_price' : (
-                category === 'low' ? 'dd-low_price' :
-                    ''
-            )}`}>
-                {formatCryptoDetail(value)}
-                {suffix && <span>&nbsp;{suffix}</span>}
-            </dd>
-        </dt>
+        <>
+            {
+                <dt>
+                    {title}
+                    <dd className={`${category === 'high' ? 'dd-high_price' : (
+                        category === 'low' ? 'dd-low_price' :
+                            ''
+                    )}`}>
+                        {formatCryptoDetail(value)}
+                        {suffix && <span>&nbsp;{suffix}</span>}
+                    </dd>
+                </dt>
+            }
+        </>
     )
 }
 
@@ -38,7 +45,7 @@ export default function Summary() {
     }, [allCrypto]);
 
     return (
-        <>
+        <div className="div-dl">
             <dl>
                 <DetailContent
                     title="거래대금"
@@ -65,6 +72,6 @@ export default function Summary() {
                     value={cryptoRealTime.low_price}
                     category="low" />
             </dl>
-        </>
+        </div>
     );
 }
