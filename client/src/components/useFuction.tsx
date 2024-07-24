@@ -5,14 +5,22 @@ import { AskingData, setAskingData, setTotalAskSize, setTotalBidSize, setClosedD
 import { setAllCrypto, OwnedCrypto } from "../redux/features/cryptoListSlice";
 import { setSelectedCrypto } from "../redux/features/selectedCryptoSlice";
 import { setUserTradeHistory, setUserTradeHistory_unSigned } from "../redux/features/tradeSlice";
-import { setUserWallet } from "../redux/features/walletSlice";
+import { setFailTransfer, setSuccessTransfer, setUserWallet } from "../redux/features/walletSlice";
 import { RootState } from "../redux/store";
 import { setErrorModal } from "../redux/features/modalSlice";
+import { useCallback } from "react";
+import { setCandlePerMinute, setCandlePerDate } from "../redux/features/chartSlice";
+import NoticeModal from "./modal/common/NoticeModal";
 
 export default function useFunction() {
   const dispatch = useDispatch();
 
   const selectedCrypto = useSelector((state: RootState) => state.selectedCrypto);
+  const chartSortDate = useSelector((state: RootState) => state.chartSortDate);
+  const successTransfer = useSelector((state: RootState) => state.successTransfer);
+  const failTransfer = useSelector((state: RootState) => state.failTransfer);
+  const transferCategory = useSelector((state: RootState) => state.transferCategory);
+
 
   const checkLogin = async () => {
     try {
@@ -186,6 +194,67 @@ export default function useFunction() {
     }
   };
 
+  // 리스트에서 화폐를 선택하면 해당 화폐에 대한 캔들 호출(차트의 분에 따라)
+  const requestCandleMinute = useCallback(async (market: string, minute: string) => {
+    if (minute && market) {
+      try {
+        const response = await axios.get(`https://jeaybit.onrender.com/candle_per_minute/?market=${market}&minute=${minute}`);
+        dispatch(setCandlePerMinute(response.data));
+      } catch (error) {
+        dispatch(setErrorModal(true));
+        throw error;
+      }
+    }
+  }, [dispatch]);
+
+  // 리스트에서 화폐를 선택하면 해당 화폐에 대한 캔들 호출(차트의 일/주/월에 따라)
+  const requestCandleDate = useCallback(async (market: string) => {
+    try {
+      let response;
+      let url = "https://jeaybit.onrender.com/";
+
+      if (chartSortDate === "1일") {
+        url += `candle_per_date/?market=${market}`;
+        response = await axios.get(url);
+        dispatch(setCandlePerDate(response.data));
+      } else if (chartSortDate === "1주") {
+        url += `candle_per_week/?market=${market}`;
+        response = await axios.get(url);
+        dispatch(setCandlePerDate(response.data));
+      } else if (chartSortDate === "1개월") {
+        url += `candle_per_month/?market=${market}`;
+        response = await axios.get(url);
+        dispatch(setCandlePerDate(response.data));
+      }
+    } catch (error) {
+      dispatch(setErrorModal(true));
+      throw error;
+    }
+  }, [chartSortDate, dispatch]);
+
+  // 입/출금 완료 시 띄울 모달 결정
+  const renderTransferModal = () => {
+    if (successTransfer) {
+      return (
+        <NoticeModal
+          isModalOpen={successTransfer}
+          setIsModalOpen={() => dispatch(setSuccessTransfer(false))}
+          content={`${transferCategory === 'deposit' ? '입금' : '출금'}이 성공적으로 완료되었습니다.`} />
+      );
+    }
+    if (failTransfer) {
+      return (
+        <NoticeModal
+          isModalOpen={failTransfer}
+          setIsModalOpen={() => dispatch(setFailTransfer(false))}
+          content={`${transferCategory === 'deposit' ? '입금' : '출금'}에 실패했습니다.`} />
+      );
+    }
+
+    return null;
+  };
+
+
   return {
     checkLogin,
     getAllCrypto,
@@ -195,6 +264,9 @@ export default function useFunction() {
     getTradeHistory,
     selectAskingPrice,
     selectClosedPrice,
+    requestCandleMinute,
+    requestCandleDate,
+    renderTransferModal
   };
 
 }

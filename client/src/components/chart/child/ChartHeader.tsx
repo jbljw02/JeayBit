@@ -4,58 +4,21 @@ import axios from "axios";
 import { RootState } from "../../../redux/store";
 import { setCandlePerDate, setCandlePerMinute, setChartSortDate, setChartSortTime } from "../../../redux/features/chartSlice";
 import { setErrorModal } from "../../../redux/features/modalSlice";
+import useFunction from "../../useFuction";
 
 export default function ChartHeader() {
     const dispatch = useDispatch();
 
+    const { requestCandleMinute, requestCandleDate } = useFunction();
+
     const delimitedTime = useSelector((state: RootState) => state.delimitedTime);
     const delimitedDate = useSelector((state: RootState) => state.delimitedDate);
-
     const chartSortTime = useSelector((state: RootState) => state.chartSortTime);
     const chartSortDate = useSelector((state: RootState) => state.chartSortDate);
-
     const cryptoRealTime = useSelector((state: RootState) => state.cryptoRealTime);
 
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const dropdownRef = useRef<HTMLLabelElement>(null);
-
-    // 리스트에서 화폐를 선택하면 해당 화폐에 대한 캔들 호출(차트의 분에 따라)
-    const requestCandleMinute = useCallback(async (market: string, minute: string) => {
-        if (minute && market) {
-            try {
-                const response = await axios.get(`https://jeaybit.onrender.com/candle_per_minute/?market=${market}&minute=${minute}`);
-                dispatch(setCandlePerMinute(response.data));
-            } catch (error) {
-                dispatch(setErrorModal(true));
-                throw error;
-            }
-        }
-    }, [dispatch]);
-
-    // 리스트에서 화폐를 선택하면 해당 화폐에 대한 캔들 호출(차트의 일/주/월에 따라)
-    const requestCandleDate = useCallback(async (market: string) => {
-        try {
-            let response;
-            let url = "https://jeaybit.onrender.com/";
-
-            if (chartSortDate === "1일") {
-                url += `candle_per_date/?market=${market}`;
-                response = await axios.get(url);
-                dispatch(setCandlePerDate(response.data));
-            } else if (chartSortDate === "1주") {
-                url += `candle_per_week/?market=${market}`;
-                response = await axios.get(url);
-                dispatch(setCandlePerDate(response.data));
-            } else if (chartSortDate === "1개월") {
-                url += `candle_per_month/?market=${market}`;
-                response = await axios.get(url);
-                dispatch(setCandlePerDate(response.data));
-            }
-        } catch (error) {
-            dispatch(setErrorModal(true));
-            throw error;
-        }
-    }, [chartSortDate, dispatch]);
 
     const clickChartSortTime = (value: string) => {
         dispatch(setChartSortTime(value));
@@ -71,7 +34,8 @@ export default function ChartHeader() {
     useEffect(() => {
         if (chartSortTime && cryptoRealTime.market) {
             requestCandleMinute(cryptoRealTime.market, chartSortTime);
-        } else if (chartSortDate && !chartSortTime && cryptoRealTime.market) {
+        }
+        else if (chartSortDate && !chartSortTime && cryptoRealTime.market) {
             requestCandleDate(cryptoRealTime.market);
         }
     }, [cryptoRealTime, chartSortTime, chartSortDate, requestCandleDate, requestCandleMinute]);

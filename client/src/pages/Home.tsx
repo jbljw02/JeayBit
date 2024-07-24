@@ -17,19 +17,24 @@ import NoticeModal from '../components/modal/common/NoticeModal';
 import { RootState } from '../redux/store';
 import { setErrorModal } from '../redux/features/modalSlice';
 import '../styles/scrollbar/scrollbar.css'
-import LoadingSpinner from '../components/placeholder/LoadingSpinner';
 import CryptoHeader from '../components/cryptoDetail/CryptoHeader';
+import WorkingSpinnerModal from '../components/modal/trade/WorkingSpinnerModal';
+import { setWorkingSpinner } from '../redux/features/placeholderSlice';
 
 export default function Home() {
     const dispatch = useDispatch();
 
-    const { checkLogin, getAllCrypto, getTradeHistory } = useFunction();
+    const { checkLogin,
+        getAllCrypto,
+        getTradeHistory,
+        selectAskingPrice,
+        selectClosedPrice,
+        renderTransferModal } = useFunction();
 
     const errorModal = useSelector((state: RootState) => state.errorModal)
     const user = useSelector((state: RootState) => state.user);
-    const allCrypto = useSelector((state: RootState) => state.allCrypto);
-    const candlePerDate = useSelector((state: RootState) => state.candlePerDate);
-    const candlePerMinute = useSelector((state: RootState) => state.candlePerMinute);
+    const selectedCrypto = useSelector((state: RootState) => state.selectedCrypto);
+    const workingSpinner = useSelector((state: RootState) => state.workingSpinner);
 
     // 초기 데이터를 비트코인으로 설정
     const getInitialData = async () => {
@@ -49,13 +54,15 @@ export default function Home() {
     useEffect(() => {
         getAllCrypto();
 
-        // getAllCrypto 함수를 2초마다 실행 - 서버에서 받아오는 값을 2초마다 갱신시킴
+        // 2초마다 실행 - 서버에서 받아오는 값을 2초마다 갱신시킴
         const interval = setInterval(() => {
             getAllCrypto();
+            selectClosedPrice(selectedCrypto.market);
+            selectAskingPrice(selectedCrypto.market);
         }, 2000);
 
         return () => clearInterval(interval);
-    }, []);
+    }, [selectedCrypto]);
 
 
     useEffect(() => {
@@ -90,10 +97,14 @@ export default function Home() {
 
     return (
         <div className="container">
+            <WorkingSpinnerModal
+                isModalOpen={workingSpinner}
+                setIsModalOpen={() => dispatch(setWorkingSpinner(false))} />
             <NoticeModal
                 isModalOpen={errorModal}
                 setIsModalOpen={() => dispatch(setErrorModal(false))}
-                content='네트워크 오류가 발생했습니다. 잠시 후 다시 시도해주세요.' />
+                content='서버 연결이 불안정합니다. 잠시 후 다시 시도해주세요.' />
+            {renderTransferModal()}
             <BrowserRouter>
                 <Routes>
                     <Route path="/" element={

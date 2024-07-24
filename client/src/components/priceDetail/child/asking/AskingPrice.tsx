@@ -7,9 +7,11 @@ import AskingTitle from "./AskingTitle";
 import { AskingData } from "../../../../redux/features/askingSlice";
 import { RootState } from "../../../../redux/store";
 import SkeletonUI from "../../../placeholder/SkeletonUI";
+import LoadingSpinner from "../../../placeholder/LoadingSpinner";
 
 // bid = 매수, ask = 매도
 export default function AskingPrice() {
+    const askingSpinner = useSelector((state: RootState) => state.askingSpinner);
     const askingData = useSelector((state: RootState) => state.askingData);
     const totalAskSize = useSelector((state: RootState) => state.totalAskSize);
     const totalBidSize = useSelector((state: RootState) => state.totalBidSize);
@@ -85,28 +87,37 @@ export default function AskingPrice() {
                                     </tr>
                                 </thead>
                             </table>
-                            {
-                                askingData.length ?
-                                    <CustomScrollbars style={{ width: '100%', height: '335px' }}>
-                                        <table className="asking-table">
-                                            <tbody>
-                                                <>
-                                                    <AskingTable
-                                                        differences={differences_bid}
-                                                        size={totalBidSize}
-                                                        category={'bid'} />
-                                                    <AskingTable
-                                                        differences={differences_ask}
-                                                        size={totalAskSize}
-                                                        category={'ask'} />
-                                                </>
-                                            </tbody>
-                                        </table>
-                                    </CustomScrollbars> :
-                                    <SkeletonUI
-                                        containerHeight="335px"
-                                        elementsHeight={20} />
-                            }
+                            <div style={{ height: '335px' }}>
+                                {
+                                    askingSpinner ?
+                                        <LoadingSpinner
+                                            containerHeight={'100%'}
+                                            size={40} /> :
+                                        (
+                                            askingData.length ?
+                                                <CustomScrollbars style={{ width: '100%', height: '100%' }}>
+                                                    <table className="asking-table">
+                                                        <tbody>
+                                                            <>
+                                                                <AskingTable
+                                                                    differences={differences_bid}
+                                                                    size={totalBidSize}
+                                                                    category={'bid'} />
+                                                                <AskingTable
+                                                                    differences={differences_ask}
+                                                                    size={totalAskSize}
+                                                                    category={'ask'} />
+                                                            </>
+                                                        </tbody>
+                                                    </table>
+                                                </CustomScrollbars> :
+                                                <SkeletonUI
+                                                    containerHeight="335px"
+                                                    elementsHeight={20} />
+                                        )
+                                }
+                            </div>
+
                         </> :
                         <div className="hide-element">...</div>
                 }

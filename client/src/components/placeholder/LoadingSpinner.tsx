@@ -5,13 +5,19 @@ const loaderStyle = {
     border: '3px solid #585858'
 }
 
-export default function LoadingSpinner() {
+type LoadingSpinnerProps = {
+    containerHeight: string,
+    size: number,
+}
 
+export default function LoadingSpinner({ containerHeight, size }: LoadingSpinnerProps) {
     return (
-        <div className="spinner-container">
-            <ClipLoader 
-                color="#585858" 
-                size={60} 
+        <div
+            className="loading-spinner-container"
+            style={{ height: containerHeight }}>
+            <ClipLoader
+                color="#585858"
+                size={size}
                 loading={true}
                 cssOverride={loaderStyle}
             />

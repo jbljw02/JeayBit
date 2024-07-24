@@ -13,6 +13,7 @@ import tradeReducers from './features/tradeSlice';
 import userCryptoReducers from './features/userCryptoSlice';
 import walletReducers from './features/walletSlice';
 import modalReducers from './features/modalSlice';
+import placeholderReducers from './features/placeholderSlice';
 
 export type RootState = {
   filteredData: Crypto[],
@@ -30,6 +31,7 @@ export type RootState = {
   chartSortTime: ChartSortTime,
   favoriteCrypto: Crypto[],
   ownedCrypto: Crypto[],
+  walletHover: boolean,
   userWallet: number,
   buyingPrice: number,
   balanceUpdate: boolean,
@@ -38,6 +40,9 @@ export type RootState = {
   userTradeHistory: UserTradeHistory[],
   userTradeHistory_unSigned: UserTradeHistory[],
   transferSort: string,
+  successTransfer: boolean,
+  failTransfer: boolean,
+  transferCategory: string,
   askHide: boolean,
   closeHide: boolean,
   listCategory: ListCategory,
@@ -48,6 +53,8 @@ export type RootState = {
   sortStates: number[],
   cryptoRealTime: Crypto,
   errorModal: boolean,
+  askingSpinner: boolean,
+  workingSpinner: boolean,
 }
 
 const combinedReducer = combineReducers({
@@ -77,10 +84,16 @@ const combinedReducer = combineReducers({
   favoriteCrypto: userCryptoReducers.favoriteCrypto,
   ownedCrypto: userCryptoReducers.ownedCrypto,
   user: userReducers.user,
+  walletHover: walletReducers.walletHover,
   userWallet: walletReducers.userWallet,
   balanceUpdate: walletReducers.balanceUpdate,
   transferSort: walletReducers.transferSort,
+  successTransfer: walletReducers.successTransfer,
+  failTransfer: walletReducers.failTransfer,
+  transferCategory: walletReducers.transferCategory,
   errorModal: modalReducers.errorModal,
+  askingSpinner: placeholderReducers.askingSpinner,
+  workingSpinner: placeholderReducers.workingSpinner,
 });
 
 export const makeStore = () => {

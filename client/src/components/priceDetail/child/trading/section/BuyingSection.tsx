@@ -16,6 +16,9 @@ import WaitingModal from "../../../../modal/trade/WatingModal";
 import { bidSortOptions } from "../TradeSection";
 import { setBuyingPrice } from "../../../../../redux/features/tradeSlice";
 import { RootState } from "../../../../../redux/store";
+import WorkingSpinner from "../../../../modal/trade/WorkingSpinnerModal";
+import { setWorkingSpinner } from "../../../../../redux/features/placeholderSlice";
+import NoticeModal from "../../../../modal/common/NoticeModal";
 
 export default function BuyingSection() {
     const dispatch = useDispatch();
@@ -166,7 +169,8 @@ export default function BuyingSection() {
             setIsExceedWallet(true);
             return;
         }
-        setIsExceedWallet(false);
+
+        dispatch(setWorkingSpinner(true));
 
         const addTradeResCode = await addTradeHistory(
             user.email,
@@ -184,7 +188,9 @@ export default function BuyingSection() {
         await getTradeHistory(user.email);
         await getOwnedCrypto(user.email);
         await getBalance(user.email);
-        await getAllCrypto();
+        // await getAllCrypto();
+
+        dispatch(setWorkingSpinner(false));
 
         if (addTradeResCode === 200) {
             resetValue();
@@ -197,6 +203,7 @@ export default function BuyingSection() {
         else {
             setFailedModalOpen(true);
         }
+
     };
 
     // 지정가 매수 요청
@@ -223,6 +230,10 @@ export default function BuyingSection() {
                 isModalOpen={watingModalOpen}
                 setIsModalOpen={setWatingModalOpen}
                 category="buy" />
+            <NoticeModal
+                isModalOpen={isExceedWallet}
+                setIsModalOpen={setIsExceedWallet}
+                content="주문 총액이 잔고 보유량을 초과했습니다." />
             {
                 // 매수 - 지정가 영역
                 bidSort === '지정가' ?
@@ -285,15 +296,6 @@ export default function BuyingSection() {
                                             suffix="KRW" />
                                     </td>
                                 </tr>
-                                {
-                                    isExceedWallet ?
-                                        <tr>
-                                            <td></td>
-                                            <td>
-                                            </td>
-                                        </tr> :
-                                        null
-                                }
                             </tbody>
                         </table>
                     </div > :

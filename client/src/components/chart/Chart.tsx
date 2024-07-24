@@ -8,14 +8,18 @@ import '../../styles/chart/chart.css'
 export default function Chart() {
     const candlePerDate = useSelector((state: RootState) => state.candlePerDate);
     const candlePerMinute = useSelector((state: RootState) => state.candlePerMinute);
+    const askingSpinner = useSelector((state: RootState) => state.askingSpinner);
 
     return (
         <div className="chart-container">
             <ChartHeader />
             {
-                candlePerDate.length || candlePerMinute.length ?
+                // 캔들의 값이 존재하지 않거나, fetch중일 때는 스피너 출력
+                (candlePerDate.length || candlePerMinute.length) && !askingSpinner ?
                     <ApexChart /> :
-                    <LoadingSpinner />
+                    <LoadingSpinner
+                        containerHeight={'60%'}
+                        size={60} />
             }
         </div>
     )

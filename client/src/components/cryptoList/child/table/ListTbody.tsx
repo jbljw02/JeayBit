@@ -10,6 +10,7 @@ import { RootState } from "../../../../redux/store";
 import { setFavoriteCrypto, setOwnedCrypto } from "../../../../redux/features/userCryptoSlice";
 import { setCryptoRealTime, setSelectedCrypto } from "../../../../redux/features/selectedCryptoSlice";
 import { Crypto } from "../../../../redux/features/cryptoListSlice";
+import { setAskingSpinner } from "../../../../redux/features/placeholderSlice";
 
 type Differences = {
     name: string;
@@ -20,14 +21,18 @@ type Differences = {
 export default function ListTbody() {
     const dispatch = useDispatch();
 
-    const { getAllCrypto } = useFunction();
+    const { getAllCrypto,
+        selectAskingPrice,
+        selectClosedPrice,
+        requestCandleMinute,
+        requestCandleDate } = useFunction();
 
     const filteredData = useSelector((state: RootState) => state.filteredData);
     const listCategory = useSelector((state: RootState) => state.listCategory);
     const allCrypto = useSelector((state: RootState) => state.allCrypto);
-    const favoriteCrypto = useSelector((state: RootState) => state.favoriteCrypto);
-    const ownedCrypto = useSelector((state: RootState) => state.ownedCrypto);
     const user = useSelector((state: RootState) => state.user);
+    const chartSortTime = useSelector((state: RootState) => state.chartSortTime);
+    const chartSortDate = useSelector((state: RootState) => state.chartSortDate);
 
     // 화폐 가격을 업데이트 하기 전에 해당 state에 담음
     const [prevData, setPrevData] = useState<Record<string, number> | undefined>(undefined);
@@ -100,9 +105,24 @@ export default function ListTbody() {
     };
 
     // 특정 화폐를 클릭했을 때
-    const cryptoClick = (value: Crypto) => {
+    const cryptoClick = async (value: Crypto) => {
+        // 스피너 생성
+        dispatch(setAskingSpinner(true));
+
         dispatch(setSelectedCrypto(value));
         dispatch(setCryptoRealTime(value));
+        await selectClosedPrice(value.market);
+        await selectAskingPrice(value.market);
+
+        if (chartSortTime && value.market) {
+            requestCandleMinute(value.market, chartSortTime);
+        }
+        else if (chartSortDate && !chartSortTime && value.market) {
+            requestCandleDate(value.market);
+        }
+
+        // 스피너 소멸
+        dispatch(setAskingSpinner(false));
     }
 
     return (

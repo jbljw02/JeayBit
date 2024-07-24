@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import FaviconTitle from "./child/FaviconTitle";
@@ -7,8 +7,10 @@ import FormInput from "../input/FormInput";
 import formValueChange from "../../utils/formValueChange";
 import SignUpModal from "../modal/SignUpModal";
 import HeaderNav from "../../header/HeaderNav";
-import AuthButton from "../button/AuthButton";
+import LoadingBar, { LoadingBarRef } from 'react-top-loading-bar';
 import '../../styles/auth/signUp.css'
+import AuthButton from "./child/AuthButton";
+import AuthFooter from "./child/AuthFooter";
 
 export default function SignUp() {
   const navigate = useNavigate();
@@ -31,6 +33,8 @@ export default function SignUp() {
   const [invalidSubmit, setInvalidSubmit] = useState<boolean>(false);
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
   const [signUpModal, setSignUpModal] = useState<boolean>(false);
+
+  const loadingBarRef = useRef<LoadingBarRef>(null);
 
   const emailPattern = /^[A-Za-z0-9_\.\-]+@[A-Za-z0-9\-]+\.[A-Za-z]{2,}$/;
   const passwordPattern = /^(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
@@ -75,6 +79,10 @@ export default function SignUp() {
       password: password,
     }
 
+    if (loadingBarRef.current) {
+      loadingBarRef.current.continuousStart();
+    }
+
     try {
       setIsNameEmpty(false);
       setIsEmailEmpty(false);
@@ -108,11 +116,16 @@ export default function SignUp() {
           setIsEmailDuplicate(true);
         }
       }
+    } finally {
+      if (loadingBarRef.current) {
+        loadingBarRef.current.complete();
+      }
     }
   }
 
   return (
     <>
+      <LoadingBar color="#22ab94" ref={loadingBarRef} />
       <SignUpModal
         isModalOpen={signUpModal}
         setIsModalOpen={setSignUpModal} />
@@ -200,7 +213,9 @@ export default function SignUp() {
           </div>
           <AuthButton
             label="회원가입" />
-          <span onClick={() => { navigate('/logIn') }} className="signUp-footer">이미 계정이 있으신가요?</span>
+          <AuthFooter
+            label="이미 계정이 있으신가요?"
+            navigateString="/logIn" />
         </form>
       </div>
     </>

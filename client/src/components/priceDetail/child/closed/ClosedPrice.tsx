@@ -7,8 +7,10 @@ import CustomScrollbars from "../../../scrollbar/CustomScorllbars";
 import AskingTitle from "../asking/AskingTitle";
 import { useState } from "react";
 import SkeletonUI from "../../../placeholder/SkeletonUI";
+import LoadingSpinner from "../../../placeholder/LoadingSpinner";
 
 export default function ClosedPrice() {
+    const askingSpinner = useSelector((state: RootState) => state.askingSpinner);
     const askingData = useSelector((state: RootState) => state.askingData);
     const closedData = useSelector((state: RootState) => state.closedData);
     const selectedCrypto = useSelector((state: RootState) => state.selectedCrypto);
@@ -32,46 +34,54 @@ export default function ClosedPrice() {
                                         <th>
                                             체결량
                                             <span>
-                                                {
+                                                ({
                                                     selectedCrypto && selectedCrypto.market &&
                                                     (selectedCrypto.market).slice(4)
-                                                }
+                                                })
                                             </span>
                                         </th>
                                     </tr>
                                 </thead>
                             </table>
-                            {
-                                askingData.length ?
-                                    <CustomScrollbars style={{ width: '100%', height: '335px' }}>
-                                        <table className="asking-table">
-                                            <tbody>
-                                                {
-                                                    closedData.map((item, i) => {
-                                                        const trade_time = convertToDate(item.timestamp)
-                                                        const str_trade_volume = adjustSize(item.trade_volume);
+                            <div style={{ height: '335px' }}>
+                                {
+                                    askingSpinner ?
+                                        <LoadingSpinner
+                                            containerHeight={"100%"}
+                                            size={40} /> :
+                                        (
 
-                                                        return (
-                                                            <tr key={i}>
-                                                                <td>{trade_time}</td>
-                                                                <td>{(item.trade_price).toLocaleString()}</td>
-                                                                {
-                                                                    item.ask_bid === 'BID' ?
-                                                                        <td className="td-rise">{str_trade_volume}</td> :
-                                                                        <td className="td-fall">{str_trade_volume}</td>
-                                                                }
-                                                            </tr>
-                                                        )
-                                                    }
-                                                    )
-                                                }
-                                            </tbody>
-                                        </table>
-                                    </CustomScrollbars> :
-                                    <SkeletonUI
-                                        containerHeight="335px"
-                                        elementsHeight={20} />
-                            }
+                                            askingData.length ?
+                                                <CustomScrollbars style={{ width: '100%', height: '100%' }}>
+                                                    <table className="asking-table">
+                                                        <tbody>
+                                                            {
+                                                                closedData.map((item, i) => {
+                                                                    const trade_time = convertToDate(item.timestamp);
+                                                                    const str_trade_volume = adjustSize(item.trade_volume);
+
+                                                                    return (
+                                                                        <tr key={i}>
+                                                                            <td>{trade_time}</td>
+                                                                            <td>{(item.trade_price).toLocaleString()}</td>
+                                                                            {
+                                                                                item.ask_bid === 'BID' ?
+                                                                                    <td className="td-rise">{str_trade_volume}</td> :
+                                                                                    <td className="td-fall">{str_trade_volume}</td>
+                                                                            }
+                                                                        </tr>
+                                                                    )
+                                                                })
+                                                            }
+                                                        </tbody>
+                                                    </table>
+                                                </CustomScrollbars> :
+                                                <SkeletonUI
+                                                    containerHeight="335px"
+                                                    elementsHeight={20} />
+                                        )
+                                }
+                            </div>
                         </> :
                         <div className="hide-element">...</div>
                 }

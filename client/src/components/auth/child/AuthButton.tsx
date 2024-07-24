@@ -1,4 +1,4 @@
-import '../../styles/auth/authButton.css'
+import '../../../styles/auth/authButton.css'
 
 export default function AuthButton({ label }: { label: string }) {
     return (

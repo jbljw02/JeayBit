@@ -11,6 +11,7 @@ import NoticeModal from "../../../../modal/common/NoticeModal";
 import PlaceholderDisplay from "../../../../placeholder/PlaceholderDisplay";
 import { RootState } from "../../../../../redux/store";
 import { setScheduledCancel } from "../../../../../redux/features/tradeSlice";
+import { setWorkingSpinner } from "../../../../../redux/features/placeholderSlice";
 
 export default function TradeHistory() {
     const dispatch = useDispatch();
@@ -62,7 +63,13 @@ export default function TradeHistory() {
     const cancelSubmit = async () => {
         let ids: string[] = scheduledCancel.map(item => item.id);
         if (ids.length > 0) {
+            dispatch(setWorkingSpinner(true));
+
             await cancelOrder(user.email, ids);
+            await getTradeHistory(user.email);
+
+            dispatch(setWorkingSpinner(false));
+            
             setCancelCompleteModal(true);
         }
     }
@@ -74,7 +81,6 @@ export default function TradeHistory() {
                 ids: ids,
                 email: email,
             });
-            getTradeHistory(user.email);
             dispatch(setScheduledCancel([]));
         } catch (error) {
             throw error;
