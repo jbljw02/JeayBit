@@ -19,7 +19,6 @@ import { setErrorModal } from '../redux/features/modalSlice';
 import CryptoHeader from '../components/cryptoDetail/CryptoHeader';
 import WorkingSpinnerModal from '../components/modal/trade/WorkingSpinnerModal';
 import { setWorkingSpinner } from '../redux/features/placeholderSlice';
-import '../styles/scrollbar/scrollbar.css'
 
 export default function Home() {
     const dispatch = useDispatch();
