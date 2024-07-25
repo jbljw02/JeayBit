@@ -157,32 +157,11 @@
     font-size: 11px;
 }
 
-.td-rise {
-    color: #22ab94;
-}
-
-.td-fall {
-    color: #f23645;
-}
-
-.td-even {
-    color: black;
-}
-
-.change-bid {
+.change-price {
     font-weight: bold;
-    color: #22ab94;
+    text-decoration: underline;
 }
 
-.change-ask {
+.change-etc {
     font-weight: bold;
-    color: #f23645;
-}
-
-.asking-buy {
-    color: #22ab94;
-}
-
-.asking-sell {
-    color: #f23645;
 }

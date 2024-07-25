@@ -20,7 +20,6 @@ export default function Header() {
 
   const loadingBarRef = useRef<LoadingBarRef>(null);
 
-
   const logOut = async () => {
     if (loadingBarRef.current) {
       loadingBarRef.current.continuousStart();

@@ -38,10 +38,9 @@ export default function WorkingSpinner({ isModalOpen, setIsModalOpen }: ModalPro
                 color="#ffffff"
                 size={80}
                 loading={true}
-                cssOverride={loaderStyle}
-            />
+                cssOverride={loaderStyle} />
             <div className="working-spinner-msg">
-                <div className="msg-title">작업을 처리중입니다</div>
+                <div className="msg-title">요청하신 작업을 처리중이에요</div>
                 <div className="msg-content">새로고침을 하시거나 페이지를 이탈하시면 작업이 취소될 수 있습니다. 잠시만 기다려 주세요.</div>
             </div>
         </Modal>

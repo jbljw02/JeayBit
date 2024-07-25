@@ -36,13 +36,17 @@ def add_favoriteCrypto_to_user(request):
 
         user_crypto.save()
 
-        return Response(
-            {"add_favoriteCrypto_to_user": "화폐-유저 정보 저장 완료"}, status=200
-        )
+        # 유저의 관심 화폐 목록을 가져옴
+        favorite_cryptos = UserCrypto.objects.filter(user=user, is_favorited=True)
+        favorite_crypto_names = [uc.crypto.name for uc in favorite_cryptos]
+
+        return Response({"favorite_crypto": favorite_crypto_names}, status=200)
     except CustomUser.DoesNotExist:
         return Response(
             {"error": "해당 이메일의 사용자가 존재하지 않습니다"}, status=400
         )
+    except Crypto.DoesNotExist:
+        return Response({"error": "해당 이름의 화폐가 존재하지 않습니다"}, status=400)
 
 
 # 클라이언트에게 UserCrypto 테이블에 있는 사용자에 따른 화폐의 관심 여부를 전달
@@ -50,7 +54,7 @@ def add_favoriteCrypto_to_user(request):
 def get_user_favoriteCrypto(request):
     try:
         email = request.data.get("email")
-        
+
         # 매개변수로 받은 이메일과 일치하는 값을 테이블에서 찾음
         user = CustomUser.objects.get(email=email)
         # 이메일이 일치하고 관심여부가 True인 행을 찾음

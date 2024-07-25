@@ -4,7 +4,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import LogIn from '../components/auth/LogIn';
 import PriceDetail from '../components/priceDetail/PriceDetail';
 import SignUp from '../components/auth/SignUp';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Chart from '../components/chart/Chart';
 import CryptoDetail from '../components/cryptoDetail/CryptoDetail';
@@ -29,12 +29,20 @@ export default function Home() {
         getTradeHistory,
         selectAskingPrice,
         selectClosedPrice,
+        requestCandleMinute,
+        requestCandleDate,
         renderTransferModal } = useFunction();
 
     const errorModal = useSelector((state: RootState) => state.errorModal)
     const user = useSelector((state: RootState) => state.user);
     const selectedCrypto = useSelector((state: RootState) => state.selectedCrypto);
     const workingSpinner = useSelector((state: RootState) => state.workingSpinner);
+    const chartSortTime = useSelector((state: RootState) => state.chartSortTime);
+    const chartSortDate = useSelector((state: RootState) => state.chartSortDate);
+
+    const selectedCryptoRef = useRef(selectedCrypto);
+    const chartSortTimeRef = useRef(chartSortTime);
+    const chartSortDateRef = useRef(chartSortDate);
 
     // 초기 데이터를 비트코인으로 설정
     const getInitialData = async () => {
@@ -50,20 +58,32 @@ export default function Home() {
         }
     };
 
+    // 상태 값이 변경될 때마다 ref에 최신 값 저장
+    useEffect(() => {
+        selectedCryptoRef.current = selectedCrypto;
+        chartSortTimeRef.current = chartSortTime;
+        chartSortDateRef.current = chartSortDate;
+    }, [selectedCrypto, chartSortTime, chartSortDate]);
+
     // 초기 렌더링시 화폐 정보를 받아오고, 주기적으로 업데이트
     useEffect(() => {
         getAllCrypto();
 
-        // 2초마다 실행 - 서버에서 받아오는 값을 2초마다 갱신시킴
         const interval = setInterval(() => {
             getAllCrypto();
-            selectClosedPrice(selectedCrypto.market);
-            selectAskingPrice(selectedCrypto.market);
+
+            selectClosedPrice(selectedCryptoRef.current.market);
+            selectAskingPrice(selectedCryptoRef.current.market);
+
+            if (chartSortTimeRef.current && selectedCryptoRef.current.market) {
+                requestCandleMinute(selectedCryptoRef.current.market, chartSortTimeRef.current);
+            } else if (chartSortDateRef.current && !chartSortTimeRef.current && selectedCryptoRef.current.market) {
+                requestCandleDate(selectedCryptoRef.current.market);
+            }
         }, 2000);
 
         return () => clearInterval(interval);
-    }, [selectedCrypto]);
-
+    }, []);
 
     useEffect(() => {
         if (user.email) {

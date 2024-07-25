@@ -99,7 +99,6 @@ export default function useFunction() {
       });
       return response.status;
     } catch (error) {
-      console.log("Dk: ", error);
       if (axios.isAxiosError(error)) {
         return error.response ? error.response.status : 500;
       }

@@ -5,6 +5,7 @@ import { RootState } from "../../../redux/store";
 import { setCandlePerDate, setCandlePerMinute, setChartSortDate, setChartSortTime } from "../../../redux/features/chartSlice";
 import { setErrorModal } from "../../../redux/features/modalSlice";
 import useFunction from "../../useFuction";
+import { setAskingSpinner } from "../../../redux/features/placeholderSlice";
 
 export default function ChartHeader() {
     const dispatch = useDispatch();
@@ -30,15 +31,22 @@ export default function ChartHeader() {
         setIsDropdownOpen(false);
     };
 
-    // 선택 화폐가 변경 되거나, 시간/날짜당 캔들의 정보가 변경될 때 요청
+    const changeCandle = useCallback(async () => {
+        dispatch(setAskingSpinner(true));
+        try {
+            if (chartSortTime && cryptoRealTime.market) {
+                await requestCandleMinute(cryptoRealTime.market, chartSortTime);
+            } else if (chartSortDate && !chartSortTime && cryptoRealTime.market) {
+                await requestCandleDate(cryptoRealTime.market);
+            }
+        } finally {
+            dispatch(setAskingSpinner(false));
+        }
+    }, [chartSortTime, chartSortDate, cryptoRealTime.market, dispatch]);
+
     useEffect(() => {
-        if (chartSortTime && cryptoRealTime.market) {
-            requestCandleMinute(cryptoRealTime.market, chartSortTime);
-        }
-        else if (chartSortDate && !chartSortTime && cryptoRealTime.market) {
-            requestCandleDate(cryptoRealTime.market);
-        }
-    }, [cryptoRealTime, chartSortTime, chartSortDate, requestCandleDate, requestCandleMinute]);
+        changeCandle();
+    }, [changeCandle]);
 
     // 드롭다운 외부 클릭 감지
     useEffect(() => {

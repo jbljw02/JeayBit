@@ -10,7 +10,7 @@ import { RootState } from "../../../../redux/store";
 import { setFavoriteCrypto, setOwnedCrypto } from "../../../../redux/features/userCryptoSlice";
 import { setCryptoRealTime, setSelectedCrypto } from "../../../../redux/features/selectedCryptoSlice";
 import { Crypto } from "../../../../redux/features/cryptoListSlice";
-import { setAskingSpinner } from "../../../../redux/features/placeholderSlice";
+import { setAskingSpinner, setWorkingSpinner } from "../../../../redux/features/placeholderSlice";
 
 type Differences = {
     name: string;
@@ -39,6 +39,9 @@ export default function ListTbody() {
     // 화폐 가격의 변화를 저장
     const [differences, setDifferences] = useState<Differences[]>([]);
 
+    const favoriteCrypto = useSelector((state: RootState) => state.favoriteCrypto);
+    const ownedCrypto = useSelector((state: RootState) => state.ownedCrypto);
+    console.log("페이보릿: ", ownedCrypto);
     useEffect(() => {
         const isFavorites = allCrypto.filter(item => item.is_favorited);
         const isOwnes = allCrypto.filter(item => item.is_owned && item.owned_quantity > 0.00);
@@ -87,10 +90,11 @@ export default function ListTbody() {
     const addFavoriteCrypto = async (email: string, cryptoName: string) => {
         if (user.email) {
             try {
-                axios.post("https://jeaybit.onrender.com/add_favoriteCrypto_to_user/", {
+                const res = await axios.post("https://jeaybit.onrender.com/add_favoriteCrypto_to_user/", {
                     email: email,
                     crypto_name: cryptoName,
                 });
+                console.log("아: ", res.data);
             } catch (error) {
                 throw error;
             }
@@ -100,8 +104,11 @@ export default function ListTbody() {
     // 별 이미지를 클릭하면 관심 화폐 추가 요청
     const starClick = async (index: number, market: string, e: { stopPropagation: () => void; }) => {
         e.stopPropagation();
+
+        dispatch(setWorkingSpinner(true));
         await addFavoriteCrypto(user.email, filteredData[index].name);
-        await getAllCrypto();
+        // await getAllCrypto();
+        dispatch(setWorkingSpinner(false));
     };
 
     // 특정 화폐를 클릭했을 때
@@ -113,13 +120,6 @@ export default function ListTbody() {
         dispatch(setCryptoRealTime(value));
         await selectClosedPrice(value.market);
         await selectAskingPrice(value.market);
-
-        if (chartSortTime && value.market) {
-            requestCandleMinute(value.market, chartSortTime);
-        }
-        else if (chartSortDate && !chartSortTime && value.market) {
-            requestCandleDate(value.market);
-        }
 
         // 스피너 소멸
         dispatch(setAskingSpinner(false));
@@ -190,14 +190,14 @@ export default function ListTbody() {
                                         // 가격
                                         item.change === "RISE" ? (
                                             <td>
-                                                <span className='rise'>
+                                                <span className={`rise ${isChanged ? 'change-price' : ''}`}>
                                                     {cryptoPrice}
                                                 </span>
                                             </td>
                                         ) :
                                             item.change === "FALL" ? (
                                                 <td>
-                                                    <span className='fall'>
+                                                    <span className={`fall ${isChanged ? 'change-price' : ''}`}>
                                                         {cryptoPrice}
                                                     </span>
                                                 </td>
@@ -211,7 +211,7 @@ export default function ListTbody() {
                                         // 변화율 및 변화량
                                         item.change === "RISE" ? (
                                             <td>
-                                                <span className="rise">
+                                                <span className={`rise ${isChanged ? 'change-etc' : ''}`}>
                                                     +{changeRate}% <br />
                                                     +{changePrice}
                                                 </span>
@@ -219,7 +219,7 @@ export default function ListTbody() {
                                         ) :
                                             item.change === "FALL" ? (
                                                 <td>
-                                                    <span className="fall">
+                                                    <span className={`fall ${isChanged ? 'change-etc' : ''}`}>
                                                         -{changeRate}% <br />
                                                         -{changePrice}
                                                     </span>
