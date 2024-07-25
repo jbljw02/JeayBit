@@ -16,10 +16,10 @@ import { setSelectedCrypto, setCryptoRealTime } from '../redux/features/selected
 import NoticeModal from '../components/modal/common/NoticeModal';
 import { RootState } from '../redux/store';
 import { setErrorModal } from '../redux/features/modalSlice';
-import '../styles/scrollbar/scrollbar.css'
 import CryptoHeader from '../components/cryptoDetail/CryptoHeader';
 import WorkingSpinnerModal from '../components/modal/trade/WorkingSpinnerModal';
 import { setWorkingSpinner } from '../redux/features/placeholderSlice';
+import '../styles/scrollbar/scrollbar.css'
 
 export default function Home() {
     const dispatch = useDispatch();

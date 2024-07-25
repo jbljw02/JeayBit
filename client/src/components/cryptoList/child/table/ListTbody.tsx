@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import useFunction from "../../../useFuction";
 import starOn from '../../../../assets/images/star-on.png'
@@ -39,10 +39,9 @@ export default function ListTbody() {
     useEffect(() => {
         const isFavorites = allCrypto.filter(item => item.is_favorited);
         const isOwnes = allCrypto.filter(item => item.is_owned && item.owned_quantity > 0.00);
-
         dispatch(setFavoriteCrypto(isFavorites));
         dispatch(setOwnedCrypto(isOwnes));
-    }, [allCrypto]);
+    }, []);
 
     // 화폐 가격의 변화를 감지하고 업데이트
     useEffect(() => {
@@ -96,16 +95,14 @@ export default function ListTbody() {
     };
 
     // 별 이미지를 클릭하면 관심 화폐 추가 요청
-    const starClick = async (index: number, market: string, e: { stopPropagation: () => void; }) => {
+    const starClick = async (crypto: Crypto, index: number, e: { stopPropagation: () => void; }) => {
         e.stopPropagation();
 
-        dispatch(setWorkingSpinner(true));
-
-        const favCryptoRes = await addFavoriteCrypto(user.email, filteredData[index].name);
-        const updatedFavoriteCrypto = allCrypto.filter(item => favCryptoRes.includes(item.name));
+        const updatedFavoriteCrypto = favoriteCrypto.some(item => item.name === crypto.name)
+            ? favoriteCrypto.filter(item => item.name !== crypto.name)
+            : [...favoriteCrypto, crypto];
         dispatch(setFavoriteCrypto(updatedFavoriteCrypto));
-
-        dispatch(setWorkingSpinner(false));
+        addFavoriteCrypto(user.email, filteredData[index].name);
     };
 
     // 특정 화폐를 클릭했을 때
@@ -180,7 +177,7 @@ export default function ListTbody() {
                                     <td className="td-name">
                                         <span className="span-star">
                                             <img
-                                                onClick={(e) => { starClick(i, item.market, e) }}
+                                                onClick={(e) => { starClick(item, i, e) }}
                                                 src={isFavorited ? starOn : starOff}
                                                 alt="star" />
                                         </span>
