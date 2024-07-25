@@ -188,7 +188,6 @@ export default function BuyingSection() {
         await getTradeHistory(user.email);
         await getOwnedCrypto(user.email);
         await getBalance(user.email);
-        // await getAllCrypto();
 
         dispatch(setWorkingSpinner(false));
 

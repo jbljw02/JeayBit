@@ -11,6 +11,7 @@ import { setErrorModal } from "../redux/features/modalSlice";
 import { useCallback } from "react";
 import { setCandlePerMinute, setCandlePerDate } from "../redux/features/chartSlice";
 import NoticeModal from "./modal/common/NoticeModal";
+import { setOwnedCrypto } from "../redux/features/userCryptoSlice";
 
 export default function useFunction() {
   const dispatch = useDispatch();
@@ -20,7 +21,7 @@ export default function useFunction() {
   const successTransfer = useSelector((state: RootState) => state.successTransfer);
   const failTransfer = useSelector((state: RootState) => state.failTransfer);
   const transferCategory = useSelector((state: RootState) => state.transferCategory);
-
+  const allCrypto = useSelector((state: RootState) => state.allCrypto);
 
   const checkLogin = async () => {
     try {
@@ -68,14 +69,24 @@ export default function useFunction() {
       });
 
       const resOwnedCrypto: OwnedCrypto[] = response.data;
-      const targetCrypto = resOwnedCrypto.find(item => item.name === selectedCrypto.name);
 
+      // 현재 선택한 화폐의 보유량 업데이트
+      const targetCrypto = resOwnedCrypto.find(item => item.name === selectedCrypto.name);
       const updatedCrypto = {
         ...selectedCrypto,
         is_owned: targetCrypto?.is_owned,
         owned_quantity: targetCrypto?.owned_quantity,
       };
 
+
+      const updatedOwnedCrypto = allCrypto
+        .filter(crypto => resOwnedCrypto.some(own => crypto.name === own.name))
+        .map(crypto => {
+          const matched = resOwnedCrypto.find(own => crypto.name === own.name);
+          return matched ? { ...crypto, is_owned: true, owned_quantity: matched.owned_quantity } : crypto;
+        });
+
+      dispatch(setOwnedCrypto(updatedOwnedCrypto));
       dispatch(setSelectedCrypto(updatedCrypto));
     } catch (error) {
       throw error;

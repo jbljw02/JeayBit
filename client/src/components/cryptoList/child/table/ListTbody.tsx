@@ -9,7 +9,7 @@ import CustomScrollbars from "../../../scrollbar/CustomScorllbars";
 import { RootState } from "../../../../redux/store";
 import { setFavoriteCrypto, setOwnedCrypto } from "../../../../redux/features/userCryptoSlice";
 import { setCryptoRealTime, setSelectedCrypto } from "../../../../redux/features/selectedCryptoSlice";
-import { Crypto } from "../../../../redux/features/cryptoListSlice";
+import { Crypto, setAllCrypto } from "../../../../redux/features/cryptoListSlice";
 import { setAskingSpinner, setWorkingSpinner } from "../../../../redux/features/placeholderSlice";
 
 type Differences = {
@@ -21,18 +21,12 @@ type Differences = {
 export default function ListTbody() {
     const dispatch = useDispatch();
 
-    const { getAllCrypto,
-        selectAskingPrice,
-        selectClosedPrice,
-        requestCandleMinute,
-        requestCandleDate } = useFunction();
+    const { selectAskingPrice, selectClosedPrice } = useFunction();
 
     const filteredData = useSelector((state: RootState) => state.filteredData);
     const listCategory = useSelector((state: RootState) => state.listCategory);
     const allCrypto = useSelector((state: RootState) => state.allCrypto);
     const user = useSelector((state: RootState) => state.user);
-    const chartSortTime = useSelector((state: RootState) => state.chartSortTime);
-    const chartSortDate = useSelector((state: RootState) => state.chartSortDate);
 
     // 화폐 가격을 업데이트 하기 전에 해당 state에 담음
     const [prevData, setPrevData] = useState<Record<string, number> | undefined>(undefined);
@@ -41,7 +35,7 @@ export default function ListTbody() {
 
     const favoriteCrypto = useSelector((state: RootState) => state.favoriteCrypto);
     const ownedCrypto = useSelector((state: RootState) => state.ownedCrypto);
-    console.log("페이보릿: ", ownedCrypto);
+
     useEffect(() => {
         const isFavorites = allCrypto.filter(item => item.is_favorited);
         const isOwnes = allCrypto.filter(item => item.is_owned && item.owned_quantity > 0.00);
@@ -90,11 +84,11 @@ export default function ListTbody() {
     const addFavoriteCrypto = async (email: string, cryptoName: string) => {
         if (user.email) {
             try {
-                const res = await axios.post("https://jeaybit.onrender.com/add_favoriteCrypto_to_user/", {
+                const response = await axios.post("https://jeaybit.onrender.com/add_favoriteCrypto_to_user/", {
                     email: email,
                     crypto_name: cryptoName,
                 });
-                console.log("아: ", res.data);
+                return response.data.favorite_crypto
             } catch (error) {
                 throw error;
             }
@@ -106,14 +100,16 @@ export default function ListTbody() {
         e.stopPropagation();
 
         dispatch(setWorkingSpinner(true));
-        await addFavoriteCrypto(user.email, filteredData[index].name);
-        // await getAllCrypto();
+
+        const favCryptoRes = await addFavoriteCrypto(user.email, filteredData[index].name);
+        const updatedFavoriteCrypto = allCrypto.filter(item => favCryptoRes.includes(item.name));
+        dispatch(setFavoriteCrypto(updatedFavoriteCrypto));
+
         dispatch(setWorkingSpinner(false));
     };
 
     // 특정 화폐를 클릭했을 때
     const cryptoClick = async (value: Crypto) => {
-        // 스피너 생성
         dispatch(setAskingSpinner(true));
 
         dispatch(setSelectedCrypto(value));
@@ -121,7 +117,6 @@ export default function ListTbody() {
         await selectClosedPrice(value.market);
         await selectAskingPrice(value.market);
 
-        // 스피너 소멸
         dispatch(setAskingSpinner(false));
     }
 
@@ -146,28 +141,37 @@ export default function ListTbody() {
                                 return diff.name === item.name && diff.newValue === item.price;
                             });
 
+                            // 관심 화폐인지 확인
+                            let isFavorited = favoriteCrypto.find(fav => fav.name === item.name);
+
+                            // 화폐를 보유중인지에 따라 처리
+                            let userOwnedQuantity: { quantity: string, market: string } = { quantity: '', market: '' };
+                            if (listCategory === '보유') {
+                                let ownedInfo = ownedCrypto.find(own => own.name === item.name);
+
+                                if (ownedInfo) {
+                                    // 화폐의 보유량 설정
+                                    let ownedQuantity = String(ownedInfo.owned_quantity);
+                                    let ownedMarket = (item.market).slice(4);
+
+                                    // 전체 문자열의 길이가 12자리를 넘어갈 경우 12자리가 될 때까지 마지막 인덱스 제거
+                                    while (ownedQuantity.length + ownedMarket.length > 11) {
+                                        ownedQuantity = ownedQuantity.slice(0, -1);
+                                    }
+
+                                    // 마지막 인덱스가 '.'일 경우 제거
+                                    if (ownedQuantity.endsWith('.')) {
+                                        ownedQuantity = ownedQuantity.slice(0, -1);
+                                    }
+
+                                    // 결과를 공백으로 구분
+                                    userOwnedQuantity = { quantity: ownedQuantity, market: ownedMarket };
+                                }
+                            }
+
                             const cryptoPrice = formatWithComas(item.price); // 화폐 가격
                             const changeRate = (item.change_rate * 100).toFixed(2); // 화폐 변화율
                             const changePrice = formatWithComas(item.change_price); // 화폐 변화량
-
-                            // 화폐의 보유량 설정
-                            let userOwnedQuantity;
-                            if (listCategory === '보유') {
-                                let ownedQuantity = String(item.owned_quantity);
-                                let ownedMarket = (item.market).slice(4);
-
-                                userOwnedQuantity = ownedQuantity + ownedMarket;
-
-                                // 전체 문자열의 길이가 12자리를 넘어갈 경우 12자리가 될 때 까지 마지막 인덱스 제거
-                                while (userOwnedQuantity.length > 11) {
-                                    ownedQuantity = ownedQuantity.slice(0, -1);
-                                    userOwnedQuantity = ownedQuantity + ownedMarket;
-                                }
-                                // 마지막 인덱스가 '.'일 경우 제거
-                                if (userOwnedQuantity.endsWith('.')) {
-                                    userOwnedQuantity = userOwnedQuantity.slice(0, -1);
-                                }
-                            }
 
                             return (
                                 <tr
@@ -177,7 +181,7 @@ export default function ListTbody() {
                                         <span className="span-star">
                                             <img
                                                 onClick={(e) => { starClick(i, item.market, e) }}
-                                                src={item.is_favorited ? starOn : starOff}
+                                                src={isFavorited ? starOn : starOff}
                                                 alt="star" />
                                         </span>
                                         <div className="div-name">
@@ -237,8 +241,9 @@ export default function ListTbody() {
                                     <td>
                                         {
                                             listCategory === '보유' ?
-                                                <span className="td-volume">
-                                                    {userOwnedQuantity}
+                                                <span>
+                                                    {userOwnedQuantity.quantity}
+                                                    <span className="td-own-market">{userOwnedQuantity.market}</span>
                                                 </span> :
                                                 <span>
                                                     {

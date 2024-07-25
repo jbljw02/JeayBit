@@ -196,12 +196,11 @@ export default function SellingSectioin() {
             selectedCrypto.market,
             isMarketValue
         );
-
+        
         await getTradeHistory(user.email);
         await getOwnedCrypto(user.email);
         await getBalance(user.email);
-        // await getAllCrypto();
-
+        
         dispatch(setWorkingSpinner(false));
 
         if (addTradeResCode === 200) {
