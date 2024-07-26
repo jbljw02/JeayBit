@@ -9,7 +9,7 @@
 
 ### 개발 기간
 > 2023.08.28 - 2023.12.05 <br>
-> 2024.05.26 ~ (리팩토링)
+> 2024.05.26 ~ 2024.07.26(리팩토링)
 
 ### 인원 구성
 > 이진우(1인)
@@ -18,17 +18,18 @@
 
 |Environment|Frontend|Backend|Database|Deployment|API|
 |:---:|:---:|:---:|:---:|:---:|:---:|
-|![Git](https://img.shields.io/badge/git-%23F05033.svg?style=for-the-badge&logo=git&logoColor=white) ![Visual Studio Code](https://img.shields.io/badge/Visual%20Studio%20Code-0078d7.svg?style=for-the-badge&logo=visual-studio-code&logoColor=white)|![TypeScript](https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white) ![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB) ![Redux](https://img.shields.io/badge/redux-%23593d88.svg?style=for-the-badge&logo=redux&logoColor=white)|![Django](https://img.shields.io/badge/django-%23092E20.svg?style=for-the-badge&logo=django&logoColor=white)|![SQLite](https://img.shields.io/badge/sqlite-%2307405e.svg?style=for-the-badge&logo=sqlite&logoColor=white)|![AWS](https://img.shields.io/badge/AWS-%23FF9900.svg?style=for-the-badge&logo=amazon-aws&logoColor=white) ![Netlify](https://img.shields.io/badge/netlify-%23000000.svg?style=for-the-badge&logo=netlify&logoColor=#00C7B7)|![aa](https://github.com/jbljw02/JeayBit/assets/125800649/f015f2eb-6b86-48e0-9722-11749244d6c3)|
+|![Git](https://img.shields.io/badge/git-%23F05033.svg?style=for-the-badge&logo=git&logoColor=white) ![Visual Studio Code](https://img.shields.io/badge/Visual%20Studio%20Code-0078d7.svg?style=for-the-badge&logo=visual-studio-code&logoColor=white)|![TypeScript](https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white) ![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB) ![Redux](https://img.shields.io/badge/redux-%23593d88.svg?style=for-the-badge&logo=redux&logoColor=white)|![Django](https://img.shields.io/badge/django-%23092E20.svg?style=for-the-badge&logo=django&logoColor=white) ![Celery](https://img.shields.io/badge/celery-%23a9cc54.svg?style=for-the-badge&logo=celery&logoColor=ddf4a4) ![Redis](https://img.shields.io/badge/redis-%23DD0031.svg?style=for-the-badge&logo=redis&logoColor=white)|![Postgres](https://img.shields.io/badge/postgres-%23316192.svg?style=for-the-badge&logo=postgresql&logoColor=white)|![Vercel](https://img.shields.io/badge/vercel-%23000000.svg?style=for-the-badge&logo=vercel&logoColor=white) ![Render](https://img.shields.io/badge/Render-%46E3B7.svg?style=for-the-badge&logo=render&logoColor=white)![Supabase](https://img.shields.io/badge/Supabase-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white) <img width="110" alt="스크린샷 2024-07-26 15 19 21" src="https://github.com/user-attachments/assets/f853205a-8660-4e00-a903-eef43a235585"> |![Upbit](https://github.com/jbljw02/JeayBit/assets/125800649/f015f2eb-6b86-48e0-9722-11749244d6c3)|
 
 <br>
 
 ## 2. 프로젝트 구조도
 
 ### 1) 화폐 정보 불러오기
-<img width="1180" alt="스크린샷 2024-01-07 20 19 08" src="https://github.com/jbljw02/JeayBit/assets/125800649/675034c9-737f-49b1-bee8-28329286c283">
+![화폐 불러오기](https://github.com/user-attachments/assets/4c1f9b3b-a005-471a-bf5a-3eb95b4e7f1c)
 
 ### 2) 매수 및 매도
-<img width="951" alt="스크린샷 2024-01-07 20 21 21" src="https://github.com/jbljw02/JeayBit/assets/125800649/4565ad3c-3997-4cbd-be5e-987b633b7dd5">
+![화폐 거래_1](https://github.com/user-attachments/assets/eeae0d76-2219-48ff-a387-06408268ec44)
+![화폐 거래_2](https://github.com/user-attachments/assets/df3c1607-43b9-48dc-8268-50fb6f9f669c)
 
 <br>
 
