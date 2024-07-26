@@ -75,7 +75,7 @@ export default function TradeSection() {
                 }
             }
         };
-    }, [connectionAttempts]);
+    }, [connectionAttempts, user.email]);
 
     useEffect(() => {
         connectWebSocket();
