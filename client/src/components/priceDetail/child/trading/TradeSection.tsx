@@ -34,15 +34,15 @@ export default function TradeSection() {
         tradeCategory: "",
         price: 0,
     });
+    
+    const [connectionAttempts, setConnectionAttempts] = useState(0);
+    const socketRef = useRef<WebSocket | null>(null);
 
     useEffect(() => {
         if (user.email && user.name) {
             getBalance(user.email);
         }
     }, [user, getBalance]);
-
-    const [connectionAttempts, setConnectionAttempts] = useState(0);
-    const socketRef = useRef<WebSocket | null>(null);
 
     const connectWebSocket = useCallback (() => {
         const socket = new WebSocket('wss://jeaybit.onrender.com/ws/trade_updates/');
