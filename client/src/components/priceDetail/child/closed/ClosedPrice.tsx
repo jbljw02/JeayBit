@@ -66,8 +66,8 @@ export default function ClosedPrice() {
                                                                             <td>{(item.trade_price).toLocaleString()}</td>
                                                                             {
                                                                                 item.ask_bid === 'BID' ?
-                                                                                    <td className="td-rise">{str_trade_volume}</td> :
-                                                                                    <td className="td-fall">{str_trade_volume}</td>
+                                                                                    <td className="rise">{str_trade_volume}</td> :
+                                                                                    <td className="fall">{str_trade_volume}</td>
                                                                             }
                                                                         </tr>
                                                                     )
