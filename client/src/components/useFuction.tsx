@@ -25,7 +25,7 @@ export default function useFunction() {
 
   const checkLogin = async () => {
     try {
-      const response = await axios.post("https://jaybit.onrender.com/check_login/", {}, {
+      const response = await axios.post("https://jeaybit.onrender.com/check_login/", {}, {
         withCredentials: true
       });
 
@@ -78,7 +78,6 @@ export default function useFunction() {
         is_owned: targetCrypto?.is_owned,
         owned_quantity: targetCrypto?.owned_quantity,
       };
-
 
       const updatedOwnedCrypto = allCrypto
         .filter(crypto => resOwnedCrypto.some(own => crypto.name === own.name))

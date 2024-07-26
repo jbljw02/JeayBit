@@ -3,7 +3,7 @@ import { RootState } from "../../../../redux/store";
 import BuyingSection from "./section/BuyingSection";
 import SellingSection from "./section/SellingSection";
 import TradeHistory from "./history/TradeHistory";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import CeleryCompleteModal from "../../../modal/trade/CeleryCompleteModal";
 import useFunction from "../../../useFuction";
 import '../../../../styles/priceDetail/trading/tradeSection.css'
@@ -39,55 +39,16 @@ export default function TradeSection() {
         if (user.email && user.name) {
             getBalance(user.email);
         }
-    }, [user]);
-
-    // 미체결 거래가 체결될 시 웹소켓을 통해 결과를 받음
-    // useEffect(() => {
-    //     const socket = new WebSocket('wss://jeaybit.onrender.com/ws/trade_updates/');
-
-    //     socket.onopen = () => {
-    //         console.log("WebSocket 연결 성공");
-    //     };
-
-    //     socket.onmessage = (e) => {
-    //         const data = JSON.parse(e.data);
-    //         console.log("메시지 수신: ", data);
-    //         const celeryMessage = data.message;
-    //         setCeleryData({
-    //             name: celeryMessage.crypto_name,
-    //             tradeTime: celeryMessage.trade_time,
-    //             tradeCategory: celeryMessage.trade_category,
-    //             price: celeryMessage.crypto_price,
-    //         });
-    //         setCeleryModal(true);
-    //     };
-
-    //     socket.onerror = (error) => {
-    //         console.log("WebSocket 에러: ", error);
-    //     };
-
-    //     socket.onclose = (event) => {
-    //         if (event.wasClean) {
-    //             console.log(`WebSocket 연결이 깨끗하게 종료됨, 코드=${event.code} 이유=${event.reason}`);
-    //         } else {
-    //             console.log('WebSocket 연결이 비정상적으로 종료됨, ', event);
-    //         }
-    //     };
-
-    //     return () => {
-    //         socket.close();
-    //     };
-    // }, []);
+    }, [user, getBalance]);
 
     const [connectionAttempts, setConnectionAttempts] = useState(0);
     const socketRef = useRef<WebSocket | null>(null);
 
-    const connectWebSocket = () => {
+    const connectWebSocket = useCallback (() => {
         const socket = new WebSocket('wss://jeaybit.onrender.com/ws/trade_updates/');
         socketRef.current = socket;
 
         socket.onopen = () => {
-            console.log("WebSocket 연결 성공");
             setConnectionAttempts(0); // 연결 성공 시 재시도 횟수 초기화
         };
 
@@ -112,7 +73,7 @@ export default function TradeSection() {
                 }
             }
         };
-    };
+    }, [connectionAttempts]);
 
     useEffect(() => {
         connectWebSocket();
@@ -122,7 +83,7 @@ export default function TradeSection() {
                 socketRef.current.close();
             }
         };
-    }, []);
+    }, [connectWebSocket]);
 
     useEffect(() => {
         // 최소한 한 번의 연결 시도가 실패했을 때

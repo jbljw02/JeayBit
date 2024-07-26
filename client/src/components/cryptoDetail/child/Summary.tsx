@@ -12,8 +12,6 @@ type ChildParams = {
 }
 
 function DetailContent({ title, value, suffix, category }: ChildParams) {
-    const cryptoRealTime = useSelector((state: RootState) => state.cryptoRealTime);
-
     return (
         <>
             {
@@ -41,7 +39,7 @@ export default function Summary() {
     useEffect(() => {
         const targetCrypto = allCrypto.find(item => item.market === cryptoRealTime.market);
         dispatch(setCryptoRealTime(targetCrypto));
-    }, [allCrypto]);
+    }, [allCrypto, cryptoRealTime.market, dispatch]);
 
     return (
         <div className="div-dl">

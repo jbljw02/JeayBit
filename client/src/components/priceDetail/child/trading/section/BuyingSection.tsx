@@ -22,7 +22,7 @@ import NoticeModal from "../../../../modal/common/NoticeModal";
 export default function BuyingSection() {
     const dispatch = useDispatch();
 
-    const { addTradeHistory, getTradeHistory, getBalance, getOwnedCrypto, getAllCrypto } = useFunction();
+    const { addTradeHistory, getTradeHistory, getBalance, getOwnedCrypto } = useFunction();
 
     const selectedCrypto = useSelector((state: RootState) => state.selectedCrypto);
     const user = useSelector((state: RootState) => state.user);
@@ -74,7 +74,7 @@ export default function BuyingSection() {
             dispatch(setBuyingPrice(selectedCrypto.price));
             setBuyingInputValue(String(selectedCrypto.price));
         }
-    }, [selectedCrypto]);
+    }, [selectedCrypto, dispatch]);
 
     const selectPercentage = (percentage: string) => {
         setSelectedPercentage(percentage);

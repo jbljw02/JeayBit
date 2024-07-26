@@ -1,6 +1,5 @@
 import { useRef, useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
 import FaviconTitle from "./child/FaviconTitle";
 import InputWarning from "../input/InputWarning";
 import FormInput from "../input/FormInput";

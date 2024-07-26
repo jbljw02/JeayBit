@@ -40,7 +40,7 @@ export default function ChartHeader() {
         } finally {
             dispatch(setChartSpinner(false));
         }
-    }, [chartSortTime, chartSortDate, cryptoRealTime.market, dispatch]);
+    }, [chartSortTime, chartSortDate, cryptoRealTime.market, requestCandleDate, requestCandleMinute, dispatch]);
 
     useEffect(() => {
         changeCandle();
