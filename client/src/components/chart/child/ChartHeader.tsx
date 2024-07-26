@@ -35,7 +35,7 @@ export default function ChartHeader() {
             if (chartSortTime && cryptoRealTime.market) {
                 await requestCandleMinute(cryptoRealTime.market, chartSortTime);
             } else if (chartSortDate && !chartSortTime && cryptoRealTime.market) {
-                await requestCandleDate(cryptoRealTime.market);
+                await requestCandleDate(cryptoRealTime.market, chartSortDate);
             }
         } finally {
             dispatch(setChartSpinner(false));

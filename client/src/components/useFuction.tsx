@@ -217,21 +217,21 @@ export default function useFunction() {
     }
   }, [dispatch]);
 
-  // 리스트에서 화폐를 선택하면 해당 화폐에 대한 캔들 호출(차트의 일/주/월에 따라)
-  const requestCandleDate = useCallback(async (market: string) => {
+  // 리스트에서 화폐를 선택하면 해당 화폐에 대한 캔들 호출(차트의 ;일/주/월에 따라)
+  const requestCandleDate = useCallback(async (market: string, date: '1일' | '1주' | '1개월') => {
     try {
       let response;
       let url = "https://jeaybit.onrender.com/";
 
-      if (chartSortDate === "1일") {
+      if (date === "1일") {
         url += `candle_per_date/?market=${market}`;
         response = await axios.get(url);
         dispatch(setCandlePerDate(response.data));
-      } else if (chartSortDate === "1주") {
+      } else if (date === "1주") {
         url += `candle_per_week/?market=${market}`;
         response = await axios.get(url);
         dispatch(setCandlePerDate(response.data));
-      } else if (chartSortDate === "1개월") {
+      } else if (date === "1개월") {
         url += `candle_per_month/?market=${market}`;
         response = await axios.get(url);
         dispatch(setCandlePerDate(response.data));
@@ -240,7 +240,7 @@ export default function useFunction() {
       dispatch(setErrorModal(true));
       throw error;
     }
-  }, [chartSortDate, dispatch]);
+  }, [dispatch]);
 
   // 입/출금 완료 시 띄울 모달 결정
   const renderTransferModal = () => {
