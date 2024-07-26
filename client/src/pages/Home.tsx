@@ -38,10 +38,14 @@ export default function Home() {
     const workingSpinner = useSelector((state: RootState) => state.workingSpinner);
     const chartSortTime = useSelector((state: RootState) => state.chartSortTime);
     const chartSortDate = useSelector((state: RootState) => state.chartSortDate);
+    const chartSpinner = useSelector((state: RootState) => state.chartSpinner);
+    const askingSpinner = useSelector((state: RootState) => state.askingSpinner);
 
     const selectedCryptoRef = useRef(selectedCrypto);
     const chartSortTimeRef = useRef(chartSortTime);
     const chartSortDateRef = useRef(chartSortDate);
+    const chartSpinnerRef = useRef(chartSpinner);
+    const askingSpinnerRef = useRef(askingSpinner);
 
     // 초기 데이터를 비트코인으로 설정
     const getInitialData = async () => {
@@ -62,7 +66,9 @@ export default function Home() {
         selectedCryptoRef.current = selectedCrypto;
         chartSortTimeRef.current = chartSortTime;
         chartSortDateRef.current = chartSortDate;
-    }, [selectedCrypto, chartSortTime, chartSortDate]);
+        chartSpinnerRef.current = chartSpinner;
+        askingSpinnerRef.current = askingSpinner;
+    }, [selectedCrypto, chartSortTime, chartSortDate, chartSpinner, askingSpinner]);
 
     // 초기 렌더링시 화폐 정보를 받아오고, 주기적으로 업데이트
     useEffect(() => {
@@ -71,13 +77,17 @@ export default function Home() {
         const interval = setInterval(() => {
             getAllCrypto();
 
-            selectClosedPrice(selectedCryptoRef.current.market);
-            selectAskingPrice(selectedCryptoRef.current.market);
+            if(!askingSpinnerRef.current) {
+                selectClosedPrice(selectedCryptoRef.current.market);
+                selectAskingPrice(selectedCryptoRef.current.market);
+            }
 
-            if (chartSortTimeRef.current && selectedCryptoRef.current.market) {
-                requestCandleMinute(selectedCryptoRef.current.market, chartSortTimeRef.current);
-            } else if (chartSortDateRef.current && !chartSortTimeRef.current && selectedCryptoRef.current.market) {
-                requestCandleDate(selectedCryptoRef.current.market);
+            if (!chartSpinnerRef.current) {
+                if (chartSortTimeRef.current && selectedCryptoRef.current.market) {
+                    requestCandleMinute(selectedCryptoRef.current.market, chartSortTimeRef.current);
+                } else if (chartSortDateRef.current && !chartSortTimeRef.current && selectedCryptoRef.current.market) {
+                    requestCandleDate(selectedCryptoRef.current.market, chartSortDateRef.current);
+                }
             }
         }, 2000);
 
