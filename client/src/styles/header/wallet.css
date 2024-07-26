@@ -38,11 +38,13 @@
 #deposit-section {
     color: #22ab94;
     border-bottom: 4px solid #22ab94;
+    font-weight: bold;
 }
 
 #withdraw-section {
     color: #f23645;
     border-bottom: 4px solid #f23645;
+    font-weight: bold;
 }
 
 .transfer-input,
@@ -144,6 +146,7 @@
 #balance-section {
     color: #000000;
     border-bottom: 4px solid #000000;
+    font-weight: bold;
 }
 
 .img-transfer-crypto {
