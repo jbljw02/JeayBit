@@ -1,11 +1,9 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState, useRef, useCallback } from "react";
-import axios from "axios";
 import { RootState } from "../../../redux/store";
-import { setCandlePerDate, setCandlePerMinute, setChartSortDate, setChartSortTime } from "../../../redux/features/chartSlice";
-import { setErrorModal } from "../../../redux/features/modalSlice";
+import { setChartSortDate, setChartSortTime } from "../../../redux/features/chartSlice";
 import useFunction from "../../useFuction";
-import { setAskingSpinner } from "../../../redux/features/placeholderSlice";
+import { setChartSpinner } from "../../../redux/features/placeholderSlice";
 
 export default function ChartHeader() {
     const dispatch = useDispatch();
@@ -32,7 +30,7 @@ export default function ChartHeader() {
     };
 
     const changeCandle = useCallback(async () => {
-        dispatch(setAskingSpinner(true));
+        dispatch(setChartSpinner(true));
         try {
             if (chartSortTime && cryptoRealTime.market) {
                 await requestCandleMinute(cryptoRealTime.market, chartSortTime);
@@ -40,7 +38,7 @@ export default function ChartHeader() {
                 await requestCandleDate(cryptoRealTime.market);
             }
         } finally {
-            dispatch(setAskingSpinner(false));
+            dispatch(setChartSpinner(false));
         }
     }, [chartSortTime, chartSortDate, cryptoRealTime.market, dispatch]);
 

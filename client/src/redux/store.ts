@@ -54,6 +54,7 @@ export type RootState = {
   cryptoRealTime: Crypto,
   errorModal: boolean,
   askingSpinner: boolean,
+  chartSpinner: boolean,
   workingSpinner: boolean,
 }
 
@@ -93,6 +94,7 @@ const combinedReducer = combineReducers({
   transferCategory: walletReducers.transferCategory,
   errorModal: modalReducers.errorModal,
   askingSpinner: placeholderReducers.askingSpinner,
+  chartSpinner: placeholderReducers.chartSpinner,
   workingSpinner: placeholderReducers.workingSpinner,
 });
 

@@ -13,8 +13,6 @@ import AuthButton from "./child/AuthButton";
 import AuthFooter from "./child/AuthFooter";
 
 export default function SignUp() {
-  const navigate = useNavigate();
-
   const [activeInput, setActiveInput] = useState<string>('');
 
   const [name, setName] = useState<string>('');

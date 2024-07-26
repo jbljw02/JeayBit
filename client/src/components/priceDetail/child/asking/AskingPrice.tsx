@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import AskingTable from "./AskingTable";
 import '../../../../styles/priceDetail/asking/asking.css'
 import CustomScrollbars from "../../../scrollbar/CustomScorllbars";

@@ -3,7 +3,6 @@ import formatCryptoDetail from "../../../utils/format/formatCryptoDetail";
 import { useEffect } from "react";
 import { RootState } from "../../../redux/store";
 import { setCryptoRealTime } from "../../../redux/features/selectedCryptoSlice";
-import SkeletonUI from "../../placeholder/SkeletonUI";
 
 type ChildParams = {
     title: string,

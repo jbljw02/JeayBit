@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import useFunction from "../../../useFuction";
 import starOn from '../../../../assets/images/star-on.png'
@@ -9,8 +9,8 @@ import CustomScrollbars from "../../../scrollbar/CustomScorllbars";
 import { RootState } from "../../../../redux/store";
 import { setFavoriteCrypto, setOwnedCrypto } from "../../../../redux/features/userCryptoSlice";
 import { setCryptoRealTime, setSelectedCrypto } from "../../../../redux/features/selectedCryptoSlice";
-import { Crypto, setAllCrypto } from "../../../../redux/features/cryptoListSlice";
-import { setAskingSpinner, setWorkingSpinner } from "../../../../redux/features/placeholderSlice";
+import { Crypto } from "../../../../redux/features/cryptoListSlice";
+import { setAskingSpinner } from "../../../../redux/features/placeholderSlice";
 
 type Differences = {
     name: string;
@@ -45,37 +45,39 @@ export default function ListTbody() {
 
     // 화폐 가격의 변화를 감지하고 업데이트
     useEffect(() => {
-        // 각 항목의 name을 키로, price를 값으로 하는 객체 생성
-        const cryptoPriceMap: Record<string, number> = filteredData.reduce((acc, item) => {
-            acc[item.name] = item.price;
-            return acc;
-        }, {} as Record<string, number>);
+        if (filteredData.length) {
+            // 각 항목의 name을 키로, price를 값으로 하는 객체 생성
+            const cryptoPriceMap: Record<string, number> = filteredData.reduce((acc, item) => {
+                acc[item.name] = item.price;
+                return acc;
+            }, {} as Record<string, number>);
 
-        if (!prevData) {
+            if (!prevData) {
+                setPrevData(cryptoPriceMap);
+                return;
+            }
+
+            // 이전 값과 현재 값의 차이를 저장할 배열
+            const newDifferences: Differences[] = [];
+
+            // 객체를 순회하며 변화 이전 값과 현재 값을 비교
+            if (prevData) {
+                Object.keys(cryptoPriceMap).forEach(name => {
+                    // 값이 다를 경우, newDifferences 배열에 변화된 항목 추가
+                    if (prevData[name] !== cryptoPriceMap[name]) {
+                        newDifferences.push({
+                            name: name,
+                            oldValue: prevData[name],
+                            newValue: cryptoPriceMap[name],
+                        });
+                    }
+                });
+            }
+
             setPrevData(cryptoPriceMap);
-            return;
-        }
-
-        // 이전 값과 현재 값의 차이를 저장할 배열
-        const newDifferences: Differences[] = [];
-
-        // 객체를 순회하며 변화 이전 값과 현재 값을 비교
-        if (prevData) {
-            Object.keys(cryptoPriceMap).forEach(name => {
-                // 값이 다를 경우, newDifferences 배열에 변화된 항목 추가
-                if (prevData[name] !== cryptoPriceMap[name]) {
-                    newDifferences.push({
-                        name: name,
-                        oldValue: prevData[name],
-                        newValue: cryptoPriceMap[name],
-                    });
-                }
-            });
-        }
-
-        setPrevData(cryptoPriceMap);
-        if (newDifferences.length !== allCrypto.length) {
-            setDifferences(newDifferences);
+            if (newDifferences.length !== allCrypto.length) {
+                setDifferences(newDifferences);
+            }
         }
     }, [filteredData]);
 
@@ -131,7 +133,9 @@ export default function ListTbody() {
                 <tbody>
                     {/* 검색값을 반환한 filteredData 함수를 다시 반복문을 이용하여 출력 */}
                     {
-                        Array.isArray(filteredData) &&
+                        filteredData.length &&
+                        favoriteCrypto.length &&
+                        ownedCrypto.length &&
                         filteredData.map((item, i) => {
                             // 가격의 변화가 생긴 state를 테이블에서 찾아 해당 td 시각화
                             let isChanged = differences.some((diff) => {

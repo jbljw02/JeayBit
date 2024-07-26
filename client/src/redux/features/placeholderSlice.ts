@@ -1,10 +1,20 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const askingSpinnerSlice = createSlice({
+const askingSpinner = createSlice({
     name: 'askingSpinner',
     initialState: false,
     reducers: {
         setAskingSpinner: (state, action) => {
+            return action.payload;
+        }
+    }
+})
+
+const chartSpinnerSlice = createSlice({
+    name: 'chartSpinner',
+    initialState: false,
+    reducers: {
+        setChartSpinner: (state, action) => {
             return action.payload;
         }
     }
@@ -20,11 +30,13 @@ const workingSpinnerSlice = createSlice({
     }
 })
 
-export const { setAskingSpinner } = askingSpinnerSlice.actions;
+export const { setAskingSpinner } = askingSpinner.actions;
+export const { setChartSpinner } = chartSpinnerSlice.actions;
 export const { setWorkingSpinner } = workingSpinnerSlice.actions;
 
 const reducers = {
-    askingSpinner: askingSpinnerSlice.reducer,
+    askingSpinner: askingSpinner.reducer,
+    chartSpinner: chartSpinnerSlice.reducer,
     workingSpinner: workingSpinnerSlice.reducer,
 }
 

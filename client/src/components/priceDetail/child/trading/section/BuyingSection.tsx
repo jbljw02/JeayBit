@@ -16,7 +16,6 @@ import WaitingModal from "../../../../modal/trade/WatingModal";
 import { bidSortOptions } from "../TradeSection";
 import { setBuyingPrice } from "../../../../../redux/features/tradeSlice";
 import { RootState } from "../../../../../redux/store";
-import WorkingSpinner from "../../../../modal/trade/WorkingSpinnerModal";
 import { setWorkingSpinner } from "../../../../../redux/features/placeholderSlice";
 import NoticeModal from "../../../../modal/common/NoticeModal";
 
