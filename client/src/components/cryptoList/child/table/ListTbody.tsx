@@ -133,9 +133,9 @@ export default function ListTbody() {
                 <tbody>
                     {/* 검색값을 반환한 filteredData 함수를 다시 반복문을 이용하여 출력 */}
                     {
-                        filteredData.length &&
-                        favoriteCrypto.length &&
-                        ownedCrypto.length &&
+                        Array.isArray(filteredData) &&
+                        Array.isArray(favoriteCrypto) &&
+                        Array.isArray(ownedCrypto) &&
                         filteredData.map((item, i) => {
                             // 가격의 변화가 생긴 state를 테이블에서 찾아 해당 td 시각화
                             let isChanged = differences.some((diff) => {
