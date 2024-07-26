@@ -25,12 +25,13 @@ export default function useFunction() {
 
   const checkLogin = async () => {
     try {
-      const response = await axios.post("https://jeaybit.onrender.com/check_login/", {}, {
+      const response = await axios.post("https://jaybit.onrender.com/check_login/", {}, {
         withCredentials: true
       });
 
       return response.data;
     } catch (error) {
+      dispatch(setErrorModal(true));
       throw error;
     }
   }
