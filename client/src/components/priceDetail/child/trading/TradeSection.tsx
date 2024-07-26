@@ -22,7 +22,7 @@ export const bidSortOptions = [
 ];
 
 export default function TradeSection() {
-    const { getBalance } = useFunction();
+    const { getBalance, getOwnedCrypto, getTradeHistory } = useFunction();
 
     const [sectionChange, setSectionChange] = useState<'매수' | '매도' | '거래내역'>('매수');
     const user = useSelector((state: RootState) => state.user);
@@ -34,7 +34,7 @@ export default function TradeSection() {
         tradeCategory: "",
         price: 0,
     });
-    
+
     const [connectionAttempts, setConnectionAttempts] = useState(0);
     const socketRef = useRef<WebSocket | null>(null);
 
@@ -44,7 +44,7 @@ export default function TradeSection() {
         }
     }, [user, getBalance]);
 
-    const connectWebSocket = useCallback (() => {
+    const connectWebSocket = useCallback(() => {
         const socket = new WebSocket('wss://jeaybit.onrender.com/ws/trade_updates/');
         socketRef.current = socket;
 
@@ -52,7 +52,7 @@ export default function TradeSection() {
             setConnectionAttempts(0); // 연결 성공 시 재시도 횟수 초기화
         };
 
-        socket.onmessage = (e) => {
+        socket.onmessage = async (e) => {
             const data = JSON.parse(e.data);
             const celeryMessage = data.message;
             setCeleryData({
@@ -61,6 +61,8 @@ export default function TradeSection() {
                 tradeCategory: celeryMessage.trade_category,
                 price: celeryMessage.crypto_price,
             });
+            await getOwnedCrypto(user.email);
+            await getTradeHistory(user.email);
             setCeleryModal(true);
         };
 
