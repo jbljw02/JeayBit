@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  redis:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+
+  celery-worker:
+    build:
+      context: .
+      dockerfile: Dockerfile.celery
+    command: celery -A crypto_app worker -l info
+    env_file:
+      - .env
+    depends_on:
+      - redis
+
+  celery-beat:
+    build:
+      context: .
+      dockerfile: Dockerfile.beat
+    command: celery -A crypto_app beat -l info
+    env_file:
+      - .env
+    depends_on:
+      - redis

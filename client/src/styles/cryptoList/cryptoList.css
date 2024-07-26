@@ -52,6 +52,13 @@
     border-color: #E3E8EC;
 }
 
+#scrollbar-list-table {
+    width: 100%;
+    /* 100vh에서 테이블을 제외한 다른 요소들의 값을 빼줘야 잘리지 않고 출력됨 */
+    max-height: calc(100vh - 180px);
+    overflow-x: hidden;
+}
+
 .list-table {
     flex-direction: column;
     border-collapse: collapse;
@@ -157,32 +164,16 @@
     font-size: 11px;
 }
 
-.td-rise {
-    color: #22ab94;
+.td-own-market {
+    margin-left: 2px;
+    font-size: 11.5px;
 }
 
-.td-fall {
-    color: #f23645;
-}
-
-.td-even {
-    color: black;
-}
-
-.change-bid {
+.change-price {
     font-weight: bold;
-    color: #22ab94;
+    text-decoration: underline;
 }
 
-.change-ask {
+.change-etc {
     font-weight: bold;
-    color: #f23645;
-}
-
-.asking-buy {
-    color: #22ab94;
-}
-
-.asking-sell {
-    color: #f23645;
 }

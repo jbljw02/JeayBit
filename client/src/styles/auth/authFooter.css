@@ -1,0 +1,17 @@
+.auth-footer {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    margin-top: 25px;
+    font-size: 14.5px;
+    font-weight: bold;
+}
+
+.auth-footer span {
+    cursor: pointer;
+}
+
+.auth-footer span:hover {
+    text-decoration: underline;
+}

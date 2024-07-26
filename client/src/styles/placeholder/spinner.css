@@ -1,0 +1,26 @@
+.loading-spinner-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+
+.working-spinner-msg {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    font-size: 18px;
+    margin-top: 35px;
+}
+
+.msg-title {
+    font-weight: bold;
+    font-size: 28px;
+    margin-bottom: 10px;
+}
+
+.msg-content {
+    font-size: 18px;
+}

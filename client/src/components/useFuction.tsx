@@ -5,30 +5,40 @@ import { AskingData, setAskingData, setTotalAskSize, setTotalBidSize, setClosedD
 import { setAllCrypto, OwnedCrypto } from "../redux/features/cryptoListSlice";
 import { setSelectedCrypto } from "../redux/features/selectedCryptoSlice";
 import { setUserTradeHistory, setUserTradeHistory_unSigned } from "../redux/features/tradeSlice";
-import { setUserWallet } from "../redux/features/walletSlice";
+import { setFailTransfer, setSuccessTransfer, setUserWallet } from "../redux/features/walletSlice";
 import { RootState } from "../redux/store";
 import { setErrorModal } from "../redux/features/modalSlice";
+import { useCallback } from "react";
+import { setCandlePerMinute, setCandlePerDate } from "../redux/features/chartSlice";
+import NoticeModal from "./modal/common/NoticeModal";
+import { setOwnedCrypto } from "../redux/features/userCryptoSlice";
 
 export default function useFunction() {
   const dispatch = useDispatch();
 
   const selectedCrypto = useSelector((state: RootState) => state.selectedCrypto);
+  const chartSortDate = useSelector((state: RootState) => state.chartSortDate);
+  const successTransfer = useSelector((state: RootState) => state.successTransfer);
+  const failTransfer = useSelector((state: RootState) => state.failTransfer);
+  const transferCategory = useSelector((state: RootState) => state.transferCategory);
+  const allCrypto = useSelector((state: RootState) => state.allCrypto);
 
   const checkLogin = async () => {
     try {
-      const response = await axios.post("http://127.0.0.1:8000/check_login/", {}, {
+      const response = await axios.post("https://jeaybit.onrender.com/check_login/", {}, {
         withCredentials: true
       });
 
       return response.data;
     } catch (error) {
+      dispatch(setErrorModal(true));
       throw error;
     }
   }
 
   const getAllCrypto = async () => {
     try {
-      const response = await axios.post("http://127.0.0.1:8000/get_all_crypto/", {}, {
+      const response = await axios.post("https://jeaybit.onrender.com/get_all_crypto/", {}, {
         withCredentials: true,
       });
 
@@ -43,7 +53,7 @@ export default function useFunction() {
   const getBalance = async (email: string) => {
     try {
       const response = await axios.post(
-        `http://127.0.0.1:8000/get_user_balance/`,
+        `https://jeaybit.onrender.com/get_user_balance/`,
         { email: email }
       );
       dispatch(setUserWallet(response.data.user_balance));
@@ -55,19 +65,28 @@ export default function useFunction() {
   // 사용자가 소유하고 있는 화폐의 정보를 받아옴
   const getOwnedCrypto = async (email: string) => {
     try {
-      const response = await axios.post('http://127.0.0.1:8000/get_user_ownedCrypto/', {
+      const response = await axios.post('https://jeaybit.onrender.com/get_user_ownedCrypto/', {
         email: email,
       });
 
       const resOwnedCrypto: OwnedCrypto[] = response.data;
-      const targetCrypto = resOwnedCrypto.find(item => item.name === selectedCrypto.name);
 
+      // 현재 선택한 화폐의 보유량 업데이트
+      const targetCrypto = resOwnedCrypto.find(item => item.name === selectedCrypto.name);
       const updatedCrypto = {
         ...selectedCrypto,
         is_owned: targetCrypto?.is_owned,
         owned_quantity: targetCrypto?.owned_quantity,
       };
 
+      const updatedOwnedCrypto = allCrypto
+        .filter(crypto => resOwnedCrypto.some(own => crypto.name === own.name))
+        .map(crypto => {
+          const matched = resOwnedCrypto.find(own => crypto.name === own.name);
+          return matched ? { ...crypto, is_owned: true, owned_quantity: matched.owned_quantity } : crypto;
+        });
+
+      dispatch(setOwnedCrypto(updatedOwnedCrypto));
       dispatch(setSelectedCrypto(updatedCrypto));
     } catch (error) {
       throw error;
@@ -77,7 +96,7 @@ export default function useFunction() {
   // 거래 내역에 저장될 정보를 전송(화폐 매수와 함께)
   const addTradeHistory = async (email: string, cryptoName: string, tradeCategory: string, tradeTime: Date, cryptoMarket: string, cryptoPrice: number, tradePrice: number, tradeAmount: number, market: string, isMarketValue: boolean) => {
     try {
-      const response = await axios.post("http://127.0.0.1:8000/add_user_tradeHistory/", {
+      const response = await axios.post("https://jeaybit.onrender.com/add_user_tradeHistory/", {
         email: email,
         crypto_name: cryptoName,
         trade_category: tradeCategory,
@@ -103,7 +122,7 @@ export default function useFunction() {
   // 서버로부터 거래 내역을 받아옴
   const getTradeHistory = async (email: string) => {
     try {
-      const response = await axios.post('http://127.0.0.1:8000/get_user_tradeHistory/', {
+      const response = await axios.post('https://jeaybit.onrender.com/get_user_tradeHistory/', {
         email: email,
       });
 
@@ -154,7 +173,7 @@ export default function useFunction() {
   // 선택된 화폐에 대한 호가내역 호출
   const selectAskingPrice = async (market: string) => {
     try {
-      const response = await axios.get(`http://127.0.0.1:8000/asking_price/?market=${market}`);
+      const response = await axios.get(`https://jeaybit.onrender.com/asking_price/?market=${market}`);
 
       const orderbookUnits = response.data[0].orderbook_units;
       const timestamp = response.data[0].timestamp;
@@ -177,13 +196,74 @@ export default function useFunction() {
   // 선택된 화폐에 대한 체결내역 호출
   const selectClosedPrice = async (market: string) => {
     try {
-      const response = await axios.get(`http://127.0.0.1:8000/closed_price/?market=${market}`);
+      const response = await axios.get(`https://jeaybit.onrender.com/closed_price/?market=${market}`);
       dispatch(setClosedData(response.data));
     } catch (error) {
       dispatch(setErrorModal(true));
       throw error;
     }
   };
+
+  // 리스트에서 화폐를 선택하면 해당 화폐에 대한 캔들 호출(차트의 분에 따라)
+  const requestCandleMinute = useCallback(async (market: string, minute: string) => {
+    if (minute && market) {
+      try {
+        const response = await axios.get(`https://jeaybit.onrender.com/candle_per_minute/?market=${market}&minute=${minute}`);
+        dispatch(setCandlePerMinute(response.data));
+      } catch (error) {
+        dispatch(setErrorModal(true));
+        throw error;
+      }
+    }
+  }, [dispatch]);
+
+  // 리스트에서 화폐를 선택하면 해당 화폐에 대한 캔들 호출(차트의 일/주/월에 따라)
+  const requestCandleDate = useCallback(async (market: string) => {
+    try {
+      let response;
+      let url = "https://jeaybit.onrender.com/";
+
+      if (chartSortDate === "1일") {
+        url += `candle_per_date/?market=${market}`;
+        response = await axios.get(url);
+        dispatch(setCandlePerDate(response.data));
+      } else if (chartSortDate === "1주") {
+        url += `candle_per_week/?market=${market}`;
+        response = await axios.get(url);
+        dispatch(setCandlePerDate(response.data));
+      } else if (chartSortDate === "1개월") {
+        url += `candle_per_month/?market=${market}`;
+        response = await axios.get(url);
+        dispatch(setCandlePerDate(response.data));
+      }
+    } catch (error) {
+      dispatch(setErrorModal(true));
+      throw error;
+    }
+  }, [chartSortDate, dispatch]);
+
+  // 입/출금 완료 시 띄울 모달 결정
+  const renderTransferModal = () => {
+    if (successTransfer) {
+      return (
+        <NoticeModal
+          isModalOpen={successTransfer}
+          setIsModalOpen={() => dispatch(setSuccessTransfer(false))}
+          content={`${transferCategory === 'deposit' ? '입금' : '출금'}이 성공적으로 완료되었습니다.`} />
+      );
+    }
+    if (failTransfer) {
+      return (
+        <NoticeModal
+          isModalOpen={failTransfer}
+          setIsModalOpen={() => dispatch(setFailTransfer(false))}
+          content={`${transferCategory === 'deposit' ? '입금' : '출금'}에 실패했습니다.`} />
+      );
+    }
+
+    return null;
+  };
+
 
   return {
     checkLogin,
@@ -194,6 +274,9 @@ export default function useFunction() {
     getTradeHistory,
     selectAskingPrice,
     selectClosedPrice,
+    requestCandleMinute,
+    requestCandleDate,
+    renderTransferModal
   };
 
 }

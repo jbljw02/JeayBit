@@ -42,7 +42,7 @@ export default function UnSignedHistory() {
                                 </td>
                                 <td>
                                     <span className="trading-history-market">{item.crypto_market}</span> <br />
-                                    <span className={`trading-history-category ${item.trade_category === 'BUY' ? 'asking-buy' : 'asking-sell'}`}>
+                                    <span className={`trading-history-category ${item.trade_category === 'BUY' ? 'rise' : 'fall'}`}>
                                         {item.trade_category ? (item.trade_category === 'BUY' ? '매수' : '매도') : ''}
                                     </span>
                                 </td>

@@ -26,9 +26,15 @@ export default function ListSearch() {
         if (listCategory === '원화') {
             dataToFilter = allCrypto;
         } else if (listCategory === '관심') {
-            dataToFilter = favoriteCrypto;
+            const isFavorites = allCrypto.filter(item => item.is_favorited);
+            dataToFilter = isFavorites;
+            // 관심 화폐의 무결성 유지
+            if (dataToFilter !== favoriteCrypto) {
+                dataToFilter = favoriteCrypto;
+            }
         } else if (listCategory === '보유') {
-            dataToFilter = ownedCrypto;
+            const isOwnes = allCrypto.filter(item => item.is_owned && item.owned_quantity > 0.00);
+            dataToFilter = isOwnes;
         }
 
         // 검색값이 있을 경우 필터링

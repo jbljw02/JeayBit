@@ -10,6 +10,7 @@ import { RootState } from "../../../../redux/store";
 import { setFavoriteCrypto, setOwnedCrypto } from "../../../../redux/features/userCryptoSlice";
 import { setCryptoRealTime, setSelectedCrypto } from "../../../../redux/features/selectedCryptoSlice";
 import { Crypto } from "../../../../redux/features/cryptoListSlice";
+import { setAskingSpinner } from "../../../../redux/features/placeholderSlice";
 
 type Differences = {
     name: string;
@@ -20,13 +21,11 @@ type Differences = {
 export default function ListTbody() {
     const dispatch = useDispatch();
 
-    const { getAllCrypto } = useFunction();
+    const { selectAskingPrice, selectClosedPrice } = useFunction();
 
     const filteredData = useSelector((state: RootState) => state.filteredData);
     const listCategory = useSelector((state: RootState) => state.listCategory);
     const allCrypto = useSelector((state: RootState) => state.allCrypto);
-    const favoriteCrypto = useSelector((state: RootState) => state.favoriteCrypto);
-    const ownedCrypto = useSelector((state: RootState) => state.ownedCrypto);
     const user = useSelector((state: RootState) => state.user);
 
     // 화폐 가격을 업데이트 하기 전에 해당 state에 담음
@@ -34,60 +33,51 @@ export default function ListTbody() {
     // 화폐 가격의 변화를 저장
     const [differences, setDifferences] = useState<Differences[]>([]);
 
-    // 초기 렌더링시 화폐 정보를 받아오고, 주기적으로 업데이트
-    useEffect(() => {
-        getAllCrypto();
-
-        // getAllCrypto 함수를 2초마다 실행 - 서버에서 받아오는 값을 2초마다 갱신시킴
-        const interval = setInterval(() => {
-            getAllCrypto();
-        }, 2000);
-
-        // setInterval이 반환하는 interval ID를 clearInterval 함수로 제거
-        return () => clearInterval(interval);
-    }, []);
+    const favoriteCrypto = useSelector((state: RootState) => state.favoriteCrypto);
+    const ownedCrypto = useSelector((state: RootState) => state.ownedCrypto);
 
     useEffect(() => {
         const isFavorites = allCrypto.filter(item => item.is_favorited);
         const isOwnes = allCrypto.filter(item => item.is_owned && item.owned_quantity > 0.00);
-
         dispatch(setFavoriteCrypto(isFavorites));
         dispatch(setOwnedCrypto(isOwnes));
-    }, [allCrypto]);
+    }, []);
 
     // 화폐 가격의 변화를 감지하고 업데이트
     useEffect(() => {
-        // 각 항목의 name을 키로, price를 값으로 하는 객체 생성
-        const cryptoPriceMap: Record<string, number> = filteredData.reduce((acc, item) => {
-            acc[item.name] = item.price;
-            return acc;
-        }, {} as Record<string, number>);
+        if (filteredData.length) {
+            // 각 항목의 name을 키로, price를 값으로 하는 객체 생성
+            const cryptoPriceMap: Record<string, number> = filteredData.reduce((acc, item) => {
+                acc[item.name] = item.price;
+                return acc;
+            }, {} as Record<string, number>);
 
-        if (!prevData) {
+            if (!prevData) {
+                setPrevData(cryptoPriceMap);
+                return;
+            }
+
+            // 이전 값과 현재 값의 차이를 저장할 배열
+            const newDifferences: Differences[] = [];
+
+            // 객체를 순회하며 변화 이전 값과 현재 값을 비교
+            if (prevData) {
+                Object.keys(cryptoPriceMap).forEach(name => {
+                    // 값이 다를 경우, newDifferences 배열에 변화된 항목 추가
+                    if (prevData[name] !== cryptoPriceMap[name]) {
+                        newDifferences.push({
+                            name: name,
+                            oldValue: prevData[name],
+                            newValue: cryptoPriceMap[name],
+                        });
+                    }
+                });
+            }
+
             setPrevData(cryptoPriceMap);
-            return;
-        }
-
-        // 이전 값과 현재 값의 차이를 저장할 배열
-        const newDifferences: Differences[] = [];
-
-        // 객체를 순회하며 변화 이전 값과 현재 값을 비교
-        if (prevData) {
-            Object.keys(cryptoPriceMap).forEach(name => {
-                // 값이 다를 경우, newDifferences 배열에 변화된 항목 추가
-                if (prevData[name] !== cryptoPriceMap[name]) {
-                    newDifferences.push({
-                        name: name,
-                        oldValue: prevData[name],
-                        newValue: cryptoPriceMap[name],
-                    });
-                }
-            });
-        }
-
-        setPrevData(cryptoPriceMap);
-        if (newDifferences.length !== allCrypto.length) {
-            setDifferences(newDifferences);
+            if (newDifferences.length !== allCrypto.length) {
+                setDifferences(newDifferences);
+            }
         }
     }, [filteredData]);
 
@@ -95,10 +85,11 @@ export default function ListTbody() {
     const addFavoriteCrypto = async (email: string, cryptoName: string) => {
         if (user.email) {
             try {
-                axios.post("http://127.0.0.1:8000/add_favoriteCrypto_to_user/", {
+                const response = await axios.post("https://jeaybit.onrender.com/add_favoriteCrypto_to_user/", {
                     email: email,
                     crypto_name: cryptoName,
                 });
+                return response.data.favorite_crypto
             } catch (error) {
                 throw error;
             }
@@ -106,16 +97,26 @@ export default function ListTbody() {
     };
 
     // 별 이미지를 클릭하면 관심 화폐 추가 요청
-    const starClick = async (index: number, market: string, e: { stopPropagation: () => void; }) => {
+    const starClick = async (crypto: Crypto, index: number, e: { stopPropagation: () => void; }) => {
         e.stopPropagation();
-        await addFavoriteCrypto(user.email, filteredData[index].name);
-        await getAllCrypto();
+
+        const updatedFavoriteCrypto = favoriteCrypto.some(item => item.name === crypto.name)
+            ? favoriteCrypto.filter(item => item.name !== crypto.name)
+            : [...favoriteCrypto, crypto];
+        dispatch(setFavoriteCrypto(updatedFavoriteCrypto));
+        addFavoriteCrypto(user.email, filteredData[index].name);
     };
 
     // 특정 화폐를 클릭했을 때
-    const cryptoClick = (value: Crypto) => {
+    const cryptoClick = async (value: Crypto) => {
+        dispatch(setAskingSpinner(true));
+
         dispatch(setSelectedCrypto(value));
         dispatch(setCryptoRealTime(value));
+        await selectClosedPrice(value.market);
+        await selectAskingPrice(value.market);
+
+        dispatch(setAskingSpinner(false));
     }
 
     return (
@@ -132,35 +133,46 @@ export default function ListTbody() {
                 <tbody>
                     {/* 검색값을 반환한 filteredData 함수를 다시 반복문을 이용하여 출력 */}
                     {
-                        Array.isArray(filteredData) &&
+                        filteredData.length &&
+                        favoriteCrypto.length &&
+                        ownedCrypto.length &&
                         filteredData.map((item, i) => {
                             // 가격의 변화가 생긴 state를 테이블에서 찾아 해당 td 시각화
                             let isChanged = differences.some((diff) => {
                                 return diff.name === item.name && diff.newValue === item.price;
                             });
 
+                            // 관심 화폐인지 확인
+                            let isFavorited = favoriteCrypto.find(fav => fav.name === item.name);
+
+                            // 화폐를 보유중인지에 따라 처리
+                            let userOwnedQuantity: { quantity: string, market: string } = { quantity: '', market: '' };
+                            if (listCategory === '보유') {
+                                let ownedInfo = ownedCrypto.find(own => own.name === item.name);
+
+                                if (ownedInfo) {
+                                    // 화폐의 보유량 설정
+                                    let ownedQuantity = String(ownedInfo.owned_quantity);
+                                    let ownedMarket = (item.market).slice(4);
+
+                                    // 전체 문자열의 길이가 12자리를 넘어갈 경우 12자리가 될 때까지 마지막 인덱스 제거
+                                    while (ownedQuantity.length + ownedMarket.length > 11) {
+                                        ownedQuantity = ownedQuantity.slice(0, -1);
+                                    }
+
+                                    // 마지막 인덱스가 '.'일 경우 제거
+                                    if (ownedQuantity.endsWith('.')) {
+                                        ownedQuantity = ownedQuantity.slice(0, -1);
+                                    }
+
+                                    // 결과를 공백으로 구분
+                                    userOwnedQuantity = { quantity: ownedQuantity, market: ownedMarket };
+                                }
+                            }
+
                             const cryptoPrice = formatWithComas(item.price); // 화폐 가격
                             const changeRate = (item.change_rate * 100).toFixed(2); // 화폐 변화율
                             const changePrice = formatWithComas(item.change_price); // 화폐 변화량
-
-                            // 화폐의 보유량 설정
-                            let userOwnedQuantity;
-                            if (listCategory === '보유') {
-                                let ownedQuantity = String(item.owned_quantity);
-                                let ownedMarket = (item.market).slice(4);
-
-                                userOwnedQuantity = ownedQuantity + ownedMarket;
-
-                                // 전체 문자열의 길이가 12자리를 넘어갈 경우 12자리가 될 때 까지 마지막 인덱스 제거
-                                while (userOwnedQuantity.length > 11) {
-                                    ownedQuantity = ownedQuantity.slice(0, -1);
-                                    userOwnedQuantity = ownedQuantity + ownedMarket;
-                                }
-                                // 마지막 인덱스가 '.'일 경우 제거
-                                if (userOwnedQuantity.endsWith('.')) {
-                                    userOwnedQuantity = userOwnedQuantity.slice(0, -1);
-                                }
-                            }
 
                             return (
                                 <tr
@@ -169,8 +181,8 @@ export default function ListTbody() {
                                     <td className="td-name">
                                         <span className="span-star">
                                             <img
-                                                onClick={(e) => { starClick(i, item.market, e) }}
-                                                src={item.is_favorited ? starOn : starOff}
+                                                onClick={(e) => { starClick(item, i, e) }}
+                                                src={isFavorited ? starOn : starOff}
                                                 alt="star" />
                                         </span>
                                         <div className="div-name">
@@ -183,14 +195,14 @@ export default function ListTbody() {
                                         // 가격
                                         item.change === "RISE" ? (
                                             <td>
-                                                <span className='rise'>
+                                                <span className={`rise ${isChanged ? 'change-price' : ''}`}>
                                                     {cryptoPrice}
                                                 </span>
                                             </td>
                                         ) :
                                             item.change === "FALL" ? (
                                                 <td>
-                                                    <span className='fall'>
+                                                    <span className={`fall ${isChanged ? 'change-price' : ''}`}>
                                                         {cryptoPrice}
                                                     </span>
                                                 </td>
@@ -204,7 +216,7 @@ export default function ListTbody() {
                                         // 변화율 및 변화량
                                         item.change === "RISE" ? (
                                             <td>
-                                                <span className="rise">
+                                                <span className={`rise ${isChanged ? 'change-etc' : ''}`}>
                                                     +{changeRate}% <br />
                                                     +{changePrice}
                                                 </span>
@@ -212,7 +224,7 @@ export default function ListTbody() {
                                         ) :
                                             item.change === "FALL" ? (
                                                 <td>
-                                                    <span className="fall">
+                                                    <span className={`fall ${isChanged ? 'change-etc' : ''}`}>
                                                         -{changeRate}% <br />
                                                         -{changePrice}
                                                     </span>
@@ -230,8 +242,9 @@ export default function ListTbody() {
                                     <td>
                                         {
                                             listCategory === '보유' ?
-                                                <span className="td-volume">
-                                                    {userOwnedQuantity}
+                                                <span>
+                                                    {userOwnedQuantity.quantity}
+                                                    <span className="td-own-market">{userOwnedQuantity.market}</span>
                                                 </span> :
                                                 <span>
                                                     {

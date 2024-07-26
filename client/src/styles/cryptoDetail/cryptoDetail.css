@@ -1,25 +1,7 @@
-.crypto-name {
-    padding: 25px 30px;
-    font-weight: bold;
-    font-size: 26px;
-    border-bottom: 1px solid rgb(228, 229, 230);
-}
-
-.crypto-img {
-    position: relative;
-    width: 24px;
-    margin-right: 7px;
-    top: 2px;
-}
-
-.crypto-market {
-    margin-left: 5px;
-    font-size: 16px;
-    font-weight: bold;
-    color: rgba(0, 0, 0, 0.4);
-}
-
 .trading-detail {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
     height: 125px;
     padding: 30px 25px 0px 40px;
 }
@@ -33,6 +15,7 @@
 .crypto-change_price {
     margin-top: 4px;
     font-size: 20px;
+    font-weight: lighter;
 }
 
 .crypto-price {
@@ -52,16 +35,19 @@
     color: black;
 }
 
+.div-dl {
+    height: 100%;
+}
+
 dl {
     position: relative;
     margin-top: -9px;
     float: right;
-    font-weight: lighter;
-    color: rgba(0, 0, 0, 0.6);
     margin-left: 25px;
 }
 
 dt {
+    color: #111111;
     font-size: 13px;
     margin-top: 10px;
     padding-bottom: 6px;

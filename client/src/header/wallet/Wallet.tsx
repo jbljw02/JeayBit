@@ -7,8 +7,9 @@ import { ChangeInput } from "./ChangeInput";
 import TransferWarning from "./TransferWarning";
 import NoticeModal from "../../components/modal/common/NoticeModal";
 import '../../styles/header/wallet.css'
-import { setBalanceUpdate, setTransferSort } from "../../redux/features/walletSlice";
+import { setBalanceUpdate, setFailTransfer, setSuccessTransfer, setTransferCategory, setTransferSort } from "../../redux/features/walletSlice";
 import { RootState } from "../../redux/store";
+import { setWorkingSpinner } from "../../redux/features/placeholderSlice";
 
 export default function Wallet() {
     const dispatch = useDispatch();
@@ -35,9 +36,6 @@ export default function Wallet() {
     const [depositSubmitted, setDepositSubmitted] = useState<boolean>(false);
     const [withdrawSubmitted, setWithdrawSubmitted] = useState<boolean>(false);
 
-    const [successTransfer, setSuccessTransfer] = useState<boolean>(false);
-    const [failTransfer, setFailTransfer] = useState<boolean>(false);
-    const [transferCategory, setTransferCategory] = useState<'deposit' | 'withdraw' | ''>('');
 
     // 로그인 중인 사용자의 잔고량
     const userWallet = useSelector((state: RootState) => state.userWallet);
@@ -63,6 +61,7 @@ export default function Wallet() {
         let value = event.target.value.replace(/,/g, "");
         let numberValue = Number(value);
 
+        // 1000만원을 초과하는 수가 입력될 경우 1000만원으로 대치
         if (numberValue > 10000000) {
             numberValue = 10000000;
         }
@@ -91,15 +90,15 @@ export default function Wallet() {
     const addBalanceToUser = async (email: string, depositAmount: number) => {
         if (user.email && user.name) {
             try {
-                await axios.post("http://127.0.0.1:8000/add_balance_to_user/", {
+                await axios.post("https://jeaybit.onrender.com/add_balance_to_user/", {
                     email: email,
                     depositAmount: depositAmount,
                 });
-                setSuccessTransfer(true);
-                setTransferCategory('deposit');
+                dispatch(setSuccessTransfer(true));
+                dispatch(setTransferCategory('deposit'));
             } catch (error) {
-                setFailTransfer(true);
-                setTransferCategory('deposit');
+                dispatch(setFailTransfer(true));
+                dispatch(setTransferCategory('deposit'));
             }
         }
     };
@@ -109,24 +108,24 @@ export default function Wallet() {
         if (user.email && user.name) {
             try {
                 await axios.post(
-                    "http://127.0.0.1:8000/minus_balance_from_user/",
+                    "https://jeaybit.onrender.com/minus_balance_from_user/",
                     {
                         email: email,
                         withdrawAmount: withdrawAmount,
                     }
                 );
-                setSuccessTransfer(true);
-                setTransferCategory('withdraw');
+                dispatch(setSuccessTransfer(true));
+                dispatch(setTransferCategory('withdraw'));
             } catch (error) {
-                setFailTransfer(true);
-                setTransferCategory('withdraw');
+                dispatch(setFailTransfer(true));
+                dispatch(setTransferCategory('withdraw'));
             }
         }
     };
 
     const depositSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        
+
         setDepositSubmitted(true);
         if (!depositAmount) {
             setDepositEmpty(true);
@@ -134,7 +133,11 @@ export default function Wallet() {
         }
 
         if (depositAmount && !depositLimit) {
+            dispatch(setWorkingSpinner(true));
             await addBalanceToUser(user.email, depositAmount);
+            await getBalance(user.email);
+            dispatch(setWorkingSpinner(false));
+
             dispatch(setBalanceUpdate(!balanceUpdate));
             setDepositSubmitted(false);
             setDepositEmpty(false);
@@ -143,48 +146,37 @@ export default function Wallet() {
 
     const withdrawSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        
+
         setWithdrawSubmitted(true);
         if (!withdrawAmount) {
             setWithdrawEmpty(true);
             return;
         }
 
+        if (withdrawAmount > userWallet) {
+            setWithdrawOverflow(true);
+            return;
+        }
+
         if (withdrawAmount && !withdrawOverflow && !withdrawLimit) {
+            dispatch(setWorkingSpinner(true));
             await minusBalanceFromUser(user.email, withdrawAmount);
+            await getBalance(user.email);
+            dispatch(setWorkingSpinner(false));
+
             dispatch(setBalanceUpdate(!balanceUpdate));
             setWithdrawSubmitted(false);
             setWithdrawEmpty(false);
         }
     }
 
-    // 입/출금 완료 시 띄울 모달 결정
-    const renderNoticeModal = () => {
-        if (successTransfer) {
-            return (
-                <NoticeModal
-                    isModalOpen={successTransfer}
-                    setIsModalOpen={setSuccessTransfer}
-                    content={`${transferCategory === 'deposit' ? '입금' : '출금'}이 성공적으로 완료되었습니다.`}
-                />
-            );
-        }
-        if (failTransfer) {
-            return (
-                <NoticeModal
-                    isModalOpen={failTransfer}
-                    setIsModalOpen={setFailTransfer}
-                    content={`${transferCategory === 'deposit' ? '입금' : '출금'}에 실패했습니다.`}
-                />
-            );
-        }
-
-        return null;
-    };
 
     return (
         <>
-            {renderNoticeModal()}
+            <NoticeModal
+                isModalOpen={withdrawOverflow}
+                setIsModalOpen={setWithdrawOverflow}
+                content="출금량이 잔고를 초과했습니다." />
             <form
                 onSubmit={transferSort === '입금' ? depositSubmit : withdrawSubmit}
                 className={`wallet-hover 
@@ -243,11 +235,8 @@ export default function Wallet() {
                                     onChange={(e) =>
                                         handleBalanceChange(e, setWithdrawAmount, setWithdrawChangeAmount, setWithdrawLimit, setWithdrawEmpty, withdrawSubmitted, selectedCrypto.price)
                                     }
-                                    limitReached={withdrawLimit || withdrawOverflow}
+                                    limitReached={withdrawLimit}
                                     amountEmpty={withdrawEmpty} />
-                                <TransferWarning
-                                    isWarning={withdrawOverflow}
-                                    label="출금량이 잔고보다 많습니다" />
                                 <TransferWarning
                                     isWarning={withdrawLimit}
                                     label="출금은 1회당 1,000원 이상 10,000,000원 이하만 가능합니다" />

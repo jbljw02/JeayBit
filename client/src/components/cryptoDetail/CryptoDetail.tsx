@@ -5,10 +5,13 @@ import formatWithComas from "../../utils/format/formatWithComas";
 import ChangeRate from "./child/ChangeRate";
 import Summary from "./child/Summary";
 import '../../styles/cryptoDetail/cryptoDetail.css'
+import SkeletonUI from "../placeholder/SkeletonUI";
 
 export default function CryptoDetail() {
     const selectedCrypto = useSelector((state: RootState) => state.selectedCrypto);
-    const cryptoRealTime = useSelector((state: RootState) => state.cryptoRealTime)
+    const cryptoRealTime = useSelector((state: RootState) => state.cryptoRealTime);
+    const allCrypto = useSelector((state: RootState) => state.allCrypto);
+
     const priceClassName = `crypto-price 
     ${cryptoRealTime.change === 'RISE'
             ? 'rise' : (
@@ -19,44 +22,31 @@ export default function CryptoDetail() {
 
     return (
         <>
-            <div className="crypto-name">
-                <img
-                    className="crypto-img"
-                    src={
-                        selectedCrypto && selectedCrypto.market &&
-                        (`https://static.upbit.com/logos/${(selectedCrypto.market).slice(4)}.png`)
-                    }
-                    onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }}
-                    alt="" />
-                {
-                    cryptoRealTime && cryptoRealTime.name &&
-                    cryptoRealTime.name
-                }
-                <span className="crypto-market">
-                    {
-                        cryptoRealTime && cryptoRealTime.market &&
-                        cryptoRealTime.market
-                    }
-                </span>
-            </div>
-            <div className="trading-detail">
-                {
-                    cryptoRealTime && cryptoRealTime.change && (
-                        <div className={priceClassName}>
-                            {formatWithComas(cryptoRealTime.price)}
-                            <ChangeRate />
-                            <Summary />
-                        </div>
-                    )
-                }
-                {
-                    cryptoRealTime && cryptoRealTime.change_price !== undefined && cryptoRealTime.change && (
-                        <ChangePrice
-                            changePrice={cryptoRealTime.change_price}
-                            change={cryptoRealTime.change} />
-                    )
-                }
-            </div>
+            {
+                allCrypto.length ?
+                    <div className="trading-detail">
+                        {
+                            cryptoRealTime && cryptoRealTime.change && (
+                                <div className={priceClassName}>
+                                    {formatWithComas(cryptoRealTime.price)}
+                                    <ChangeRate />
+                                    {
+                                        cryptoRealTime && cryptoRealTime.change_price !== undefined && cryptoRealTime.change && (
+                                            <ChangePrice
+                                                changePrice={cryptoRealTime.change_price}
+                                                change={cryptoRealTime.change} />
+                                        )
+                                    }
+                                </div>
+                            )
+                        }
+                        <Summary />
+                    </div> :
+                    <div style={{ height: '134px', padding: '4px 5px 17px 5px' }}>
+                        <SkeletonUI
+                            containerHeight="100%" elementsHeight={25} counts={4} />
+                    </div>
+            }
         </>
     );
 }

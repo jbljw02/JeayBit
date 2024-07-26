@@ -11,6 +11,7 @@ import NoticeModal from "../../../../modal/common/NoticeModal";
 import PlaceholderDisplay from "../../../../placeholder/PlaceholderDisplay";
 import { RootState } from "../../../../../redux/store";
 import { setScheduledCancel } from "../../../../../redux/features/tradeSlice";
+import { setWorkingSpinner } from "../../../../../redux/features/placeholderSlice";
 
 export default function TradeHistory() {
     const dispatch = useDispatch();
@@ -62,7 +63,13 @@ export default function TradeHistory() {
     const cancelSubmit = async () => {
         let ids: string[] = scheduledCancel.map(item => item.id);
         if (ids.length > 0) {
+            dispatch(setWorkingSpinner(true));
+
             await cancelOrder(user.email, ids);
+            await getTradeHistory(user.email);
+
+            dispatch(setWorkingSpinner(false));
+            
             setCancelCompleteModal(true);
         }
     }
@@ -70,22 +77,15 @@ export default function TradeHistory() {
     // 주문을 취소할 화폐를 서버로 전송
     const cancelOrder = async (email: string, ids: string[]) => {
         try {
-            await axios.post("http://127.0.0.1:8000/cancel_order/", {
+            await axios.post("https://jeaybit.onrender.com/cancel_order/", {
                 ids: ids,
                 email: email,
             });
-            getTradeHistory(user.email);
             dispatch(setScheduledCancel([]));
         } catch (error) {
             throw error;
         }
     }
-
-    useEffect(() => {
-        if (user.email) {
-            getTradeHistory(user.email);
-        }
-    }, [user]);
 
     return (
         <>

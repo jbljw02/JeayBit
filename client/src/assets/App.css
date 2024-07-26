@@ -62,3 +62,15 @@
 input:focus {
   outline: none;
 }
+
+.rise {
+  color: #22ab94;
+}
+
+.fall {
+  color: #f23645;
+}
+
+.even {
+  color: #000000;
+}

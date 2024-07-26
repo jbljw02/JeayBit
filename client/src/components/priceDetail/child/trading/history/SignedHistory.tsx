@@ -19,7 +19,7 @@ export default function SignedHistory() {
                             </td>
                             <td>
                                 <div className="trading-history-market">{item.crypto_market}</div>
-                                <div className={`trading-history-category ${item.trade_category === 'BUY' ? 'asking-buy' : 'asking-sell'}`}>
+                                <div className={`trading-history-category ${item.trade_category === 'BUY' ? 'rise' : 'fall'}`}>
                                     {item.trade_category === 'BUY' ? '매수' : '매도'}
                                 </div>
                             </td>

@@ -39,21 +39,3 @@
 .section-password {
   margin-bottom: 0px;
 }
-
-.login-footer {
-  display: flex;
-  flex-direction: row;
-  margin-top: 25px;
-  justify-content: center;
-  font-size: 14.5px;
-  font-weight: bold;
-}
-
-.login-footer span:nth-child(1) {
-  cursor: pointer;
-}
-
-.login-footer span:nth-child(2) {
-  margin-left: 25px;
-  cursor: pointer;
-}

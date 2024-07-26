@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import FormInput from "../input/FormInput";
@@ -8,10 +8,13 @@ import FaviconTitle from "./child/FaviconTitle";
 import formValueChange from "../../utils/formValueChange";
 import HeaderNav from "../../header/HeaderNav";
 import '../../styles/auth/login.css'
-import AuthButton from "../button/AuthButton";
 import { setUser } from "../../redux/features/userSlice";
+import LoadingBar, { LoadingBarRef } from 'react-top-loading-bar';
+import AuthButton from "./child/AuthButton";
+import AuthFooter from "./child/AuthFooter";
 
 export default function LogIn() {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const [activeInput, setActiveInput] = useState<string>('');
@@ -26,7 +29,7 @@ export default function LogIn() {
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
   const [invalidSubmit, setInvalidSubmit] = useState<boolean>(false);
 
-  const dispatch = useDispatch();
+  const loadingBarRef = useRef<LoadingBarRef>(null);
 
   const submitLogin = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -43,12 +46,16 @@ export default function LogIn() {
       return;
     }
 
+    if (loadingBarRef.current) {
+      loadingBarRef.current.continuousStart();
+    }
+
     try {
       setIsEmailEmpty(false);
       setIsPasswordEmpty(false);
 
       const data = { email, password };
-      const response = await axios.post('http://127.0.0.1:8000/logIn/', data, {
+      const response = await axios.post('https://jeaybit.onrender.com/logIn/', data, {
         withCredentials: true,
       });
 
@@ -76,11 +83,16 @@ export default function LogIn() {
           setInvalidSubmit(true);
         }
       }
+    } finally {
+      if (loadingBarRef.current) {
+        loadingBarRef.current.complete();
+      }
     }
   };
 
   return (
     <>
+      <LoadingBar color="#22ab94" ref={loadingBarRef} />
       <HeaderNav />
       <div className="container-login">
         <FaviconTitle />
@@ -131,10 +143,9 @@ export default function LogIn() {
             isSubmitted={isSubmitted} />
           <AuthButton
             label="로그인" />
-          <div className="login-footer">
-            <span onClick={() => navigate('/signUp')}>회원가입</span>
-            <span>비밀번호를 잊으셨나요?</span>
-          </div>
+          <AuthFooter
+            label="아직 계정이 없으신가요?"
+            navigateString="/signUp" />
         </form>
       </div>
     </>

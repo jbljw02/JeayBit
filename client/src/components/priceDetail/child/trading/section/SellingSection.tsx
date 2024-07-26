@@ -16,6 +16,8 @@ import WaitingModal from "../../../../modal/trade/WatingModal";
 import { bidSortOptions } from "../TradeSection";
 import { RootState } from "../../../../../redux/store";
 import { setSellingPrice } from "../../../../../redux/features/tradeSlice";
+import { setWorkingSpinner } from "../../../../../redux/features/placeholderSlice";
+import NoticeModal from "../../../../modal/common/NoticeModal";
 
 export default function SellingSectioin() {
     const dispatch = useDispatch();
@@ -179,7 +181,8 @@ export default function SellingSectioin() {
             setIsExceedQuantity(true);
             return;
         }
-        setIsExceedQuantity(false);
+
+        dispatch(setWorkingSpinner(true));
 
         const addTradeResCode = await addTradeHistory(
             user.email,
@@ -193,11 +196,12 @@ export default function SellingSectioin() {
             selectedCrypto.market,
             isMarketValue
         );
-
+        
         await getTradeHistory(user.email);
         await getOwnedCrypto(user.email);
         await getBalance(user.email);
-        await getAllCrypto();
+        
+        dispatch(setWorkingSpinner(false));
 
         if (addTradeResCode === 200) {
             resetValue();
@@ -234,6 +238,10 @@ export default function SellingSectioin() {
                 isModalOpen={watingModalOpen}
                 setIsModalOpen={setWatingModalOpen}
                 category="sell" />
+            <NoticeModal
+                isModalOpen={isExceedQuantity}
+                setIsModalOpen={setIsExceedQuantity}
+                content="주문 수량이 화폐 보유량을 초과했습니다." />
             {
                 // 매도 - 지정가 영역
                 bidSort === '지정가' ?
@@ -305,17 +313,6 @@ export default function SellingSectioin() {
                                         onChange={(e) => totalValueChange(e.target.value)}
                                         suffix="KRW" />
                                 </td>
-                            </tr>
-                            <tr>
-                                {
-                                    isExceedQuantity ?
-                                        <tr>
-                                            <td></td>
-                                            <td>
-                                            </td>
-                                        </tr> :
-                                        null
-                                }
                             </tr>
                         </table>
                     </div> :

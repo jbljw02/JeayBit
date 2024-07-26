@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import favicon from "../assets/images/favicon.png";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Wallet from "./wallet/Wallet";
@@ -8,6 +8,7 @@ import { setUser } from "../redux/features/userSlice";
 import { setUserTradeHistory, setUserTradeHistory_unSigned } from "../redux/features/tradeSlice";
 import { RootState } from "../redux/store";
 import '../styles/header/header.css'
+import LoadingBar, { LoadingBarRef } from 'react-top-loading-bar';
 
 export default function Header() {
   const dispatch = useDispatch();
@@ -17,9 +18,15 @@ export default function Header() {
 
   const [walletHover, setWalletHover] = useState<boolean>(false);
 
+  const loadingBarRef = useRef<LoadingBarRef>(null);
+
   const logOut = async () => {
+    if (loadingBarRef.current) {
+      loadingBarRef.current.continuousStart();
+    }
+
     try {
-      await axios.post("http://127.0.0.1:8000/logOut/",
+      await axios.post("https://jeaybit.onrender.com/logOut/",
         {},
         {
           withCredentials: true,
@@ -32,10 +39,13 @@ export default function Header() {
 
       dispatch(setUserTradeHistory([]));
       dispatch(setUserTradeHistory_unSigned([]));
-
-      window.location.reload();
     } catch (error) {
       throw error;
+    } finally {
+      if (loadingBarRef.current) {
+        loadingBarRef.current.complete();
+      }
+      window.location.reload();
     }
   };
 
@@ -51,6 +61,7 @@ export default function Header() {
         url('https://fonts.googleapis.com/css2?family=Asap+Condensed:wght@300&family=Barlow:ital@1&family=Fira+Sans:ital,wght@1,300&family=Gowun+Batang&family=Roboto+Flex&display=swap');
       </style>
       <div className="header-container">
+        <LoadingBar color="#22ab94" ref={loadingBarRef} />
         <div className="title">
           <img src={favicon} className="title-img" alt="제목" />
           <span

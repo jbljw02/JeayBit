@@ -7,6 +7,12 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from requests import get
 import requests
+from asgiref.sync import sync_to_async
+import aiohttp
+import logging
+from django.db.models import Prefetch
+
+logger = logging.getLogger(__name__)
 
 
 def crypto_api():
@@ -92,68 +98,48 @@ def update_crypto():
             Crypto.objects.create(name=name[i], price=cur_price[i])
 
 
-def candle_per_date_BTC():
-    headers = {"accept": "application/json"}
-    url = "https://api.upbit.com/v1/candles/days?market=KRW-BTC&count=100"
-    response = get(url, headers=headers)
-
-    candle_btc_date = response.json()
-
-    return candle_btc_date
-
-
-def candle_per_week_BTC():
-    headers = {"accept": "application/json"}
-    url = "https://api.upbit.com/v1/candles/weeks?market=KRW-BTC&count=100"
-    response = get(url, headers=headers)
-
-    candle_btc_date = response.json()
-
-    return candle_btc_date
-
-
-def candle_per_month_BTC():
-    headers = {"accept": "application/json"}
-    url = "https://api.upbit.com/v1/candles/months?market=KRW-BTC&count=100"
-    response = get(url, headers=headers)
-
-    candle_btc_date = response.json()
-
-    return candle_btc_date
-
-
 class GetAllCryptoView(View):
-    def post(
-        self,
-        request,
-    ):
+    async def post(self, request):
         try:
-            # 로그인 여부 확인
-            is_logged_in = request.user.is_authenticated
+            # 비동기적으로 로그인 여부 확인
+            is_logged_in = await sync_to_async(lambda: request.user.is_authenticated)()
 
             headers = {"accept": "application/json"}
-            url = "https://api.upbit.com/v1/market/all?isDetails=true"
-            response = get(url, headers=headers)
+            url1 = "https://api.upbit.com/v1/market/all?isDetails=true"
+            url2_template = "https://api.upbit.com/v1/ticker?markets={}"
 
-            market_data = json.loads(response.text)
-            market = []
-            name = []
+            async with aiohttp.ClientSession() as session:
+                async with session.get(url1, headers=headers) as response1:
+                    market_data = await response1.json()
 
-            for crypto in market_data:
-                if (
-                    crypto["market"].startswith("KRW")
+                market = [
+                    crypto["market"]
+                    for crypto in market_data
+                    if crypto["market"].startswith("KRW")
                     and crypto["market_warning"] == "NONE"
-                ):
-                    name.append(crypto["korean_name"])
-                    market.append(crypto["market"])
+                ]
+                name = [
+                    crypto["korean_name"]
+                    for crypto in market_data
+                    if crypto["market"].startswith("KRW")
+                    and crypto["market_warning"] == "NONE"
+                ]
 
-            unJoin_market = market
-            market_str = "%2C%20".join(market)
-            url = f"https://api.upbit.com/v1/ticker?markets={market_str}"
-            response = get(url, headers=headers)
-            data = json.loads(response.text)
+                market_str = "%2C%20".join(market)
+                url2 = url2_template.format(market_str)
+                async with session.get(url2, headers=headers) as response2:
+                    data = await response2.json()
 
             all_crypto = []
+
+            # 로그인된 경우 UserCrypto 데이터를 미리 가져오기
+            if is_logged_in:
+                user_cryptos = await sync_to_async(list)(
+                    UserCrypto.objects.filter(user=request.user, crypto__name__in=name)
+                )
+                user_crypto_dict = {uc.crypto.name: uc for uc in user_cryptos}
+            else:
+                user_crypto_dict = {}
 
             for i in range(len(data)):
                 trade_price = data[i].get("trade_price")
@@ -161,7 +147,7 @@ class GetAllCryptoView(View):
 
                 crypto_obj = {
                     "name": name[i],
-                    "market": unJoin_market[i],
+                    "market": market[i],
                     "price": (
                         int(trade_price)
                         if trade_price and trade_price % 1 == 0
@@ -181,12 +167,8 @@ class GetAllCryptoView(View):
                     "low_price": data[i]["low_price"],
                 }
 
-                # 로그인된 경우 사용자 정보 추가
                 if is_logged_in:
-                    user_crypto_info = UserCrypto.objects.filter(
-                        user=request.user,
-                        crypto__name=name[i],  # Crypto 모델의 name 필드와 매칭
-                    ).first()
+                    user_crypto_info = user_crypto_dict.get(name[i])
                     if user_crypto_info:
                         crypto_obj["is_favorited"] = user_crypto_info.is_favorited
                         crypto_obj["is_owned"] = user_crypto_info.is_owned
@@ -198,7 +180,7 @@ class GetAllCryptoView(View):
 
                 all_crypto.append(crypto_obj)
         except Exception as e:
-            print(f"암호화폐 데이터 가져오기 에러: {e}")
+            logger.error(f"암호화폐 데이터 가져오기 에러: {e}")
             return JsonResponse({"error": "암호화폐 데이터 가져오기 에러"}, status=500)
 
         data = {

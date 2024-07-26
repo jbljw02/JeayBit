@@ -4,7 +4,6 @@ import { useSelector } from 'react-redux';
 import moment from 'moment-timezone';
 import { RootState } from '../../../redux/store';
 import formatWithComas from '../../../utils/format/formatWithComas';
-import '../../../styles/chart/chart.css'
 import { Market } from '../../../redux/features/chartSlice';
 
 type Axis = {

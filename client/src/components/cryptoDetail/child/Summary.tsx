@@ -13,16 +13,20 @@ type ChildParams = {
 
 function DetailContent({ title, value, suffix, category }: ChildParams) {
     return (
-        <dt>
-            {title}
-            <dd className={`${category === 'high' ? 'dd-high_price' : (
-                category === 'low' ? 'dd-low_price' :
-                    ''
-            )}`}>
-                {formatCryptoDetail(value)}
-                {suffix && <span>&nbsp;{suffix}</span>}
-            </dd>
-        </dt>
+        <>
+            {
+                <dt>
+                    {title}
+                    <dd className={`${category === 'high' ? 'dd-high_price' : (
+                        category === 'low' ? 'dd-low_price' :
+                            ''
+                    )}`}>
+                        {formatCryptoDetail(value)}
+                        {suffix && <span>&nbsp;{suffix}</span>}
+                    </dd>
+                </dt>
+            }
+        </>
     )
 }
 
@@ -35,10 +39,10 @@ export default function Summary() {
     useEffect(() => {
         const targetCrypto = allCrypto.find(item => item.market === cryptoRealTime.market);
         dispatch(setCryptoRealTime(targetCrypto));
-    }, [allCrypto]);
+    }, [allCrypto, cryptoRealTime.market, dispatch]);
 
     return (
-        <>
+        <div className="div-dl">
             <dl>
                 <DetailContent
                     title="거래대금"
@@ -65,6 +69,6 @@ export default function Summary() {
                     value={cryptoRealTime.low_price}
                     category="low" />
             </dl>
-        </>
+        </div>
     );
 }

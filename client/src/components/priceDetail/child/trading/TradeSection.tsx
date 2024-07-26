@@ -3,7 +3,7 @@ import { RootState } from "../../../../redux/store";
 import BuyingSection from "./section/BuyingSection";
 import SellingSection from "./section/SellingSection";
 import TradeHistory from "./history/TradeHistory";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import CeleryCompleteModal from "../../../modal/trade/CeleryCompleteModal";
 import useFunction from "../../../useFuction";
 import '../../../../styles/priceDetail/trading/tradeSection.css'
@@ -41,11 +41,18 @@ export default function TradeSection() {
         }
     }, [user, getBalance]);
 
-    // 미체결 거래가 체결될 시 웹소켓을 통해 결과를 받음
-    useEffect(() => {
-        const socket = new WebSocket('ws://localhost:8000/ws/trade_updates/');
+    const [connectionAttempts, setConnectionAttempts] = useState(0);
+    const socketRef = useRef<WebSocket | null>(null);
 
-        socket.onmessage = function (e) {
+    const connectWebSocket = useCallback (() => {
+        const socket = new WebSocket('wss://jeaybit.onrender.com/ws/trade_updates/');
+        socketRef.current = socket;
+
+        socket.onopen = () => {
+            setConnectionAttempts(0); // 연결 성공 시 재시도 횟수 초기화
+        };
+
+        socket.onmessage = (e) => {
             const data = JSON.parse(e.data);
             const celeryMessage = data.message;
             setCeleryData({
@@ -53,14 +60,43 @@ export default function TradeSection() {
                 tradeTime: celeryMessage.trade_time,
                 tradeCategory: celeryMessage.trade_category,
                 price: celeryMessage.crypto_price,
-            })
+            });
             setCeleryModal(true);
         };
 
-        socket.onerror = function (e) {
-            throw e;
+        socket.onclose = (event) => {
+            if (event.wasClean) {
+                return;
+            } else {
+                if (connectionAttempts <= 4) {
+                    setConnectionAttempts(prev => prev + 1); // 연결 실패 시 재시도 횟수 증가
+                }
+            }
         };
-    }, []);
+    }, [connectionAttempts]);
+
+    useEffect(() => {
+        connectWebSocket();
+
+        return () => {
+            if (socketRef.current) {
+                socketRef.current.close();
+            }
+        };
+    }, [connectWebSocket]);
+
+    useEffect(() => {
+        // 최소한 한 번의 연결 시도가 실패했을 때
+        if (connectionAttempts > 0) {
+            // 각 재연결 시도 사이 대기 시간을 점진적으로 증가시키되, 10초를 넘기지 않음
+            const timeout = Math.min(10000, connectionAttempts * 1000);
+            const timer = setTimeout(() => {
+                connectWebSocket();
+            }, timeout);
+
+            return () => clearTimeout(timer);
+        }
+    }, [connectionAttempts]);
 
     return (
         <>
