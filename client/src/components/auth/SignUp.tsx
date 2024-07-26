@@ -129,7 +129,7 @@ export default function SignUp() {
       <HeaderNav />
       <div className="container-signUp">
         <FaviconTitle />
-        <form onSubmit={submitSignUp} className="form-signUp">
+        <form onSubmit={submitSignUp} className="form-signUp" noValidate>
           <div className="section-name">
             <FormInput
               type="text"
