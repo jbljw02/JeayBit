@@ -10,6 +10,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 
 logger = logging.getLogger(__name__)
 
+
 def fetch_orderbook(trade_history):
     url = f"https://api.upbit.com/v1/orderbook?markets={trade_history.crypto_market}"
     response = requests.get(url)
@@ -81,3 +82,15 @@ def cleanup_task_results(max_results=100):
         excess_results = total_results - max_results
         results_to_delete = AsyncResult.objects.order_by("date_done")[:excess_results]
         results_to_delete.delete()
+
+
+@shared_task
+def keep_server_awake():
+    try:
+        response = requests.get("https://jeaybit.onrender.com")
+        if response.status_code == 200:
+            logger.info("서버 실행중")
+        else:
+            logger.error(f"서버 Health Check 실패: {response.status_code}")
+    except Exception as e:
+        logger.error(f"서버 Health Check 도중 에러: {e}")
