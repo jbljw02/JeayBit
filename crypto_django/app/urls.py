@@ -8,6 +8,7 @@ from .views.candle_views import candle_per_minute, candle_per_date, candle_per_w
 from .views.favorite_views import add_favoriteCrypto_to_user, get_user_favoriteCrypto
 from .views.own_views import get_user_ownedCrypto
 from .views.balance_views import add_balance_to_user, minus_balance_from_user, get_user_balance
+from .views.home_views import home
 
 urlpatterns = [
     path("sign_up/", sign_up),
@@ -30,5 +31,6 @@ urlpatterns = [
     path("minus_balance_from_user/", minus_balance_from_user),
     path("get_user_balance/", get_user_balance),
     path("get_all_crypto/", GetAllCryptoView.as_view()),
+    path('', home, name='home'),
     # path('admin/', admin.site.urls)
 ]

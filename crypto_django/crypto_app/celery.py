@@ -37,6 +37,6 @@ app.conf.beat_schedule = {
     },
       "keep-server-awake": {
         "task": "app.tasks.keep_server_awake",
-        "schedule": crontab(minute="*/5"),  # 5분마다 실행
+        "schedule": crontab(minute="*/1"),  # 5분마다 실행
     },
 }
