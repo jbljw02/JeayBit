@@ -33,6 +33,6 @@ app.conf.beat_schedule = {
     # celery 결과 정리
     "cleanup-task-results": {
         "task": "app.tasks.periodic_cleanup_task_results",
-        "schedule": crontab(minute="0,10"),  # 10분 마다 실행
+        "schedule": 5.0,  # 10분 마다 실행
     },
 }
