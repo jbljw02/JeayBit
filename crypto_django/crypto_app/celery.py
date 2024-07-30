@@ -28,7 +28,7 @@ app.conf.beat_schedule = {
     # 미체결 화폐 호가 비교
     "check-trade-history-5-seconds": {
         "task": "app.tasks.check_trade_history",
-        "schedule": 10.0,  # 10초 주기로 task를 실행
+        "schedule": 20.0, 
     },
     # celery 결과 정리
     "cleanup-task-results": {
@@ -37,6 +37,6 @@ app.conf.beat_schedule = {
     },
     "keep-server-awake": {
         "task": "app.tasks.keep_server_awake",
-        "schedule": crontab(minute="*/10"),  # 5분마다 실행
+        "schedule": crontab(minute="*/14"),
     },
 }
