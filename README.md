@@ -30,8 +30,8 @@
 ![화폐 불러오기](https://github.com/user-attachments/assets/4c1f9b3b-a005-471a-bf5a-3eb95b4e7f1c)
 
 ### 2) 매수 및 매도
-![화폐 거래_1](https://github.com/user-attachments/assets/eeae0d76-2219-48ff-a387-06408268ec44)
-![화폐 거래_2](https://github.com/user-attachments/assets/df3c1607-43b9-48dc-8268-50fb6f9f669c)
+![007](https://github.com/user-attachments/assets/f20b6c82-4272-47f7-9a54-98da5675faf7)
+![008](https://github.com/user-attachments/assets/c1ba1191-cd36-425f-8652-77870430c0c4)
 
 <br>
 
