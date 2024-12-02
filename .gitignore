@@ -24,3 +24,5 @@ yarn-error.log*
 
 /crypto_django/.env
 /crypto_django/db.splite3
+
+/client/.env

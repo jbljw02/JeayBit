@@ -11,6 +11,8 @@ import '../../styles/auth/signUp.css'
 import AuthButton from "./child/AuthButton";
 import AuthFooter from "./child/AuthFooter";
 
+const API_URL = process.env.REACT_APP_API_URL;
+
 export default function SignUp() {
   const [activeInput, setActiveInput] = useState<string>('');
 
@@ -86,7 +88,7 @@ export default function SignUp() {
       setIsEmailDuplicate(false);
       setIsPasswordEmpty(false);
 
-      await axios.post('https://jeaybit.onrender.com/sign_up/', data, {
+      await axios.post(`${API_URL}/sign_up/`, data, {
         withCredentials: true,
       });
 
