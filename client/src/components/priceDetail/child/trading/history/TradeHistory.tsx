@@ -1,6 +1,5 @@
 import axios from "axios";
 import { useEffect, useRef, useState } from "react";
-import useFunction from "../../../../useFuction";
 import SignedHistory from "./SignedHistory";
 import UnSignedHistory from "./UnSignedHistory";
 import '../../../../../styles/priceDetail/trading/tradeHistory.css'
@@ -11,13 +10,14 @@ import PlaceholderDisplay from "../../../../placeholder/PlaceholderDisplay";
 import { useAppDispatch, useAppSelector } from "../../../../../redux/hooks";
 import { setScheduledCancel } from "../../../../../redux/features/tradeSlice";
 import { setWorkingSpinner } from "../../../../../redux/features/placeholderSlice";
+import useTradeHistory from "../../../../hooks/useTradeHistory";
 
 const API_URL = process.env.REACT_APP_API_URL;
 
 export default function TradeHistory() {
     const dispatch = useAppDispatch();
 
-    const { getTradeHistory } = useFunction();
+    const { getTradeHistory } = useTradeHistory();
 
     const user = useAppSelector(state => state.user);
     const scheduledCancel = useAppSelector(state => state.scheduledCancel);

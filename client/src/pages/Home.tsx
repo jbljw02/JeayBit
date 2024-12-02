@@ -9,7 +9,6 @@ import Chart from '../components/chart/Chart';
 import CryptoDetail from '../components/cryptoDetail/CryptoDetail';
 import Header from '../header/Header';
 import axios from 'axios';
-import useFunction from '../components/useFuction';
 import { setUser } from '../redux/features/userSlice';
 import { setSelectedCrypto, setCryptoRealTime } from '../redux/features/selectedCryptoSlice';
 import NoticeModal from '../components/modal/common/NoticeModal';
@@ -19,20 +18,27 @@ import CryptoHeader from '../components/cryptoDetail/CryptoHeader';
 import WorkingSpinnerModal from '../components/modal/trade/WorkingSpinnerModal';
 import { setWorkingSpinner } from '../redux/features/placeholderSlice';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
+import useCheckLogin from '../components/hooks/useCheckLogin';
+import useGetAllCrypto from '../components/hooks/useGetAllCrypto';
+import useRenderTransferModal from '../components/hooks/useRenderTransferModal';
+import useRequestCandleMinute from '../components/hooks/useRequestCandle';
+import useSelectAskingPrice from '../components/hooks/useSelectAskingPrice';
+import useSelectClosedPrice from '../components/hooks/useSelectClosedPrice';
+import useTradeHistory from '../components/hooks/useTradeHistory';
+import useRequestCandle from '../components/hooks/useRequestCandle';
 
 const API_URL = process.env.REACT_APP_API_URL;
 
 export default function Home() {
     const dispatch = useAppDispatch();
 
-    const { checkLogin,
-        getAllCrypto,
-        getTradeHistory,
-        selectAskingPrice,
-        selectClosedPrice,
-        requestCandleMinute,
-        requestCandleDate,
-        renderTransferModal } = useFunction();
+    const checkLogin = useCheckLogin();
+    const getAllCrypto = useGetAllCrypto();
+    const { getTradeHistory } = useTradeHistory();
+    const selectAskingPrice = useSelectAskingPrice();
+    const selectClosedPrice = useSelectClosedPrice();
+    const { requestCandleMinute, requestCandleDate } = useRequestCandle();
+    const renderTransferModal = useRenderTransferModal();
 
     const errorModal = useAppSelector(state => state.errorModal)
     const user = useAppSelector(state => state.user);
@@ -79,7 +85,7 @@ export default function Home() {
         const interval = setInterval(() => {
             getAllCrypto();
 
-            if(!askingSpinnerRef.current) {
+            if (!askingSpinnerRef.current) {
                 selectClosedPrice(selectedCryptoRef.current.market);
                 selectAskingPrice(selectedCryptoRef.current.market);
             }

@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import useFunction from "../../../useFuction";
 import starOn from '../../../../assets/images/star-on.png'
 import starOff from '../../../../assets/images/star-off.png'
 import axios from "axios";
@@ -10,6 +9,8 @@ import { setCryptoRealTime, setSelectedCrypto } from "../../../../redux/features
 import { Crypto } from "../../../../redux/features/cryptoListSlice";
 import { setAskingSpinner } from "../../../../redux/features/placeholderSlice";
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
+import useSelectAskingPrice from "../../../hooks/useSelectAskingPrice";
+import useSelectClosedPrice from "../../../hooks/useSelectClosedPrice";
 
 type Differences = {
     name: string;
@@ -22,7 +23,8 @@ const API_URL = process.env.REACT_APP_API_URL;
 export default function ListTbody() {
     const dispatch = useAppDispatch();
 
-    const { selectAskingPrice, selectClosedPrice } = useFunction();
+    const selectAskingPrice = useSelectAskingPrice();
+    const selectClosedPrice = useSelectClosedPrice();
 
     const filteredData = useAppSelector(state => state.filteredData);
     const listCategory = useAppSelector(state => state.listCategory);

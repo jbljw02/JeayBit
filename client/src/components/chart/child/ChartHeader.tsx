@@ -1,14 +1,14 @@
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
-import { useEffect, useState, useRef, useCallback } from "react";
+import { useEffect, useState, useRef } from "react";
 import { RootState } from "../../../redux/store";
 import { setChartSortDate, setChartSortTime } from "../../../redux/features/chartSlice";
-import useFunction from "../../useFuction";
 import { setChartSpinner } from "../../../redux/features/placeholderSlice";
+import useRequestCandle from "../../hooks/useRequestCandle";
 
 export default function ChartHeader() {
     const dispatch = useAppDispatch();
 
-    const { requestCandleMinute, requestCandleDate } = useFunction();
+    const { requestCandleMinute, requestCandleDate } = useRequestCandle();
 
     const delimitedTime = useAppSelector(state => state.delimitedTime);
     const delimitedDate = useAppSelector(state => state.delimitedDate);
@@ -29,7 +29,7 @@ export default function ChartHeader() {
         setIsDropdownOpen(false);
     };
 
-    const changeCandle = useCallback(async () => {
+    const changeCandle = async () => {
         dispatch(setChartSpinner(true));
         try {
             if (chartSortTime && cryptoRealTime.market) {
@@ -40,11 +40,11 @@ export default function ChartHeader() {
         } finally {
             dispatch(setChartSpinner(false));
         }
-    }, [chartSortTime, chartSortDate, cryptoRealTime.market, requestCandleDate, requestCandleMinute, dispatch]);
+    };
 
     useEffect(() => {
         changeCandle();
-    }, [changeCandle]);
+    }, [chartSortTime, chartSortDate, cryptoRealTime.market]);
 
     // 드롭다운 외부 클릭 감지
     useEffect(() => {

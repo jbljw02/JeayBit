@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import useFunction from "../../../../useFuction";
 import adjustInputValue from "../../../../../utils/format/adjustInputValue";
 import PriceRange from '../../../../input/PriceRange';
 import TradeInput from "../../../../input/TradeInput";
@@ -18,11 +17,16 @@ import { RootState } from "../../../../../redux/store";
 import { setWorkingSpinner } from "../../../../../redux/features/placeholderSlice";
 import NoticeModal from "../../../../modal/common/NoticeModal";
 import { useAppDispatch, useAppSelector } from "../../../../../redux/hooks";
+import useGetBalance from "../../../../hooks/useGetBalance";
+import useGetOwnedCrypto from "../../../../hooks/useGetOwnedCrypto";
+import useTradeHistory from "../../../../hooks/useTradeHistory";
 
 export default function BuyingSection() {
     const dispatch = useAppDispatch();
 
-    const { addTradeHistory, getTradeHistory, getBalance, getOwnedCrypto } = useFunction();
+    const { addTradeHistory, getTradeHistory } = useTradeHistory();
+    const getBalance = useGetBalance();
+    const getOwnedCrypto = useGetOwnedCrypto();
 
     const selectedCrypto = useAppSelector(state => state.selectedCrypto);
     const user = useAppSelector(state => state.user);

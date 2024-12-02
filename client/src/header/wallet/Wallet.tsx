@@ -1,6 +1,5 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
-import useFunction from "../../components/useFuction";
 import TransferInput from "./TransferInput";
 import { ChangeInput } from "./ChangeInput";
 import TransferWarning from "./TransferWarning";
@@ -10,13 +9,14 @@ import { setBalanceUpdate, setFailTransfer, setSuccessTransfer, setTransferCateg
 import { RootState } from "../../redux/store";
 import { setWorkingSpinner } from "../../redux/features/placeholderSlice";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import useGetBalance from "../../components/hooks/useGetBalance";
 
 const API_URL = process.env.REACT_APP_API_URL;
 
 export default function Wallet() {
     const dispatch = useAppDispatch();
 
-    const { getBalance } = useFunction();
+    const getBalance = useGetBalance();
 
     const user = useAppSelector(state => state.user);
     const balanceUpdate = useAppSelector(state => state.balanceUpdate);

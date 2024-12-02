@@ -4,9 +4,11 @@ import SellingSection from "./section/SellingSection";
 import TradeHistory from "./history/TradeHistory";
 import { useState, useEffect, useRef, useCallback } from "react";
 import CeleryCompleteModal from "../../../modal/trade/CeleryCompleteModal";
-import useFunction from "../../../useFuction";
 import '../../../../styles/priceDetail/trading/tradeSection.css'
 import PlaceholderDisplay from "../../../placeholder/PlaceholderDisplay";
+import useGetOwnedCrypto from "../../../hooks/useGetOwnedCrypto";
+import useGetBalance from "../../../hooks/useGetBalance";
+import useTradeHistory from "../../../hooks/useTradeHistory";
 
 export type CeleryData = {
     name: string,
@@ -23,11 +25,13 @@ export const bidSortOptions = [
 const API_URL = process.env.REACT_APP_API_URL;
 
 export default function TradeSection() {
-    const { getBalance, getOwnedCrypto, getTradeHistory } = useFunction();
+    const getBalance = useGetBalance();
+    const getOwnedCrypto = useGetOwnedCrypto();
+    const { getTradeHistory } = useTradeHistory();
 
-    const [sectionChange, setSectionChange] = useState<'매수' | '매도' | '거래내역'>('매수');
     const user = useAppSelector(state => state.user);
-
+    
+    const [sectionChange, setSectionChange] = useState<'매수' | '매도' | '거래내역'>('매수');
     const [celeryModal, setCeleryModal] = useState(false);
     const [celeryData, setCeleryData] = useState<CeleryData>({
         name: "",
