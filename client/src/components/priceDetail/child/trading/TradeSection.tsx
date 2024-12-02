@@ -21,6 +21,8 @@ export const bidSortOptions = [
     { id: 'radio2', value: '시장가', label: '시장가' },
 ];
 
+const API_URL = process.env.REACT_APP_API_URL;
+
 export default function TradeSection() {
     const { getBalance, getOwnedCrypto, getTradeHistory } = useFunction();
 
@@ -45,7 +47,7 @@ export default function TradeSection() {
     }, [user, getBalance]);
 
     const connectWebSocket = useCallback(() => {
-        const socket = new WebSocket('wss://jeaybit.onrender.com/ws/trade_updates/');
+        const socket = new WebSocket(`${API_URL}/ws/trade_updates/`);
         socketRef.current = socket;
 
         socket.onopen = () => {

@@ -4,6 +4,9 @@ from rest_framework.response import Response
 from app.models import UserCrypto
 from django.core.exceptions import ObjectDoesNotExist
 
+import logging
+
+logger = logging.getLogger(__name__)
 
 # 클라이언트에게 UserCrypto 테이블에 있는 사용자에 따른 화폐의 소유 여부를 전달
 @api_view(["POST"])
@@ -32,4 +35,5 @@ def get_user_ownedCrypto(request):
 
         return Response(data, status=200)
     except Exception as e:
+        logger.error(f"소유 화폐 가져오기 실패: {e}")
         return Response({"error": "소유 화폐 가져오기 실패"}, status=500)

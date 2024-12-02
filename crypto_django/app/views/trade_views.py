@@ -9,7 +9,9 @@ from app.utils.buy_process import buy_process
 from app.utils.check_price_match import check_price_match
 from app.utils.sell_process import sell_process
 import math
+import logging
 
+logger = logging.getLogger(__name__)
 
 # 사용자, 화폐별 거래내역을 추가 및 매수/매도 처리
 @api_view(["POST"])
@@ -107,6 +109,9 @@ def add_user_trade_history(request):
         return Response(
             {"error": "해당 화폐명을 가진 화폐가 존재하지 않습니다"}, status=500
         )
+    except Exception as e:
+        logger.error(f"거래내역 추가 실패: {e}")
+        return Response({"error": "거래내역 추가 실패"}, status=500)
 
 
 # 거래내역을 클라이언트로 전송
@@ -138,7 +143,8 @@ def get_user_tradeHistory(request):
         ]
 
         return Response(data, status=200)
-    except:
+    except Exception as e:
+        logger.error(f"거래내역 받아오기 실패: {e}")
         return Response({"error:": "거래내역 받아오기 실패"}, status=500)
 
 
@@ -163,4 +169,7 @@ def cancel_order(request):
 
         return Response({"cancel_order": "주문 취소 성공"}, status=200)
     except CustomUser.DoesNotExist:
-        Response({"error": "해당 이메일의 사용자가 존재하지 않습니다"}, status=500)
+        return Response({"error": "해당 이메일의 사용자가 존재하지 않습니다"}, status=500)
+    except Exception as e:
+        logger.error(f"주문 취소 실패: {e}")
+        return Response({"error": "주문 취소 실패"}, status=500)
