@@ -13,6 +13,8 @@ import { setCandlePerMinute, setCandlePerDate } from "../redux/features/chartSli
 import NoticeModal from "./modal/common/NoticeModal";
 import { setOwnedCrypto } from "../redux/features/userCryptoSlice";
 
+const API_URL = process.env.REACT_APP_API_URL;
+
 export default function useFunction() {
   const dispatch = useDispatch();
 
@@ -25,7 +27,7 @@ export default function useFunction() {
 
   const checkLogin = async () => {
     try {
-      const response = await axios.post("https://jeaybit.onrender.com/check_login/", {}, {
+      const response = await axios.post(`${API_URL}/check_login/`, {}, {
         withCredentials: true
       });
 
@@ -38,13 +40,14 @@ export default function useFunction() {
 
   const getAllCrypto = async () => {
     try {
-      const response = await axios.post("https://jeaybit.onrender.com/get_all_crypto/", {}, {
+      const response = await axios.post(`${API_URL}/get_all_crypto/`, {}, {
         withCredentials: true,
       });
 
       dispatch(setAllCrypto(response.data.all_crypto));
     } catch (error) {
       dispatch(setErrorModal(true));
+      console.log(error);
       throw error;
     }
   };
@@ -53,7 +56,7 @@ export default function useFunction() {
   const getBalance = async (email: string) => {
     try {
       const response = await axios.post(
-        `https://jeaybit.onrender.com/get_user_balance/`,
+        `${API_URL}/get_user_balance/`,
         { email: email }
       );
       dispatch(setUserWallet(response.data.user_balance));
@@ -65,7 +68,7 @@ export default function useFunction() {
   // 사용자가 소유하고 있는 화폐의 정보를 받아옴
   const getOwnedCrypto = async (email: string) => {
     try {
-      const response = await axios.post('https://jeaybit.onrender.com/get_user_ownedCrypto/', {
+      const response = await axios.post(`${API_URL}/get_user_ownedCrypto/`, {
         email: email,
       });
 
@@ -96,7 +99,7 @@ export default function useFunction() {
   // 거래 내역에 저장될 정보를 전송(화폐 매수와 함께)
   const addTradeHistory = async (email: string, cryptoName: string, tradeCategory: string, tradeTime: Date, cryptoMarket: string, cryptoPrice: number, tradePrice: number, tradeAmount: number, market: string, isMarketValue: boolean) => {
     try {
-      const response = await axios.post("https://jeaybit.onrender.com/add_user_tradeHistory/", {
+      const response = await axios.post(`${API_URL}/add_user_tradeHistory/`, {
         email: email,
         crypto_name: cryptoName,
         trade_category: tradeCategory,
@@ -122,7 +125,7 @@ export default function useFunction() {
   // 서버로부터 거래 내역을 받아옴
   const getTradeHistory = async (email: string) => {
     try {
-      const response = await axios.post('https://jeaybit.onrender.com/get_user_tradeHistory/', {
+      const response = await axios.post(`${API_URL}/get_user_tradeHistory/`, {
         email: email,
       });
 
@@ -173,7 +176,7 @@ export default function useFunction() {
   // 선택된 화폐에 대한 호가내역 호출
   const selectAskingPrice = async (market: string) => {
     try {
-      const response = await axios.get(`https://jeaybit.onrender.com/asking_price/?market=${market}`);
+      const response = await axios.get(`${API_URL}/asking_price/?market=${market}`);
 
       const orderbookUnits = response.data[0].orderbook_units;
       const timestamp = response.data[0].timestamp;
@@ -196,7 +199,7 @@ export default function useFunction() {
   // 선택된 화폐에 대한 체결내역 호출
   const selectClosedPrice = async (market: string) => {
     try {
-      const response = await axios.get(`https://jeaybit.onrender.com/closed_price/?market=${market}`);
+      const response = await axios.get(`${API_URL}/closed_price/?market=${market}`);
       dispatch(setClosedData(response.data));
     } catch (error) {
       dispatch(setErrorModal(true));
@@ -208,7 +211,7 @@ export default function useFunction() {
   const requestCandleMinute = useCallback(async (market: string, minute: string) => {
     if (minute && market) {
       try {
-        const response = await axios.get(`https://jeaybit.onrender.com/candle_per_minute/?market=${market}&minute=${minute}`);
+        const response = await axios.get(`${API_URL}/candle_per_minute/?market=${market}&minute=${minute}`);
         dispatch(setCandlePerMinute(response.data));
       } catch (error) {
         dispatch(setErrorModal(true));
@@ -221,7 +224,7 @@ export default function useFunction() {
   const requestCandleDate = useCallback(async (market: string, date: '1일' | '1주' | '1개월') => {
     try {
       let response;
-      let url = "https://jeaybit.onrender.com/";
+      let url = `${API_URL}/`;
 
       if (date === "1일") {
         url += `candle_per_date/?market=${market}`;

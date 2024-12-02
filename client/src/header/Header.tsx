@@ -10,6 +10,8 @@ import { RootState } from "../redux/store";
 import '../styles/header/header.css'
 import LoadingBar, { LoadingBarRef } from 'react-top-loading-bar';
 
+const API_URL = process.env.REACT_APP_API_URL;
+
 export default function Header() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -26,7 +28,7 @@ export default function Header() {
     }
 
     try {
-      await axios.post("https://jeaybit.onrender.com/logOut/",
+      await axios.post(`${API_URL}/logOut/`,
         {},
         {
           withCredentials: true,

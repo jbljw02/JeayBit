@@ -13,6 +13,8 @@ import LoadingBar, { LoadingBarRef } from 'react-top-loading-bar';
 import AuthButton from "./child/AuthButton";
 import AuthFooter from "./child/AuthFooter";
 
+const API_URL = process.env.REACT_APP_API_URL;
+
 export default function LogIn() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -55,7 +57,7 @@ export default function LogIn() {
       setIsPasswordEmpty(false);
 
       const data = { email, password };
-      const response = await axios.post('https://jeaybit.onrender.com/logIn/', data, {
+      const response = await axios.post(`${API_URL}/logIn/`, data, {
         withCredentials: true,
       });
 

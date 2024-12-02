@@ -11,6 +11,8 @@ import { setBalanceUpdate, setFailTransfer, setSuccessTransfer, setTransferCateg
 import { RootState } from "../../redux/store";
 import { setWorkingSpinner } from "../../redux/features/placeholderSlice";
 
+const API_URL = process.env.REACT_APP_API_URL;
+
 export default function Wallet() {
     const dispatch = useDispatch();
 
@@ -90,7 +92,7 @@ export default function Wallet() {
     const addBalanceToUser = async (email: string, depositAmount: number) => {
         if (user.email && user.name) {
             try {
-                await axios.post("https://jeaybit.onrender.com/add_balance_to_user/", {
+                await axios.post(`${API_URL}/add_balance_to_user/`, {
                     email: email,
                     depositAmount: depositAmount,
                 });
@@ -107,10 +109,8 @@ export default function Wallet() {
     const minusBalanceFromUser = async (email: string, withdrawAmount: number) => {
         if (user.email && user.name) {
             try {
-                await axios.post(
-                    "https://jeaybit.onrender.com/minus_balance_from_user/",
-                    {
-                        email: email,
+                await axios.post(`${API_URL}/minus_balance_from_user/`, {
+                    email: email,
                         withdrawAmount: withdrawAmount,
                     }
                 );

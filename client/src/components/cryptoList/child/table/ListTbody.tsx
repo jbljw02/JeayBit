@@ -18,6 +18,8 @@ type Differences = {
     newValue: number;
 }
 
+const API_URL = process.env.REACT_APP_API_URL;
+
 export default function ListTbody() {
     const dispatch = useDispatch();
 
@@ -85,7 +87,7 @@ export default function ListTbody() {
     const addFavoriteCrypto = async (email: string, cryptoName: string) => {
         if (user.email) {
             try {
-                const response = await axios.post("https://jeaybit.onrender.com/add_favoriteCrypto_to_user/", {
+                const response = await axios.post(`${API_URL}/add_favoriteCrypto_to_user/`, {
                     email: email,
                     crypto_name: cryptoName,
                 });

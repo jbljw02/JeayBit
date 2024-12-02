@@ -13,6 +13,8 @@ import { RootState } from "../../../../../redux/store";
 import { setScheduledCancel } from "../../../../../redux/features/tradeSlice";
 import { setWorkingSpinner } from "../../../../../redux/features/placeholderSlice";
 
+const API_URL = process.env.REACT_APP_API_URL;
+
 export default function TradeHistory() {
     const dispatch = useDispatch();
 
@@ -77,7 +79,7 @@ export default function TradeHistory() {
     // 주문을 취소할 화폐를 서버로 전송
     const cancelOrder = async (email: string, ids: string[]) => {
         try {
-            await axios.post("https://jeaybit.onrender.com/cancel_order/", {
+            await axios.post(`${API_URL}/cancel_order/`, {
                 ids: ids,
                 email: email,
             });

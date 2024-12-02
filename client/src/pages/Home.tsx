@@ -20,6 +20,8 @@ import CryptoHeader from '../components/cryptoDetail/CryptoHeader';
 import WorkingSpinnerModal from '../components/modal/trade/WorkingSpinnerModal';
 import { setWorkingSpinner } from '../redux/features/placeholderSlice';
 
+const API_URL = process.env.REACT_APP_API_URL;
+
 export default function Home() {
     const dispatch = useDispatch();
 
@@ -50,7 +52,7 @@ export default function Home() {
     // 초기 데이터를 비트코인으로 설정
     const getInitialData = async () => {
         try {
-            const response = await axios.post("https://jeaybit.onrender.com/get_all_crypto/", {}, {
+            const response = await axios.post(`${API_URL}/get_all_crypto/`, {}, {
                 withCredentials: true,
             });
             dispatch(setSelectedCrypto(response.data.all_crypto[0]));
