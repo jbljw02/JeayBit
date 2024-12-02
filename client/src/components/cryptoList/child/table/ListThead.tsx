@@ -1,4 +1,4 @@
-import { useDispatch, useSelector } from "react-redux";
+import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
 import { sortByChangeRate, sortByName, sortByPrice, sortByTradeVolume } from "../../../../utils/sort/sortData";
 import img_sort from "../../../../assets/images/sort.png";
 import img_sort_up from "../../../../assets/images/sort-up.png";
@@ -7,14 +7,14 @@ import { setSortStates, setFilteredData, setSortedData } from "../../../../redux
 import { RootState } from "../../../../redux/store";
 
 export default function ListThead() {
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
 
-    const filteredData = useSelector((state: RootState) => state.filteredData);
-    const listCategory = useSelector((state: RootState) => state.listCategory);
+    const filteredData = useAppSelector(state => state.filteredData);
+    const listCategory = useAppSelector(state => state.listCategory);
 
     // 차례로 화폐명, 현재가, 전일대비, 거래대금의 정렬 상태를 관리
     const sortImages = [img_sort, img_sort_down, img_sort_up];
-    const sortStates = useSelector((state: RootState) => state.sortStates);
+    const sortStates = useAppSelector(state => state.sortStates);
 
     // 정렬 이미지 클릭 이벤트
     const sortClick = (index: number) => {

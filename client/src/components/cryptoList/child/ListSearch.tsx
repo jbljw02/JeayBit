@@ -1,17 +1,17 @@
 import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useAppSelector } from "../../../redux/hooks";
+import { useAppDispatch } from "../../../redux/hooks";
 import { sortData } from "../../../utils/sort/sortData";
-import { RootState } from "../../../redux/store";
 import { Crypto, setFilteredData } from "../../../redux/features/cryptoListSlice";
 
 export default function ListSearch() {
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
 
-    const allCrypto = useSelector((state: RootState) => state.allCrypto);
-    const listCategory = useSelector((state: RootState) => state.listCategory);
-    const favoriteCrypto = useSelector((state: RootState) => state.favoriteCrypto);
-    const ownedCrypto = useSelector((state: RootState) => state.ownedCrypto);
-    const sortStates = useSelector((state: RootState) => state.sortStates);
+    const allCrypto = useAppSelector(state => state.allCrypto);
+    const listCategory = useAppSelector(state => state.listCategory);
+    const favoriteCrypto = useAppSelector(state => state.favoriteCrypto);
+    const ownedCrypto = useAppSelector(state => state.ownedCrypto);
+    const sortStates = useAppSelector(state => state.sortStates);
 
     const [searchedInput, setSearchedInput] = useState<string>("");
 

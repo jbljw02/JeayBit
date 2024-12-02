@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import useFunction from "../../../../useFuction";
 import TradingThead from "../TradingThead";
 import SelectPercentage from "../SelectPercentage";
@@ -14,23 +13,23 @@ import CompleteModal from "../../../../modal/trade/TradeModal";
 import TradeFailedModal from "../../../../modal/trade/TradeFailedModal";
 import WaitingModal from "../../../../modal/trade/WatingModal";
 import { bidSortOptions } from "../TradeSection";
-import { RootState } from "../../../../../redux/store";
+import { useAppDispatch, useAppSelector } from "../../../../../redux/hooks";
 import { setSellingPrice } from "../../../../../redux/features/tradeSlice";
 import { setWorkingSpinner } from "../../../../../redux/features/placeholderSlice";
 import NoticeModal from "../../../../modal/common/NoticeModal";
 
 export default function SellingSectioin() {
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
 
     const { getBalance, addTradeHistory, getTradeHistory, getOwnedCrypto, getAllCrypto } = useFunction();
 
-    const selectedCrypto = useSelector((state: RootState) => state.selectedCrypto);
-    const user = useSelector((state: RootState) => state.user);
+    const selectedCrypto = useAppSelector(state => state.selectedCrypto);
+    const user = useAppSelector(state => state.user);
 
     const [selectedPercentage, setSelectedPercentage] = useState<string>('');
     const [bidSort, setBidSort] = useState<string>('지정가');
 
-    const sellingPrice = useSelector((state: RootState) => state.sellingPrice);
+    const sellingPrice = useAppSelector(state => state.sellingPrice);
     const [sellTotal, setSellTotal] = useState<number>(0);
     const [sellQuantity, setSellQuantity] = useState<number>(0);
     const [quantityInputValue, setQuantityInputValue] = useState('0');

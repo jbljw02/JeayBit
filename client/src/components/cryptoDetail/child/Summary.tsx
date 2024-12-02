@@ -1,7 +1,7 @@
-import { useDispatch, useSelector } from "react-redux";
+import { useAppSelector } from "../../../redux/hooks";
+import { useAppDispatch } from "../../../redux/hooks";
 import formatCryptoDetail from "../../../utils/format/formatCryptoDetail";
 import { useEffect } from "react";
-import { RootState } from "../../../redux/store";
 import { setCryptoRealTime } from "../../../redux/features/selectedCryptoSlice";
 
 type ChildParams = {
@@ -31,10 +31,10 @@ function DetailContent({ title, value, suffix, category }: ChildParams) {
 }
 
 export default function Summary() {
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
 
-    const allCrypto = useSelector((state: RootState) => state.allCrypto);
-    const cryptoRealTime = useSelector((state: RootState) => state.cryptoRealTime);
+    const allCrypto = useAppSelector(state => state.allCrypto);
+    const cryptoRealTime = useAppSelector(state => state.cryptoRealTime);
 
     useEffect(() => {
         const targetCrypto = allCrypto.find(item => item.market === cryptoRealTime.market);

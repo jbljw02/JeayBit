@@ -1,6 +1,5 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import useFunction from "../../components/useFuction";
 import TransferInput from "./TransferInput";
 import { ChangeInput } from "./ChangeInput";
@@ -10,17 +9,18 @@ import '../../styles/header/wallet.css'
 import { setBalanceUpdate, setFailTransfer, setSuccessTransfer, setTransferCategory, setTransferSort } from "../../redux/features/walletSlice";
 import { RootState } from "../../redux/store";
 import { setWorkingSpinner } from "../../redux/features/placeholderSlice";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 
 const API_URL = process.env.REACT_APP_API_URL;
 
 export default function Wallet() {
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
 
     const { getBalance } = useFunction();
 
-    const user = useSelector((state: RootState) => state.user);
-    const balanceUpdate = useSelector((state: RootState) => state.balanceUpdate);
-    const transferSort = useSelector((state: RootState) => state.transferSort);
+    const user = useAppSelector(state => state.user);
+    const balanceUpdate = useAppSelector(state => state.balanceUpdate);
+    const transferSort = useAppSelector(state => state.transferSort);
 
     // 입금량, 입금 -> 화폐 전환량
     const [depositAmount, setDepositAmount] = useState<number>();
@@ -40,9 +40,14 @@ export default function Wallet() {
 
 
     // 로그인 중인 사용자의 잔고량
-    const userWallet = useSelector((state: RootState) => state.userWallet);
+    const userWallet = useAppSelector((state: RootState) => state.userWallet);
 
-    const selectedCrypto = useSelector((state: RootState) => state.selectedCrypto);
+    const selectedCrypto = useAppSelector(state => state.selectedCrypto);
+    const chartSortDate = useAppSelector(state => state.chartSortDate);
+    const successTransfer = useAppSelector(state => state.successTransfer);
+    const failTransfer = useAppSelector(state => state.failTransfer);
+    const transferCategory = useAppSelector(state => state.transferCategory);
+    const allCrypto = useAppSelector(state => state.allCrypto);
 
     // 화면 첫 랜더링 시, 사용자 변경 시, 입출금 할 때마다 잔고 데이터 받아옴
     useEffect(() => {

@@ -1,5 +1,4 @@
 import axios from "axios";
-import { useDispatch, useSelector } from "react-redux";
 import formatDateString from "../utils/date/formatDateString";
 import { AskingData, setAskingData, setTotalAskSize, setTotalBidSize, setClosedData } from "../redux/features/askingSlice";
 import { setAllCrypto, OwnedCrypto } from "../redux/features/cryptoListSlice";
@@ -12,18 +11,19 @@ import { useCallback } from "react";
 import { setCandlePerMinute, setCandlePerDate } from "../redux/features/chartSlice";
 import NoticeModal from "./modal/common/NoticeModal";
 import { setOwnedCrypto } from "../redux/features/userCryptoSlice";
+import { useAppDispatch, useAppSelector } from "../redux/hooks";
 
 const API_URL = process.env.REACT_APP_API_URL;
 
 export default function useFunction() {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
-  const selectedCrypto = useSelector((state: RootState) => state.selectedCrypto);
-  const chartSortDate = useSelector((state: RootState) => state.chartSortDate);
-  const successTransfer = useSelector((state: RootState) => state.successTransfer);
-  const failTransfer = useSelector((state: RootState) => state.failTransfer);
-  const transferCategory = useSelector((state: RootState) => state.transferCategory);
-  const allCrypto = useSelector((state: RootState) => state.allCrypto);
+  const selectedCrypto = useAppSelector(state => state.selectedCrypto);
+  const chartSortDate = useAppSelector(state => state.chartSortDate);
+  const successTransfer = useAppSelector(state => state.successTransfer);
+  const failTransfer = useAppSelector(state => state.failTransfer);
+  const transferCategory = useAppSelector(state => state.transferCategory);
+  const allCrypto = useAppSelector(state => state.allCrypto);
 
   const checkLogin = async () => {
     try {
@@ -47,7 +47,6 @@ export default function useFunction() {
       dispatch(setAllCrypto(response.data.all_crypto));
     } catch (error) {
       dispatch(setErrorModal(true));
-      console.log(error);
       throw error;
     }
   };

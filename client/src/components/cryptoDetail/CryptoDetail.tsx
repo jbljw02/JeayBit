@@ -1,5 +1,4 @@
-import { useSelector } from "react-redux";
-import { RootState } from "../../redux/store";
+import { useAppSelector } from "../../redux/hooks";
 import ChangePrice from "./child/ChangePrice";
 import formatWithComas from "../../utils/format/formatWithComas";
 import ChangeRate from "./child/ChangeRate";
@@ -8,9 +7,9 @@ import '../../styles/cryptoDetail/cryptoDetail.css'
 import SkeletonUI from "../placeholder/SkeletonUI";
 
 export default function CryptoDetail() {
-    const selectedCrypto = useSelector((state: RootState) => state.selectedCrypto);
-    const cryptoRealTime = useSelector((state: RootState) => state.cryptoRealTime);
-    const allCrypto = useSelector((state: RootState) => state.allCrypto);
+    const selectedCrypto = useAppSelector(state => state.selectedCrypto);
+    const cryptoRealTime = useAppSelector(state => state.cryptoRealTime);
+    const allCrypto = useAppSelector(state => state.allCrypto);
 
     const priceClassName = `crypto-price 
     ${cryptoRealTime.change === 'RISE'

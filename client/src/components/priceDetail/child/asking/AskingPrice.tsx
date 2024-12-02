@@ -1,21 +1,20 @@
 import { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
 import AskingTable from "./AskingTable";
 import '../../../../styles/priceDetail/asking/asking.css'
 import CustomScrollbars from "../../../scrollbar/CustomScorllbars";
 import AskingTitle from "./AskingTitle";
 import { AskingData } from "../../../../redux/features/askingSlice";
-import { RootState } from "../../../../redux/store";
+import { useAppSelector } from "../../../../redux/hooks";
 import SkeletonUI from "../../../placeholder/SkeletonUI";
 import LoadingSpinner from "../../../placeholder/LoadingSpinner";
 
 // bid = 매수, ask = 매도
 export default function AskingPrice() {
-    const askingSpinner = useSelector((state: RootState) => state.askingSpinner);
-    const askingData = useSelector((state: RootState) => state.askingData);
-    const totalAskSize = useSelector((state: RootState) => state.totalAskSize);
-    const totalBidSize = useSelector((state: RootState) => state.totalBidSize);
-    const selectedCrypto = useSelector((state: RootState) => state.selectedCrypto);
+    const askingSpinner = useAppSelector(state => state.askingSpinner);
+    const askingData = useAppSelector(state => state.askingData);
+    const totalAskSize = useAppSelector(state => state.totalAskSize);
+    const totalBidSize = useAppSelector(state => state.totalBidSize);
+    const selectedCrypto = useAppSelector(state => state.selectedCrypto);
     const [askHide, setAskHide] = useState(false);
 
     const [prevData, setPrevData] = useState<AskingData[]>();

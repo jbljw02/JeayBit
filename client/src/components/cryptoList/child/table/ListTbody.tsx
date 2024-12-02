@@ -1,16 +1,15 @@
 import { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import useFunction from "../../../useFuction";
 import starOn from '../../../../assets/images/star-on.png'
 import starOff from '../../../../assets/images/star-off.png'
 import axios from "axios";
 import formatWithComas from "../../../../utils/format/formatWithComas";
 import CustomScrollbars from "../../../scrollbar/CustomScorllbars";
-import { RootState } from "../../../../redux/store";
 import { setFavoriteCrypto, setOwnedCrypto } from "../../../../redux/features/userCryptoSlice";
 import { setCryptoRealTime, setSelectedCrypto } from "../../../../redux/features/selectedCryptoSlice";
 import { Crypto } from "../../../../redux/features/cryptoListSlice";
 import { setAskingSpinner } from "../../../../redux/features/placeholderSlice";
+import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
 
 type Differences = {
     name: string;
@@ -21,22 +20,22 @@ type Differences = {
 const API_URL = process.env.REACT_APP_API_URL;
 
 export default function ListTbody() {
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
 
     const { selectAskingPrice, selectClosedPrice } = useFunction();
 
-    const filteredData = useSelector((state: RootState) => state.filteredData);
-    const listCategory = useSelector((state: RootState) => state.listCategory);
-    const allCrypto = useSelector((state: RootState) => state.allCrypto);
-    const user = useSelector((state: RootState) => state.user);
+    const filteredData = useAppSelector(state => state.filteredData);
+    const listCategory = useAppSelector(state => state.listCategory);
+    const allCrypto = useAppSelector(state => state.allCrypto);
+    const user = useAppSelector(state => state.user);
 
     // 화폐 가격을 업데이트 하기 전에 해당 state에 담음
     const [prevData, setPrevData] = useState<Record<string, number> | undefined>(undefined);
     // 화폐 가격의 변화를 저장
     const [differences, setDifferences] = useState<Differences[]>([]);
 
-    const favoriteCrypto = useSelector((state: RootState) => state.favoriteCrypto);
-    const ownedCrypto = useSelector((state: RootState) => state.ownedCrypto);
+    const favoriteCrypto = useAppSelector(state => state.favoriteCrypto);
+    const ownedCrypto = useAppSelector(state => state.ownedCrypto);
 
     useEffect(() => {
         const isFavorites = allCrypto.filter(item => item.is_favorited);

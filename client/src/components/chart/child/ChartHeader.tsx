@@ -1,4 +1,4 @@
-import { useDispatch, useSelector } from "react-redux";
+import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import { useEffect, useState, useRef, useCallback } from "react";
 import { RootState } from "../../../redux/store";
 import { setChartSortDate, setChartSortTime } from "../../../redux/features/chartSlice";
@@ -6,15 +6,15 @@ import useFunction from "../../useFuction";
 import { setChartSpinner } from "../../../redux/features/placeholderSlice";
 
 export default function ChartHeader() {
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
 
     const { requestCandleMinute, requestCandleDate } = useFunction();
 
-    const delimitedTime = useSelector((state: RootState) => state.delimitedTime);
-    const delimitedDate = useSelector((state: RootState) => state.delimitedDate);
-    const chartSortTime = useSelector((state: RootState) => state.chartSortTime);
-    const chartSortDate = useSelector((state: RootState) => state.chartSortDate);
-    const cryptoRealTime = useSelector((state: RootState) => state.cryptoRealTime);
+    const delimitedTime = useAppSelector(state => state.delimitedTime);
+    const delimitedDate = useAppSelector(state => state.delimitedDate);
+    const chartSortTime = useAppSelector(state => state.chartSortTime);
+    const chartSortDate = useAppSelector(state => state.chartSortDate);
+    const cryptoRealTime = useAppSelector(state => state.cryptoRealTime);
 
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const dropdownRef = useRef<HTMLLabelElement>(null);

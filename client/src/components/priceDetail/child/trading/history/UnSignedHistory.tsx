@@ -1,14 +1,14 @@
-import { useDispatch, useSelector, } from "react-redux";
+import { useAppSelector } from "../../../../../redux/hooks";
+import { useAppDispatch } from "../../../../../redux/hooks";
 import formatTradeAmount from "../../../../../utils/format/formatTradeAmount";
 import formatWithComas from "../../../../../utils/format/formatWithComas";
 import { setScheduledCancel } from "../../../../../redux/features/tradeSlice";
-import { RootState } from "../../../../../redux/store";
 
 export default function UnSignedHistory() {
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
 
-    const userTradeHistory_unSigned = useSelector((state: RootState) => state.userTradeHistory_unSigned);
-    const scheduledCancel = useSelector((state: RootState) => state.scheduledCancel);
+    const userTradeHistory_unSigned = useAppSelector(state => state.userTradeHistory_unSigned);
+    const scheduledCancel = useAppSelector(state => state.scheduledCancel);
 
     const clickUnSigned = (id: string, i: number) => {
         // 기존 state에 인덱스가 일치하는 속성이 있는지 확인

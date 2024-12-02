@@ -1,10 +1,9 @@
-import { useSelector } from "react-redux";
-import { RootState } from "../../redux/store";
+import { useAppSelector } from "../../redux/hooks";
 import '../../styles/cryptoDetail/cryptoHeader.css'
 
 export default function CryptoHeader() {
-    const selectedCrypto = useSelector((state: RootState) => state.selectedCrypto);
-    const cryptoRealTime = useSelector((state: RootState) => state.cryptoRealTime);
+    const selectedCrypto = useAppSelector(state => state.selectedCrypto);
+    const cryptoRealTime = useAppSelector(state => state.cryptoRealTime);
     return (
         <div className="crypto-name">
             <img

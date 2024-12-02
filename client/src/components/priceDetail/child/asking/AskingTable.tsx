@@ -1,7 +1,6 @@
-import { useSelector } from "react-redux";
 import convertToDate from "../../../../utils/date/covertToDate";
 import adjustSize from "../../../../utils/format/adjustSize";
-import { RootState } from "../../../../redux/store";
+import { useAppSelector } from "../../../../redux/hooks";
 import { AskingData } from "../../../../redux/features/askingSlice";
 
 type Params = {
@@ -16,7 +15,7 @@ type Params = {
 }
 
 export default function AskingTable({ differences, size, category }: Params) {
-    const askingData = useSelector((state: RootState) => state.askingData);
+    const askingData = useAppSelector(state => state.askingData);
 
     // 이전 호가와 현재 호가를 비교한 값을 이용 - 변경된 호가가 현재 state를 순회하면서 일치하는 값에 대해서 스타일 지정
     const isChange = (item: AskingData) => {

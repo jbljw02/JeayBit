@@ -5,7 +5,6 @@ import LogIn from '../components/auth/LogIn';
 import PriceDetail from '../components/priceDetail/PriceDetail';
 import SignUp from '../components/auth/SignUp';
 import { useEffect, useRef } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import Chart from '../components/chart/Chart';
 import CryptoDetail from '../components/cryptoDetail/CryptoDetail';
 import Header from '../header/Header';
@@ -19,11 +18,12 @@ import { setErrorModal } from '../redux/features/modalSlice';
 import CryptoHeader from '../components/cryptoDetail/CryptoHeader';
 import WorkingSpinnerModal from '../components/modal/trade/WorkingSpinnerModal';
 import { setWorkingSpinner } from '../redux/features/placeholderSlice';
+import { useAppDispatch, useAppSelector } from '../redux/hooks';
 
 const API_URL = process.env.REACT_APP_API_URL;
 
 export default function Home() {
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
 
     const { checkLogin,
         getAllCrypto,
@@ -34,14 +34,14 @@ export default function Home() {
         requestCandleDate,
         renderTransferModal } = useFunction();
 
-    const errorModal = useSelector((state: RootState) => state.errorModal)
-    const user = useSelector((state: RootState) => state.user);
-    const selectedCrypto = useSelector((state: RootState) => state.selectedCrypto);
-    const workingSpinner = useSelector((state: RootState) => state.workingSpinner);
-    const chartSortTime = useSelector((state: RootState) => state.chartSortTime);
-    const chartSortDate = useSelector((state: RootState) => state.chartSortDate);
-    const chartSpinner = useSelector((state: RootState) => state.chartSpinner);
-    const askingSpinner = useSelector((state: RootState) => state.askingSpinner);
+    const errorModal = useAppSelector(state => state.errorModal)
+    const user = useAppSelector(state => state.user);
+    const selectedCrypto = useAppSelector(state => state.selectedCrypto);
+    const workingSpinner = useAppSelector(state => state.workingSpinner);
+    const chartSortTime = useAppSelector(state => state.chartSortTime);
+    const chartSortDate = useAppSelector(state => state.chartSortDate);
+    const chartSpinner = useAppSelector(state => state.chartSpinner);
+    const askingSpinner = useAppSelector(state => state.askingSpinner);
 
     const selectedCryptoRef = useRef(selectedCrypto);
     const chartSortTimeRef = useRef(chartSortTime);

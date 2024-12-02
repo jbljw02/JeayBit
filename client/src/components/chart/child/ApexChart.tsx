@@ -1,8 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import Chart from 'react-apexcharts';
-import { useSelector } from 'react-redux';
 import moment from 'moment-timezone';
-import { RootState } from '../../../redux/store';
+import { useAppSelector } from '../../../redux/hooks';
 import formatWithComas from '../../../utils/format/formatWithComas';
 import { Market } from '../../../redux/features/chartSlice';
 
@@ -12,10 +11,10 @@ type Axis = {
 }
 
 export default function ApexChart() {
-  const candlePerDate = useSelector((state: RootState) => state.candlePerDate);
-  const candlePerMinute = useSelector((state: RootState) => state.candlePerMinute);
-  const chartSortTime = useSelector((state: RootState) => state.chartSortTime);
-  const chartSortDate = useSelector((state: RootState) => state.chartSortDate);
+  const candlePerDate = useAppSelector(state => state.candlePerDate);
+  const candlePerMinute = useAppSelector(state => state.candlePerMinute);
+  const chartSortTime = useAppSelector(state => state.chartSortTime);
+  const chartSortDate = useAppSelector(state => state.chartSortDate);
 
   const [format, setFormat] = useState<string>(chartSortTime ? chartSortTime : chartSortDate);
   const formatRef = useRef(format);

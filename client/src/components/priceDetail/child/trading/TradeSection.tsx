@@ -1,5 +1,4 @@
-import { useSelector } from "react-redux";
-import { RootState } from "../../../../redux/store";
+import { useAppSelector } from "../../../../redux/hooks";
 import BuyingSection from "./section/BuyingSection";
 import SellingSection from "./section/SellingSection";
 import TradeHistory from "./history/TradeHistory";
@@ -27,7 +26,7 @@ export default function TradeSection() {
     const { getBalance, getOwnedCrypto, getTradeHistory } = useFunction();
 
     const [sectionChange, setSectionChange] = useState<'매수' | '매도' | '거래내역'>('매수');
-    const user = useSelector((state: RootState) => state.user);
+    const user = useAppSelector(state => state.user);
 
     const [celeryModal, setCeleryModal] = useState(false);
     const [celeryData, setCeleryData] = useState<CeleryData>({
@@ -51,7 +50,7 @@ export default function TradeSection() {
         socketRef.current = socket;
 
         socket.onopen = () => {
-            setConnectionAttempts(0); // 연결 성공 시 재시도 횟수 초기화
+            setConnectionAttempts(0);
         };
 
         socket.onmessage = async (e) => {

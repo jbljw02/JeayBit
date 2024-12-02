@@ -106,4 +106,9 @@ export const makeStore = () => {
 
 const store = makeStore();
 
+// AppStore 타입은 configureStore로 생성된 타입
+export type AppStore = ReturnType<typeof makeStore>
+// AppDispatch는 스토어의 dispatch 타입
+export type AppDispatch = ReturnType<typeof makeStore>['dispatch'];
+
 export default store;
