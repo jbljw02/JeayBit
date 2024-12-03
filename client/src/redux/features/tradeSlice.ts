@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import formatDateString from "../../utils/date/formatDateString";
 
 export type UserTradeHistory = {
     id: string,
@@ -48,6 +49,12 @@ const userTradeHistorySlice = createSlice({
     reducers: {
         setUserTradeHistory: (state, action) => {
             return action.payload
+        },
+        addUserTradeHistory: (state, action) => {
+            const date = new Date(action.payload.trade_time);
+            const formattedDate = formatDateString(date);
+
+            return [...state, { ...action.payload, trade_time: formattedDate }];
         }
     }
 })
@@ -58,6 +65,9 @@ const userTradeHistory_unSignedSlice = createSlice({
     reducers: {
         setUserTradeHistory_unSigned: (state, action) => {
             return action.payload;
+        },
+        addUserTradeHistory_unSigned: (state, action) => {
+            return [...state, action.payload];
         }
     }
 })
@@ -74,8 +84,8 @@ export const scheduledCancelSlice = createSlice({
 
 export const { setBuyingPrice } = buyingPriceSlice.actions;
 export const { setSellingPrice } = sellingPriceSlice.actions;
-export const { setUserTradeHistory } = userTradeHistorySlice.actions;
-export const { setUserTradeHistory_unSigned } = userTradeHistory_unSignedSlice.actions;
+export const { setUserTradeHistory, addUserTradeHistory } = userTradeHistorySlice.actions;
+export const { setUserTradeHistory_unSigned, addUserTradeHistory_unSigned } = userTradeHistory_unSignedSlice.actions;
 export const { setScheduledCancel } = scheduledCancelSlice.actions;
 
 const reducers = {

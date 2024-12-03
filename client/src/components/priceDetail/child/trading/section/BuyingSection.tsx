@@ -29,7 +29,6 @@ export default function BuyingSection() {
 
     const selectedCrypto = useAppSelector(state => state.selectedCrypto);
     const user = useAppSelector(state => state.user);
-    const userWallet = useAppSelector(state => state.userWallet);
     const buyingPrice = useAppSelector(state => state.buyingPrice);
 
     const [selectedPercentage, setSelectedPercentage] = useState<string>('');
@@ -88,7 +87,7 @@ export default function BuyingSection() {
 
             if (percentageValue === 0) return; // 유효하지 않은 퍼센트 값에 대해 함수 종료
 
-            const dividedTotal = userWallet * percentageValue;
+            const dividedTotal = user.balance * percentageValue;
             setBuyTotal(Math.floor(dividedTotal));
             setTotalInputValue(Math.floor(dividedTotal).toString());
 
@@ -167,14 +166,14 @@ export default function BuyingSection() {
 
     const tradeSubmit = async (isMarketValue: boolean, price: number) => {
         // 주문총액이 잔고의 잔액을 넘으면 주문을 넣을 수 없음
-        if (buyTotal > userWallet) {
+        if (buyTotal > user.balance) {
             setIsExceedWallet(true);
             return;
         }
 
         dispatch(setWorkingSpinner(true));
 
-        const addTradeResCode = await addTradeHistory(
+        const statusCode = await addTradeHistory(
             user.email,
             selectedCrypto.name,
             tradeCategory,
@@ -187,25 +186,23 @@ export default function BuyingSection() {
             isMarketValue
         );
 
-        await getTradeHistory(user.email);
-        await getOwnedCrypto(user.email);
-        await getBalance(user.email);
-
         dispatch(setWorkingSpinner(false));
 
-        if (addTradeResCode === 200) {
+        // 거래가 즉시 체결 됐을 경우
+        if (statusCode === 200) {
             resetValue();
             setCompleteModalOpen(true);
         }
-        else if (addTradeResCode === 202 && !isMarketValue) {
+        // 거래가 대기 중일 경우
+        else if (statusCode === 202 && !isMarketValue) {
             resetValue();
             setWatingModalOpen(true);
         }
+        // 거래 실패 시
         else {
             setFailedModalOpen(true);
         }
-
-    };
+    }
 
     // 지정가 매수 요청
     const designatedSubmit = () => {
@@ -248,7 +245,7 @@ export default function BuyingSection() {
                             <tbody>
                                 <tr>
                                     <td className="trading-category">주문가능</td>
-                                    <td className="trading-available-trade">{formatWithComas(userWallet)}
+                                    <td className="trading-available-trade">{formatWithComas(user.balance)}
                                         <span>KRW</span>
                                     </td>
                                 </tr>
@@ -310,7 +307,7 @@ export default function BuyingSection() {
                         <table className="trading-table">
                             <tr>
                                 <td className='trading-category'>주문가능</td>
-                                <td className="trading-available-trade">{(Number(userWallet).toLocaleString())}
+                                <td className="trading-available-trade">{(Number(user.balance).toLocaleString())}
                                     <span>KRW</span>
                                 </td>
                             </tr>

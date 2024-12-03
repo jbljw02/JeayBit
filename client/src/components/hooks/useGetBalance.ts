@@ -1,7 +1,7 @@
 
 import axios from "axios";
 import { useAppDispatch } from "../../redux/hooks";
-import { setUserWallet } from "../../redux/features/walletSlice";
+import { setUserBalance } from "../../redux/features/userSlice";
 
 const API_URL = process.env.REACT_APP_API_URL;
 
@@ -15,7 +15,7 @@ export default function useGetBalance() {
                 `${API_URL}/get_user_balance/`,
                 { email: email }
             );
-            dispatch(setUserWallet(response.data.user_balance));
+            dispatch(setUserBalance(response.data.user_balance));
         } catch (error) {
             throw error;
         }

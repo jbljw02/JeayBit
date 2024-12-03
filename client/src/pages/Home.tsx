@@ -9,7 +9,7 @@ import Chart from '../components/chart/Chart';
 import CryptoDetail from '../components/cryptoDetail/CryptoDetail';
 import Header from '../header/Header';
 import axios from 'axios';
-import { setUser } from '../redux/features/userSlice';
+import { setUserInfo } from '../redux/features/userSlice';
 import { setSelectedCrypto, setCryptoRealTime } from '../redux/features/selectedCryptoSlice';
 import NoticeModal from '../components/modal/common/NoticeModal';
 import { setErrorModal } from '../redux/features/modalSlice';
@@ -105,20 +105,20 @@ export default function Home() {
         if (user.email) {
             getTradeHistory(user.email);
         }
-    }, [user]);
+    }, [user.email]);
 
     // 마운트 초기에 사용자의 로그인 여부를 체크
     useEffect(() => {
         (async () => {
             const response = await checkLogin();
             if (response && response.is_logged_in) {
-                dispatch(setUser({
+                dispatch(setUserInfo({
                     name: response.name,
                     email: response.email,
                 }));
             }
             else {
-                dispatch(setUser({
+                dispatch(setUserInfo({
                     name: '',
                     email: '',
                 }))

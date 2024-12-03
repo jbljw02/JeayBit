@@ -199,20 +199,21 @@ export default function SellingSectioin() {
             selectedCrypto.market,
             isMarketValue
         );
-        
-        await getTradeHistory(user.email);
-        await getOwnedCrypto(user.email);
-        await getBalance(user.email);
-        
+
         dispatch(setWorkingSpinner(false));
 
+        // 거래가 즉시 체결 됐을 경우
         if (addTradeResCode === 200) {
             resetValue();
             setCompleteModalOpen(true);
-        } else if (addTradeResCode === 202 && !isMarketValue) {
+        }
+        // 거래가 대기 중일 경우
+        else if (addTradeResCode === 202 && !isMarketValue) {
             resetValue();
             setWatingModalOpen(true);
-        } else {
+        }
+        // 거래 실패 시
+        else {
             setFailedModalOpen(true);
         }
     };

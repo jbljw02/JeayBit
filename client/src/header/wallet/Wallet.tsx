@@ -37,10 +37,6 @@ export default function Wallet() {
     const [depositSubmitted, setDepositSubmitted] = useState<boolean>(false);
     const [withdrawSubmitted, setWithdrawSubmitted] = useState<boolean>(false);
 
-
-    // 로그인 중인 사용자의 잔고량
-    const userWallet = useAppSelector(state => state.userWallet);
-
     const selectedCrypto = useAppSelector(state => state.selectedCrypto);
     const chartSortDate = useAppSelector(state => state.chartSortDate);
     const successTransfer = useAppSelector(state => state.successTransfer);
@@ -53,7 +49,7 @@ export default function Wallet() {
         if (user.email && user.name) {
             getBalance(user.email);
         }
-    }, [user, balanceUpdate, getBalance])
+    }, [user.email, balanceUpdate])
 
     // 입금 및 출금량의 변화를 감지하고 한계량을 지정
     const handleBalanceChange = (
@@ -157,7 +153,7 @@ export default function Wallet() {
             return;
         }
 
-        if (withdrawAmount > userWallet) {
+        if (withdrawAmount > user.balance) {
             setWithdrawOverflow(true);
             return;
         }
@@ -263,8 +259,8 @@ export default function Wallet() {
                                     </span>
                                     <span className="balance-amount">
                                         {
-                                            userWallet ?
-                                                Number(userWallet).toLocaleString() :
+                                            user.balance ?
+                                                Number(user.balance).toLocaleString() :
                                                 0
                                         }
                                         <span>&nbsp;KRW</span>

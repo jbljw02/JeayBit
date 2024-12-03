@@ -31,12 +31,19 @@ const ownedCryptoSlice = createSlice({
     reducers: {
         setOwnedCrypto: (state, action) => {
             return action.payload;
+        },
+        addOwnedCrypto: (state, action) => {
+            const targetCrypto = state.find(crypto => crypto.name === action.payload.name);
+            if (targetCrypto) {
+                targetCrypto.is_owned = action.payload.is_owned;
+                targetCrypto.owned_quantity = action.payload.owned_quantity;
+            }
         }
     }
 })
 
 export const { setFavoriteCrypto } = favoriteCryptoSlice.actions;
-export const { setOwnedCrypto } = ownedCryptoSlice.actions;
+export const { setOwnedCrypto, addOwnedCrypto } = ownedCryptoSlice.actions;
 
 const reducers = {
     favoriteCrypto: favoriteCryptoSlice.reducer,

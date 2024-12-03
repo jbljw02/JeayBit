@@ -10,6 +10,7 @@ from app.utils.check_price_match import check_price_match
 from app.utils.sell_process import sell_process
 import math
 import logging
+from app.models import CustomUser, UserCrypto
 
 logger = logging.getLogger(__name__)
 
@@ -80,6 +81,20 @@ def add_user_trade_history(request):
             trade_amount=Decimal(trade_amount),
             is_signed=is_signed,
         )
+        
+        # TradeHistory 객체를 딕셔너리로 변환
+        trade_history_data = {
+            "id": trade_history.id,
+            "trade_category": trade_history.trade_category,
+            "trade_time": trade_history.trade_time,
+            "crypto_market": trade_history.crypto_market,
+            "crypto_price": trade_history.crypto_price,
+            "trade_price": trade_history.trade_price,
+            "trade_amount": str(trade_history.trade_amount),
+            "is_signed": trade_history.is_signed,
+        }
+
+        user = CustomUser.objects.get(email=email)
 
         # 가격이 매치될 경우 즉시 매수 및 매도 처리
         if is_signed:
@@ -89,17 +104,56 @@ def add_user_trade_history(request):
                 response_data, status_code = buy_process(
                     user, crypto, trade_amount, buy_total
                 )
-                return Response(response_data, status=status_code)
+                
+                print('status_code', status_code)
+                
+                # 사용자의 현재 보유 화폐 정보 조회
+                user_crypto = UserCrypto.objects.get(user=user, crypto=crypto, is_owned=True)
+                owned_crypto_data = {
+                    "name": crypto.name,
+                    "is_owned": user_crypto.is_owned,
+                    "owned_quantity": float(user_crypto.owned_quantity)
+                }
+
+                response = {
+                    "is_signed": is_signed,
+                    "trade_history": trade_history_data,
+                    "owned_crypto": owned_crypto_data,
+                    "balance": user.balance,
+                }
+                
+                return Response(response, status=status_code)
             elif trade_category == "매도":
                 sell_total = Decimal(trade_price)
 
                 response_data, status_code = sell_process(
                     user, crypto, trade_amount, sell_total
                 )
-                return Response(response_data, status=status_code)
+
+                # 사용자의 현재 보유 화폐 정보 조회
+                user_crypto = UserCrypto.objects.get(user=user, crypto=crypto, is_owned=True)
+                owned_crypto_data = {
+                    "name": crypto.name,
+                    "is_owned": user_crypto.is_owned,
+                    "owned_quantity": float(user_crypto.owned_quantity),
+                }
+                
+                response = {
+                    "is_signed": is_signed,
+                    "trade_history": trade_history_data,
+                    "owned_crypto": owned_crypto_data,
+                    "balance": user.balance,
+                }
+
+                return Response(response, status=status_code)
         # 일치하지 않을 경우 대기
         else:
-            return Response({'trade': '거래 내역 추가 및 구매 대기'}, status=202)
+            response = {
+                "is_signed": is_signed,
+                "trade_history": trade_history_data,
+                "balance": user.balance,
+            }
+            return Response(response, status=202)
 
     except CustomUser.DoesNotExist:
         return Response(

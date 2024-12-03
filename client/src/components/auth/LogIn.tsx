@@ -8,7 +8,7 @@ import FaviconTitle from "./child/FaviconTitle";
 import formValueChange from "../../utils/formValueChange";
 import HeaderNav from "../../header/HeaderNav";
 import '../../styles/auth/login.css'
-import { setUser } from "../../redux/features/userSlice";
+import { setUserInfo } from "../../redux/features/userSlice";
 import LoadingBar, { LoadingBarRef } from 'react-top-loading-bar';
 import AuthButton from "./child/AuthButton";
 import AuthFooter from "./child/AuthFooter";
@@ -61,10 +61,10 @@ export default function LogIn() {
         withCredentials: true,
       });
 
-      dispatch(setUser({
+      dispatch(setUserInfo({
         name: response.data.name,
         email: response.data.email,
-      }));
+      }))
       setInvalidSubmit(false);
       setIsSubmitted(false);
 

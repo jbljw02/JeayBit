@@ -5,8 +5,8 @@ import { useRef, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Wallet from "./wallet/Wallet";
-import { setUser } from "../redux/features/userSlice";
 import { setUserTradeHistory, setUserTradeHistory_unSigned } from "../redux/features/tradeSlice";
+import { setUser, setUserInfo } from "../redux/features/userSlice";
 import '../styles/header/header.css'
 import LoadingBar, { LoadingBarRef } from 'react-top-loading-bar';
 
@@ -28,8 +28,7 @@ export default function Header() {
     }
 
     try {
-      await axios.post(`${API_URL}/logOut/`,
-        {},
+      await axios.post(`${API_URL}/logOut/`, {},
         {
           withCredentials: true,
         });
@@ -37,6 +36,7 @@ export default function Header() {
       dispatch(setUser({
         name: '',
         email: '',
+        balance: 0
       }));
 
       dispatch(setUserTradeHistory([]));
