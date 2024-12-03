@@ -1,8 +1,23 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { Crypto } from "./cryptoListSlice";
+
+export type FavoriteCrypto = {
+    crypto_name: string,
+    isFavorited: boolean
+}
+
+export type OwnedCrypto = {
+    name: string,
+    is_owned: boolean,
+    owned_quantity: number,
+}
+
+const initialFavoriteCrypto: Crypto[] = [];
+const initialOwnedCrypto: Crypto[] = [];
 
 const favoriteCryptoSlice = createSlice({
     name: 'favoriteCrypto',
-    initialState: '',
+    initialState: initialFavoriteCrypto,
     reducers: {
         setFavoriteCrypto: (state, action) => {
             return action.payload;
@@ -12,7 +27,7 @@ const favoriteCryptoSlice = createSlice({
 
 const ownedCryptoSlice = createSlice({
     name: 'ownedCrypto',
-    initialState: '',
+    initialState: initialOwnedCrypto,
     reducers: {
         setOwnedCrypto: (state, action) => {
             return action.payload;

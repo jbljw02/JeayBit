@@ -16,7 +16,11 @@ export type UserTradeHistory = {
 export type ScheduleCancel = {
     id: string,
     index: number,
-}[]
+}
+
+const initialUserTradeHistory: UserTradeHistory[] = [];
+const initialUserTradeHistory_unSigned: UserTradeHistory[] = [];
+const initialScheduledCancel: ScheduleCancel[] = [];
 
 const buyingPriceSlice = createSlice({
     name: 'buyingPrice',
@@ -40,7 +44,7 @@ const sellingPriceSlice = createSlice({
 
 const userTradeHistorySlice = createSlice({
     name: 'userTradeHisotry',
-    initialState: [] as UserTradeHistory[],
+    initialState: initialUserTradeHistory,
     reducers: {
         setUserTradeHistory: (state, action) => {
             return action.payload
@@ -50,7 +54,7 @@ const userTradeHistorySlice = createSlice({
 
 const userTradeHistory_unSignedSlice = createSlice({
     name: 'userTradeHistory_unSigned',
-    initialState: [] as UserTradeHistory[],
+    initialState: initialUserTradeHistory_unSigned,
     reducers: {
         setUserTradeHistory_unSigned: (state, action) => {
             return action.payload;
@@ -60,7 +64,7 @@ const userTradeHistory_unSignedSlice = createSlice({
 
 export const scheduledCancelSlice = createSlice({
     name: 'scheduledCancel',
-    initialState: [],
+    initialState: initialScheduledCancel,
     reducers: {
         setScheduledCancel: (state, action) => {
             return action.payload;

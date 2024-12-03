@@ -12,7 +12,6 @@ import axios from 'axios';
 import { setUser } from '../redux/features/userSlice';
 import { setSelectedCrypto, setCryptoRealTime } from '../redux/features/selectedCryptoSlice';
 import NoticeModal from '../components/modal/common/NoticeModal';
-import { RootState } from '../redux/store';
 import { setErrorModal } from '../redux/features/modalSlice';
 import CryptoHeader from '../components/cryptoDetail/CryptoHeader';
 import WorkingSpinnerModal from '../components/modal/trade/WorkingSpinnerModal';

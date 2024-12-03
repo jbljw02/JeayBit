@@ -19,20 +19,11 @@ export type Crypto = {
 
 export type ListCategory = '원화' | '보유' | '관심'
 
-export type FavoriteCrypto = {
-    crypto_name: string,
-    isFavorited: boolean
-}
-
-export type OwnedCrypto = {
-    name: string,
-    is_owned: boolean,
-    owned_quantity: number,
-}
+const initialCryptoList: Crypto[] = [];
 
 export const allCryptoSlice = createSlice({
     name: 'allCrypto',
-    initialState: [],
+    initialState: initialCryptoList,
     reducers: {
         setAllCrypto: (state, action) => {
             return action.payload;
@@ -42,7 +33,7 @@ export const allCryptoSlice = createSlice({
 
 export const listCategorySlice = createSlice({
     name: 'listCategory',
-    initialState: '원화',
+    initialState: '원화' as ListCategory,
     reducers: {
         setListCategory: (state, action) => {
             return action.payload;
@@ -52,7 +43,7 @@ export const listCategorySlice = createSlice({
 
 const filteredDataSlice = createSlice({
     name: 'filteredData',
-    initialState: [] as Crypto[],
+    initialState: initialCryptoList,
     reducers: {
         setFilteredData: (state, action) => {
             return action.payload;
@@ -62,7 +53,7 @@ const filteredDataSlice = createSlice({
 
 const sortedDataSlice = createSlice({
     name: 'sortedData',
-    initialState: [] as Crypto[],
+    initialState: initialCryptoList,
     reducers: {
         setSortedData: (state, action) => {
             return action.payload;
@@ -72,7 +63,7 @@ const sortedDataSlice = createSlice({
 
 export const searchedCryptoSlice = createSlice({
     name: 'searchedCrypto',
-    initialState: [],
+    initialState: initialCryptoList,
     reducers: {
         setSearchedCrypto: (state, action) => {
             return action.payload;

@@ -1,6 +1,5 @@
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import { useEffect, useState, useRef } from "react";
-import { RootState } from "../../../redux/store";
 import { setChartSortDate, setChartSortTime } from "../../../redux/features/chartSlice";
 import { setChartSpinner } from "../../../redux/features/placeholderSlice";
 import useRequestCandle from "../../hooks/useRequestCandle";

@@ -49,62 +49,6 @@ export default function TradeSection() {
         }
     }, [user, getBalance]);
 
-    const connectWebSocket = useCallback(() => {
-        const socket = new WebSocket(`${API_URL}/ws/trade_updates/`);
-        socketRef.current = socket;
-
-        socket.onopen = () => {
-            setConnectionAttempts(0);
-        };
-
-        socket.onmessage = async (e) => {
-            const data = JSON.parse(e.data);
-            const celeryMessage = data.message;
-            setCeleryData({
-                name: celeryMessage.crypto_name,
-                tradeTime: celeryMessage.trade_time,
-                tradeCategory: celeryMessage.trade_category,
-                price: celeryMessage.crypto_price,
-            });
-            await getOwnedCrypto(user.email);
-            await getTradeHistory(user.email);
-            setCeleryModal(true);
-        };
-
-        socket.onclose = (event) => {
-            if (event.wasClean) {
-                return;
-            } else {
-                if (connectionAttempts <= 4) {
-                    setConnectionAttempts(prev => prev + 1); // 연결 실패 시 재시도 횟수 증가
-                }
-            }
-        };
-    }, [connectionAttempts, user.email]);
-
-    useEffect(() => {
-        connectWebSocket();
-
-        return () => {
-            if (socketRef.current) {
-                socketRef.current.close();
-            }
-        };
-    }, [connectWebSocket]);
-
-    useEffect(() => {
-        // 최소한 한 번의 연결 시도가 실패했을 때
-        if (connectionAttempts > 0) {
-            // 각 재연결 시도 사이 대기 시간을 점진적으로 증가시키되, 10초를 넘기지 않음
-            const timeout = Math.min(10000, connectionAttempts * 1000);
-            const timer = setTimeout(() => {
-                connectWebSocket();
-            }, timeout);
-
-            return () => clearTimeout(timer);
-        }
-    }, [connectionAttempts]);
-
     return (
         <>
             <CeleryCompleteModal

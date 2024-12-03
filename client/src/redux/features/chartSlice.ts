@@ -12,11 +12,17 @@ export type Market = {
 };
 
 export type ChartSortDate = '1일' | '1주' | '1개월';
-export type ChartSortTime = '1분' | '5분' | '10분' | '30분' | '1시간' | '4시간';
+export type ChartSortTime = '1분' | '5분' | '10분' | '30분' | '1시간' | '4시간' | '';
+
+const initialDelimitedTime: ChartSortTime[] = ['1분', '5분', '10분', '30분', '1시간', '4시간'];
+const initialDelimitedDate: ChartSortDate[] = ['1일', '1주', '1개월'];
+
+const initialCandlePerMinute: Market[] = [];
+const initialCandlePerDate: Market[] = [];
 
 const delimitedTimeSlice = createSlice({
     name: 'delimitedTime',
-    initialState: ['1분', '5분', '10분', '30분', '1시간', '4시간'] as ChartSortTime[],
+    initialState: initialDelimitedTime,
     reducers: {
         setDelimitedTime: (state, action) => {
             return action.payload;
@@ -26,7 +32,7 @@ const delimitedTimeSlice = createSlice({
 
 const delimitedDateSlice = createSlice({
     name: 'delimitedDate',
-    initialState: ['1일', '1주', '1개월'] as ChartSortDate[],
+    initialState: initialDelimitedDate,
     reducers: {
         setDelimitedDate: (state, action) => {
             return action.payload;
@@ -36,7 +42,7 @@ const delimitedDateSlice = createSlice({
 
 const chartSortTimeSlice = createSlice({
     name: 'chartSortTime',
-    initialState: '' as ChartSortTime | '',
+    initialState: '' as ChartSortTime,
     reducers: {
         setChartSortTime: (state, action) => {
             return action.payload;
@@ -56,7 +62,7 @@ const chartSortDateSlice = createSlice({
 
 const candlePerMinuteSlice = createSlice({
     name: 'candlePerMinute',
-    initialState: [] as Market[],
+    initialState: initialCandlePerMinute,
     reducers: {
         setCandlePerMinute: (state, action) => {
             return action.payload;
@@ -66,7 +72,7 @@ const candlePerMinuteSlice = createSlice({
 
 const candlePerDateSlice = createSlice({
     name: 'candlePerDate',
-    initialState: [] as Market[],
+    initialState: initialCandlePerDate,
     reducers: {
         setCandlePerDate: (state, action) => {
             return action.payload;

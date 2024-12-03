@@ -15,8 +15,7 @@ export default function useRenderTransferModal() {
             return (
                 <NoticeModal
                     isModalOpen={successTransfer}
-                    setIsModalOpen={() => dispatch(setSuccessTransfer(false))
-                    }
+                    setIsModalOpen={() => dispatch(setSuccessTransfer(false))}
                     content={`${transferCategory === 'deposit' ? '입금' : '출금'}이 성공적으로 완료되었습니다.`} />
             );
         }
@@ -24,8 +23,7 @@ export default function useRenderTransferModal() {
             return (
                 <NoticeModal
                     isModalOpen={failTransfer}
-                    setIsModalOpen={() => dispatch(setFailTransfer(false))
-                    }
+                    setIsModalOpen={() => dispatch(setFailTransfer(false))}
                     content={`${transferCategory === 'deposit' ? '입금' : '출금'}에 실패했습니다.`} />
             );
         }

@@ -13,7 +13,6 @@ import TradeFailedModal from "../../../../modal/trade/TradeFailedModal";
 import WaitingModal from "../../../../modal/trade/WatingModal";
 import { bidSortOptions } from "../TradeSection";
 import { setBuyingPrice } from "../../../../../redux/features/tradeSlice";
-import { RootState } from "../../../../../redux/store";
 import { setWorkingSpinner } from "../../../../../redux/features/placeholderSlice";
 import NoticeModal from "../../../../modal/common/NoticeModal";
 import { useAppDispatch, useAppSelector } from "../../../../../redux/hooks";

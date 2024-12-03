@@ -6,7 +6,6 @@ import TransferWarning from "./TransferWarning";
 import NoticeModal from "../../components/modal/common/NoticeModal";
 import '../../styles/header/wallet.css'
 import { setBalanceUpdate, setFailTransfer, setSuccessTransfer, setTransferCategory, setTransferSort } from "../../redux/features/walletSlice";
-import { RootState } from "../../redux/store";
 import { setWorkingSpinner } from "../../redux/features/placeholderSlice";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import useGetBalance from "../../components/hooks/useGetBalance";
@@ -40,7 +39,7 @@ export default function Wallet() {
 
 
     // 로그인 중인 사용자의 잔고량
-    const userWallet = useAppSelector((state: RootState) => state.userWallet);
+    const userWallet = useAppSelector(state => state.userWallet);
 
     const selectedCrypto = useAppSelector(state => state.selectedCrypto);
     const chartSortDate = useAppSelector(state => state.chartSortDate);
@@ -116,8 +115,8 @@ export default function Wallet() {
             try {
                 await axios.post(`${API_URL}/minus_balance_from_user/`, {
                     email: email,
-                        withdrawAmount: withdrawAmount,
-                    }
+                    withdrawAmount: withdrawAmount,
+                }
                 );
                 dispatch(setSuccessTransfer(true));
                 dispatch(setTransferCategory('withdraw'));

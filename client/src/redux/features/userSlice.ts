@@ -5,12 +5,14 @@ export type User = {
     email: string
 }
 
+const initialState: User = {
+    name: '',
+    email: ''
+}
+
 const userSlice = createSlice({
     name: 'user',
-    initialState: {
-        name: '',
-        email: ''
-    },
+    initialState,
     reducers: {
         setUser: (state, action) => {
             return action.payload;

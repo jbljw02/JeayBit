@@ -100,11 +100,11 @@ export default function AskingPrice() {
                                                             <>
                                                                 <AskingTable
                                                                     differences={differences_bid}
-                                                                    size={totalBidSize}
+                                                                    size={Number(totalBidSize)}
                                                                     category={'bid'} />
                                                                 <AskingTable
                                                                     differences={differences_ask}
-                                                                    size={totalAskSize}
+                                                                    size={Number(totalAskSize)}
                                                                     category={'ask'} />
                                                             </>
                                                         </tbody>

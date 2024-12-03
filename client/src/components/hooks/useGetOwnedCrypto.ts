@@ -1,7 +1,6 @@
 import axios from "axios";
-import { OwnedCrypto } from "../../redux/features/cryptoListSlice";
 import { setSelectedCrypto } from "../../redux/features/selectedCryptoSlice";
-import { setOwnedCrypto } from "../../redux/features/userCryptoSlice";
+import { OwnedCrypto, setOwnedCrypto } from "../../redux/features/userCryptoSlice";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 
 const API_URL = process.env.REACT_APP_API_URL;
