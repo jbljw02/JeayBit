@@ -5,43 +5,48 @@ import LogIn from '../components/auth/LogIn';
 import PriceDetail from '../components/priceDetail/PriceDetail';
 import SignUp from '../components/auth/SignUp';
 import { useEffect, useRef } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import Chart from '../components/chart/Chart';
 import CryptoDetail from '../components/cryptoDetail/CryptoDetail';
 import Header from '../header/Header';
 import axios from 'axios';
-import useFunction from '../components/useFuction';
-import { setUser } from '../redux/features/userSlice';
+import { setUserInfo } from '../redux/features/userSlice';
 import { setSelectedCrypto, setCryptoRealTime } from '../redux/features/selectedCryptoSlice';
 import NoticeModal from '../components/modal/common/NoticeModal';
-import { RootState } from '../redux/store';
 import { setErrorModal } from '../redux/features/modalSlice';
 import CryptoHeader from '../components/cryptoDetail/CryptoHeader';
 import WorkingSpinnerModal from '../components/modal/trade/WorkingSpinnerModal';
 import { setWorkingSpinner } from '../redux/features/placeholderSlice';
+import { useAppDispatch, useAppSelector } from '../redux/hooks';
+import useCheckLogin from '../components/hooks/useCheckLogin';
+import useGetAllCrypto from '../components/hooks/useGetAllCrypto';
+import useRenderTransferModal from '../components/hooks/useRenderTransferModal';
+import useRequestCandleMinute from '../components/hooks/useRequestCandle';
+import useSelectAskingPrice from '../components/hooks/useSelectAskingPrice';
+import useSelectClosedPrice from '../components/hooks/useSelectClosedPrice';
+import useTradeHistory from '../components/hooks/useTradeHistory';
+import useRequestCandle from '../components/hooks/useRequestCandle';
 
 const API_URL = process.env.REACT_APP_API_URL;
 
 export default function Home() {
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
 
-    const { checkLogin,
-        getAllCrypto,
-        getTradeHistory,
-        selectAskingPrice,
-        selectClosedPrice,
-        requestCandleMinute,
-        requestCandleDate,
-        renderTransferModal } = useFunction();
+    const checkLogin = useCheckLogin();
+    const getAllCrypto = useGetAllCrypto();
+    const { getTradeHistory } = useTradeHistory();
+    const selectAskingPrice = useSelectAskingPrice();
+    const selectClosedPrice = useSelectClosedPrice();
+    const { requestCandleMinute, requestCandleDate } = useRequestCandle();
+    const renderTransferModal = useRenderTransferModal();
 
-    const errorModal = useSelector((state: RootState) => state.errorModal)
-    const user = useSelector((state: RootState) => state.user);
-    const selectedCrypto = useSelector((state: RootState) => state.selectedCrypto);
-    const workingSpinner = useSelector((state: RootState) => state.workingSpinner);
-    const chartSortTime = useSelector((state: RootState) => state.chartSortTime);
-    const chartSortDate = useSelector((state: RootState) => state.chartSortDate);
-    const chartSpinner = useSelector((state: RootState) => state.chartSpinner);
-    const askingSpinner = useSelector((state: RootState) => state.askingSpinner);
+    const errorModal = useAppSelector(state => state.errorModal)
+    const user = useAppSelector(state => state.user);
+    const selectedCrypto = useAppSelector(state => state.selectedCrypto);
+    const workingSpinner = useAppSelector(state => state.workingSpinner);
+    const chartSortTime = useAppSelector(state => state.chartSortTime);
+    const chartSortDate = useAppSelector(state => state.chartSortDate);
+    const chartSpinner = useAppSelector(state => state.chartSpinner);
+    const askingSpinner = useAppSelector(state => state.askingSpinner);
 
     const selectedCryptoRef = useRef(selectedCrypto);
     const chartSortTimeRef = useRef(chartSortTime);
@@ -79,7 +84,7 @@ export default function Home() {
         const interval = setInterval(() => {
             getAllCrypto();
 
-            if(!askingSpinnerRef.current) {
+            if (!askingSpinnerRef.current) {
                 selectClosedPrice(selectedCryptoRef.current.market);
                 selectAskingPrice(selectedCryptoRef.current.market);
             }
@@ -100,20 +105,20 @@ export default function Home() {
         if (user.email) {
             getTradeHistory(user.email);
         }
-    }, [user]);
+    }, [user.email]);
 
     // 마운트 초기에 사용자의 로그인 여부를 체크
     useEffect(() => {
         (async () => {
             const response = await checkLogin();
             if (response && response.is_logged_in) {
-                dispatch(setUser({
+                dispatch(setUserInfo({
                     name: response.name,
                     email: response.email,
                 }));
             }
             else {
-                dispatch(setUser({
+                dispatch(setUserInfo({
                     name: '',
                     email: '',
                 }))

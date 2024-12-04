@@ -6,7 +6,9 @@ from django.http import JsonResponse
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from app.models import CustomUser
+import logging
 
+logger = logging.getLogger(__name__)
 
 @api_view(["POST"])
 def sign_up(request):
@@ -30,7 +32,8 @@ def sign_up(request):
         user = CustomUser.objects.create_user(
             username=username, email=email, password=password
         )
-    except:
+    except Exception as e:
+        logger.error(f"회원가입 실패: {str(e)}")
         return Response({"error": "회원가입 실패"}, status=500)
 
     return Response({"sign_up": "회원가입 성공"}, status=201)
@@ -63,6 +66,7 @@ class LoginView(View):
                     {"error": "잘못된 이메일 혹은 비밀번호"}, status=400
                 )
         except Exception as e:
+            logger.error(f"로그인 실패: {str(e)}")
             return JsonResponse({"error": "로그인 실패"}, status=500)
 
 
@@ -75,7 +79,8 @@ class LogoutView(View):
             else:
                 request.session.flush()  # 세션 데이터 삭제
                 return JsonResponse({"logout": "로그아웃 성공"}, status=200)
-        except:
+        except Exception as e:
+            logger.error(f"로그아웃 실패: {str(e)}")
             return JsonResponse({"error": "로그아웃 실패"}, status=500)
 
 
@@ -101,5 +106,6 @@ class CheckLoginView(View):
                     },
                     status=200,
                 )
-        except Exception:
-            return JsonResponse({f"error": "로그인 체크 에러"}, status=500)
+        except Exception as e:
+            logger.error(f"로그인 체크 에러: {str(e)}")
+            return JsonResponse({"error": "로그인 체크 에러"}, status=500)

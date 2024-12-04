@@ -1,17 +1,17 @@
 import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useAppSelector } from "../../../redux/hooks";
+import { useAppDispatch } from "../../../redux/hooks";
 import { sortData } from "../../../utils/sort/sortData";
-import { RootState } from "../../../redux/store";
 import { Crypto, setFilteredData } from "../../../redux/features/cryptoListSlice";
 
 export default function ListSearch() {
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
 
-    const allCrypto = useSelector((state: RootState) => state.allCrypto);
-    const listCategory = useSelector((state: RootState) => state.listCategory);
-    const favoriteCrypto = useSelector((state: RootState) => state.favoriteCrypto);
-    const ownedCrypto = useSelector((state: RootState) => state.ownedCrypto);
-    const sortStates = useSelector((state: RootState) => state.sortStates);
+    const allCrypto = useAppSelector(state => state.allCrypto);
+    const listCategory = useAppSelector(state => state.listCategory);
+    const favoriteCrypto = useAppSelector(state => state.favoriteCrypto);
+    const ownedCrypto = useAppSelector(state => state.ownedCrypto);
+    const sortStates = useAppSelector(state => state.sortStates);
 
     const [searchedInput, setSearchedInput] = useState<string>("");
 
@@ -25,14 +25,16 @@ export default function ListSearch() {
         let dataToFilter: Crypto[] = [];
         if (listCategory === '원화') {
             dataToFilter = allCrypto;
-        } else if (listCategory === '관심') {
+        } 
+        else if (listCategory === '관심') {
             const isFavorites = allCrypto.filter(item => item.is_favorited);
             dataToFilter = isFavorites;
             // 관심 화폐의 무결성 유지
             if (dataToFilter !== favoriteCrypto) {
                 dataToFilter = favoriteCrypto;
             }
-        } else if (listCategory === '보유') {
+        } 
+        else if (listCategory === '보유') {
             const isOwnes = allCrypto.filter(item => item.is_owned && item.owned_quantity > 0.00);
             dataToFilter = isOwnes;
         }

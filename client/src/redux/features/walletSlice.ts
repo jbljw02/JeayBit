@@ -10,17 +10,6 @@ const walletHoverSlice = createSlice({
     }
 })
 
-
-const userWalletSlice = createSlice({
-    name: 'userWallet',
-    initialState: 0,
-    reducers: {
-        setUserWallet: (state, action) => {
-            return action.payload;
-        }
-    }
-})
-
 const balanceUpdateSlice = createSlice({
     name: 'balanceUpdate',
     initialState: false,
@@ -72,7 +61,6 @@ const transferCategorySlice = createSlice({
 })
 
 export const { setWalletHover } = walletHoverSlice.actions;
-export const { setUserWallet } = userWalletSlice.actions;
 export const { setBalanceUpdate } = balanceUpdateSlice.actions;
 export const { setTransferSort } = transferSortSlice.actions;
 export const { setSuccessTransfer } = successTransferSlice.actions;
@@ -82,7 +70,6 @@ export const { setTransferCategory } = transferCategorySlice.actions;
 
 const reducers = {
     walletHover: walletHoverSlice.reducer,
-    userWallet: userWalletSlice.reducer,
     balanceUpdate: balanceUpdateSlice.reducer,
     transferSort: transferSortSlice.reducer,
     successTransfer: successTransferSlice.reducer,

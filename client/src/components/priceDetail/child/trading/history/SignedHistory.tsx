@@ -1,11 +1,9 @@
-import { useSelector } from "react-redux";
-import { RootState } from "../../../../../redux/store";
+import { useAppSelector } from "../../../../../redux/hooks";
 import formatTradeAmount from "../../../../../utils/format/formatTradeAmount";
 import formatWithComas from "../../../../../utils/format/formatWithComas";
 
 export default function SignedHistory() {
-    const userTradeHistory = useSelector((state: RootState) => state.userTradeHistory);
-
+    const userTradeHistory = useAppSelector(state => state.userTradeHistory);
     return (
         <>
             {

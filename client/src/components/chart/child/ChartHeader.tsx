@@ -1,20 +1,19 @@
-import { useDispatch, useSelector } from "react-redux";
-import { useEffect, useState, useRef, useCallback } from "react";
-import { RootState } from "../../../redux/store";
+import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
+import { useEffect, useState, useRef } from "react";
 import { setChartSortDate, setChartSortTime } from "../../../redux/features/chartSlice";
-import useFunction from "../../useFuction";
 import { setChartSpinner } from "../../../redux/features/placeholderSlice";
+import useRequestCandle from "../../hooks/useRequestCandle";
 
 export default function ChartHeader() {
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
 
-    const { requestCandleMinute, requestCandleDate } = useFunction();
+    const { requestCandleMinute, requestCandleDate } = useRequestCandle();
 
-    const delimitedTime = useSelector((state: RootState) => state.delimitedTime);
-    const delimitedDate = useSelector((state: RootState) => state.delimitedDate);
-    const chartSortTime = useSelector((state: RootState) => state.chartSortTime);
-    const chartSortDate = useSelector((state: RootState) => state.chartSortDate);
-    const cryptoRealTime = useSelector((state: RootState) => state.cryptoRealTime);
+    const delimitedTime = useAppSelector(state => state.delimitedTime);
+    const delimitedDate = useAppSelector(state => state.delimitedDate);
+    const chartSortTime = useAppSelector(state => state.chartSortTime);
+    const chartSortDate = useAppSelector(state => state.chartSortDate);
+    const cryptoRealTime = useAppSelector(state => state.cryptoRealTime);
 
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const dropdownRef = useRef<HTMLLabelElement>(null);
@@ -29,7 +28,7 @@ export default function ChartHeader() {
         setIsDropdownOpen(false);
     };
 
-    const changeCandle = useCallback(async () => {
+    const changeCandle = async () => {
         dispatch(setChartSpinner(true));
         try {
             if (chartSortTime && cryptoRealTime.market) {
@@ -40,11 +39,11 @@ export default function ChartHeader() {
         } finally {
             dispatch(setChartSpinner(false));
         }
-    }, [chartSortTime, chartSortDate, cryptoRealTime.market, requestCandleDate, requestCandleMinute, dispatch]);
+    };
 
     useEffect(() => {
         changeCandle();
-    }, [changeCandle]);
+    }, [chartSortTime, chartSortDate, cryptoRealTime.market]);
 
     // 드롭다운 외부 클릭 감지
     useEffect(() => {

@@ -1,14 +1,14 @@
 import { useNavigate } from "react-router-dom";
 import { useRef, useState } from "react";
 import axios from "axios";
-import { useDispatch } from "react-redux";
+import { useAppDispatch } from "../../redux/hooks";
 import FormInput from "../input/FormInput";
 import InputWarning from "../input/InputWarning";
 import FaviconTitle from "./child/FaviconTitle";
 import formValueChange from "../../utils/formValueChange";
 import HeaderNav from "../../header/HeaderNav";
 import '../../styles/auth/login.css'
-import { setUser } from "../../redux/features/userSlice";
+import { setUserInfo } from "../../redux/features/userSlice";
 import LoadingBar, { LoadingBarRef } from 'react-top-loading-bar';
 import AuthButton from "./child/AuthButton";
 import AuthFooter from "./child/AuthFooter";
@@ -16,7 +16,7 @@ import AuthFooter from "./child/AuthFooter";
 const API_URL = process.env.REACT_APP_API_URL;
 
 export default function LogIn() {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
   const [activeInput, setActiveInput] = useState<string>('');
@@ -61,10 +61,10 @@ export default function LogIn() {
         withCredentials: true,
       });
 
-      dispatch(setUser({
+      dispatch(setUserInfo({
         name: response.data.name,
         email: response.data.email,
-      }));
+      }))
       setInvalidSubmit(false);
       setIsSubmitted(false);
 

@@ -82,8 +82,7 @@ def crypto_api():
             low_price,
         )
     except Exception as e:
-        logger.error(f"Error in crypto_api: {e}")
-        print(e)
+        logger.error(f"암호화폐 데이터 가져오기 에러: {e}")
         return None
 
 
@@ -185,7 +184,7 @@ class GetAllCryptoView(View):
 
                 all_crypto.append(crypto_obj)
         except Exception as e:
-            logger.error(f"암호화폐 데이터 ��져오기 에러: {e}")
+            logger.error(f"암호화폐 데이터 가져오기 에러: {e}")
             return JsonResponse({"error": "암호화폐 데이터 가져오기 에러"}, status=500)
 
         data = {
@@ -217,6 +216,7 @@ def asking_price(request):
         return Response(data, status=200)
 
     except Exception as e:
+        logger.error(f"호가내역 받아오기 실패: {e}")
         return Response(
             {"error": "호가내역 받아오기 실패", "details": str(e)}, status=500
         )
@@ -242,5 +242,6 @@ def closed_price(request):
 
         return Response(data, status=200)
 
-    except:
-        return Response({"error: 호가내역 받아오기 실패"}, status=500)
+    except Exception as e:
+        logger.error(f"체결내역 받아오기 실패: {e}")
+        return Response({"error: 체결내역 받아오기 실패"}, status=500)

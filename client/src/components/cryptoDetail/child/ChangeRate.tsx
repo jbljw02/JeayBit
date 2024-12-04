@@ -1,9 +1,7 @@
-import { useSelector } from "react-redux";
-import { RootState } from "../../../redux/store";
+import { useAppSelector } from "../../../redux/hooks";
 
 export default function ChangeRate() {
-  const cryptoRealTime = useSelector((state: RootState) => state.cryptoRealTime);
-
+  const cryptoRealTime = useAppSelector(state => state.cryptoRealTime);
   return (
     <>
       {

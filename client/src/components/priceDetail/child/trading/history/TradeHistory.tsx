@@ -1,7 +1,5 @@
 import axios from "axios";
 import { useEffect, useRef, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import useFunction from "../../../../useFuction";
 import SignedHistory from "./SignedHistory";
 import UnSignedHistory from "./UnSignedHistory";
 import '../../../../../styles/priceDetail/trading/tradeHistory.css'
@@ -9,21 +7,22 @@ import TradingThead from "../TradingThead";
 import CustomScrollbars from "../../../../scrollbar/CustomScorllbars";
 import NoticeModal from "../../../../modal/common/NoticeModal";
 import PlaceholderDisplay from "../../../../placeholder/PlaceholderDisplay";
-import { RootState } from "../../../../../redux/store";
-import { setScheduledCancel } from "../../../../../redux/features/tradeSlice";
+import { useAppDispatch, useAppSelector } from "../../../../../redux/hooks";
+import { cancelUnSignedOrder, setScheduledCancel } from "../../../../../redux/features/tradeSlice";
 import { setWorkingSpinner } from "../../../../../redux/features/placeholderSlice";
+import useTradeHistory from "../../../../hooks/useTradeHistory";
 
 const API_URL = process.env.REACT_APP_API_URL;
 
 export default function TradeHistory() {
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
 
-    const { getTradeHistory } = useFunction();
+    const { getTradeHistory } = useTradeHistory();
 
-    const user = useSelector((state: RootState) => state.user);
-    const scheduledCancel = useSelector((state: RootState) => state.scheduledCancel);
-    const userTradeHistory = useSelector((state: RootState) => state.userTradeHistory);
-    const userTradeHistory_unSigned = useSelector((state: RootState) => state.userTradeHistory_unSigned);
+    const user = useAppSelector(state => state.user);
+    const scheduledCancel = useAppSelector(state => state.scheduledCancel);
+    const userTradeHistory = useAppSelector(state => state.userTradeHistory);
+    const userTradeHistory_unSigned = useAppSelector(state => state.userTradeHistory_unSigned);
 
     const [cancelCompleteModal, setCancelCompleteModal] = useState(false);
 
@@ -68,10 +67,9 @@ export default function TradeHistory() {
             dispatch(setWorkingSpinner(true));
 
             await cancelOrder(user.email, ids);
-            await getTradeHistory(user.email);
+            dispatch(cancelUnSignedOrder(ids));
 
             dispatch(setWorkingSpinner(false));
-            
             setCancelCompleteModal(true);
         }
     }

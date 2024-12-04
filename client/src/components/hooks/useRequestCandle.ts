@@ -1,0 +1,50 @@
+import axios from "axios";
+import { setErrorModal } from "../../redux/features/modalSlice";
+import { useAppDispatch } from "../../redux/hooks";
+import { setCandlePerDate, setCandlePerMinute } from "../../redux/features/chartSlice";
+
+const API_URL = process.env.REACT_APP_API_URL;
+
+export default function useRequestCandleMinute() {
+    const dispatch = useAppDispatch();
+
+  // 리스트에서 화폐를 선택하면 해당 화폐에 대한 캔들 호출(차트의 분에 따라)
+  const requestCandleMinute = async (market: string, minute: string) => {
+    if (minute && market) {
+      try {
+        const response = await axios.get(`${API_URL}/candle_per_minute/?market=${market}&minute=${minute}`);
+        dispatch(setCandlePerMinute(response.data));
+      } catch (error) {
+        dispatch(setErrorModal(true));
+        throw error;
+      }
+    }
+  };
+
+   // 리스트에서 화폐를 선택하면 해당 화폐에 대한 캔들 호출(차트의 ;일/주/월에 따라)
+   const requestCandleDate = async (market: string, date: '1일' | '1주' | '1개월') => {
+    try {
+      let response;
+      let url = `${API_URL}/`;
+
+      if (date === "1일") {
+        url += `candle_per_date/?market=${market}`;
+        response = await axios.get(url);
+        dispatch(setCandlePerDate(response.data));
+      } else if (date === "1주") {
+        url += `candle_per_week/?market=${market}`;
+        response = await axios.get(url);
+        dispatch(setCandlePerDate(response.data));
+      } else if (date === "1개월") {
+        url += `candle_per_month/?market=${market}`;
+        response = await axios.get(url);
+        dispatch(setCandlePerDate(response.data));
+      }
+    } catch (error) {
+      dispatch(setErrorModal(true));
+      throw error;
+    }
+  };
+
+  return { requestCandleMinute, requestCandleDate };
+}

@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import formatDateString from "../../utils/date/formatDateString";
 
 export type UserTradeHistory = {
     id: string,
@@ -16,7 +17,11 @@ export type UserTradeHistory = {
 export type ScheduleCancel = {
     id: string,
     index: number,
-}[]
+}
+
+const initialUserTradeHistory: UserTradeHistory[] = [];
+const initialUserTradeHistory_unSigned: UserTradeHistory[] = [];
+const initialScheduledCancel: ScheduleCancel[] = [];
 
 const buyingPriceSlice = createSlice({
     name: 'buyingPrice',
@@ -40,27 +45,42 @@ const sellingPriceSlice = createSlice({
 
 const userTradeHistorySlice = createSlice({
     name: 'userTradeHisotry',
-    initialState: [] as UserTradeHistory[],
+    initialState: initialUserTradeHistory,
     reducers: {
         setUserTradeHistory: (state, action) => {
             return action.payload
-        }
+        },
+        addUserTradeHistory: (state, action) => {
+            const date = new Date(action.payload.trade_time);
+            const formattedDate = formatDateString(date);
+
+            return [...state, { ...action.payload, trade_time: formattedDate }];
+        },
     }
 })
 
 const userTradeHistory_unSignedSlice = createSlice({
     name: 'userTradeHistory_unSigned',
-    initialState: [] as UserTradeHistory[],
+    initialState: initialUserTradeHistory_unSigned,
     reducers: {
         setUserTradeHistory_unSigned: (state, action) => {
             return action.payload;
+        },
+        addUserTradeHistory_unSigned: (state, action) => {
+            const date = new Date(action.payload.trade_time);
+            const formattedDate = formatDateString(date);
+
+            return [...state, { ...action.payload, trade_time: formattedDate }];
+        },
+        cancelUnSignedOrder: (state, action) => {
+            return state.filter(trade => !action.payload.includes(trade.id));
         }
     }
 })
 
 export const scheduledCancelSlice = createSlice({
     name: 'scheduledCancel',
-    initialState: [],
+    initialState: initialScheduledCancel,
     reducers: {
         setScheduledCancel: (state, action) => {
             return action.payload;
@@ -70,8 +90,8 @@ export const scheduledCancelSlice = createSlice({
 
 export const { setBuyingPrice } = buyingPriceSlice.actions;
 export const { setSellingPrice } = sellingPriceSlice.actions;
-export const { setUserTradeHistory } = userTradeHistorySlice.actions;
-export const { setUserTradeHistory_unSigned } = userTradeHistory_unSignedSlice.actions;
+export const { setUserTradeHistory, addUserTradeHistory } = userTradeHistorySlice.actions;
+export const { setUserTradeHistory_unSigned, addUserTradeHistory_unSigned, cancelUnSignedOrder } = userTradeHistory_unSignedSlice.actions;
 export const { setScheduledCancel } = scheduledCancelSlice.actions;
 
 const reducers = {

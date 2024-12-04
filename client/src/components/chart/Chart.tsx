@@ -1,14 +1,13 @@
-import { useSelector } from "react-redux";
-import { RootState } from "../../redux/store";
+import { useAppSelector } from "../../redux/hooks";
 import ApexChart from "./child/ApexChart";
 import ChartHeader from "./child/ChartHeader";
 import LoadingSpinner from "../placeholder/LoadingSpinner";
 import '../../styles/chart/chart.css'
 
 export default function Chart() {
-    const candlePerDate = useSelector((state: RootState) => state.candlePerDate);
-    const candlePerMinute = useSelector((state: RootState) => state.candlePerMinute);
-    const chartSpinner = useSelector((state: RootState) => state.chartSpinner);
+    const candlePerDate = useAppSelector(state => state.candlePerDate);
+    const candlePerMinute = useAppSelector(state => state.candlePerMinute);
+    const chartSpinner = useAppSelector(state => state.chartSpinner);
 
     return (
         <div className="chart-container">

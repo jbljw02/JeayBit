@@ -2,7 +2,9 @@ from app.models import Crypto, CustomUser, UserCrypto
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from app.models import UserCrypto
+import logging
 
+logger = logging.getLogger(__name__)
 
 # UserCrypto 테이블에 사용자에 따른 화폐 관심 여부 추가
 @api_view(["POST"])
@@ -47,6 +49,9 @@ def add_favoriteCrypto_to_user(request):
         )
     except Crypto.DoesNotExist:
         return Response({"error": "해당 이름의 화폐가 존재하지 않습니다"}, status=400)
+    except Exception as e:
+        logger.error(f"관심 화폐 추가 실패: {e}")
+        return Response({"error": "관심 화폐 추가 실패"}, status=500)
 
 
 # 클라이언트에게 UserCrypto 테이블에 있는 사용자에 따른 화폐의 관심 여부를 전달
@@ -69,5 +74,6 @@ def get_user_favoriteCrypto(request):
         ]
         # safe=False => 딕셔너리가 아닌 다른 형태도 JSON으로 변환 가능
         return Response(data, status=200)
-    except:
+    except Exception as e:
+        logger.error(f"관심 화폐 가져오기 실패: {e}")
         return Response({"error": "관심 화폐 가져오기 실패"}, status=500)

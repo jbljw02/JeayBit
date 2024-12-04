@@ -1,11 +1,11 @@
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../../redux/store";
+import { useAppSelector } from "../../../redux/hooks";
+import { useAppDispatch } from "../../../redux/hooks";
 import { setListCategory } from "../../../redux/features/cryptoListSlice";
 
 export default function ListCategory() {
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
 
-    const listCategory = useSelector((state: RootState) => state.listCategory);
+    const listCategory = useAppSelector(state => state.listCategory);
     return (
         <>
             <div className="list-category no-drag">

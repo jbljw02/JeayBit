@@ -1,22 +1,22 @@
-import { useDispatch, useSelector } from "react-redux";
+import { useAppSelector } from "../redux/hooks";
+import { useAppDispatch } from "../redux/hooks";
 import favicon from "../assets/images/favicon.png";
 import { useRef, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Wallet from "./wallet/Wallet";
-import { setUser } from "../redux/features/userSlice";
 import { setUserTradeHistory, setUserTradeHistory_unSigned } from "../redux/features/tradeSlice";
-import { RootState } from "../redux/store";
+import { setUser, setUserInfo } from "../redux/features/userSlice";
 import '../styles/header/header.css'
 import LoadingBar, { LoadingBarRef } from 'react-top-loading-bar';
 
 const API_URL = process.env.REACT_APP_API_URL;
 
 export default function Header() {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const user = useSelector((state: RootState) => state.user);
+  const user = useAppSelector(state => state.user);
 
   const [walletHover, setWalletHover] = useState<boolean>(false);
 
@@ -28,8 +28,7 @@ export default function Header() {
     }
 
     try {
-      await axios.post(`${API_URL}/logOut/`,
-        {},
+      await axios.post(`${API_URL}/logOut/`, {},
         {
           withCredentials: true,
         });
@@ -37,6 +36,7 @@ export default function Header() {
       dispatch(setUser({
         name: '',
         email: '',
+        balance: 0
       }));
 
       dispatch(setUserTradeHistory([]));

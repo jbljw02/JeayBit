@@ -1,13 +1,12 @@
-import { useSelector } from "react-redux";
-import { RootState } from "../../../../redux/store";
+import { useAppSelector } from "../../../../redux/hooks";
 import BuyingSection from "./section/BuyingSection";
 import SellingSection from "./section/SellingSection";
 import TradeHistory from "./history/TradeHistory";
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect } from "react";
 import CeleryCompleteModal from "../../../modal/trade/CeleryCompleteModal";
-import useFunction from "../../../useFuction";
 import '../../../../styles/priceDetail/trading/tradeSection.css'
 import PlaceholderDisplay from "../../../placeholder/PlaceholderDisplay";
+import useGetBalance from "../../../hooks/useGetBalance";
 
 export type CeleryData = {
     name: string,
@@ -22,11 +21,9 @@ export const bidSortOptions = [
 ];
 
 export default function TradeSection() {
-    const { getBalance, getOwnedCrypto, getTradeHistory } = useFunction();
+    const user = useAppSelector(state => state.user);
 
     const [sectionChange, setSectionChange] = useState<'매수' | '매도' | '거래내역'>('매수');
-    const user = useSelector((state: RootState) => state.user);
-
     const [celeryModal, setCeleryModal] = useState(false);
     const [celeryData, setCeleryData] = useState<CeleryData>({
         name: "",
@@ -34,71 +31,6 @@ export default function TradeSection() {
         tradeCategory: "",
         price: 0,
     });
-
-    const [connectionAttempts, setConnectionAttempts] = useState(0);
-    const socketRef = useRef<WebSocket | null>(null);
-
-    useEffect(() => {
-        if (user.email && user.name) {
-            getBalance(user.email);
-        }
-    }, [user, getBalance]);
-
-    const connectWebSocket = useCallback(() => {
-        const socket = new WebSocket('wss://jeaybit.onrender.com/ws/trade_updates/');
-        socketRef.current = socket;
-
-        socket.onopen = () => {
-            setConnectionAttempts(0); // 연결 성공 시 재시도 횟수 초기화
-        };
-
-        socket.onmessage = async (e) => {
-            const data = JSON.parse(e.data);
-            const celeryMessage = data.message;
-            setCeleryData({
-                name: celeryMessage.crypto_name,
-                tradeTime: celeryMessage.trade_time,
-                tradeCategory: celeryMessage.trade_category,
-                price: celeryMessage.crypto_price,
-            });
-            await getOwnedCrypto(user.email);
-            await getTradeHistory(user.email);
-            setCeleryModal(true);
-        };
-
-        socket.onclose = (event) => {
-            if (event.wasClean) {
-                return;
-            } else {
-                if (connectionAttempts <= 4) {
-                    setConnectionAttempts(prev => prev + 1); // 연결 실패 시 재시도 횟수 증가
-                }
-            }
-        };
-    }, [connectionAttempts, user.email]);
-
-    useEffect(() => {
-        connectWebSocket();
-
-        return () => {
-            if (socketRef.current) {
-                socketRef.current.close();
-            }
-        };
-    }, [connectWebSocket]);
-
-    useEffect(() => {
-        // 최소한 한 번의 연결 시도가 실패했을 때
-        if (connectionAttempts > 0) {
-            // 각 재연결 시도 사이 대기 시간을 점진적으로 증가시키되, 10초를 넘기지 않음
-            const timeout = Math.min(10000, connectionAttempts * 1000);
-            const timer = setTimeout(() => {
-                connectWebSocket();
-            }, timeout);
-
-            return () => clearTimeout(timer);
-        }
-    }, [connectionAttempts]);
 
     return (
         <>

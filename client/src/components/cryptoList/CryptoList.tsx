@@ -3,17 +3,16 @@ import ListSearch from "./child/ListSearch";
 import ListTbody from "./child/table/ListTbody";
 import ListThead from "./child/table/ListThead";
 import '../../styles/cryptoList/cryptoList.css'
-import { useSelector } from "react-redux";
-import { RootState } from "../../redux/store";
 import PlaceholderDisplay from "../placeholder/PlaceholderDisplay";
 import SkeletonUI from "../placeholder/SkeletonUI";
+import { useAppSelector } from "../../redux/hooks";
 
 export default function CryptoList() {
-    const user = useSelector((state: RootState) => state.user);
-    const listCategory = useSelector((state: RootState) => state.listCategory);
-    const favoriteCrypto = useSelector((state: RootState) => state.favoriteCrypto);
-    const ownedCrypto = useSelector((state: RootState) => state.ownedCrypto);
-    const allCrypto = useSelector((state: RootState) => state.allCrypto);
+    const user = useAppSelector(state => state.user);
+    const listCategory = useAppSelector(state => state.listCategory);
+    const favoriteCrypto = useAppSelector(state => state.favoriteCrypto);
+    const ownedCrypto = useAppSelector(state => state.ownedCrypto);
+    const allCrypto = useAppSelector(state => state.allCrypto);
 
     const renderContent = () => {
         if (!allCrypto.length) {

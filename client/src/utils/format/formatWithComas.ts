@@ -1,6 +1,7 @@
 // 천의 자리마다 콤마를 찍음
-export default function formatWithComas(value: string | number) {
+export default function formatWithComas(value: string | number, dump?: boolean) {
     if (typeof value === 'number') {
+        if (dump) value = Math.floor(value);
         value = String(value);
     }
     const parts = value.split('.');

@@ -17,9 +17,12 @@ export type ClosedData = {
     timestamp: number,
 }
 
+const initialClosedData: ClosedData[] = [];
+const initialAskingData: AskingData[] = [];
+
 const closedDataSlice = createSlice({
     name: 'closedData',
-    initialState: [] as ClosedData[],
+    initialState: initialClosedData,
     reducers: {
         setClosedData: (state, action) => {
             return action.payload;
@@ -29,7 +32,7 @@ const closedDataSlice = createSlice({
 
 const askingDataSlice = createSlice({
     name: 'askingData',
-    initialState: [],
+    initialState: initialAskingData,
     reducers: {
         setAskingData: (state, action) => {
             return action.payload;

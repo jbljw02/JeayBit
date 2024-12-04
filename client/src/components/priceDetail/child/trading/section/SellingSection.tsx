@@ -1,6 +1,4 @@
 import { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import useFunction from "../../../../useFuction";
 import TradingThead from "../TradingThead";
 import SelectPercentage from "../SelectPercentage";
 import adjustInputValue from "../../../../../utils/format/adjustInputValue";
@@ -14,23 +12,24 @@ import CompleteModal from "../../../../modal/trade/TradeModal";
 import TradeFailedModal from "../../../../modal/trade/TradeFailedModal";
 import WaitingModal from "../../../../modal/trade/WatingModal";
 import { bidSortOptions } from "../TradeSection";
-import { RootState } from "../../../../../redux/store";
+import { useAppDispatch, useAppSelector } from "../../../../../redux/hooks";
 import { setSellingPrice } from "../../../../../redux/features/tradeSlice";
 import { setWorkingSpinner } from "../../../../../redux/features/placeholderSlice";
 import NoticeModal from "../../../../modal/common/NoticeModal";
+import useTradeHistory from "../../../../hooks/useTradeHistory";
 
 export default function SellingSectioin() {
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
 
-    const { getBalance, addTradeHistory, getTradeHistory, getOwnedCrypto, getAllCrypto } = useFunction();
+    const { addTradeHistory, getTradeHistory } = useTradeHistory();
 
-    const selectedCrypto = useSelector((state: RootState) => state.selectedCrypto);
-    const user = useSelector((state: RootState) => state.user);
+    const selectedCrypto = useAppSelector(state => state.selectedCrypto);
+    const user = useAppSelector(state => state.user);
 
     const [selectedPercentage, setSelectedPercentage] = useState<string>('');
     const [bidSort, setBidSort] = useState<string>('지정가');
 
-    const sellingPrice = useSelector((state: RootState) => state.sellingPrice);
+    const sellingPrice = useAppSelector(state => state.sellingPrice);
     const [sellTotal, setSellTotal] = useState<number>(0);
     const [sellQuantity, setSellQuantity] = useState<number>(0);
     const [quantityInputValue, setQuantityInputValue] = useState('0');
@@ -196,20 +195,21 @@ export default function SellingSectioin() {
             selectedCrypto.market,
             isMarketValue
         );
-        
-        await getTradeHistory(user.email);
-        await getOwnedCrypto(user.email);
-        await getBalance(user.email);
-        
+
         dispatch(setWorkingSpinner(false));
 
+        // 거래가 즉시 체결 됐을 경우
         if (addTradeResCode === 200) {
             resetValue();
             setCompleteModalOpen(true);
-        } else if (addTradeResCode === 202 && !isMarketValue) {
+        }
+        // 거래가 대기 중일 경우
+        else if (addTradeResCode === 202 && !isMarketValue) {
             resetValue();
             setWatingModalOpen(true);
-        } else {
+        }
+        // 거래 실패 시
+        else {
             setFailedModalOpen(true);
         }
     };

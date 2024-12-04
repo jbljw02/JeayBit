@@ -10,7 +10,6 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 
 logger = logging.getLogger(__name__)
 
-
 def fetch_orderbook(trade_history):
     url = f"https://api.upbit.com/v1/orderbook?markets={trade_history.crypto_market}"
     response = requests.get(url)
