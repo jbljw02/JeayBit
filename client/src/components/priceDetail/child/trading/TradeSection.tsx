@@ -21,8 +21,6 @@ export const bidSortOptions = [
 ];
 
 export default function TradeSection() {
-    const getBalance = useGetBalance();
-
     const user = useAppSelector(state => state.user);
 
     const [sectionChange, setSectionChange] = useState<'매수' | '매도' | '거래내역'>('매수');
@@ -33,12 +31,6 @@ export default function TradeSection() {
         tradeCategory: "",
         price: 0,
     });
-
-    useEffect(() => {
-        if (user.email && user.name) {
-            getBalance(user.email);
-        }
-    }, [user.email]);
 
     return (
         <>

@@ -12,7 +12,6 @@ export default function CryptoHeader() {
                     selectedCrypto && selectedCrypto.market &&
                     (`https://static.upbit.com/logos/${(selectedCrypto.market).slice(4)}.png`)
                 }
-                onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }}
                 alt="" />
             {
                 cryptoRealTime && cryptoRealTime.name &&

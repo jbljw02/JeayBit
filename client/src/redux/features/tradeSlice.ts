@@ -55,7 +55,7 @@ const userTradeHistorySlice = createSlice({
             const formattedDate = formatDateString(date);
 
             return [...state, { ...action.payload, trade_time: formattedDate }];
-        }
+        },
     }
 })
 
@@ -67,7 +67,13 @@ const userTradeHistory_unSignedSlice = createSlice({
             return action.payload;
         },
         addUserTradeHistory_unSigned: (state, action) => {
-            return [...state, action.payload];
+            const date = new Date(action.payload.trade_time);
+            const formattedDate = formatDateString(date);
+
+            return [...state, { ...action.payload, trade_time: formattedDate }];
+        },
+        cancelUnSignedOrder: (state, action) => {
+            return state.filter(trade => !action.payload.includes(trade.id));
         }
     }
 })
@@ -85,7 +91,7 @@ export const scheduledCancelSlice = createSlice({
 export const { setBuyingPrice } = buyingPriceSlice.actions;
 export const { setSellingPrice } = sellingPriceSlice.actions;
 export const { setUserTradeHistory, addUserTradeHistory } = userTradeHistorySlice.actions;
-export const { setUserTradeHistory_unSigned, addUserTradeHistory_unSigned } = userTradeHistory_unSignedSlice.actions;
+export const { setUserTradeHistory_unSigned, addUserTradeHistory_unSigned, cancelUnSignedOrder } = userTradeHistory_unSignedSlice.actions;
 export const { setScheduledCancel } = scheduledCancelSlice.actions;
 
 const reducers = {

@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useAppDispatch } from "../../redux/hooks";
 import formatDateString from "../../utils/date/formatDateString";
-import { addUserTradeHistory, setUserTradeHistory, setUserTradeHistory_unSigned } from "../../redux/features/tradeSlice";
+import { addUserTradeHistory, addUserTradeHistory_unSigned, setUserTradeHistory, setUserTradeHistory_unSigned } from "../../redux/features/tradeSlice";
 import { addOwnedCrypto } from "../../redux/features/userCryptoSlice";
 import { setUserBalance } from "../../redux/features/userSlice";
 
@@ -35,7 +35,7 @@ export default function useTradeHistory() {
       }
       // 거래가 대기 중일 경우 거래 내역만 업데이트
       else {
-        dispatch(addUserTradeHistory(response.data.trade_history));
+        dispatch(addUserTradeHistory_unSigned(response.data.trade_history));
       }
 
       return response.status;

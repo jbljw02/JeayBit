@@ -16,16 +16,12 @@ import { useAppDispatch, useAppSelector } from "../../../../../redux/hooks";
 import { setSellingPrice } from "../../../../../redux/features/tradeSlice";
 import { setWorkingSpinner } from "../../../../../redux/features/placeholderSlice";
 import NoticeModal from "../../../../modal/common/NoticeModal";
-import useGetBalance from "../../../../hooks/useGetBalance";
-import useGetOwnedCrypto from "../../../../hooks/useGetOwnedCrypto";
 import useTradeHistory from "../../../../hooks/useTradeHistory";
 
 export default function SellingSectioin() {
     const dispatch = useAppDispatch();
 
-    const getBalance = useGetBalance();
     const { addTradeHistory, getTradeHistory } = useTradeHistory();
-    const getOwnedCrypto = useGetOwnedCrypto();
 
     const selectedCrypto = useAppSelector(state => state.selectedCrypto);
     const user = useAppSelector(state => state.user);

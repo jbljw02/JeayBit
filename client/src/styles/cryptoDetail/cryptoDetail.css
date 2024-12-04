@@ -2,6 +2,7 @@
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    align-items: flex-start;
     height: 125px;
     padding: 30px 25px 0px 40px;
 }
@@ -36,36 +37,59 @@
 }
 
 .div-dl {
+    display: flex;
+    flex-direction: row;
+    height: auto;
+    gap: 30px;
+    margin-left: 20px;
+}
+
+.div-dl div {
     height: 100%;
 }
 
 dl {
-    position: relative;
-    margin-top: -9px;
-    float: right;
-    margin-left: 25px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-top: 0;
+    margin-bottom: 5px;
+    border-bottom: 1px solid #E3E8EC;
+    padding: 5px 0;
+    width: 240px;
+    gap: 17px;
 }
 
 dt {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
     color: #111111;
     font-size: 13px;
-    margin-top: 10px;
-    padding-bottom: 6px;
-    border-bottom: 1px solid #E3E8EC;
+    white-space: nowrap;
 }
 
 dd {
+    display: flex;
+    flex-direction: row;
     font-size: 15px;
-    float: right;
-    display: inline;
     color: black;
-    padding-left: 10px;
+    padding-left: 20px;
+    margin-left: auto;
+}
+
+dd div {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    max-width: 130px;
 }
 
 dd span {
     color: rgba(0, 0, 0, 0.3);
     font-size: 13px;
     font-weight: bold;
+    margin-top: 2px;
 }
 
 .dd-high_price {

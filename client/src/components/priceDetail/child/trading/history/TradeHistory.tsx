@@ -8,7 +8,7 @@ import CustomScrollbars from "../../../../scrollbar/CustomScorllbars";
 import NoticeModal from "../../../../modal/common/NoticeModal";
 import PlaceholderDisplay from "../../../../placeholder/PlaceholderDisplay";
 import { useAppDispatch, useAppSelector } from "../../../../../redux/hooks";
-import { setScheduledCancel } from "../../../../../redux/features/tradeSlice";
+import { cancelUnSignedOrder, setScheduledCancel } from "../../../../../redux/features/tradeSlice";
 import { setWorkingSpinner } from "../../../../../redux/features/placeholderSlice";
 import useTradeHistory from "../../../../hooks/useTradeHistory";
 
@@ -67,10 +67,9 @@ export default function TradeHistory() {
             dispatch(setWorkingSpinner(true));
 
             await cancelOrder(user.email, ids);
-            await getTradeHistory(user.email);
+            dispatch(cancelUnSignedOrder(ids));
 
             dispatch(setWorkingSpinner(false));
-            
             setCancelCompleteModal(true);
         }
     }

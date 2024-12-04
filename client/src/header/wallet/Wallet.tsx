@@ -109,11 +109,11 @@ export default function Wallet() {
     const minusBalanceFromUser = async (email: string, withdrawAmount: number) => {
         if (user.email && user.name) {
             try {
+                console.log('withdrawAmount: ', withdrawAmount);
                 await axios.post(`${API_URL}/minus_balance_from_user/`, {
                     email: email,
                     withdrawAmount: withdrawAmount,
-                }
-                );
+                });
                 dispatch(setSuccessTransfer(true));
                 dispatch(setTransferCategory('withdraw'));
             } catch (error) {
