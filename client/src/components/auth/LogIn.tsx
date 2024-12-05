@@ -17,7 +17,7 @@ import KakaoLoginButton from "./child/KakaoLoginButton";
 
 const API_URL = process.env.REACT_APP_API_URL;
 
-export default function LogIn() {
+export default function Login() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
@@ -104,42 +104,42 @@ export default function LogIn() {
           subtitle="24시간 깨어있는 JeayBit과 함께하세요." />
         <div>
           <form onSubmit={submitLogin} className="form-auth" noValidate>
-              <FormInput
-                type="email"
-                value={email}
-                placeholder="이메일"
-                isActive={activeInput === 'email'}
-                isEmpty={isEmailEmpty}
-                onChange={(e) => formValueChange(e.target.value,
-                  isSubmitted,
-                  setEmail,
-                  setIsEmailEmpty)}
-                onClick={() => setActiveInput('email')}
-                invalidSubmit={invalidSubmit}
-                isSubmitted={isSubmitted} />
-              <InputWarning
-                isEmpty={isEmailEmpty}
-                isSubmitted={isSubmitted}
-                label="이메일을 입력해주세요" />
-              <FormInput
-                type="password"
-                value={password}
-                placeholder="비밀번호"
-                isActive={activeInput === 'password'}
-                isEmpty={isPasswordEmpty}
-                onChange={(e) => formValueChange(e.target.value,
-                  isSubmitted,
-                  setPassword,
-                  setIsPasswordEmpty)}
-                onClick={() => setActiveInput('password')}
-                isPasswordVisible={visiblePassword}
-                onPasswordClick={() => setVisiblePassword(!visiblePassword)}
-                invalidSubmit={invalidSubmit}
-                isSubmitted={isSubmitted} />
-              <InputWarning
-                isEmpty={isPasswordEmpty}
-                isSubmitted={isSubmitted}
-                label="비밀번호를 입력해주세요" />
+            <FormInput
+              type="email"
+              value={email}
+              placeholder="이메일"
+              isActive={activeInput === 'email'}
+              isEmpty={isEmailEmpty}
+              onChange={(e) => formValueChange(e.target.value,
+                isSubmitted,
+                setEmail,
+                setIsEmailEmpty)}
+              onClick={() => setActiveInput('email')}
+              invalidSubmit={invalidSubmit}
+              isSubmitted={isSubmitted} />
+            <InputWarning
+              isEmpty={isEmailEmpty}
+              isSubmitted={isSubmitted}
+              label="이메일을 입력해주세요" />
+            <FormInput
+              type="password"
+              value={password}
+              placeholder="비밀번호"
+              isActive={activeInput === 'password'}
+              isEmpty={isPasswordEmpty}
+              onChange={(e) => formValueChange(e.target.value,
+                isSubmitted,
+                setPassword,
+                setIsPasswordEmpty)}
+              onClick={() => setActiveInput('password')}
+              isPasswordVisible={visiblePassword}
+              onPasswordClick={() => setVisiblePassword(!visiblePassword)}
+              invalidSubmit={invalidSubmit}
+              isSubmitted={isSubmitted} />
+            <InputWarning
+              isEmpty={isPasswordEmpty}
+              isSubmitted={isSubmitted}
+              label="비밀번호를 입력해주세요" />
             <InputWarning
               isEmpty={invalidSubmit}
               label="이메일 혹은 비밀번호가 일치하지 않습니다"

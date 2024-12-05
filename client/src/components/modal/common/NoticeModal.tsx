@@ -25,13 +25,12 @@ export default function NoticeModal({ isModalOpen, setIsModalOpen, content }: No
                     transform: 'translate(-50%, -50%)',
                     zIndex: 1001
                 }
-            }}
-        >
+            }}>
             <div className={styles.container}>
                 <div className={styles.title}>
                     안내
                 </div>
-                <div className={styles.content}>
+                <div className={styles.content} style={{ whiteSpace: 'pre-line' }}>
                     {content}
                 </div>
                 <button

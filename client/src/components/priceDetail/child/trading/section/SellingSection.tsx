@@ -15,16 +15,17 @@ import { bidSortOptions } from "../TradeSection";
 import { useAppDispatch, useAppSelector } from "../../../../../redux/hooks";
 import { setSellingPrice } from "../../../../../redux/features/tradeSlice";
 import { setWorkingSpinner } from "../../../../../redux/features/placeholderSlice";
-import NoticeModal from "../../../../modal/common/NoticeModal";
 import useTradeHistory from "../../../../hooks/useTradeHistory";
+import { setIsTradeComplete, setIsTradeFailed, setIsTradeWaiting, showNoticeModal } from "../../../../../redux/features/modalSlice";
 
 export default function SellingSectioin() {
     const dispatch = useAppDispatch();
 
-    const { addTradeHistory, getTradeHistory } = useTradeHistory();
+    const { addTradeHistory } = useTradeHistory();
 
     const selectedCrypto = useAppSelector(state => state.selectedCrypto);
     const user = useAppSelector(state => state.user);
+    const tradeModal = useAppSelector(state => state.tradeModal);
 
     const [selectedPercentage, setSelectedPercentage] = useState<string>('');
     const [bidSort, setBidSort] = useState<string>('지정가');
@@ -35,12 +36,6 @@ export default function SellingSectioin() {
     const [quantityInputValue, setQuantityInputValue] = useState('0');
     const [totalInputValue, setTotalInputValue] = useState('0');
     const [sellingInputValue, setSellingInputValue] = useState('0');
-
-    const [watingModalOpen, setWatingModalOpen] = useState<boolean>(false);
-    const [completeModalOpen, setCompleteModalOpen] = useState<boolean>(false);
-    const [failedModalOpen, setFailedModalOpen] = useState<boolean>(false);
-
-    const [isExceedQuantity, setIsExceedQuantity] = useState<boolean>(false);
 
     // 화폐 거래내역에 '매수'로 저장할지 '매도'로 저장할지를 지정
     const [tradeCategory, setTradeCategory] = useState<string>('매도');
@@ -177,7 +172,7 @@ export default function SellingSectioin() {
     const processSellTrade = async (isMarketValue: boolean, price: number) => {
         // 주문총액이 잔고의 잔액을 넘으면 주문을 넣을 수 없음
         if (sellQuantity > selectedCrypto.owned_quantity) {
-            setIsExceedQuantity(true);
+            dispatch(showNoticeModal('주문 수량이 보유 화폐량을 초과했습니다.'));
             return;
         }
 
@@ -201,16 +196,16 @@ export default function SellingSectioin() {
         // 거래가 즉시 체결 됐을 경우
         if (addTradeResCode === 200) {
             resetValue();
-            setCompleteModalOpen(true);
+            dispatch(setIsTradeComplete(true));
         }
         // 거래가 대기 중일 경우
         else if (addTradeResCode === 202 && !isMarketValue) {
             resetValue();
-            setWatingModalOpen(true);
+            dispatch(setIsTradeWaiting(true));
         }
         // 거래 실패 시
         else {
-            setFailedModalOpen(true);
+            dispatch(setIsTradeFailed(true));
         }
     };
 
@@ -227,21 +222,17 @@ export default function SellingSectioin() {
     return (
         <>
             <CompleteModal
-                isModalOpen={completeModalOpen}
-                setIsModalOpen={setCompleteModalOpen}
+                isModalOpen={tradeModal.isComplete}
+                setIsModalOpen={() => dispatch(setIsTradeComplete(false))}
                 category="sell" />
             <TradeFailedModal
-                isModalOpen={failedModalOpen}
-                setIsModalOpen={setFailedModalOpen}
+                isModalOpen={tradeModal.isFailed}
+                setIsModalOpen={() => dispatch(setIsTradeFailed(false))}
                 category="sell" />
             <WaitingModal
-                isModalOpen={watingModalOpen}
-                setIsModalOpen={setWatingModalOpen}
+                isModalOpen={tradeModal.isWaiting}
+                setIsModalOpen={() => dispatch(setIsTradeWaiting(false))}
                 category="sell" />
-            <NoticeModal
-                isModalOpen={isExceedQuantity}
-                setIsModalOpen={setIsExceedQuantity}
-                content="주문 수량이 화폐 보유량을 초과했습니다." />
             {
                 // 매도 - 지정가 영역
                 bidSort === '지정가' ?

@@ -14,18 +14,19 @@ import WaitingModal from "../../../../modal/trade/WatingModal";
 import { bidSortOptions } from "../TradeSection";
 import { setBuyingPrice } from "../../../../../redux/features/tradeSlice";
 import { setWorkingSpinner } from "../../../../../redux/features/placeholderSlice";
-import NoticeModal from "../../../../modal/common/NoticeModal";
 import { useAppDispatch, useAppSelector } from "../../../../../redux/hooks";
 import useTradeHistory from "../../../../hooks/useTradeHistory";
+import { setIsTradeComplete, setIsTradeFailed, setIsTradeWaiting, showNoticeModal } from "../../../../../redux/features/modalSlice";
 
 export default function BuyingSection() {
     const dispatch = useAppDispatch();
 
-    const { addTradeHistory, getTradeHistory } = useTradeHistory();
+    const { addTradeHistory } = useTradeHistory();
 
     const selectedCrypto = useAppSelector(state => state.selectedCrypto);
     const user = useAppSelector(state => state.user);
     const buyingPrice = useAppSelector(state => state.buyingPrice);
+    const tradeModal = useAppSelector(state => state.tradeModal);
 
     const [selectedPercentage, setSelectedPercentage] = useState<string>('');
     const [bidSort, setBidSort] = useState<string>('지정가');
@@ -36,13 +37,6 @@ export default function BuyingSection() {
     const [buyingInputValue, setBuyingInputValue] = useState('0');
     const [quantityInputValue, setQuantityInputValue] = useState('0');
     const [totalInputValue, setTotalInputValue] = useState('0');
-
-    const [watingModalOpen, setWatingModalOpen] = useState<boolean>(false);
-    const [completeModalOpen, setCompleteModalOpen] = useState<boolean>(false);
-    const [failedModalOpen, setFailedModalOpen] = useState<boolean>(false);
-
-    // 주문총액의 값이 현재 잔고를 넘진 않았는지
-    const [isExceedWallet, setIsExceedWallet] = useState<boolean>(false);
 
     // 화폐 거래내역에 '매수'로 저장할지 '매도'로 저장할지를 지정
     const [tradeCategory, setTradeCategory] = useState<string>('매수');
@@ -163,7 +157,7 @@ export default function BuyingSection() {
     const tradeSubmit = async (isMarketValue: boolean, price: number) => {
         // 주문총액이 잔고의 잔액을 넘으면 주문을 넣을 수 없음
         if (buyTotal > user.balance) {
-            setIsExceedWallet(true);
+            dispatch(showNoticeModal('주문 총액이 잔고 보유량을 초과했습니다.'));
             return;
         }
 
@@ -187,16 +181,16 @@ export default function BuyingSection() {
         // 거래가 즉시 체결 됐을 경우
         if (statusCode === 200) {
             resetValue();
-            setCompleteModalOpen(true);
+            dispatch(setIsTradeComplete(true));
         }
         // 거래가 대기 중일 경우
         else if (statusCode === 202 && !isMarketValue) {
             resetValue();
-            setWatingModalOpen(true);
+            dispatch(setIsTradeWaiting(true));
         }
         // 거래 실패 시
         else {
-            setFailedModalOpen(true);
+            dispatch(setIsTradeFailed(true));
         }
     }
 
@@ -213,21 +207,17 @@ export default function BuyingSection() {
     return (
         <>
             <CompleteModal
-                isModalOpen={completeModalOpen}
-                setIsModalOpen={setCompleteModalOpen}
+                isModalOpen={tradeModal.isComplete}
+                setIsModalOpen={() => dispatch(setIsTradeComplete(false))}
                 category="buy" />
             <TradeFailedModal
-                isModalOpen={failedModalOpen}
-                setIsModalOpen={setFailedModalOpen}
+                isModalOpen={tradeModal.isFailed}
+                setIsModalOpen={() => dispatch(setIsTradeFailed(false))}
                 category="buy" />
             <WaitingModal
-                isModalOpen={watingModalOpen}
-                setIsModalOpen={setWatingModalOpen}
+                isModalOpen={tradeModal.isWaiting}
+                setIsModalOpen={() => dispatch(setIsTradeWaiting(false))}
                 category="buy" />
-            <NoticeModal
-                isModalOpen={isExceedWallet}
-                setIsModalOpen={setIsExceedWallet}
-                content="주문 총액이 잔고 보유량을 초과했습니다." />
             {
                 // 매수 - 지정가 영역
                 bidSort === '지정가' ?

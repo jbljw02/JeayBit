@@ -11,6 +11,7 @@ import { setAskingSpinner } from "../../../../redux/features/placeholderSlice";
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
 import useSelectAskingPrice from "../../../hooks/useSelectAskingPrice";
 import useSelectClosedPrice from "../../../hooks/useSelectClosedPrice";
+import { showNoticeModal } from "../../../../redux/features/modalSlice";
 
 type Differences = {
     name: string;
@@ -94,7 +95,7 @@ export default function ListTbody() {
                 });
                 return response.data.favorite_crypto
             } catch (error) {
-                throw error;
+                dispatch(showNoticeModal('관심 화폐 추가에 실패했습니다.'));
             }
         }
     };
@@ -102,6 +103,11 @@ export default function ListTbody() {
     // 별 이미지를 클릭하면 관심 화폐 추가 요청
     const starClick = async (crypto: Crypto, index: number, e: { stopPropagation: () => void; }) => {
         e.stopPropagation();
+
+        if (!user.email) {
+            dispatch(showNoticeModal('관심 화폐를 추가하기 위해선 로그인이 필요합니다.'));
+            return;
+        }
 
         const updatedFavoriteCrypto = favoriteCrypto.some(item => item.name === crypto.name)
             ? favoriteCrypto.filter(item => item.name !== crypto.name)

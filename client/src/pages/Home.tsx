@@ -1,10 +1,9 @@
 import CryptoList from '../components/cryptoList/CryptoList';
 import '../assets/App.css';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import LogIn from '../components/auth/LogIn';
 import PriceDetail from '../components/priceDetail/PriceDetail';
 import SignUp from '../components/auth/SignUp';
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 import Chart from '../components/chart/Chart';
 import CryptoDetail from '../components/cryptoDetail/CryptoDetail';
 import Header from '../header/Header';
@@ -12,20 +11,19 @@ import axios from 'axios';
 import { setUserInfo } from '../redux/features/userSlice';
 import { setSelectedCrypto, setCryptoRealTime } from '../redux/features/selectedCryptoSlice';
 import NoticeModal from '../components/modal/common/NoticeModal';
-import { setErrorModal } from '../redux/features/modalSlice';
 import CryptoHeader from '../components/cryptoDetail/CryptoHeader';
 import WorkingSpinnerModal from '../components/modal/trade/WorkingSpinnerModal';
 import { setWorkingSpinner } from '../redux/features/placeholderSlice';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import useCheckLogin from '../components/hooks/useCheckLogin';
 import useGetAllCrypto from '../components/hooks/useGetAllCrypto';
-import useRenderTransferModal from '../components/hooks/useRenderTransferModal';
-import useRequestCandleMinute from '../components/hooks/useRequestCandle';
 import useSelectAskingPrice from '../components/hooks/useSelectAskingPrice';
 import useSelectClosedPrice from '../components/hooks/useSelectClosedPrice';
 import useTradeHistory from '../components/hooks/useTradeHistory';
 import useRequestCandle from '../components/hooks/useRequestCandle';
 import KakaoCallback from '../components/auth/child/KakaoCallback';
+import Login from '../components/auth/Login';
+import { hideNoticeModal, showNoticeModal } from '../redux/features/modalSlice';
 
 const API_URL = process.env.REACT_APP_API_URL;
 
@@ -38,9 +36,7 @@ export default function Home() {
     const selectAskingPrice = useSelectAskingPrice();
     const selectClosedPrice = useSelectClosedPrice();
     const { requestCandleMinute, requestCandleDate } = useRequestCandle();
-    const renderTransferModal = useRenderTransferModal();
 
-    const errorModal = useAppSelector(state => state.errorModal)
     const user = useAppSelector(state => state.user);
     const selectedCrypto = useAppSelector(state => state.selectedCrypto);
     const workingSpinner = useAppSelector(state => state.workingSpinner);
@@ -48,6 +44,7 @@ export default function Home() {
     const chartSortDate = useAppSelector(state => state.chartSortDate);
     const chartSpinner = useAppSelector(state => state.chartSpinner);
     const askingSpinner = useAppSelector(state => state.askingSpinner);
+    const noticeModal = useAppSelector(state => state.noticeModal);
 
     // 초기 렌더링시 화폐 정보를 받아오고, 주기적으로 업데이트
     useEffect(() => {
@@ -119,8 +116,7 @@ export default function Home() {
                 dispatch(setSelectedCrypto(response.data.all_crypto[0]));
                 dispatch(setCryptoRealTime(response.data.all_crypto[0]));
             } catch (error) {
-                dispatch(setErrorModal(true));
-                throw error;
+                dispatch(showNoticeModal('서버 연결이 불안정합니다. 잠시 후 다시 시도해주세요.'));
             }
         };
 
@@ -133,10 +129,9 @@ export default function Home() {
                 isModalOpen={workingSpinner}
                 setIsModalOpen={() => dispatch(setWorkingSpinner(false))} />
             <NoticeModal
-                isModalOpen={errorModal}
-                setIsModalOpen={() => dispatch(setErrorModal(false))}
-                content='서버 연결이 불안정합니다. 잠시 후 다시 시도해주세요.' />
-            {renderTransferModal()}
+                isModalOpen={noticeModal.isOpen}
+                setIsModalOpen={() => dispatch(hideNoticeModal())}
+                content={noticeModal.content} />
             <BrowserRouter>
                 <Routes>
                     <Route path="/" element={
@@ -159,8 +154,8 @@ export default function Home() {
                             </div>
                         </>
                     } />
-                    <Route path="/login" element={<LogIn />} />
-                    <Route path="/signUp" element={<SignUp />} />
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/signup" element={<SignUp />} />
                     <Route path="/oauth/callback/kakao" element={<KakaoCallback />} />
                 </Routes>
             </BrowserRouter>

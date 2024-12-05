@@ -13,8 +13,8 @@ from .views.kakao_views import KakaoLoginView
 
 urlpatterns = [
     path("sign_up/", sign_up),
-    path("logIn/", LoginView.as_view()),
-    path("logOut/", LogoutView.as_view()),
+    path("login/", LoginView.as_view()),
+    path("logout/", LogoutView.as_view()),
     path("check_login/", CheckLoginView.as_view()),
     path("asking_price/", asking_price),
     path("closed_price/", closed_price),
