@@ -6,9 +6,11 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Wallet from "./wallet/Wallet";
 import { setUserTradeHistory, setUserTradeHistory_unSigned } from "../redux/features/tradeSlice";
-import { setUser, setUserInfo } from "../redux/features/userSlice";
+import { setUser } from "../redux/features/userSlice";
 import '../styles/header/header.css'
 import LoadingBar, { LoadingBarRef } from 'react-top-loading-bar';
+import { showNoticeModal } from "../redux/features/modalSlice";
+import useGetBalance from "../components/hooks/useGetBalance";
 
 const API_URL = process.env.REACT_APP_API_URL;
 
@@ -16,19 +18,17 @@ export default function Header() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
+  const loadingBarRef = useRef<LoadingBarRef>(null);
   const user = useAppSelector(state => state.user);
-
   const [walletHover, setWalletHover] = useState<boolean>(false);
 
-  const loadingBarRef = useRef<LoadingBarRef>(null);
-
-  const logOut = async () => {
+  const logout = async () => {
     if (loadingBarRef.current) {
       loadingBarRef.current.continuousStart();
     }
 
     try {
-      await axios.post(`${API_URL}/logOut/`, {},
+      await axios.post(`${API_URL}/logout/`, {},
         {
           withCredentials: true,
         });
@@ -42,7 +42,7 @@ export default function Header() {
       dispatch(setUserTradeHistory([]));
       dispatch(setUserTradeHistory_unSigned([]));
     } catch (error) {
-      throw error;
+      dispatch(showNoticeModal('로그아웃에 실패했습니다. 잠시 후 다시 시도해주세요.'));
     } finally {
       if (loadingBarRef.current) {
         loadingBarRef.current.complete();
@@ -50,6 +50,8 @@ export default function Header() {
       window.location.reload();
     }
   };
+
+  useGetBalance();
 
   return (
     <>
@@ -98,7 +100,7 @@ export default function Header() {
                 </span>
                 <span
                   onClick={() => {
-                    logOut();
+                    logout();
                   }}
                   className="logout">
                   로그아웃

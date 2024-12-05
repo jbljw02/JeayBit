@@ -7,9 +7,11 @@ import formValueChange from "../../utils/formValueChange";
 import SignUpModal from "../modal/SignUpModal";
 import HeaderNav from "../../header/HeaderNav";
 import LoadingBar, { LoadingBarRef } from 'react-top-loading-bar';
-import '../../styles/auth/signUp.css'
 import AuthButton from "./child/AuthButton";
 import AuthFooter from "./child/AuthFooter";
+import '../../styles/auth/authSection.css'
+import Divider from "./child/Divider";
+import KakaoLoginButton from "./child/KakaoLoginButton";
 
 const API_URL = process.env.REACT_APP_API_URL;
 
@@ -129,10 +131,12 @@ export default function SignUp() {
         isModalOpen={signUpModal}
         setIsModalOpen={setSignUpModal} />
       <HeaderNav />
-      <div className="container-signUp">
-        <FaviconTitle />
-        <form onSubmit={submitSignUp} className="form-signUp" noValidate>
-          <div className="section-name">
+      <div className="container-auth">
+        <FaviconTitle
+          title="회원가입"
+          subtitle="JeayBit에 오신 것을 환영합니다!" />
+        <div>
+          <form onSubmit={submitSignUp} className="form-auth" noValidate>
             <FormInput
               type="text"
               value={name}
@@ -149,8 +153,6 @@ export default function SignUp() {
               isEmpty={isNameEmpty}
               label="이름을 입력해주세요"
               isSubmitted={isSubmitted} />
-          </div>
-          <div className="section-email">
             <FormInput
               type="email"
               value={email}
@@ -168,21 +170,12 @@ export default function SignUp() {
               isSubmitted={isSubmitted}
               invalidPattern={emailInvalid} />
             <InputWarning
-              isEmpty={emailInvalid}
-              label="유효한 이메일을 입력해주세요"
+              isEmpty={emailInvalid || isEmailDuplicate || isEmailEmpty}
+              label={emailInvalid ? "유효한 이메일을 입력해주세요" :
+                isEmailDuplicate ? "이미 존재하는 이메일입니다" :
+                  "이메일을 입력해주세요"}
               isSubmitted={isSubmitted}
-              isInvalid={emailInvalid} />
-            <InputWarning
-              isEmpty={isEmailDuplicate}
-              label="이미 존재하는 이메일입니다"
-              isSubmitted={isSubmitted}
-              isInvalid={isEmailDuplicate} />
-            <InputWarning
-              isEmpty={isEmailEmpty}
-              label="이메일을 입력해주세요"
-              isSubmitted={isSubmitted} />
-          </div>
-          <div className="section-password">
+              isInvalid={emailInvalid || isEmailDuplicate} />
             <FormInput
               type="password"
               value={password}
@@ -209,13 +202,15 @@ export default function SignUp() {
               isEmpty={isPasswordEmpty}
               label="비밀번호를 입력해주세요"
               isSubmitted={isSubmitted} />
-          </div>
-          <AuthButton
-            label="회원가입" />
+            <AuthButton
+              label="회원가입" />
+          </form>
+          <Divider />
+          <KakaoLoginButton />
           <AuthFooter
             label="이미 계정이 있으신가요?"
             navigateString="/logIn" />
-        </form>
+        </div>
       </div>
     </>
   )

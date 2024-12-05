@@ -2,6 +2,7 @@ import axios from "axios";
 import { setSelectedCrypto } from "../../redux/features/selectedCryptoSlice";
 import { OwnedCrypto, setOwnedCrypto } from "../../redux/features/userCryptoSlice";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import { showNoticeModal } from "../../redux/features/modalSlice";
 
 const API_URL = process.env.REACT_APP_API_URL;
 
@@ -38,7 +39,7 @@ export default function useGetOwnedCrypto() {
             dispatch(setOwnedCrypto(updatedOwnedCrypto));
             dispatch(setSelectedCrypto(updatedCrypto));
         } catch (error) {
-            throw error;
+            dispatch(showNoticeModal('보유 화폐 정보를 불러오는 데 실패했습니다. 잠시 후 다시 시도해주세요.'));
         }
     }
 

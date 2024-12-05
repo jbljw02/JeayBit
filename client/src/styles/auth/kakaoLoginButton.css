@@ -1,0 +1,19 @@
+.kakao-login-button {
+    background-color: #FEE500;
+    border: none;
+    border-radius: 7px;
+    color: #000000 85%;
+    min-width: 100%;
+    height: 52px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    gap: 8px;
+    font-size: 16px;
+}
+
+.kakao-login-button img {
+    width: 32px;
+}

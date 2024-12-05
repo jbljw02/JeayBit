@@ -88,10 +88,8 @@ ASGI_APPLICATION = "crypto_app.asgi.application"
 CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
-        "CONFIG": {
-            "hosts": [getenv("REDIS_URL")],
-            "capacity": 300,
-            "expiry": 10,  # default is 60 seconds
+         'CONFIG': {
+            'hosts': getenv("REDIS_URL"),
         },
     },
 }
@@ -116,12 +114,11 @@ AUTHENTICATION_BACKENDS = [
     "django.contrib.auth.backends.ModelBackend",
 ]
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
+KAKAO_CONFIG = {
+    "KAKAO_REST_API_KEY": getenv("KAKAO_REST_API_KEY"),
+    "KAKAO_REDIRECT_URI": getenv("KAKAO_REDIRECT_URI"),
+    "KAKAO_CLIENT_SECRET": getenv("KAKAO_CLIENT_SECRET"),
+}
 
 DATABASES = {
     "default": {

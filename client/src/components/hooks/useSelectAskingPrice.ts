@@ -1,7 +1,7 @@
 import axios from "axios";
 import { AskingData, setAskingData, setTotalAskSize, setTotalBidSize } from "../../redux/features/askingSlice";
-import { setErrorModal } from "../../redux/features/modalSlice";
 import { useAppDispatch } from "../../redux/hooks";
+import { showNoticeModal } from "../../redux/features/modalSlice";
 
 const API_URL = process.env.REACT_APP_API_URL;
 
@@ -25,8 +25,7 @@ export default function useSelectAskingPrice() {
             dispatch(setTotalAskSize(response.data[0].total_ask_size));
             dispatch(setTotalBidSize(response.data[0].total_bid_size));
         } catch (error) {
-            dispatch(setErrorModal(true));
-            throw error;
+            dispatch(showNoticeModal('호가 데이터를 불러오는데 실패했습니다. 잠시 후 다시 시도해주세요.'));
         }
     };
 

@@ -1,7 +1,7 @@
 import axios from "axios";
-import { setErrorModal } from "../../redux/features/modalSlice";
 import { useAppDispatch } from "../../redux/hooks";
 import { setCandlePerDate, setCandlePerMinute } from "../../redux/features/chartSlice";
+import { showNoticeModal } from "../../redux/features/modalSlice";
 
 const API_URL = process.env.REACT_APP_API_URL;
 
@@ -15,8 +15,7 @@ export default function useRequestCandleMinute() {
         const response = await axios.get(`${API_URL}/candle_per_minute/?market=${market}&minute=${minute}`);
         dispatch(setCandlePerMinute(response.data));
       } catch (error) {
-        dispatch(setErrorModal(true));
-        throw error;
+        dispatch(showNoticeModal('차트 데이터를 불러오는데 실패했습니다. 잠시 후 다시 시도해주세요.'));
       }
     }
   };
@@ -41,8 +40,7 @@ export default function useRequestCandleMinute() {
         dispatch(setCandlePerDate(response.data));
       }
     } catch (error) {
-      dispatch(setErrorModal(true));
-      throw error;
+      dispatch(showNoticeModal('차트 데이터를 불러오는데 실패했습니다. 잠시 후 다시 시도해주세요.'));
     }
   };
 

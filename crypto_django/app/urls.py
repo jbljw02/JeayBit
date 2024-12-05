@@ -9,11 +9,12 @@ from .views.favorite_views import add_favoriteCrypto_to_user, get_user_favoriteC
 from .views.own_views import get_user_ownedCrypto
 from .views.balance_views import add_balance_to_user, minus_balance_from_user, get_user_balance
 from .views.home_views import home
+from .views.kakao_views import KakaoLoginView
 
 urlpatterns = [
     path("sign_up/", sign_up),
-    path("logIn/", LoginView.as_view()),
-    path("logOut/", LogoutView.as_view()),
+    path("login/", LoginView.as_view()),
+    path("logout/", LogoutView.as_view()),
     path("check_login/", CheckLoginView.as_view()),
     path("asking_price/", asking_price),
     path("closed_price/", closed_price),
@@ -31,6 +32,7 @@ urlpatterns = [
     path("minus_balance_from_user/", minus_balance_from_user),
     path("get_user_balance/", get_user_balance),
     path("get_all_crypto/", GetAllCryptoView.as_view()),
+    path("oauth/callback/kakao/", KakaoLoginView.as_view()),
     path('', home, name='home'),
     # path('admin/', admin.site.urls)
 ]

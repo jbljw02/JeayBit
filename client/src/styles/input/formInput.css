@@ -1,5 +1,17 @@
 .container-input {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
     border-radius: 7px;
+    padding: 0px 10px;
+}
+
+.input-div {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
 }
 
 .nonClick {
@@ -14,14 +26,11 @@
     border-color: red;
 }
 
-.icon-email,
-.icon-password {
-    position: relative;
-    top: 10px;
-    left: 10px;
+.icon-email{
+    margin-top: 1.5px;
+    margin-right: 2px;
 }
 
 .icon-password {
     cursor: pointer;
-    left: 22px;
 }

@@ -43,10 +43,11 @@ const combinedReducer = combineReducers({
   successTransfer: walletReducers.successTransfer,
   failTransfer: walletReducers.failTransfer,
   transferCategory: walletReducers.transferCategory,
-  errorModal: modalReducers.errorModal,
+  noticeModal: modalReducers.noticeModal,
   askingSpinner: placeholderReducers.askingSpinner,
   chartSpinner: placeholderReducers.chartSpinner,
   workingSpinner: placeholderReducers.workingSpinner,
+  tradeModal: modalReducers.tradeModal,
 });
 
 export type RootState = ReturnType<typeof combinedReducer>;

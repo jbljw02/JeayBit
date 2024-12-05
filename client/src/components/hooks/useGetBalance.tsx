@@ -1,12 +1,15 @@
-
 import axios from "axios";
-import { useAppDispatch } from "../../redux/hooks";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { setUserBalance } from "../../redux/features/userSlice";
+import { showNoticeModal } from "../../redux/features/modalSlice";
+import { useEffect } from "react";
 
 const API_URL = process.env.REACT_APP_API_URL;
 
 export default function useGetBalance() {
     const dispatch = useAppDispatch();
+    
+    const user = useAppSelector(state => state.user);
 
     // 서버로부터 사용자의 잔고량을 받아옴
     const getBalance = async (email: string) => {
@@ -17,9 +20,15 @@ export default function useGetBalance() {
             );
             dispatch(setUserBalance(response.data.user_balance));
         } catch (error) {
-            throw error;
+            dispatch(showNoticeModal('잔고를 불러오는 데 실패했습니다. 잠시 후 다시 시도해주세요.'));
         }
     }
+
+    useEffect(() => {
+        if (user.email) {
+            getBalance(user.email);
+        }
+    }, [user.email]);
 
     return getBalance;
 }

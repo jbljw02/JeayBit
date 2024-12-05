@@ -5,26 +5,21 @@ import UnSignedHistory from "./UnSignedHistory";
 import '../../../../../styles/priceDetail/trading/tradeHistory.css'
 import TradingThead from "../TradingThead";
 import CustomScrollbars from "../../../../scrollbar/CustomScorllbars";
-import NoticeModal from "../../../../modal/common/NoticeModal";
 import PlaceholderDisplay from "../../../../placeholder/PlaceholderDisplay";
 import { useAppDispatch, useAppSelector } from "../../../../../redux/hooks";
 import { cancelUnSignedOrder, setScheduledCancel } from "../../../../../redux/features/tradeSlice";
 import { setWorkingSpinner } from "../../../../../redux/features/placeholderSlice";
-import useTradeHistory from "../../../../hooks/useTradeHistory";
+import { showNoticeModal } from "../../../../../redux/features/modalSlice";
 
 const API_URL = process.env.REACT_APP_API_URL;
 
 export default function TradeHistory() {
     const dispatch = useAppDispatch();
 
-    const { getTradeHistory } = useTradeHistory();
-
     const user = useAppSelector(state => state.user);
     const scheduledCancel = useAppSelector(state => state.scheduledCancel);
     const userTradeHistory = useAppSelector(state => state.userTradeHistory);
     const userTradeHistory_unSigned = useAppSelector(state => state.userTradeHistory_unSigned);
-
-    const [cancelCompleteModal, setCancelCompleteModal] = useState(false);
 
     const tableRef = useRef<HTMLTableElement | null>(null);
     const [scrollHeight, setScrollHeight] = useState<number>(0); // 초기값 설정
@@ -70,7 +65,7 @@ export default function TradeHistory() {
             dispatch(cancelUnSignedOrder(ids));
 
             dispatch(setWorkingSpinner(false));
-            setCancelCompleteModal(true);
+            dispatch(showNoticeModal('주문 취소가 완료되었습니다.'));
         }
     }
 
@@ -83,16 +78,12 @@ export default function TradeHistory() {
             });
             dispatch(setScheduledCancel([]));
         } catch (error) {
-            throw error;
+            dispatch(showNoticeModal('주문 취소에 실패했습니다. 잠시 후 다시 시도해주세요.'));
         }
     }
 
     return (
         <>
-            <NoticeModal
-                isModalOpen={cancelCompleteModal}
-                setIsModalOpen={setCancelCompleteModal}
-                content="주문 취소가 완료되었습니다." />
             <div className="history-head">
                 <TradingThead
                     options={historySortOptions}

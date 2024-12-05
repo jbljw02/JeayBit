@@ -1,7 +1,7 @@
 import axios from "axios";
 import { setAllCrypto } from "../../redux/features/cryptoListSlice";
 import { useAppDispatch } from "../../redux/hooks";
-import { setErrorModal } from "../../redux/features/modalSlice";
+import { showNoticeModal } from "../../redux/features/modalSlice";
 
 const API_URL = process.env.REACT_APP_API_URL;
 
@@ -16,8 +16,7 @@ export default function useGetAllCrypto() {
     
           dispatch(setAllCrypto(response.data.all_crypto));
         } catch (error) {
-          dispatch(setErrorModal(true));
-          throw error;
+          dispatch(showNoticeModal('서버 연결이 불안정합니다. 잠시 후 다시 시도해주세요.'));
         }
     };
 

@@ -3,7 +3,6 @@ from django.contrib.auth import get_user_model
 
 # 장고 기본 User 모델은 이름과 비밀번호로만 로그인이 가능하기 때문에 이메일, 패스워드로 로그인하기 위해 커스텀
 class EmailLogin(ModelBackend):
-    
     # authenticate을 오버라이딩하여 이메일로 로그인이 가능하게 함
     def authenticate(self, request, email=None, password=None):
         UserModel = get_user_model()

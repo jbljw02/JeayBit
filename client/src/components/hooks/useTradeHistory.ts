@@ -4,6 +4,7 @@ import formatDateString from "../../utils/date/formatDateString";
 import { addUserTradeHistory, addUserTradeHistory_unSigned, setUserTradeHistory, setUserTradeHistory_unSigned } from "../../redux/features/tradeSlice";
 import { addOwnedCrypto } from "../../redux/features/userCryptoSlice";
 import { setUserBalance } from "../../redux/features/userSlice";
+import { showNoticeModal } from "../../redux/features/modalSlice";
 
 const API_URL = process.env.REACT_APP_API_URL;
 
@@ -95,7 +96,7 @@ export default function useTradeHistory() {
       dispatch(setUserTradeHistory(signed));
       dispatch(setUserTradeHistory_unSigned(unSigned));
     } catch (error) {
-      throw error;
+      dispatch(showNoticeModal('거래 내역을 불러오는 데 실패했습니다. 잠시 후 다시 시도해주세요.'));
     }
   }
 

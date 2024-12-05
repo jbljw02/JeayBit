@@ -1,7 +1,7 @@
 import axios from "axios";
-import { setErrorModal } from "../../redux/features/modalSlice";
 import { useAppDispatch } from "../../redux/hooks";
 import { setClosedData } from "../../redux/features/askingSlice";
+import { showNoticeModal } from "../../redux/features/modalSlice";
 
 const API_URL = process.env.REACT_APP_API_URL;
 
@@ -14,8 +14,7 @@ export default function useSelectClosedPrice() {
             const response = await axios.get(`${API_URL}/closed_price/?market=${market}`);
             dispatch(setClosedData(response.data));
         } catch (error) {
-            dispatch(setErrorModal(true));
-            throw error;
+            dispatch(showNoticeModal('체결 데이터를 불러오는 데 실패했습니다. 잠시 후 다시 시도해주세요.'));
         }
     };
 

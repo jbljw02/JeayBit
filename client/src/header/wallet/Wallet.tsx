@@ -1,21 +1,19 @@
 import axios from "axios";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import TransferInput from "./TransferInput";
 import { ChangeInput } from "./ChangeInput";
 import TransferWarning from "./TransferWarning";
-import NoticeModal from "../../components/modal/common/NoticeModal";
 import '../../styles/header/wallet.css'
 import { setBalanceUpdate, setFailTransfer, setSuccessTransfer, setTransferCategory, setTransferSort } from "../../redux/features/walletSlice";
 import { setWorkingSpinner } from "../../redux/features/placeholderSlice";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import useGetBalance from "../../components/hooks/useGetBalance";
+import { depositUserBalance, withdrawUserBalance } from "../../redux/features/userSlice";
+import { showNoticeModal } from "../../redux/features/modalSlice";
 
 const API_URL = process.env.REACT_APP_API_URL;
 
 export default function Wallet() {
     const dispatch = useAppDispatch();
-
-    const getBalance = useGetBalance();
 
     const user = useAppSelector(state => state.user);
     const balanceUpdate = useAppSelector(state => state.balanceUpdate);
@@ -38,18 +36,6 @@ export default function Wallet() {
     const [withdrawSubmitted, setWithdrawSubmitted] = useState<boolean>(false);
 
     const selectedCrypto = useAppSelector(state => state.selectedCrypto);
-    const chartSortDate = useAppSelector(state => state.chartSortDate);
-    const successTransfer = useAppSelector(state => state.successTransfer);
-    const failTransfer = useAppSelector(state => state.failTransfer);
-    const transferCategory = useAppSelector(state => state.transferCategory);
-    const allCrypto = useAppSelector(state => state.allCrypto);
-
-    // 화면 첫 랜더링 시, 사용자 변경 시, 입출금 할 때마다 잔고 데이터 받아옴
-    useEffect(() => {
-        if (user.email && user.name) {
-            getBalance(user.email);
-        }
-    }, [user.email, balanceUpdate])
 
     // 입금 및 출금량의 변화를 감지하고 한계량을 지정
     const handleBalanceChange = (
@@ -97,10 +83,12 @@ export default function Wallet() {
                     depositAmount: depositAmount,
                 });
                 dispatch(setSuccessTransfer(true));
+                dispatch(showNoticeModal('입금이 성공적으로 완료되었습니다.'));
                 dispatch(setTransferCategory('deposit'));
             } catch (error) {
                 dispatch(setFailTransfer(true));
                 dispatch(setTransferCategory('deposit'));
+                dispatch(showNoticeModal('입금에 실패했습니다. 잠시 후 다시 시도해주세요.'));
             }
         }
     };
@@ -109,16 +97,17 @@ export default function Wallet() {
     const minusBalanceFromUser = async (email: string, withdrawAmount: number) => {
         if (user.email && user.name) {
             try {
-                console.log('withdrawAmount: ', withdrawAmount);
                 await axios.post(`${API_URL}/minus_balance_from_user/`, {
                     email: email,
                     withdrawAmount: withdrawAmount,
                 });
                 dispatch(setSuccessTransfer(true));
+                dispatch(showNoticeModal('출금이 성공적으로 완료되었습니다.'));
                 dispatch(setTransferCategory('withdraw'));
             } catch (error) {
                 dispatch(setFailTransfer(true));
                 dispatch(setTransferCategory('withdraw'));
+                dispatch(showNoticeModal('출금에 실패했습니다. 잠시 후 다시 시도해주세요.'));
             }
         }
     };
@@ -134,8 +123,10 @@ export default function Wallet() {
 
         if (depositAmount && !depositLimit) {
             dispatch(setWorkingSpinner(true));
+
             await addBalanceToUser(user.email, depositAmount);
-            await getBalance(user.email);
+            dispatch(depositUserBalance(depositAmount));
+
             dispatch(setWorkingSpinner(false));
 
             dispatch(setBalanceUpdate(!balanceUpdate));
@@ -154,14 +145,17 @@ export default function Wallet() {
         }
 
         if (withdrawAmount > user.balance) {
+            dispatch(showNoticeModal('출금량이 잔고를 초과했습니다.'));
             setWithdrawOverflow(true);
             return;
         }
 
         if (withdrawAmount && !withdrawOverflow && !withdrawLimit) {
             dispatch(setWorkingSpinner(true));
+
             await minusBalanceFromUser(user.email, withdrawAmount);
-            await getBalance(user.email);
+            dispatch(withdrawUserBalance(withdrawAmount));
+
             dispatch(setWorkingSpinner(false));
 
             dispatch(setBalanceUpdate(!balanceUpdate));
@@ -170,13 +164,8 @@ export default function Wallet() {
         }
     }
 
-
     return (
         <>
-            <NoticeModal
-                isModalOpen={withdrawOverflow}
-                setIsModalOpen={setWithdrawOverflow}
-                content="출금량이 잔고를 초과했습니다." />
             <form
                 onSubmit={transferSort === '입금' ? depositSubmit : withdrawSubmit}
                 className={`wallet-hover 
