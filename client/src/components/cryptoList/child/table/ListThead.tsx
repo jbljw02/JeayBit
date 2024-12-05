@@ -67,11 +67,8 @@ export default function ListThead() {
                     {
                         listCategory !== '보유' ?
                             <>
-                                <th
-
-                                    className="name"
-                                    onClick={() => sortClick(0)}>
-                                    <div>
+                                <th className="name">
+                                    <div onClick={() => sortClick(0)}>
                                         화폐명
                                         <img
                                             className="sort"
@@ -79,9 +76,8 @@ export default function ListThead() {
                                             alt="화폐명" />
                                     </div>
                                 </th>
-                                <th className="price" onClick={() => sortClick(1)}>
-                                    <div>
-
+                                <th className="price">
+                                    <div onClick={() => sortClick(1)}>
                                         현재가
                                         <img
                                             className="sort"
@@ -89,8 +85,8 @@ export default function ListThead() {
                                             alt="현재가" />
                                     </div>
                                 </th>
-                                <th className="compare" onClick={() => sortClick(2)}>
-                                    <div>
+                                <th className="compare">
+                                    <div onClick={() => sortClick(2)}>
                                         전일대비
                                         <img
                                             className="sort"
@@ -98,8 +94,8 @@ export default function ListThead() {
                                             alt="전일대비" />
                                     </div>
                                 </th>
-                                <th className="volume" onClick={() => sortClick(3)}>
-                                    <div>
+                                <th className="volume">
+                                    <div onClick={() => sortClick(3)}>
                                         거래대금
                                         <img
                                             className="sort"
@@ -109,8 +105,8 @@ export default function ListThead() {
                                 </th>
                             </> :
                             <>
-                                <th className="name" onClick={() => sortClick(0)}>
-                                    <div>
+                                <th className="name">
+                                    <div onClick={() => sortClick(0)}>
                                         화폐명
                                         <img
                                             className="sort"
@@ -118,8 +114,8 @@ export default function ListThead() {
                                             alt="화폐명" />
                                     </div>
                                 </th>
-                                <th className="price" onClick={() => sortClick(1)}>
-                                    <div>
+                                <th className="price">
+                                    <div onClick={() => sortClick(1)}>
                                         현재가
                                         <img
                                             className="sort"
@@ -127,8 +123,8 @@ export default function ListThead() {
                                             alt="현재가" />
                                     </div>
                                 </th>
-                                <th className="compare" onClick={() => sortClick(2)}>
-                                    <div>
+                                <th className="compare">
+                                    <div onClick={() => sortClick(2)}>
                                         전일대비
                                         <img
                                             className="sort"
@@ -136,8 +132,8 @@ export default function ListThead() {
                                             alt="전일대비" />
                                     </div>
                                 </th>
-                                <th className="volume" onClick={() => sortClick(2)}>
-                                    <div>
+                                <th className="volume">
+                                    <div onClick={() => sortClick(2)}>
                                         보유수량
                                         <img
                                             className="sort"

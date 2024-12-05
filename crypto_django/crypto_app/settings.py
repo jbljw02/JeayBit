@@ -88,10 +88,9 @@ ASGI_APPLICATION = "crypto_app.asgi.application"
 CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
-        "CONFIG": {
-            "hosts": [getenv("REDIS_URL")],
-            "capacity": 300,
-            "expiry": 10,  # default is 60 seconds
+         'CONFIG': {
+            'hosts': getenv("REDIS_URL"),
+            'ssl_cert_reqs': None,  # SSL 인증서 검증 비활성화
         },
     },
 }

@@ -25,6 +25,7 @@ export default function useSelectAskingPrice() {
             dispatch(setTotalAskSize(response.data[0].total_ask_size));
             dispatch(setTotalBidSize(response.data[0].total_bid_size));
         } catch (error) {
+            console.log(error);
             dispatch(setErrorModal(true));
             throw error;
         }

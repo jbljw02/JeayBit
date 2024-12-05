@@ -201,6 +201,7 @@ def asking_price(request):
     try:
         market = request.query_params.get("market")
         if not market:
+            logger.error("market 파라미터 누락")
             return Response({"error": "market 파라미터 존재 X"}, status=400)
 
         url = f"https://api.upbit.com/v1/orderbook?markets={market}"
@@ -228,6 +229,7 @@ def closed_price(request):
     try:
         market = request.query_params.get("market")
         if not market:
+            logger.error("market 파라미터 누락")
             return Response({"error": "market 파라미터 존재 X"}, status=400)
 
         url = f"https://api.upbit.com/v1/trades/ticks?market={market}&count=50"

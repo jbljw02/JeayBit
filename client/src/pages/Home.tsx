@@ -48,58 +48,39 @@ export default function Home() {
     const chartSpinner = useAppSelector(state => state.chartSpinner);
     const askingSpinner = useAppSelector(state => state.askingSpinner);
 
-    const selectedCryptoRef = useRef(selectedCrypto);
-    const chartSortTimeRef = useRef(chartSortTime);
-    const chartSortDateRef = useRef(chartSortDate);
-    const chartSpinnerRef = useRef(chartSpinner);
-    const askingSpinnerRef = useRef(askingSpinner);
-
-    // 초기 데이터를 비트코인으로 설정
-    const getInitialData = async () => {
-        try {
-            const response = await axios.post(`${API_URL}/get_all_crypto/`, {}, {
-                withCredentials: true,
-            });
-            dispatch(setSelectedCrypto(response.data.all_crypto[0]));
-            dispatch(setCryptoRealTime(response.data.all_crypto[0]));
-        } catch (error) {
-            dispatch(setErrorModal(true));
-            throw error;
-        }
-    };
-
-    // 상태 값이 변경될 때마다 ref에 최신 값 저장
-    useEffect(() => {
-        selectedCryptoRef.current = selectedCrypto;
-        chartSortTimeRef.current = chartSortTime;
-        chartSortDateRef.current = chartSortDate;
-        chartSpinnerRef.current = chartSpinner;
-        askingSpinnerRef.current = askingSpinner;
-    }, [selectedCrypto, chartSortTime, chartSortDate, chartSpinner, askingSpinner]);
-
     // 초기 렌더링시 화폐 정보를 받아오고, 주기적으로 업데이트
     useEffect(() => {
-        getAllCrypto();
-
-        const interval = setInterval(() => {
+        // 초기 마운트시 즉시 실행
+        const fetchCryptoData = () => {
             getAllCrypto();
 
-            if (!askingSpinnerRef.current) {
-                selectClosedPrice(selectedCryptoRef.current.market);
-                selectAskingPrice(selectedCryptoRef.current.market);
+            // 호가 및 체결 내역 요청
+            // 이미 내역을 불러오는 중이 아닐 때만 요청
+            if (!askingSpinner) {
+                selectClosedPrice(selectedCrypto.market || 'KRW-BTC');
+                selectAskingPrice(selectedCrypto.market || 'KRW-BTC');
             }
 
-            if (!chartSpinnerRef.current) {
-                if (chartSortTimeRef.current && selectedCryptoRef.current.market) {
-                    requestCandleMinute(selectedCryptoRef.current.market, chartSortTimeRef.current);
-                } else if (chartSortDateRef.current && !chartSortTimeRef.current && selectedCryptoRef.current.market) {
-                    requestCandleDate(selectedCryptoRef.current.market, chartSortDateRef.current);
+            // 캔들 정보를 요청
+            // 이미 내역을 불러오는 중이 아닐 때만 요청
+            if (!chartSpinner) {
+                if (chartSortTime) {
+                    requestCandleMinute(selectedCrypto.market || 'KRW-BTC', chartSortTime);
+                }
+                else if (chartSortDate && !chartSortTime) {
+                    requestCandleDate(selectedCrypto.market || 'KRW-BTc', chartSortDate);
                 }
             }
-        }, 2000);
+        };
+
+        // 초기 실행
+        fetchCryptoData();
+
+        // 3초마다 반복 실행
+        const interval = setInterval(fetchCryptoData, 3000);
 
         return () => clearInterval(interval);
-    }, []);
+    }, [selectedCrypto, chartSortTime, chartSortDate, askingSpinner, chartSpinner]);
 
     useEffect(() => {
         if (user.email) {
@@ -128,6 +109,20 @@ export default function Home() {
 
     // 초기 데이터를 요청하여 selectedCrypto의 초기값을 비트코인으로 설정
     useEffect(() => {
+        // 초기 데이터를 비트코인으로 설정
+        const getInitialData = async () => {
+            try {
+                const response = await axios.post(`${API_URL}/get_all_crypto/`, {}, {
+                    withCredentials: true,
+                });
+                dispatch(setSelectedCrypto(response.data.all_crypto[0]));
+                dispatch(setCryptoRealTime(response.data.all_crypto[0]));
+            } catch (error) {
+                dispatch(setErrorModal(true));
+                throw error;
+            }
+        };
+
         getInitialData();
     }, []);
 
