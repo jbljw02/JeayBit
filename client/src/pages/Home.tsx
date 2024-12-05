@@ -22,8 +22,8 @@ import useSelectClosedPrice from '../components/hooks/useSelectClosedPrice';
 import useTradeHistory from '../components/hooks/useTradeHistory';
 import useRequestCandle from '../components/hooks/useRequestCandle';
 import KakaoCallback from '../components/auth/child/KakaoCallback';
-import Login from '../components/auth/Login';
 import { hideNoticeModal, showNoticeModal } from '../redux/features/modalSlice';
+import Login from '../components/auth/Login';
 
 const API_URL = process.env.REACT_APP_API_URL;
 
