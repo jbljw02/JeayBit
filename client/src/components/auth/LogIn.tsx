@@ -7,11 +7,13 @@ import InputWarning from "../input/InputWarning";
 import FaviconTitle from "./child/FaviconTitle";
 import formValueChange from "../../utils/formValueChange";
 import HeaderNav from "../../header/HeaderNav";
-import '../../styles/auth/login.css'
+import '../../styles/auth/authSection.css'
 import { setUserInfo } from "../../redux/features/userSlice";
 import LoadingBar, { LoadingBarRef } from 'react-top-loading-bar';
 import AuthButton from "./child/AuthButton";
 import AuthFooter from "./child/AuthFooter";
+import Divider from "./child/Divider";
+import KakaoLoginButton from "./child/KakaoLoginButton";
 
 const API_URL = process.env.REACT_APP_API_URL;
 
@@ -96,59 +98,61 @@ export default function LogIn() {
     <>
       <LoadingBar color="#22ab94" ref={loadingBarRef} />
       <HeaderNav />
-      <div className="container-login">
-        <FaviconTitle />
-        <form onSubmit={submitLogin} className="form-login" noValidate>
-          <div className="section-email">
-            <FormInput
-              type="email"
-              value={email}
-              placeholder="이메일"
-              isActive={activeInput === 'email'}
-              isEmpty={isEmailEmpty}
-              onChange={(e) => formValueChange(e.target.value,
-                isSubmitted,
-                setEmail,
-                setIsEmailEmpty)}
-              onClick={() => setActiveInput('email')}
-              invalidSubmit={invalidSubmit}
-              isSubmitted={isSubmitted} />
+      <div className="container-auth">
+        <FaviconTitle
+          title="로그인"
+          subtitle="24시간 깨어있는 JeayBit과 함께하세요." />
+        <div>
+          <form onSubmit={submitLogin} className="form-auth" noValidate>
+              <FormInput
+                type="email"
+                value={email}
+                placeholder="이메일"
+                isActive={activeInput === 'email'}
+                isEmpty={isEmailEmpty}
+                onChange={(e) => formValueChange(e.target.value,
+                  isSubmitted,
+                  setEmail,
+                  setIsEmailEmpty)}
+                onClick={() => setActiveInput('email')}
+                invalidSubmit={invalidSubmit}
+                isSubmitted={isSubmitted} />
+              <InputWarning
+                isEmpty={isEmailEmpty}
+                isSubmitted={isSubmitted}
+                label="이메일을 입력해주세요" />
+              <FormInput
+                type="password"
+                value={password}
+                placeholder="비밀번호"
+                isActive={activeInput === 'password'}
+                isEmpty={isPasswordEmpty}
+                onChange={(e) => formValueChange(e.target.value,
+                  isSubmitted,
+                  setPassword,
+                  setIsPasswordEmpty)}
+                onClick={() => setActiveInput('password')}
+                isPasswordVisible={visiblePassword}
+                onPasswordClick={() => setVisiblePassword(!visiblePassword)}
+                invalidSubmit={invalidSubmit}
+                isSubmitted={isSubmitted} />
+              <InputWarning
+                isEmpty={isPasswordEmpty}
+                isSubmitted={isSubmitted}
+                label="비밀번호를 입력해주세요" />
             <InputWarning
-              isEmpty={isEmailEmpty}
-              isSubmitted={isSubmitted}
-              label="이메일을 입력해주세요" />
-          </div>
-          <div className="section-password">
-            <FormInput
-              type="password"
-              value={password}
-              placeholder="비밀번호"
-              isActive={activeInput === 'password'}
-              isEmpty={isPasswordEmpty}
-              onChange={(e) => formValueChange(e.target.value,
-                isSubmitted,
-                setPassword,
-                setIsPasswordEmpty)}
-              onClick={() => setActiveInput('password')}
-              isPasswordVisible={visiblePassword}
-              onPasswordClick={() => setVisiblePassword(!visiblePassword)}
-              invalidSubmit={invalidSubmit}
+              isEmpty={invalidSubmit}
+              label="이메일 혹은 비밀번호가 일치하지 않습니다"
               isSubmitted={isSubmitted} />
-            <InputWarning
-              isEmpty={isPasswordEmpty}
-              isSubmitted={isSubmitted}
-              label="비밀번호를 입력해주세요" />
-          </div>
-          <InputWarning
-            isEmpty={invalidSubmit}
-            label="이메일 혹은 비밀번호가 일치하지 않습니다"
-            isSubmitted={isSubmitted} />
-          <AuthButton
-            label="로그인" />
+            <AuthButton
+              label="로그인" />
+          </form>
+          <Divider />
+          <KakaoLoginButton />
           <AuthFooter
             label="아직 계정이 없으신가요?"
             navigateString="/signUp" />
-        </form>
+        </div>
       </div>
     </>
   )

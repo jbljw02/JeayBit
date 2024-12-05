@@ -25,6 +25,7 @@ import useSelectAskingPrice from '../components/hooks/useSelectAskingPrice';
 import useSelectClosedPrice from '../components/hooks/useSelectClosedPrice';
 import useTradeHistory from '../components/hooks/useTradeHistory';
 import useRequestCandle from '../components/hooks/useRequestCandle';
+import KakaoCallback from '../components/auth/child/KakaoCallback';
 
 const API_URL = process.env.REACT_APP_API_URL;
 
@@ -160,6 +161,7 @@ export default function Home() {
                     } />
                     <Route path="/login" element={<LogIn />} />
                     <Route path="/signUp" element={<SignUp />} />
+                    <Route path="/oauth/callback/kakao" element={<KakaoCallback />} />
                 </Routes>
             </BrowserRouter>
         </div>

@@ -22,13 +22,19 @@ const userSlice = createSlice({
         setUserBalance: (state, action) => {
             return { ...state, balance: action.payload };
         },
+        depositUserBalance: (state, action) => {
+            return { ...state, balance: state.balance + action.payload };
+        },
+        withdrawUserBalance: (state, action) => {
+            return { ...state, balance: state.balance - action.payload };
+        },
         setUser: (state, action) => {
             return action.payload;
         }
     }
 })
 
-export const { setUserInfo, setUserBalance, setUser } = userSlice.actions;
+export const { setUserInfo, setUserBalance, depositUserBalance, withdrawUserBalance, setUser } = userSlice.actions;
 
 const reducers = {
     user: userSlice.reducer,

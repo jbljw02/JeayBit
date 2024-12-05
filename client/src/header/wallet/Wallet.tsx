@@ -9,6 +9,7 @@ import { setBalanceUpdate, setFailTransfer, setSuccessTransfer, setTransferCateg
 import { setWorkingSpinner } from "../../redux/features/placeholderSlice";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import useGetBalance from "../../components/hooks/useGetBalance";
+import { depositUserBalance, withdrawUserBalance } from "../../redux/features/userSlice";
 
 const API_URL = process.env.REACT_APP_API_URL;
 
@@ -38,11 +39,6 @@ export default function Wallet() {
     const [withdrawSubmitted, setWithdrawSubmitted] = useState<boolean>(false);
 
     const selectedCrypto = useAppSelector(state => state.selectedCrypto);
-    const chartSortDate = useAppSelector(state => state.chartSortDate);
-    const successTransfer = useAppSelector(state => state.successTransfer);
-    const failTransfer = useAppSelector(state => state.failTransfer);
-    const transferCategory = useAppSelector(state => state.transferCategory);
-    const allCrypto = useAppSelector(state => state.allCrypto);
 
     // 화면 첫 랜더링 시, 사용자 변경 시, 입출금 할 때마다 잔고 데이터 받아옴
     useEffect(() => {
@@ -109,7 +105,6 @@ export default function Wallet() {
     const minusBalanceFromUser = async (email: string, withdrawAmount: number) => {
         if (user.email && user.name) {
             try {
-                console.log('withdrawAmount: ', withdrawAmount);
                 await axios.post(`${API_URL}/minus_balance_from_user/`, {
                     email: email,
                     withdrawAmount: withdrawAmount,
@@ -134,8 +129,10 @@ export default function Wallet() {
 
         if (depositAmount && !depositLimit) {
             dispatch(setWorkingSpinner(true));
+
             await addBalanceToUser(user.email, depositAmount);
-            await getBalance(user.email);
+            dispatch(depositUserBalance(depositAmount));
+
             dispatch(setWorkingSpinner(false));
 
             dispatch(setBalanceUpdate(!balanceUpdate));
@@ -160,8 +157,10 @@ export default function Wallet() {
 
         if (withdrawAmount && !withdrawOverflow && !withdrawLimit) {
             dispatch(setWorkingSpinner(true));
+
             await minusBalanceFromUser(user.email, withdrawAmount);
-            await getBalance(user.email);
+            dispatch(withdrawUserBalance(withdrawAmount));
+
             dispatch(setWorkingSpinner(false));
 
             dispatch(setBalanceUpdate(!balanceUpdate));
@@ -169,7 +168,6 @@ export default function Wallet() {
             setWithdrawEmpty(false);
         }
     }
-
 
     return (
         <>

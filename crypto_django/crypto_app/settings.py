@@ -90,7 +90,6 @@ CHANNEL_LAYERS = {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
          'CONFIG': {
             'hosts': getenv("REDIS_URL"),
-            'ssl_cert_reqs': None,  # SSL 인증서 검증 비활성화
         },
     },
 }
@@ -115,12 +114,11 @@ AUTHENTICATION_BACKENDS = [
     "django.contrib.auth.backends.ModelBackend",
 ]
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
+KAKAO_CONFIG = {
+    "KAKAO_REST_API_KEY": getenv("KAKAO_REST_API_KEY"),
+    "KAKAO_REDIRECT_URI": getenv("KAKAO_REDIRECT_URI"),
+    "KAKAO_CLIENT_SECRET": getenv("KAKAO_CLIENT_SECRET"),
+}
 
 DATABASES = {
     "default": {
