@@ -3,12 +3,12 @@ import { useState } from "react";
 import TransferInput from "./TransferInput";
 import { ChangeInput } from "./ChangeInput";
 import TransferWarning from "./TransferWarning";
-import '../../styles/header/wallet.css'
-import { setBalanceUpdate, setFailTransfer, setSuccessTransfer, setTransferCategory, setTransferSort } from "../../redux/features/walletSlice";
-import { setWorkingSpinner } from "../../redux/features/placeholderSlice";
-import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import { depositUserBalance, withdrawUserBalance } from "../../redux/features/userSlice";
-import { showNoticeModal } from "../../redux/features/modalSlice";
+import '../../../styles/header/wallet.css'
+import { showNoticeModal } from "../../../redux/features/modalSlice";
+import { setWorkingSpinner } from "../../../redux/features/placeholderSlice";
+import { depositUserBalance, withdrawUserBalance } from "../../../redux/features/userSlice";
+import { setSuccessTransfer, setTransferCategory, setFailTransfer, setBalanceUpdate, setTransferSort } from "../../../redux/features/walletSlice";
+import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 
 const API_URL = process.env.REACT_APP_API_URL;
 

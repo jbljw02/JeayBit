@@ -1,16 +1,15 @@
-import { useAppSelector } from "../redux/hooks";
-import { useAppDispatch } from "../redux/hooks";
-import favicon from "../assets/images/favicon.png";
+import favicon from "../../assets/images/favicon.png";
 import { useRef, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Wallet from "./wallet/Wallet";
-import { setUserTradeHistory, setUserTradeHistory_unSigned } from "../redux/features/tradeSlice";
-import { setUser } from "../redux/features/userSlice";
-import '../styles/header/header.css'
+import '../../styles/header/header.css'
 import LoadingBar, { LoadingBarRef } from 'react-top-loading-bar';
-import { showNoticeModal } from "../redux/features/modalSlice";
-import useGetBalance from "../components/hooks/useGetBalance";
+import { showNoticeModal } from "../../redux/features/modalSlice";
+import { setUserTradeHistory, setUserTradeHistory_unSigned } from "../../redux/features/tradeSlice";
+import { setUser } from "../../redux/features/userSlice";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import useGetBalance from "../hooks/useGetBalance";
 
 const API_URL = process.env.REACT_APP_API_URL;
 

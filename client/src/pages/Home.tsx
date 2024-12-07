@@ -6,7 +6,6 @@ import SignUp from '../components/auth/SignUp';
 import { useEffect } from 'react';
 import Chart from '../components/chart/Chart';
 import CryptoDetail from '../components/cryptoDetail/CryptoDetail';
-import Header from '../header/Header';
 import axios from 'axios';
 import { setUserInfo } from '../redux/features/userSlice';
 import { setSelectedCrypto, setCryptoRealTime } from '../redux/features/selectedCryptoSlice';
@@ -24,7 +23,7 @@ import useRequestCandle from '../components/hooks/useRequestCandle';
 import KakaoCallback from '../components/auth/child/KakaoCallback';
 import { hideNoticeModal, showNoticeModal } from '../redux/features/modalSlice';
 import Login from '../components/auth/Login';
-
+import Header from '../components/header/Header';
 const API_URL = process.env.REACT_APP_API_URL;
 
 export default function Home() {

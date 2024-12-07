@@ -5,13 +5,13 @@ import InputWarning from "../input/InputWarning";
 import FormInput from "../input/FormInput";
 import formValueChange from "../../utils/formValueChange";
 import SignUpModal from "../modal/SignUpModal";
-import HeaderNav from "../../header/HeaderNav";
 import LoadingBar, { LoadingBarRef } from 'react-top-loading-bar';
 import AuthButton from "./child/AuthButton";
 import AuthFooter from "./child/AuthFooter";
 import '../../styles/auth/authSection.css'
 import Divider from "./child/Divider";
 import KakaoLoginButton from "./child/KakaoLoginButton";
+import HeaderNav from "../header/HeaderNav";
 
 const API_URL = process.env.REACT_APP_API_URL;
 
