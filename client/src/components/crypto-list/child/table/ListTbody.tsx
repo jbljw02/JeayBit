@@ -34,7 +34,8 @@ export default function ListTbody() {
     const listCategory = useAppSelector(state => state.listCategory);
     const allCrypto = useAppSelector(state => state.allCrypto);
     const user = useAppSelector(state => state.user);
-
+    const selectedCrypto = useAppSelector(state => state.selectedCrypto);
+    
     // 화폐 가격을 업데이트 하기 전에 해당 state에 담음
     const [prevData, setPrevData] = useState<Record<string, number> | undefined>(undefined);
     // 화폐 가격의 변화를 저장
@@ -121,6 +122,10 @@ export default function ListTbody() {
 
     // 특정 화폐를 클릭했을 때
     const cryptoClick = async (value: Crypto) => {
+        if (value.market === selectedCrypto.market) {
+            return;
+        }
+
         dispatch(setAskingSpinner(true));
 
         dispatch(setSelectedCrypto(value));

@@ -2,9 +2,10 @@ import BuyingSection from "./child/section/BuyingSection";
 import SellingSection from "./child/section/SellingSection";
 import TradeHistory from "./child/history/TradeHistory";
 import { useState } from "react";
-import '../../styles/priceDetail/trading/tradeSection.css'
+import '../../styles/price-detail/trading/tradeSection.css'
 import { useAppSelector } from "../../redux/hooks";
 import PlaceholderDisplay from "../placeholder/PlaceholderDisplay";
+import NavBar from "../common/NavBar";
 
 export type CeleryData = {
     name: string,
@@ -18,29 +19,25 @@ export const bidSortOptions = [
     { id: 'radio2', value: '시장가', label: '시장가' },
 ];
 
+const navItems = [
+    { label: '매수', color: '#22ab94' },
+    { label: '매도', color: '#f23645' },
+    { label: '거래내역', color: '#000000' },
+];
+
+type SectionChange = '매수' | '매도' | '거래내역';
+
 export default function TradeSection() {
-    const [sectionChange, setSectionChange] = useState<'매수' | '매도' | '거래내역'>('매수');
+    const [sectionChange, setSectionChange] = useState<SectionChange>('매수');
     const user = useAppSelector(state => state.user);
 
     return (
         <div className="trade-section">
-            <nav className="trade-nav">
-                <span
-                    className={`${sectionChange === '매수' ?
-                        'buying-section' :
-                        ''}`}
-                    onClick={() => setSectionChange('매수')}>매수</span>
-                <span
-                    className={`${sectionChange === '매도' ?
-                        'selling-section' :
-                        ''}`}
-                    onClick={() => setSectionChange('매도')}>매도</span>
-                <span
-                    className={`${sectionChange === '거래내역' ?
-                        'trading-history-section' :
-                        ''}`}
-                    onClick={() => setSectionChange('거래내역')}>거래내역</span>
-            </nav>
+            <NavBar
+                items={navItems}
+                activeItem={sectionChange}
+                onItemClick={(label) => setSectionChange(label as SectionChange)}
+                size="large" />
             {
                 sectionChange === '매수' ?
                     <BuyingSection /> :

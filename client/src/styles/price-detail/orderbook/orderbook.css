@@ -1,37 +1,27 @@
-.priceDetail-title {
-    border-bottom: 1px solid #E3E8EC;
-    padding: 16px 50px;
-    align-items: center;
-    text-align: center;
-    font-size: 16px;
-    position: relative;
+.orderbook {
+    display: flex;
+    flex-direction: column;
+    height: 433px;
+    width: 390px;
+    background-color: #fff;
+    border-radius: 4px;
 }
 
-.arrow-hide {
-    position: relative;
-    width: 9px;
-    top: 2px;
-    left: 4px;
-    pointer-events: none;
-    padding: 5px;
-    transition: transform 0.3s ease;
-}
-
-.hide-element {
-    padding-left: 8px;
-    padding-bottom: 3px;
-    font-size: 17px;
+.orderbook-section {
+    flex: 1;
+    overflow: hidden;
 }
 
 .orderbook-content {
-    height: 335px;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
 }
 
 .orderbook-table {
     table-layout: fixed;
     border-collapse: collapse;
     width: 100%;
-    height: 100%;
 }
 
 .orderbook-table thead tr {

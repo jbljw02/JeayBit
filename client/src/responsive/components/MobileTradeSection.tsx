@@ -1,7 +1,7 @@
 import { useState } from "react";
 import PlaceholderDisplay from "../../components/placeholder/PlaceholderDisplay";
 import { useAppSelector } from "../../redux/hooks";
-import '../../styles/priceDetail/trading/tradeSection.css';
+import '../../styles/price-detail/trading/tradeSection.css';
 import TradeHistory from "../../components/trading/child/history/TradeHistory";
 import BuyingSection from "../../components/trading/child/section/BuyingSection";
 import SellingSection from "../../components/trading/child/section/SellingSection";

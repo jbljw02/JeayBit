@@ -2,12 +2,24 @@ import ListCategory from "./child/ListCategory";
 import ListSearch from "./child/ListSearch";
 import ListTbody from "./child/table/ListTbody";
 import ListThead from "./child/table/ListThead";
-import '../../styles/cryptoList/cryptoList.css'
+import '../../styles/crypto-list/cryptoList.css'
 import PlaceholderDisplay from "../placeholder/PlaceholderDisplay";
 import SkeletonUI from "../placeholder/SkeletonUI";
-import { useAppSelector } from "../../redux/hooks";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import NavBar from "../common/NavBar";
+import { setListCategory } from "../../redux/features/cryptoListSlice";
+
+type SectionChange = '원화' | '보유' | '관심';
+
+const navItems = [
+    { label: '원화', color: '#000000' },
+    { label: '보유', color: '#000000' },
+    { label: '관심', color: '#000000' },
+];
 
 export default function CryptoList() {
+    const dispatch = useAppDispatch();
+    
     const user = useAppSelector(state => state.user);
     const listCategory = useAppSelector(state => state.listCategory);
     const favoriteCrypto = useAppSelector(state => state.favoriteCrypto);
@@ -56,7 +68,11 @@ export default function CryptoList() {
     return (
         <>
             <ListSearch />
-            <ListCategory />
+            <NavBar
+                items={navItems}
+                activeItem={listCategory}
+                onItemClick={(label) => dispatch(setListCategory(label as SectionChange))}
+                size="small" />
             <ListThead />
             {renderContent()}
         </>

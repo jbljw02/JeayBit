@@ -1,16 +1,30 @@
 import AskingPrice from "./child/asking/AskingPrice";
 import ClosedPrice from "./child/closed/ClosedPrice";
-import CustomScrollbars from "../scrollbar/CustomScorllbars";
+import NavBar from "../common/NavBar";
+import { useState } from "react";
+import '../../styles/crypto-info/cryptoDetail.css';
+
+type SectionChange = '호가내역' | '체결내역';
+
+const navItems = [
+  { label: '호가내역', color: '#22ab94' },
+  { label: '체결내역', color: '#f23645' },
+];
 
 export default function OrderBook() {
+  const [sectionChange, setSectionChange] = useState<SectionChange>('호가내역');
   return (
-    <>
-      <CustomScrollbars
-        hideScrollBar={true}
-        style={{ width: '100%', height: '100%' }}>
-        <AskingPrice />
-        <ClosedPrice />
-      </CustomScrollbars>
-    </>
+    <div className="orderbook">
+      <NavBar
+        items={navItems}
+        activeItem={sectionChange}
+        onItemClick={(label) => setSectionChange(label as SectionChange)}
+        size="large" />
+      {
+        sectionChange === '호가내역' ?
+          <AskingPrice /> :
+          <ClosedPrice />
+      }
+    </div>
   );
 }

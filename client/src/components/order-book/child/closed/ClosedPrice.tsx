@@ -1,9 +1,8 @@
 import { useAppSelector } from "../../../../redux/hooks";
 import adjustSize from "../../../../utils/format/adjustSize";
 import convertToDate from "../../../../utils/date/covertToDate";
-import '../../../../styles/priceDetail/orderbook/orderbook.css'
+import '../../../../styles/price-detail/orderbook/orderbook.css'
 import CustomScrollbars from "../../../scrollbar/CustomScorllbars";
-import AskingTitle from "../asking/AskingTitle";
 import { useState } from "react";
 import SkeletonUI from "../../../placeholder/SkeletonUI";
 import LoadingSpinner from "../../../placeholder/LoadingSpinner";
@@ -17,11 +16,7 @@ export default function ClosedPrice() {
 
     return (
         <>
-            <div className="closed-section">
-                <AskingTitle
-                    contentsHide={closeHide}
-                    setContentsHide={setCloseHide}
-                    title="체결내역" />
+            <div className="orderbook-section">
                 {
                     !closeHide ?
                         <>

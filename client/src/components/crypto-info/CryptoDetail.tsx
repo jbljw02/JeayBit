@@ -3,7 +3,7 @@ import ChangePrice from "./child/ChangePrice";
 import formatWithComas from "../../utils/format/formatWithComas";
 import ChangeRate from "./child/ChangeRate";
 import Summary from "./child/Summary";
-import '../../styles/cryptoDetail/cryptoDetail.css'
+import '../../styles/crypto-info/cryptoDetail.css'
 import SkeletonUI from "../placeholder/SkeletonUI";
 
 export default function CryptoDetail() {

@@ -1,5 +1,5 @@
 import { useAppSelector } from "../../redux/hooks";
-import '../../styles/cryptoDetail/cryptoHeader.css'
+import '../../styles/crypto-info/cryptoHeader.css'
 import SkeletonUI from "../placeholder/SkeletonUI";
 
 export default function CryptoHeader() {

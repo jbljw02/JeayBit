@@ -4,7 +4,7 @@ import CustomScrollbars from "../../components/scrollbar/CustomScorllbars";
 import { useAppSelector } from "../../redux/hooks";
 import convertToDate from "../../utils/date/covertToDate";
 import adjustSize from "../../utils/format/adjustSize";
-import '../../styles/priceDetail/orderbook/orderbook.css'
+import '../../styles/price-detail/orderbook/orderbook.css'
 
 export default function MobileClosedPrice() {
     const askingSpinner = useAppSelector(state => state.askingSpinner);

@@ -9,7 +9,7 @@ import CustomScrollbars from "../../../scrollbar/CustomScorllbars";
 import TradingThead from "../TradingThead";
 import SignedHistory from "./SignedHistory";
 import UnSignedHistory from "./UnSignedHistory";
-import '../../../../styles/priceDetail/trading/tradeHistory.css';
+import '../../../../styles/price-detail/trading/tradeHistory.css';
 
 const API_URL = process.env.REACT_APP_API_URL;
 

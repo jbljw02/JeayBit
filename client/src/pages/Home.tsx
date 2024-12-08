@@ -25,12 +25,10 @@ import Login from '../components/auth/Login';
 import Header from '../components/header/Header';
 import { BREAKPOINTS } from '../responsive/breakpoints';
 import MobileDetail from '../responsive/components/MobileDetail';
-import AskingPrice from '../components/order-book/child/asking/AskingPrice';
-import ClosedPrice from '../components/order-book/child/closed/ClosedPrice';
-import CustomScrollbars from '../components/scrollbar/CustomScorllbars';
 import TradeSection from '../components/trading/TradeSection';
-import '../styles/priceDetail/trading/tradeSection.css';
+import '../styles/price-detail/trading/tradeSection.css';
 import '../styles/App.css';
+import OrderBook from '../components/order-book/OrderBook';
 
 const API_URL = process.env.REACT_APP_API_URL;
 
@@ -156,21 +154,16 @@ export default function Home() {
                                 ) :
                                     (
                                         <div className='contents-container'>
-                                            <article className='cryptoDetail'>
+                                            <article className='crypto-info'>
                                                 <CryptoHeader />
                                                 <CryptoDetail />
                                                 <Chart />
                                             </article>
-                                            <article className='priceDetail'>
-                                                <CustomScrollbars
-                                                    hideScrollBar={true}
-                                                    style={{ width: '100%', height: '100%' }}>
-                                                    <AskingPrice />
-                                                    <ClosedPrice />
-                                                    <TradeSection />
-                                                </CustomScrollbars>
+                                            <article className='price-detail'>
+                                                <OrderBook />
+                                                <TradeSection />
                                             </article>
-                                            <aside className="cryptoList">
+                                            <aside className="crypto-list">
                                                 <CryptoList />
                                             </aside>
                                         </div>

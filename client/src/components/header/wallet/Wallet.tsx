@@ -7,10 +7,17 @@ import '../../../styles/header/wallet.css'
 import { showNoticeModal } from "../../../redux/features/modalSlice";
 import { setWorkingSpinner } from "../../../redux/features/placeholderSlice";
 import { depositUserBalance, withdrawUserBalance } from "../../../redux/features/userSlice";
-import { setSuccessTransfer, setTransferCategory, setFailTransfer, setBalanceUpdate, setTransferSort } from "../../../redux/features/walletSlice";
+import { setSuccessTransfer, setTransferCategory, setFailTransfer, setBalanceUpdate, setTransferSort, TransferSort } from "../../../redux/features/walletSlice";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
+import NavBar from "../../common/NavBar";
 
 const API_URL = process.env.REACT_APP_API_URL;
+
+const navItems = [
+    { label: '입금', color: '#22ab94' },
+    { label: '출금', color: '#f23645' },
+    { label: '잔고', color: '#000000' },
+];
 
 export default function Wallet() {
     const dispatch = useAppDispatch();
@@ -165,110 +172,94 @@ export default function Wallet() {
     }
 
     return (
-        <>
-            <form
-                onSubmit={transferSort === '입금' ? depositSubmit : withdrawSubmit}
-                className={`wallet-hover 
+        <form
+            onSubmit={transferSort === '입금' ? depositSubmit : withdrawSubmit}
+            className={`wallet-hover 
                     ${transferSort === "잔고" ? "balance" : ""}`}>
-                <div className="transfer-section">
-                    <span
-                        onClick={() => dispatch(setTransferSort("입금"))}
-                        id={`${transferSort === "입금" ? "deposit-section" : ""}`}>
-                        입금
-                    </span>
-                    <span
-                        onClick={() => dispatch(setTransferSort("출금"))}
-                        id={`${transferSort === "출금" ? "withdraw-section" : ""}`}>
-                        출금
-                    </span>
-                    <span
-                        onClick={() => {
-                            dispatch(setTransferSort("잔고"));
-                        }}
-                        id={`${transferSort === "잔고" ? "balance-section" : ""}`}>
-                        잔고
-                    </span>
-                </div>
-                {
-                    // 입금 영역
-                    transferSort === "입금" ?
+            <NavBar
+                items={navItems}
+                activeItem={transferSort}
+                onItemClick={(label) => dispatch(setTransferSort(label as TransferSort))}
+                size="large" />
+            {
+                // 입금 영역
+                transferSort === "입금" ?
+                    <>
+                        <TransferInput
+                            label="입금금액"
+                            amount={depositAmount}
+                            onChange={(e) =>
+                                handleBalanceChange(e, setDepositAmount, setDepositChangeAmount, setDepositLimit, setDepositEmpty, depositSubmitted, selectedCrypto.price)
+                            }
+                            limitReached={depositLimit}
+                            amountEmpty={depositEmpty} />
+                        <TransferWarning
+                            isWarning={depositLimit}
+                            label="입금은 1회당 1,000원 이상 10,000,000원 이하만 가능합니다" />
+                        <TransferWarning
+                            isWarning={depositEmpty}
+                            isSubmitted={depositSubmitted}
+                            label="입금액을 입력해주세요" />
+                        <ChangeInput
+                            amount={depositChangeAmount}
+                            market={selectedCrypto.market.slice(4)} />
+                        <button className="transfer-submit deposit">
+                            <span>입금</span>
+                        </button>
+                    </> :
+                    transferSort === "출금" ?
+                        // 출금 영역
                         <>
                             <TransferInput
-                                label="입금금액"
-                                amount={depositAmount}
+                                label="출금금액"
+                                amount={withdrawAmount}
                                 onChange={(e) =>
-                                    handleBalanceChange(e, setDepositAmount, setDepositChangeAmount, setDepositLimit, setDepositEmpty, depositSubmitted, selectedCrypto.price)
+                                    handleBalanceChange(e, setWithdrawAmount, setWithdrawChangeAmount, setWithdrawLimit, setWithdrawEmpty, withdrawSubmitted, selectedCrypto.price)
                                 }
-                                limitReached={depositLimit}
-                                amountEmpty={depositEmpty} />
+                                limitReached={withdrawLimit}
+                                amountEmpty={withdrawEmpty} />
                             <TransferWarning
-                                isWarning={depositLimit}
-                                label="입금은 1회당 1,000원 이상 10,000,000원 이하만 가능합니다" />
+                                isWarning={withdrawLimit}
+                                label="출금은 1회당 1,000원 이상 10,000,000원 이하만 가능합니다" />
                             <TransferWarning
-                                isWarning={depositEmpty}
-                                isSubmitted={depositSubmitted}
+                                isWarning={withdrawEmpty}
+                                isSubmitted={withdrawSubmitted}
                                 label="입금액을 입력해주세요" />
                             <ChangeInput
-                                amount={depositChangeAmount}
+                                amount={withdrawChangeAmount}
                                 market={selectedCrypto.market.slice(4)} />
-                            <button className="transfer-submit deposit">
-                                <span>입금</span>
+                            <button className="transfer-submit withdraw">
+                                <span>출금</span>
                             </button>
                         </> :
-                        transferSort === "출금" ?
-                            // 출금 영역
-                            <>
-                                <TransferInput
-                                    label="출금금액"
-                                    amount={withdrawAmount}
-                                    onChange={(e) =>
-                                        handleBalanceChange(e, setWithdrawAmount, setWithdrawChangeAmount, setWithdrawLimit, setWithdrawEmpty, withdrawSubmitted, selectedCrypto.price)
+                        // 잔고 영역
+                        <div className="balance-section">
+                            <div className="balance-content">
+                                <span className="balance-title">
+                                    <span>{user.name}</span>님의 출금가능 금액
+                                </span>
+                                <span className="balance-amount">
+                                    {
+                                        user.balance ?
+                                            Number(user.balance).toLocaleString() :
+                                            0
                                     }
-                                    limitReached={withdrawLimit}
-                                    amountEmpty={withdrawEmpty} />
-                                <TransferWarning
-                                    isWarning={withdrawLimit}
-                                    label="출금은 1회당 1,000원 이상 10,000,000원 이하만 가능합니다" />
-                                <TransferWarning
-                                    isWarning={withdrawEmpty}
-                                    isSubmitted={withdrawSubmitted}
-                                    label="입금액을 입력해주세요" />
-                                <ChangeInput
-                                    amount={withdrawChangeAmount}
-                                    market={selectedCrypto.market.slice(4)} />
-                                <button className="transfer-submit withdraw">
-                                    <span>출금</span>
-                                </button>
-                            </> :
-                            // 잔고 영역
-                            <div className="balance-section">
-                                <div className="balance-content">
-                                    <span className="balance-title">
-                                        <span>{user.name}</span>님의 출금가능 금액
-                                    </span>
-                                    <span className="balance-amount">
-                                        {
-                                            user.balance ?
-                                                Number(user.balance).toLocaleString() :
-                                                0
-                                        }
-                                        <span>&nbsp;KRW</span>
-                                    </span>
-                                </div>
-                                <div className="balance-notice">
-                                    <ul>
-                                        <li>
-                                            잔고에 보유할 수 있는 금액의 제한은 없습니다.
-                                        </li>
-                                        <li>
-                                            입금 및 출금 할 수 있는 금액의 상한선은 1회당
-                                            10,000,000원입니다.
-                                        </li>
-                                    </ul>
-                                </div>
+                                    <span>&nbsp;KRW</span>
+                                </span>
                             </div>
-                }
-            </form>
-        </>
+                            <div className="balance-notice">
+                                <ul>
+                                    <li>
+                                        잔고에 보유할 수 있는 금액의 제한은 없습니다.
+                                    </li>
+                                    <li>
+                                        입금 및 출금 할 수 있는 금액의 상한선은 1회당
+                                        10,000,000원입니다.
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+            }
+        </form>
     )
 }

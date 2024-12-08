@@ -1,5 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+export type TransferSort = '입금' | '출금' | '잔고';
+
 const walletHoverSlice = createSlice({
     name: 'walletHover',
     initialState: false,
@@ -22,7 +24,7 @@ const balanceUpdateSlice = createSlice({
 
 const transferSortSlice = createSlice({
     name: 'transferSort',
-    initialState: '입금',
+    initialState: '입금' as TransferSort,
     reducers: {
         setTransferSort: (state, action) => {
             return action.payload;

@@ -5,7 +5,7 @@ import AskingTable from "../../components/order-book/child/asking/AskingTable";
 import CustomScrollbars from "../../components/scrollbar/CustomScorllbars";
 import { AskingData } from "../../redux/features/askingSlice";
 import { useAppSelector } from "../../redux/hooks";
-import '../../styles/priceDetail/orderbook/orderbook.css'
+import '../../styles/price-detail/orderbook/orderbook.css'
 
 // bid = 매수, ask = 매도
 export default function MobileAskingPrice() {

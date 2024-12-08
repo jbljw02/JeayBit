@@ -1,8 +1,7 @@
 import { useState, useEffect } from "react";
 import AskingTable from "./AskingTable";
-import '../../../../styles/priceDetail/orderbook/orderbook.css'
+import '../../../../styles/price-detail/orderbook/orderbook.css'
 import CustomScrollbars from "../../../scrollbar/CustomScorllbars";
-import AskingTitle from "./AskingTitle";
 import { AskingData } from "../../../../redux/features/askingSlice";
 import { useAppSelector } from "../../../../redux/hooks";
 import SkeletonUI from "../../../placeholder/SkeletonUI";
@@ -62,14 +61,10 @@ export default function AskingPrice() {
     return (
         <>
             <div className="orderbook-section">
-                <AskingTitle
-                    contentsHide={askHide}
-                    setContentsHide={setAskHide}
-                    title='호가내역' />
                 {
                     !askHide ?
                         <>
-                            <table className="orderbook-table">
+                            <table className="orderbook-table thead">
                                 <thead>
                                     <tr>
                                         <th>등록시간</th>
@@ -86,36 +81,32 @@ export default function AskingPrice() {
                                     </tr>
                                 </thead>
                             </table>
-                            <div
-                                style={{ borderBottom: '1px solid #E3E8EC' }}
-                                className="orderbook-content">
-                                {
-                                    askingSpinner ?
-                                        <LoadingSpinner
-                                            containerHeight={'100%'}
-                                            size={40} /> :
-                                        (
-                                            askingData.length ?
-                                                <CustomScrollbars style={{ width: '100%', height: '100%' }}>
-                                                    <table className="orderbook-table">
-                                                        <tbody>
-                                                            <AskingTable
-                                                                differences={differences_bid}
-                                                                size={Number(totalBidSize)}
-                                                                category={'bid'} />
-                                                            <AskingTable
-                                                                differences={differences_ask}
-                                                                size={Number(totalAskSize)}
-                                                                category={'ask'} />
-                                                        </tbody>
-                                                    </table>
-                                                </CustomScrollbars> :
-                                                <SkeletonUI
-                                                    containerHeight="335px"
-                                                    elementsHeight={20} />
-                                        )
-                                }
-                            </div>
+                            {
+                                askingSpinner ?
+                                    <LoadingSpinner
+                                        containerHeight={'100%'}
+                                        size={40} /> :
+                                    (
+                                        askingData.length ?
+                                            <CustomScrollbars>
+                                                <table className="orderbook-table tbody">
+                                                    <tbody>
+                                                        <AskingTable
+                                                            differences={differences_bid}
+                                                            size={Number(totalBidSize)}
+                                                            category={'bid'} />
+                                                        <AskingTable
+                                                            differences={differences_ask}
+                                                            size={Number(totalAskSize)}
+                                                            category={'ask'} />
+                                                    </tbody>
+                                                </table>
+                                            </CustomScrollbars> :
+                                            <SkeletonUI
+                                                containerHeight="335px"
+                                                elementsHeight={20} />
+                                    )
+                            }
                         </> :
                         <div className="hide-element">...</div>
                 }
