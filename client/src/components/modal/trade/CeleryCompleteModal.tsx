@@ -1,9 +1,9 @@
 import Modal from 'react-modal';
 import styles from '../../../styles/modal/modal.module.css'
-import { CeleryData } from '../../priceDetail/child/trading/TradeSection';
 import formatDateString from '../../../utils/date/formatDateString';
 import formatWithComas from '../../../utils/format/formatWithComas';
 import { ModalProps } from '../type/ModalProps';
+import { CeleryData } from '../../trading/TradeSection';
 
 type CeleryModalProps = ModalProps & {
     celeryData: CeleryData,

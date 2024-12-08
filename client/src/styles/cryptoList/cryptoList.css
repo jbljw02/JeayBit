@@ -56,7 +56,6 @@
     width: 100%;
     /* 100vh에서 테이블을 제외한 다른 요소들의 값을 빼줘야 잘리지 않고 출력됨 */
     max-height: calc(100vh - 180px);
-    overflow-x: hidden;
 }
 
 .list-table {
@@ -69,8 +68,20 @@
 .list-table th {
     padding-top: 11px;
     padding-bottom: 11px;
+    padding-right: 16px;
     font-size: 12px;
     white-space: nowrap;
+}
+
+.name {
+    padding-left: 36.5px;
+    text-align: left;
+}
+
+.price,
+.compare,
+.volume {
+    text-align: right;
 }
 
 .list-table th div {
@@ -91,37 +102,24 @@
 
 .list-table tr td:nth-child(2) {
     text-align: right;
-    padding-right: 8px;
+    padding-right: 11px;
 }
 
 .list-table tr td:nth-child(3) {
     text-align: right;
-    padding-right: 13px;
+    padding-right: 12px;
 }
 
 .list-table tr td:nth-child(4) {
     text-align: right;
-    padding-right: 8px;
 }
 
 .list-table td {
     font-size: 12px;
-    border-bottom: 1px solid #E3E8EC;
-    padding-top: 9.5px;
-    padding-bottom: 9.5px;
     white-space: nowrap;
-}
-
-.name {
-    padding-left: 36.5px;
-    text-align: left;
-}
-
-.price,
-.compare,
-.volume {
-    text-align: right;
-    padding-right: 11px;
+    border-bottom: 1px solid #E3E8EC;
+    padding: 9.5px 11px 9.5px 10px;
+    overflow: hidden;
 }
 
 .change-price-rise {
@@ -144,10 +142,6 @@
 
 .list-table tbody tr:hover {
     background-color: #e6e6e6;
-}
-
-.td-name {
-    padding-left: 10px;
 }
 
 .span-star {

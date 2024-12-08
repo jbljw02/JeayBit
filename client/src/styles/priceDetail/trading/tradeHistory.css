@@ -5,19 +5,23 @@
     align-items: center;
 }
 
+.history-scroll-container {
+    flex: 1;
+    overflow: hidden;
+    min-height: 0;
+}
+
 .table-trading-history {
     width: 100%;
     border-collapse: collapse;
     border-top: 1px solid #E3E8EC;
+    border-bottom: 1px solid #E3E8EC;
     table-layout: fixed;
-}
-
-.table-trading-history tbody {
-    height: 100%;
 }
 
 #historyHead {
     border-bottom: 1px solid #E3E8EC;
+    flex-shrink: 0;
 }
 
 #historyBody {
@@ -33,9 +37,6 @@
     color: #FFFFFF;
     cursor: pointer;
     margin-right: 12px;
-}
-
-.div-trading-table {
 }
 
 .table-trading-history thead th {

@@ -1,10 +1,12 @@
-.trading-detail {
+.crypto-detail {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: flex-start;
+    overflow: hidden;
     height: 125px;
-    padding: 30px 25px 0px 40px;
+    padding: 30px 25px 0px 35px;
+    border-bottom: 1px solid #E3E8EC;
 }
 
 .crypto-change_rate {
@@ -95,30 +97,85 @@ dd span {
 .dd-high_price {
     font-size: 15px;
     color: #22ab94;
-    font-weight: lighter;
 }
 
 .dd-low_price {
     font-size: 15px;
     color: #f23645;
-    font-weight: lighter;
 }
 
 .img-price_rise {
     filter: invert(48%) sepia(100%) saturate(349%) hue-rotate(120deg) brightness(95%) contrast(84%);
     width: 10px;
-    padding-right: 3px;
+    padding-right: 4px;
     padding-left: 1px;
 }
 
 .img-price_fall {
     filter: invert(56%) sepia(93%) saturate(4750%) hue-rotate(329deg) brightness(88%) contrast(118%);
     width: 10px;
-    padding-right: 3px;
+    padding-right: 4px;
     padding-left: 3px;
 }
 
 .img-price_even {
     width: 10px;
-    padding-right: 3px;
+    padding-right: 4px;
+}
+
+.crypto-detail-skeleton {
+    height: 134px;
+    padding: 4px 5px 17px 5px;
+    border-bottom: 1px solid #E3E8EC;
+}
+
+@media (max-width: 767px) {
+    .trading-detail {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        height: auto;
+        padding: 20px 35px 20px 28px;
+    }
+
+    .crypto-price {
+        font-size: 28px;
+        display: flex;
+        flex-direction: column;
+        margin-top: 5px;
+    }
+
+    .crypto-price > div {
+        display: flex;
+        flex-direction: row;
+        
+        align-items: center;
+        margin-top: 4px;
+        white-space: nowrap;
+        gap: 6px;
+    }
+
+    .crypto-change_rate {
+        font-size: 14px;
+        margin-left: 0;
+    }
+
+    .crypto-change_price {
+        font-size: 16px;
+        margin-top: 0;
+    }
+
+    dl {
+        width: 100%;
+    }
+
+    dd {
+        padding-left: 30px;
+    }
+
+    .img-price_rise,
+    .img-price_fall,
+    .img-price_even {
+        width: 8px;
+    }
 }

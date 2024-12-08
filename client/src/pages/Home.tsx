@@ -1,16 +1,15 @@
-import CryptoList from '../components/cryptoList/CryptoList';
-import '../assets/App.css';
+import CryptoList from '../components/crypto-list/CryptoList';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import PriceDetail from '../components/priceDetail/PriceDetail';
+import PriceDetail from '../components/order-book/OrderBook';
 import SignUp from '../components/auth/SignUp';
 import { useEffect } from 'react';
 import Chart from '../components/chart/Chart';
-import CryptoDetail from '../components/cryptoDetail/CryptoDetail';
+import CryptoDetail from '../components/crypto-info/CryptoDetail';
 import axios from 'axios';
 import { setUserInfo } from '../redux/features/userSlice';
 import { setSelectedCrypto, setCryptoRealTime } from '../redux/features/selectedCryptoSlice';
 import NoticeModal from '../components/modal/common/NoticeModal';
-import CryptoHeader from '../components/cryptoDetail/CryptoHeader';
+import CryptoHeader from '../components/crypto-info/CryptoHeader';
 import WorkingSpinnerModal from '../components/modal/trade/WorkingSpinnerModal';
 import { setWorkingSpinner } from '../redux/features/placeholderSlice';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
@@ -24,6 +23,15 @@ import KakaoCallback from '../components/auth/child/KakaoCallback';
 import { hideNoticeModal, showNoticeModal } from '../redux/features/modalSlice';
 import Login from '../components/auth/Login';
 import Header from '../components/header/Header';
+import { BREAKPOINTS } from '../responsive/breakpoints';
+import MobileDetail from '../responsive/components/MobileDetail';
+import AskingPrice from '../components/order-book/child/asking/AskingPrice';
+import ClosedPrice from '../components/order-book/child/closed/ClosedPrice';
+import CustomScrollbars from '../components/scrollbar/CustomScorllbars';
+import TradeSection from '../components/trading/TradeSection';
+import '../styles/priceDetail/trading/tradeSection.css';
+import '../styles/App.css';
+
 const API_URL = process.env.REACT_APP_API_URL;
 
 export default function Home() {
@@ -138,21 +146,39 @@ export default function Home() {
                             <header className="header">
                                 <Header />
                             </header>
-                            <div className='contents-container'>
-                                <article className='cryptoDetail'>
-                                    <CryptoHeader />
-                                    <CryptoDetail />
-                                    <Chart />
-                                </article>
-                                <article className='priceDetail'>
-                                    <PriceDetail />
-                                </article>
-                                <aside className="cryptoList">
-                                    <CryptoList />
-                                </aside>
-                            </div>
+                            {
+                                window.innerWidth <= BREAKPOINTS.mobilePortrait ? (
+                                    <div className='contents-container'>
+                                        <aside className="cryptoList">
+                                            <CryptoList />
+                                        </aside>
+                                    </div>
+                                ) :
+                                    (
+                                        <div className='contents-container'>
+                                            <article className='cryptoDetail'>
+                                                <CryptoHeader />
+                                                <CryptoDetail />
+                                                <Chart />
+                                            </article>
+                                            <article className='priceDetail'>
+                                                <CustomScrollbars
+                                                    hideScrollBar={true}
+                                                    style={{ width: '100%', height: '100%' }}>
+                                                    <AskingPrice />
+                                                    <ClosedPrice />
+                                                    <TradeSection />
+                                                </CustomScrollbars>
+                                            </article>
+                                            <aside className="cryptoList">
+                                                <CryptoList />
+                                            </aside>
+                                        </div>
+                                    )
+                            }
                         </>
                     } />
+                    <Route path="/detail/*" element={<MobileDetail />} />
                     <Route path="/login" element={<Login />} />
                     <Route path="/signup" element={<SignUp />} />
                     <Route path="/oauth/callback/kakao" element={<KakaoCallback />} />

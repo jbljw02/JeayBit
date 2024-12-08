@@ -13,24 +13,21 @@
     border-bottom: 1px solid #E3E8EC;
 }
 
-.trade-header {
+.trade-nav {
     display: flex;
     flex-direction: row;
     font-size: 16px;
     width: 100%;
     border-bottom: 1px solid #E3E8EC;
+    user-select: none;
 }
 
-.trade-header span {
+.trade-nav span {
     flex: 1;
     padding-top: 16px;
     padding-bottom: 16px;
     text-align: center;
     cursor: pointer;
-}
-
-.trade-header span:hover {
-    text-decoration: underline;
 }
 
 .trading-head-table,
@@ -189,22 +186,24 @@
 .trading-submit {
     display: flex;
     align-items: center;
+    justify-content: center;
     text-align: center;
     font-size: 16px;
     color: #ffffff;
-}
-
-.trading-submit span {
-    padding: 13px 165px;
+    width: 100%;
+    padding: 13px 15px;
+    margin: 0 14px;
+    border: none;
     border-radius: 3px;
     cursor: pointer;
+    font-weight: 400;
 }
 
-.trading-submit.buy span {
+.trading-submit.buy {
     background-color: #22ab94;
 }
 
-.trading-submit.sell span {
+.trading-submit.sell {
     background-color: #f23645;
 }
 
@@ -238,4 +237,56 @@
 
 .trading-submit-nonLogin span:nth-child(2) {
     padding: 13px 30px;
+}
+
+@media (max-width: 767px) {
+    .trade-section {
+        display: flex;
+        flex-direction: column;
+        min-height: 0;
+        flex: 1;
+        overflow: hidden;
+    }
+
+    .trade-nav {
+        display: flex;
+        flex-direction: row;
+        font-size: 14px;
+        width: 100%;
+        background-color: #f8f9fa;
+        flex-shrink: 0;
+    }
+    
+    .trade-nav span {
+        flex: 1;
+        padding: 9px 0;
+        text-align: center;
+        cursor: pointer;
+        background-color: #f8f9fa;
+    }
+
+    .buying-section,
+    .selling-section,
+    .trading-history-section {
+        background-color: #ffffff !important;
+        font-weight: bold;
+    }
+
+    .buying-section {
+        color: #22ab94;
+    }
+
+    .selling-section {
+        color: #f23645;
+    }
+
+    .trading-history-section {
+        color: #000000;
+    }
+
+    .trading-contents {
+        flex: 1;
+        overflow-y: auto;
+        height: auto;
+    }
 }
