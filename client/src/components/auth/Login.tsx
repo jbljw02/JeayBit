@@ -50,9 +50,7 @@ export default function Login() {
       return;
     }
 
-    if (loadingBarRef.current) {
-      loadingBarRef.current.continuousStart();
-    }
+    loadingBarRef.current?.continuousStart();
 
     try {
       setIsEmailEmpty(false);
@@ -88,9 +86,7 @@ export default function Login() {
         }
       }
     } finally {
-      if (loadingBarRef.current) {
-        loadingBarRef.current.complete();
-      }
+      loadingBarRef.current?.complete();
     }
   };
 

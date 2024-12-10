@@ -12,6 +12,7 @@ import { BREAKPOINTS } from "../../../../responsive/breakpoints";
 import { useNavigate } from "react-router-dom";
 import useToggleShortcuts from "../../../hooks/useToggleShortcuts";
 import ShortcutsButton from "../../../common/ShortcutsButton";
+import LoadingBar from "react-top-loading-bar";
 
 type Differences = {
     name: string;
@@ -19,20 +20,16 @@ type Differences = {
     newValue: number;
 }
 
-const API_URL = process.env.REACT_APP_API_URL;
-
 export default function ListTbody() {
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
 
     const selectAskingPrice = useSelectAskingPrice();
     const selectClosedPrice = useSelectClosedPrice();
-    const { toggleShortcuts } = useToggleShortcuts();
 
     const filteredData = useAppSelector(state => state.filteredData);
     const listCategory = useAppSelector(state => state.listCategory);
     const allCrypto = useAppSelector(state => state.allCrypto);
-    const user = useAppSelector(state => state.user);
     const selectedCrypto = useAppSelector(state => state.selectedCrypto);
 
     // 화폐 가격을 업데이트 하기 전에 해당 state에 담음
