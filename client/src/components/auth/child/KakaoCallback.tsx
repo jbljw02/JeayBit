@@ -1,10 +1,11 @@
-import React, { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { setUserInfo } from '../../../redux/features/userSlice';
 import { useAppDispatch } from '../../../redux/hooks';
 import { useNavigate } from 'react-router-dom';
 import { showNoticeModal } from '../../../redux/features/modalSlice';
 import checkCurrentScreen from '../../../utils/responsive/checkCurrentScreen';
+import WorkingSpinner from '../../modal/trade/WorkingSpinnerModal';
 
 const API_URL = process.env.REACT_APP_API_URL;
 
@@ -13,14 +14,18 @@ export default function KakaoCallback() {
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
 
+    const [isLoading, setIsLoading] = useState(true);
+
     useEffect(() => {
         const fetchData = async () => {
             const code = new URL(window.location.href).searchParams.get('code');
 
             if (code) {
                 try {
+                    setIsLoading(true);
+
                     // 카카오 인증 후 토큰 발급
-                    const response = await axios.post(`${API_URL}/oauth/callback/kakao/`, { code }, {
+                    const response = await axios.post(`${API_URL}/oauth/callback/kakao`, { code }, {
                         withCredentials: true
                     });
 
@@ -57,6 +62,8 @@ export default function KakaoCallback() {
                             buttonLabel: '확인',
                         }));
                     }
+                } finally {
+                    setIsLoading(false);
                 }
             }
         };
@@ -64,5 +71,7 @@ export default function KakaoCallback() {
         fetchData();
     }, [dispatch, navigate]);
 
-    return null;
+    return <WorkingSpinner
+        isModalOpen={isLoading}
+        setIsModalOpen={() => setIsLoading(false)} />
 }

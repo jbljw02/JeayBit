@@ -14,6 +14,7 @@ import ShortcutsButton from "../../../common/ShortcutsButton";
 import LoadingBar from "react-top-loading-bar";
 import checkCurrentScreen from "../../../../utils/responsive/checkCurrentScreen";
 import { BREAKPOINTS } from "../../../../responsive/breakpoints";
+import WorkingSpinner from "../../../modal/trade/WorkingSpinnerModal";
 
 type Differences = {
     name: string;
