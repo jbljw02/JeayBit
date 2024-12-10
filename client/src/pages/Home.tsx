@@ -1,17 +1,15 @@
-import CryptoList from '../components/cryptoList/CryptoList';
-import '../assets/App.css';
+import CryptoList from '../components/crypto-list/CryptoList';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import PriceDetail from '../components/priceDetail/PriceDetail';
+import PriceDetail from '../components/order-book/OrderBook';
 import SignUp from '../components/auth/SignUp';
 import { useEffect } from 'react';
 import Chart from '../components/chart/Chart';
-import CryptoDetail from '../components/cryptoDetail/CryptoDetail';
-import Header from '../header/Header';
+import CryptoDetail from '../components/crypto-info/CryptoDetail';
 import axios from 'axios';
 import { setUserInfo } from '../redux/features/userSlice';
 import { setSelectedCrypto, setCryptoRealTime } from '../redux/features/selectedCryptoSlice';
 import NoticeModal from '../components/modal/common/NoticeModal';
-import CryptoHeader from '../components/cryptoDetail/CryptoHeader';
+import CryptoHeader from '../components/crypto-info/CryptoHeader';
 import WorkingSpinnerModal from '../components/modal/trade/WorkingSpinnerModal';
 import { setWorkingSpinner } from '../redux/features/placeholderSlice';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
@@ -24,6 +22,13 @@ import useRequestCandle from '../components/hooks/useRequestCandle';
 import KakaoCallback from '../components/auth/child/KakaoCallback';
 import { hideNoticeModal, showNoticeModal } from '../redux/features/modalSlice';
 import Login from '../components/auth/Login';
+import Header from '../components/header/Header';
+import { BREAKPOINTS } from '../responsive/breakpoints';
+import MobileDetail from '../responsive/components/MobileDetail';
+import TradeSection from '../components/trading/TradeSection';
+import '../styles/price-detail/trading/tradeSection.css';
+import '../styles/App.css';
+import OrderBook from '../components/order-book/OrderBook';
 
 const API_URL = process.env.REACT_APP_API_URL;
 
@@ -139,21 +144,34 @@ export default function Home() {
                             <header className="header">
                                 <Header />
                             </header>
-                            <div className='contents-container'>
-                                <article className='cryptoDetail'>
-                                    <CryptoHeader />
-                                    <CryptoDetail />
-                                    <Chart />
-                                </article>
-                                <article className='priceDetail'>
-                                    <PriceDetail />
-                                </article>
-                                <aside className="cryptoList">
-                                    <CryptoList />
-                                </aside>
-                            </div>
+                            {
+                                window.innerWidth <= BREAKPOINTS.mobilePortrait ? (
+                                    <div className='contents-container'>
+                                        <aside className="crypto-list">
+                                            <CryptoList />
+                                        </aside>
+                                    </div>
+                                ) :
+                                    (
+                                        <div className='contents-container'>
+                                            <article className='crypto-info'>
+                                                <CryptoHeader />
+                                                <CryptoDetail />
+                                                <Chart />
+                                            </article>
+                                            <article className='price-detail'>
+                                                <OrderBook />
+                                                <TradeSection />
+                                            </article>
+                                            <aside className="crypto-list">
+                                                <CryptoList />
+                                            </aside>
+                                        </div>
+                                    )
+                            }
                         </>
                     } />
+                    <Route path="/detail/*" element={<MobileDetail />} />
                     <Route path="/login" element={<Login />} />
                     <Route path="/signup" element={<SignUp />} />
                     <Route path="/oauth/callback/kakao" element={<KakaoCallback />} />

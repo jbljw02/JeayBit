@@ -1,0 +1,18 @@
+.common-button {
+    font-size: 16px;
+    color: #ffffff;
+    width: 100%;
+    padding: 13px 15px;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    font-weight: 400;
+}
+
+.common-button.buy {
+    background-color: #22ab94;
+}
+
+.common-button.sell {
+    background-color: #f23645;
+}

@@ -1,0 +1,19 @@
+.mobile-nav {
+    display: flex;
+    font-size: 15px;
+    border-top: 1px solid #E3E8EC;
+    border-bottom: 1px solid #E3E8EC;
+}
+
+.mobile-nav span {
+    flex: 1;
+    text-align: center;
+    cursor: pointer;
+    padding: 12px 0px;
+}
+
+/* .active {
+    color: black;
+    font-weight: bold;
+    border-bottom: 3px solid black;
+} */

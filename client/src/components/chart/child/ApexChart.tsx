@@ -199,6 +199,6 @@ export default function ApexChart() {
       options={chartOptions}
       series={series}
       type="candlestick"
-      height='66%' />
+      height='90%' />
   );
 }

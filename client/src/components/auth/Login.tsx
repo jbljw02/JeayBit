@@ -6,14 +6,14 @@ import FormInput from "../input/FormInput";
 import InputWarning from "../input/InputWarning";
 import FaviconTitle from "./child/FaviconTitle";
 import formValueChange from "../../utils/formValueChange";
-import HeaderNav from "../../header/HeaderNav";
-import '../../styles/auth/authSection.css'
+import '../../styles/auth/authContainer.css'
 import { setUserInfo } from "../../redux/features/userSlice";
 import LoadingBar, { LoadingBarRef } from 'react-top-loading-bar';
 import AuthButton from "./child/AuthButton";
 import AuthFooter from "./child/AuthFooter";
 import Divider from "./child/Divider";
 import KakaoLoginButton from "./child/KakaoLoginButton";
+import HeaderNav from "../header/HeaderNav";
 
 const API_URL = process.env.REACT_APP_API_URL;
 
@@ -95,14 +95,14 @@ export default function Login() {
   };
 
   return (
-    <>
+    <div className="auth-container">
       <LoadingBar color="#22ab94" ref={loadingBarRef} />
       <HeaderNav />
-      <div className="container-auth">
+      <div className="auth-section">
         <FaviconTitle
           title="로그인"
           subtitle="24시간 깨어있는 JeayBit과 함께하세요." />
-        <div>
+        <div className="auth-form-container">
           <form onSubmit={submitLogin} className="form-auth" noValidate>
             <FormInput
               type="email"
@@ -154,6 +154,6 @@ export default function Login() {
             navigateString="/signUp" />
         </div>
       </div>
-    </>
+    </div>
   )
 }

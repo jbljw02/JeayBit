@@ -5,13 +5,13 @@ import InputWarning from "../input/InputWarning";
 import FormInput from "../input/FormInput";
 import formValueChange from "../../utils/formValueChange";
 import SignUpModal from "../modal/SignUpModal";
-import HeaderNav from "../../header/HeaderNav";
 import LoadingBar, { LoadingBarRef } from 'react-top-loading-bar';
 import AuthButton from "./child/AuthButton";
 import AuthFooter from "./child/AuthFooter";
-import '../../styles/auth/authSection.css'
+import '../../styles/auth/authContainer.css'
 import Divider from "./child/Divider";
 import KakaoLoginButton from "./child/KakaoLoginButton";
+import HeaderNav from "../header/HeaderNav";
 
 const API_URL = process.env.REACT_APP_API_URL;
 
@@ -125,17 +125,17 @@ export default function SignUp() {
   }
 
   return (
-    <>
+    <div className="auth-container">
       <LoadingBar color="#22ab94" ref={loadingBarRef} />
       <SignUpModal
         isModalOpen={signUpModal}
         setIsModalOpen={setSignUpModal} />
       <HeaderNav />
-      <div className="container-auth">
+      <div className="auth-section">
         <FaviconTitle
           title="회원가입"
           subtitle="JeayBit에 오신 것을 환영합니다!" />
-        <div>
+        <div className="auth-form-container">
           <form onSubmit={submitSignUp} className="form-auth" noValidate>
             <FormInput
               type="text"
@@ -212,6 +212,6 @@ export default function SignUp() {
             navigateString="/logIn" />
         </div>
       </div>
-    </>
+    </div>
   )
 }

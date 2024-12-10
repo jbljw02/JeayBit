@@ -1,0 +1,98 @@
+.orderbook {
+    display: flex;
+    flex-direction: column;
+    height: 433px;
+    width: 390px;
+    background-color: #fff;
+    border-radius: 4px;
+}
+
+.orderbook-section {
+    flex: 1;
+    overflow: hidden;
+}
+
+.orderbook-content {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.orderbook-table {
+    table-layout: fixed;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.orderbook-table thead tr {
+    border-bottom: 1px solid #E3E8EC;
+}
+
+.orderbook-table th:nth-child(1),
+.orderbook-table td:nth-child(1) {
+    text-align: left;
+}
+
+.orderbook-table th:nth-child(2),
+.orderbook-table td:nth-child(2) {
+    text-align: right;
+}
+
+.orderbook-table th:nth-child(3),
+.orderbook-table td:nth-child(3) {
+    text-align: right;
+}
+
+.orderbook-table thead th {
+    font-size: 14px;
+    padding: 10px 0px;
+    white-space: nowrap;
+}
+
+.orderbook-table th:nth-child(1),
+.orderbook-table td:nth-child(1) {
+    padding-left: 13px;
+}
+
+.orderbook-table th:nth-child(3),
+.orderbook-table td:nth-child(3) {
+    padding-right: 13px;
+}
+
+.orderbook-table td:nth-child(3) {
+    direction: rtl;
+}
+
+.orderbook-table thead span {
+    font-size: 13.5px;
+    font-weight: lighter;
+    padding-left: 1px;
+}
+
+.orderbook-table tbody td {
+    padding: 5px 0px;
+    font-size: 13.5px;
+    white-space: nowrap;
+}
+
+@media (max-width: 767px) {
+    .orderbook-section {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+    }
+
+    .orderbook-table.head {
+        height: auto;
+    }
+
+    .orderbook-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .orderbook-content {
+        flex: 1;
+        overflow-y: auto;
+    }
+}

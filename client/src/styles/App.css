@@ -1,0 +1,119 @@
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css");
+
+.container {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, 'Helvetica Neue', 'Segoe UI', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', sans-serif;
+  background-color: #f5f5f5;
+  color: #202630;
+  font-size: 14px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.header {
+  height: 60px;
+  background-color: #fff;
+  padding-left: 10px;
+  margin-bottom: 0.5rem;
+}
+
+.contents-container {
+  display: flex;
+  height: 100%;
+  width: 100%;
+  gap: 0.5rem;
+}
+
+.main {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  height: 100%;
+}
+
+.crypto-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-width: 0;
+  overflow: hidden;
+  background-color: #fff;
+  border-radius: 4px;
+}
+
+.price-detail {
+  flex: 0 0 390px;
+  min-width: 390px;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  gap: 8px;
+  border-radius: 4px;
+}
+
+.crypto-list {
+  flex: 0 0 400px;
+  min-width: 400px;
+  height: 100%;
+  background-color: #fff;
+  border-radius: 4px;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.no-drag {
+  user-select: none;
+}
+
+input:focus {
+  outline: none;
+}
+
+.rise {
+  color: #22ab94;
+}
+
+.fall {
+  color: #f23645;
+}
+
+.even {
+  color: #000000;
+}
+
+@media (max-width: 767px) {
+  .container {
+    background-color: #f5f5f5;
+  }
+
+
+  .header {
+    margin-bottom: 0.4rem;
+  }
+  
+  .contents-container {
+    background-color: #f5f5f5;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+  }
+
+  .crypto-info,
+  .price-detail {
+    display: none;
+  }
+
+  .crypto-list {
+    width: 100%;
+    /* 최소 너비 없애고 컨테이너 내용물에 따라 자동 조절 */
+    min-width: unset;
+    flex: none;
+  }
+}

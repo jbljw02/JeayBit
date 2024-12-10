@@ -1,0 +1,82 @@
+.crypto-header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    height: 83px;
+    border-bottom: 1px solid rgb(228, 229, 230);
+    padding: 0px 30px;
+    font-weight: bold;
+    font-size: 26px;
+    background-color: #fff;
+}
+
+.crypto-header-skeleton {
+    height: 61px;
+    padding: 17px 4px 5px 4px;
+    border-bottom: 1px solid rgb(228, 229, 230);
+    background-color: #fff;
+}
+
+.crypto-icon-wrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.crypto-img {
+    width: 24px;
+    margin-right: 7px;
+}
+
+.crypto-market {
+    font-size: 16px;
+    font-weight: bold;
+    color: rgba(0, 0, 0, 0.4);
+    margin-top: 7px;
+    margin-left: 5px;
+}
+
+@media (max-width: 767px) {
+    .crypto-header {
+        position: relative;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        height: 61px;
+        padding: 0px 5px;
+        font-weight: bold;
+        font-size: 20px;
+        border: none;
+    }
+
+    .back-btn-container {
+        position: absolute;
+        left: 15px;
+        bottom: 15px;
+        border: none;
+        background: none;
+        padding: 0;
+        cursor: pointer;
+    }
+
+    .shortcuts-btn-container {
+        position: absolute;
+        right: 15px;
+        bottom: 13px;
+        border: none;
+        background: none;
+        padding: 0;
+        cursor: pointer;
+    }
+
+    .crypto-img {
+        width: 21px;
+    }
+
+    .crypto-market {
+        font-size: 14px;
+        color: rgba(0, 0, 0, 0.4);
+        margin-top: 3px;
+    }
+}

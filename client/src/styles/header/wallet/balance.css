@@ -1,0 +1,48 @@
+.balance {
+    height: auto;
+}
+
+.balance-content {
+    display: flex;
+    flex-direction: row;
+    font-weight: lighter;
+}
+
+.balance-title {
+    flex: 1;
+    font-size: 16px;
+    padding: 0px 5px 0px 10px;
+}
+
+.balance-title span {
+    font-weight: bold;
+}
+
+.balance-amount {
+    text-align: end;
+    font-size: 16px;
+    border-bottom: 1px solid #dddddd;
+}
+
+.balance-amount span {
+    color: rgba(0, 0, 0, 0.3);
+}
+
+.balance-notice {
+    margin-top: 20px;
+    margin-left: 15px;
+    margin-bottom: 0px;
+    padding: 0px;
+    font-weight: lighter;
+    color: #6d6d6d;
+}
+
+@media (max-width: 767px) {
+    .balance-title {
+        font-size: 15px;
+    }
+
+    .balance-amount {
+        font-size: 15px;
+    }
+}
