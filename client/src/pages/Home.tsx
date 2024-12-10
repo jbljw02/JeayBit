@@ -71,7 +71,7 @@ export default function Home() {
                                 <Header />
                             </header>
                             {
-                                window.innerWidth <= BREAKPOINTS.mobilePortrait ? (
+                                window.innerWidth <= BREAKPOINTS.mobile ? (
                                     <div className='contents-container'>
                                         <aside className="crypto-list">
                                             <CryptoList />
