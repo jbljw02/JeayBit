@@ -1,6 +1,5 @@
 import ChangePrice from "../../components/crypto-info/child/ChangePrice";
 import ChangeRate from "../../components/crypto-info/child/ChangeRate";
-import Summary from "../../components/crypto-info/child/Summary";
 import SkeletonUI from "../../components/placeholder/SkeletonUI";
 import { useAppSelector } from "../../redux/hooks";
 import formatWithComas from "../../utils/format/formatWithComas";
@@ -18,7 +17,7 @@ export default function CryptoDetail() {
         <>
             {
                 allCrypto.length ?
-                    <div className="trading-detail">
+                    <div className="crypto-detail">
                         {
                             cryptoRealTime && cryptoRealTime.change && (
                                 <div className={priceClassName}>
@@ -40,7 +39,7 @@ export default function CryptoDetail() {
                     </div> :
                     <div className="crypto-detail-skeleton">
                         <SkeletonUI
-                            containerHeight="100%" elementsHeight={25} counts={4} />
+                            containerHeight="100%" elementsHeight={25} counts={3} />
                     </div>
             }
         </>

@@ -5,7 +5,7 @@ export default function LoginNavigator({ category }: { category: string }) {
     const backgroundColor = category === 'buy' ? '#22ab94' : '#f23645'
 
     return (
-        <div className="trading-submit-nonLogin">
+        <div className="trading-submit-non-login">
             <span
                 style={{ backgroundColor: backgroundColor }}
                 onClick={() => { navigate('/logIn') }}>로그인</span>

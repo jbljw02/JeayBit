@@ -1,29 +1,34 @@
 import { useState } from 'react';
 import Chart from '../../components/chart/Chart';
-import CryptoHeader from '../../components/crypto-info/CryptoHeader';
-import CryptoDetail from '../../components/crypto-info/CryptoDetail';
 import MobileAskingPrice from './MobileAskingPrice';
 import MobileClosedPrice from './MobileClosedPrice';
 import MobileTradeSection from './MobileTradeSection';
-import MobileNav from './MobileNav';
 import MobileCryptoDetail from './MobileCryptoDetail';
 import MobileCryptoHeader from './MobileCryptoHeader';
 import '../../styles/responsive/mobile/mobileDetail.css';
+import NavBar from '../../components/common/NavBar';
 
-export type TabType = 'chart' | 'asking' | 'closed' | 'trade';
+export type TabType = '주문' | '차트' | '호가' | '체결';
+
+const navItems = [
+    { label: '주문', color: '#000000' },
+    { label: '차트', color: '#000000' },
+    { label: '호가', color: '#000000' },
+    { label: '체결', color: '#000000' },
+];
 
 export default function MobileDetail() {
-    const [activeTab, setActiveTab] = useState<TabType>('chart');
+    const [activeTab, setActiveTab] = useState<TabType>('차트');
 
     const renderContent = () => {
         switch (activeTab) {
-            case 'chart':
+            case '차트':
                 return <Chart />;
-            case 'asking':
+            case '호가':
                 return <MobileAskingPrice />;
-            case 'closed':
+            case '체결':
                 return <MobileClosedPrice />;
-            case 'trade':
+            case '주문':
                 return <MobileTradeSection />;
             default:
                 return null;
@@ -36,9 +41,11 @@ export default function MobileDetail() {
                 <MobileCryptoHeader />
                 <MobileCryptoDetail />
                 <div className="mobile-content-wrapper">
-                    <MobileNav
-                        activeTab={activeTab}
-                        setActiveTab={setActiveTab} />
+                    <NavBar
+                        items={navItems}
+                        activeItem={activeTab}
+                        onItemClick={(label) => setActiveTab(label as TabType)}
+                        size="medium" />
                     <div className="mobile-tab-content">
                         {renderContent()}
                     </div>

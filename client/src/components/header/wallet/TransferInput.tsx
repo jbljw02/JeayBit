@@ -16,11 +16,13 @@ export default function TransferInput({ label,
     return (
         <div className={`transfer-input ${limitReached || amountEmpty ? "warning-border" : ""}`}>
             <div>{label}</div>
-            <input
-                onChange={onChange}
-                value={amount ? amount.toLocaleString() : ""}
-                placeholder="1,000 ~ 10,000,000" />
-            <span>KRW</span>
+            <div className="transfer-input-div">
+                <input
+                    onChange={onChange}
+                    value={amount ? amount.toLocaleString() : ""}
+                    placeholder="1,000 ~ 10,000,000" />
+                <span>KRW</span>
+            </div>
         </div>
     );
 }

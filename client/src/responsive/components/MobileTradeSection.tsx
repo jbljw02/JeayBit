@@ -5,6 +5,8 @@ import '../../styles/price-detail/trading/tradeSection.css';
 import TradeHistory from "../../components/trading/child/history/TradeHistory";
 import BuyingSection from "../../components/trading/child/section/BuyingSection";
 import SellingSection from "../../components/trading/child/section/SellingSection";
+import { SectionChange, tradeNavItems } from "../../components/trading/TradeSection";
+import NavBar from "../../components/common/NavBar";
 
 export type CeleryData = {
     name: string,
@@ -24,23 +26,11 @@ export default function MobileTradeSection() {
 
     return (
         <div className="trade-section">
-            <nav className="trade-nav">
-                <span
-                    className={`${sectionChange === '매수' ?
-                        'buying-section' :
-                        ''}`}
-                    onClick={() => setSectionChange('매수')}>매수</span>
-                <span
-                    className={`${sectionChange === '매도' ?
-                        'selling-section' :
-                        ''}`}
-                    onClick={() => setSectionChange('매도')}>매도</span>
-                <span
-                    className={`${sectionChange === '거래내역' ?
-                        'trading-history-section' :
-                        ''}`}
-                    onClick={() => setSectionChange('거래내역')}>거래내역</span>
-            </nav>
+            <NavBar
+                items={tradeNavItems}
+                activeItem={sectionChange}
+                onItemClick={(label) => setSectionChange(label as SectionChange)}
+                size="small" />
             {
                 sectionChange === '매수' ?
                     <BuyingSection /> :

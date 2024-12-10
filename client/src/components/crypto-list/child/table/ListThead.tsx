@@ -145,6 +145,6 @@ export default function ListThead() {
                     }
                 </tr>
             </thead>
-        </table >
+        </table>
     )
 }

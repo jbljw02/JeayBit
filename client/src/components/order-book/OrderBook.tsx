@@ -7,8 +7,8 @@ import '../../styles/crypto-info/cryptoDetail.css';
 type SectionChange = '호가내역' | '체결내역';
 
 const navItems = [
-  { label: '호가내역', color: '#22ab94' },
-  { label: '체결내역', color: '#f23645' },
+  { label: '호가내역', color: '#000000' },
+  { label: '체결내역', color: '#000000' },
 ];
 
 export default function OrderBook() {

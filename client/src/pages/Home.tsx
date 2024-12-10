@@ -147,7 +147,7 @@ export default function Home() {
                             {
                                 window.innerWidth <= BREAKPOINTS.mobilePortrait ? (
                                     <div className='contents-container'>
-                                        <aside className="cryptoList">
+                                        <aside className="crypto-list">
                                             <CryptoList />
                                         </aside>
                                     </div>

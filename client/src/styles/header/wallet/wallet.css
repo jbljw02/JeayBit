@@ -1,5 +1,7 @@
-.wallet-hover {
+.wallet-container {
     position: absolute;
+    display: flex;
+    flex-direction: column;
     top: 30px;
     right: 10px;
     width: 430px;
@@ -9,10 +11,6 @@
     box-shadow: 2px 2px 10px rgba(107, 107, 107, 0.3);
     cursor: auto;
     z-index: 999 !important;
-}
-
-.balance {
-    height: 178px;
 }
 
 .transfer-section {
@@ -51,11 +49,26 @@
 .change-input {
     background-color: #F5F5F5;
     border-radius: 4px;
-    margin-top: 20px;
-    margin-left: 10px;
-    width: 91%;
+    width: 100%;
     height: 95px;
     padding-left: 12px;
+    padding-right: 12px;
+    box-sizing: border-box;
+}
+
+.transfer-input-div,
+.change-input-div {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.change-input {
+    margin-top: 20px;
+}
+
+.change-input-div {
+    display: flex;
 }
 
 .warning-border {
@@ -64,27 +77,26 @@
 
 .warning-KRW {
     margin-top: 10px;
-    margin-left: 16px;
     font-size: 14px;
     font-weight: lighter;
     color: red;
 }
 
-.change-input-div {
-    display: flex;
-}
-
 .transfer-input div,
 .change-input div {
+    width: 100%;
     padding-top: 12px;
     font-size: 13.5px;
     font-weight: lighter;
 }
 
-.transfer-input span {
+.transfer-input span,
+.change-input span {
     font-size: 17px;
     color: rgba(0, 0, 0, 0.4);
-    margin-left: 6px;
+    text-align: end;
+    font-weight: bold;
+    margin-right: 5px;
 }
 
 .transfer-input input,
@@ -108,15 +120,6 @@
     outline: none;
 }
 
-.change-input-market {
-    font-size: 17px;
-    color: rgba(0, 0, 0, 0.4);
-    margin-left: 57px;
-    text-align: end;
-    margin-right: 20px;
-    font-weight: bold;
-}
-
 .transfer-submit {
     position: absolute;
     align-items: center;
@@ -127,65 +130,24 @@
     width: 100%;
 }
 
-.transfer-submit span {
-    background-color: #22ab94;
-    border-radius: 2px;
-    padding: 13px 186px;
-    margin-right: 3px;
-    cursor: pointer;
-}
-
-.transfer-submit.deposit span {
-    background-color: #22ab94;
-}
-
-.transfer-submit.withdraw span {
-    background-color: #f23645;
-}
-
-#balance-section {
-    color: #000000;
-    border-bottom: 4px solid #000000;
-    font-weight: bold;
-}
-
 .img-transfer-crypto {
     position: relative;
     width: 24px;
     top: 6px;
 }
 
-.balance-content {
+.wallet-content {
     display: flex;
-    flex-direction: row;
-    margin-top: 26px;
-    font-weight: lighter;
-}
-
-.balance-title {
+    flex-direction: column;
+    justify-content: space-between;
     flex: 1;
-    margin-left: 30px;
-    font-size: 16px;
+    min-height: 0;
+    padding: 20px 16px 16px 16px;
+    box-sizing: border-box;
 }
 
-.balance-title span {
-    font-weight: bold;
-}
-
-.balance-amount {
-    text-align: end;
-    margin-right: 20px;
-    font-size: 16px;
-    border-bottom: 1px solid #dddddd;
-}
-
-.balance-amount span {
-    color: rgba(0, 0, 0, 0.3);
-}
-
-.balance-notice {
-    margin-top: 21px;
-    margin-left: -10px;
-    font-weight: lighter;
-    color: #6d6d6d;
+@media (max-width: 767px) {
+    .wallet-container {
+        width: 80vw;
+    }
 }

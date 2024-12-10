@@ -5,16 +5,22 @@
     width: 100%;
     border-bottom: 1px solid #E3E8EC;
     user-select: none;
+    background-color: #fff;
 }
 
 .size-large {
     font-size: 16px;
-    padding: 16px 0px;
+    padding: 14px 0px;
+}
+
+.size-medium {
+    font-size: 15px;
+    padding: 12px 0px;
 }
 
 .size-small {
-    font-size: 15px;
-    padding: 12px 0px;
+    font-size: 14px;
+    padding: 10px 0px;
 }
 
 .nav-item {

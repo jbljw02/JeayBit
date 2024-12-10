@@ -27,6 +27,7 @@
     position: absolute;
     right: 1vw;
     font-size: 13px;
+    user-select: none;
   }
   
   .login,

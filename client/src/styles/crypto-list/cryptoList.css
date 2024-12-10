@@ -54,8 +54,8 @@
 
 #scrollbar-list-table {
     width: 100%;
-    /* 100vh에서 테이블을 제외한 다른 요소들의 값을 빼줘야 잘리지 않고 출력됨 */
     max-height: calc(100vh - 180px);
+    overflow-y: auto;
 }
 
 .list-table {
@@ -96,18 +96,13 @@
     left: 3.5px;
 }
 
-.list-table tr {
-    width: 100%;
-}
 
 .list-table tr td:nth-child(2) {
     text-align: right;
-    padding-right: 11px;
 }
 
 .list-table tr td:nth-child(3) {
     text-align: right;
-    padding-right: 12px;
 }
 
 .list-table tr td:nth-child(4) {
@@ -144,13 +139,13 @@
     background-color: #e6e6e6;
 }
 
-.span-star {
+.list-shortcuts-btn-container {
     position: relative;
-    bottom: 6px;
+    bottom: 3px;
 }
 
 .div-name {
-    padding-left: 13px;
+    padding-left: 12px;
     display: inline-block;
 }
 

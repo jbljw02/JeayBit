@@ -9,7 +9,7 @@ interface NavBarProps {
     items: NavItem[];
     activeItem: string;
     onItemClick: (id: string) => void;
-    size?: 'small' | 'large';
+    size?: 'large' | 'medium' | 'small';
 }
 
 export default function NavBar({

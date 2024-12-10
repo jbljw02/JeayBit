@@ -1,7 +1,4 @@
 import { useState, useEffect } from "react";
-import starOn from '../../../../assets/images/star-on.png'
-import starOff from '../../../../assets/images/star-off.png'
-import axios from "axios";
 import formatWithComas from "../../../../utils/format/formatWithComas";
 import CustomScrollbars from "../../../scrollbar/CustomScorllbars";
 import { setFavoriteCrypto, setOwnedCrypto } from "../../../../redux/features/userCryptoSlice";
@@ -11,9 +8,10 @@ import { setAskingSpinner } from "../../../../redux/features/placeholderSlice";
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
 import useSelectAskingPrice from "../../../hooks/useSelectAskingPrice";
 import useSelectClosedPrice from "../../../hooks/useSelectClosedPrice";
-import { showNoticeModal } from "../../../../redux/features/modalSlice";
 import { BREAKPOINTS } from "../../../../responsive/breakpoints";
 import { useNavigate } from "react-router-dom";
+import useToggleShortcuts from "../../../hooks/useToggleShortcuts";
+import ShortcutsButton from "../../../common/ShortcutsButton";
 
 type Differences = {
     name: string;
@@ -26,16 +24,17 @@ const API_URL = process.env.REACT_APP_API_URL;
 export default function ListTbody() {
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
-    
+
     const selectAskingPrice = useSelectAskingPrice();
     const selectClosedPrice = useSelectClosedPrice();
+    const { toggleShortcuts } = useToggleShortcuts();
 
     const filteredData = useAppSelector(state => state.filteredData);
     const listCategory = useAppSelector(state => state.listCategory);
     const allCrypto = useAppSelector(state => state.allCrypto);
     const user = useAppSelector(state => state.user);
     const selectedCrypto = useAppSelector(state => state.selectedCrypto);
-    
+
     // 화폐 가격을 업데이트 하기 전에 해당 state에 담음
     const [prevData, setPrevData] = useState<Record<string, number> | undefined>(undefined);
     // 화폐 가격의 변화를 저장
@@ -89,40 +88,9 @@ export default function ListTbody() {
         }
     }, [filteredData]);
 
-    // 로그인한 사용자에 대해 관심 화폐를 업데이트
-    const addFavoriteCrypto = async (email: string, cryptoName: string) => {
-        if (user.email) {
-            try {
-                const response = await axios.post(`${API_URL}/add_favoriteCrypto_to_user/`, {
-                    email: email,
-                    crypto_name: cryptoName,
-                });
-                return response.data.favorite_crypto
-            } catch (error) {
-                dispatch(showNoticeModal('관심 화폐 추가에 실패했습니다.'));
-            }
-        }
-    };
-
-    // 별 이미지를 클릭하면 관심 화폐 추가 요청
-    const starClick = async (crypto: Crypto, index: number, e: { stopPropagation: () => void; }) => {
-        e.stopPropagation();
-
-        if (!user.email) {
-            dispatch(showNoticeModal('관심 화폐를 추가하기 위해선 로그인이 필요합니다.'));
-            return;
-        }
-
-        const updatedFavoriteCrypto = favoriteCrypto.some(item => item.name === crypto.name)
-            ? favoriteCrypto.filter(item => item.name !== crypto.name)
-            : [...favoriteCrypto, crypto];
-        dispatch(setFavoriteCrypto(updatedFavoriteCrypto));
-        addFavoriteCrypto(user.email, filteredData[index].name);
-    };
-
     // 특정 화폐를 클릭했을 때
     const cryptoClick = async (value: Crypto) => {
-        if (value.market === selectedCrypto.market) {
+        if (value.market === selectedCrypto.market && window.innerWidth >= BREAKPOINTS.tabletPortrait) {
             return;
         }
 
@@ -198,11 +166,10 @@ export default function ListTbody() {
                                     key={i}
                                     onClick={() => cryptoClick(item)}>
                                     <td>
-                                        <span className="span-star">
-                                            <img
-                                                onClick={(e) => { starClick(item, i, e) }}
-                                                src={isFavorited ? starOn : starOff}
-                                                alt="star" />
+                                        <span className="list-shortcuts-btn-container">
+                                            <ShortcutsButton
+                                                isFavorited={isFavorited ? true : false}
+                                                iconWidth={14} />
                                         </span>
                                         <div className="div-name">
                                             <div>{item.name}</div>

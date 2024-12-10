@@ -59,62 +59,50 @@ export default function MobileAskingPrice() {
     }, [askingData, prevData]);
 
     return (
-        <>
-            <div className="orderbook-section">
-                {
-                    !askHide ?
-                        <>
-                            <table className="orderbook-table head">
-                                <thead>
-                                    <tr>
-                                        <th>등록시간</th>
-                                        <th>호가</th>
-                                        <th>
-                                            수량
-                                            <span>
-                                                ({
-                                                    selectedCrypto && selectedCrypto.market &&
-                                                    (selectedCrypto.market).slice(4)
-                                                })
-                                            </span>
-                                        </th>
-                                    </tr>
-                                </thead>
-                            </table>
-                            <div
-                                style={{ borderBottom: '1px solid #E3E8EC' }}
-                                className="orderbook-content">
-                                {
-                                    askingSpinner ?
-                                        <LoadingSpinner
-                                            containerHeight={'100%'}
-                                            size={40} /> :
-                                        (
-                                            askingData.length ?
-                                                <CustomScrollbars style={{ width: '100%', height: '100%' }}>
-                                                    <table className="orderbook-table">
-                                                        <tbody>
-                                                            <AskingTable
-                                                                differences={differences_bid}
-                                                                size={Number(totalBidSize)}
-                                                                category={'bid'} />
-                                                            <AskingTable
-                                                                differences={differences_ask}
-                                                                size={Number(totalAskSize)}
-                                                                category={'ask'} />
-                                                        </tbody>
-                                                    </table>
-                                                </CustomScrollbars> :
-                                                <SkeletonUI
-                                                    containerHeight="335px"
-                                                    elementsHeight={20} />
-                                        )
-                                }
-                            </div>
-                        </> :
-                        <div className="hide-element">...</div>
-                }
-            </div>
-        </>
+        <div className="orderbook-section">
+            <table className="orderbook-table thead">
+                <thead>
+                    <tr>
+                        <th>등록시간</th>
+                        <th>호가</th>
+                        <th>
+                            수량
+                            <span>
+                                ({
+                                    selectedCrypto && selectedCrypto.market &&
+                                    (selectedCrypto.market).slice(4)
+                                })
+                            </span>
+                        </th>
+                    </tr>
+                </thead>
+            </table>
+            {
+                askingSpinner ?
+                    <LoadingSpinner
+                        containerHeight={'100%'}
+                        size={40} /> :
+                    (
+                        askingData.length ?
+                            <CustomScrollbars>
+                                <table className="orderbook-table tbody">
+                                    <tbody>
+                                        <AskingTable
+                                            differences={differences_bid}
+                                            size={Number(totalBidSize)}
+                                            category={'bid'} />
+                                        <AskingTable
+                                            differences={differences_ask}
+                                            size={Number(totalAskSize)}
+                                            category={'ask'} />
+                                    </tbody>
+                                </table>
+                            </CustomScrollbars> :
+                            <SkeletonUI
+                                containerHeight="335px"
+                                elementsHeight={20} />
+                    )
+            }
+        </div>
     )
 }

@@ -1,19 +1,14 @@
 .header-nav {
     height: 50px;
     display: flex;
-    justify-content: center;
-    margin-left: 10px;
-    margin-top: 30px;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin: 8px 20px 10px 20px;
 }
 
-.back {
-    position: absolute;
-    left: 30px;
-    cursor: pointer;
-}
-
-.home {
-    position: absolute;
-    right: 30px;
-    cursor: pointer;
+@media (max-width: 767px) {
+    .header-nav {
+        display: none;
+    }
 }

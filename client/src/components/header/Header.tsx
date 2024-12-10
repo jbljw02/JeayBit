@@ -10,6 +10,7 @@ import { setUserTradeHistory, setUserTradeHistory_unSigned } from "../../redux/f
 import { setUser } from "../../redux/features/userSlice";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import useGetBalance from "../hooks/useGetBalance";
+import { useClickOutside } from "../hooks/useClickOutside";
 
 const API_URL = process.env.REACT_APP_API_URL;
 
@@ -17,7 +18,9 @@ export default function Header() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
+  const walletRef = useRef<HTMLSpanElement>(null);
   const loadingBarRef = useRef<LoadingBarRef>(null);
+
   const user = useAppSelector(state => state.user);
   const [walletHover, setWalletHover] = useState<boolean>(false);
 
@@ -50,19 +53,11 @@ export default function Header() {
     }
   };
 
+  useClickOutside(walletRef, () => setWalletHover(false));
   useGetBalance();
 
   return (
     <>
-      {/* 제목 폰트를 사용하기 위한 구글 폰트 api */}
-      <style>
-        @import
-        url('https://fonts.googleapis.com/css2?family=Asap+Condensed:wght@300&family=Barlow:ital@1&family=Fira+Sans:ital,wght@1,300&family=Gowun+Batang&family=Hind&display=swap');
-      </style>
-      <style>
-        @import
-        url('https://fonts.googleapis.com/css2?family=Asap+Condensed:wght@300&family=Barlow:ital@1&family=Fira+Sans:ital,wght@1,300&family=Gowun+Batang&family=Roboto+Flex&display=swap');
-      </style>
       <div className="header-container">
         <LoadingBar color="#22ab94" ref={loadingBarRef} />
         <div className="title">
@@ -105,8 +100,8 @@ export default function Header() {
                   로그아웃
                 </span>
                 <span
-                  onMouseEnter={() => setWalletHover(true)}
-                  onMouseLeave={() => setWalletHover(false)}
+                  ref={walletRef}
+                  onClick={() => setWalletHover(!walletHover)}
                   className="wallet">
                   지갑관리
                   {

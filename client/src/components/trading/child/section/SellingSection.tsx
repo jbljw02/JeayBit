@@ -17,6 +17,7 @@ import LoginNavigator from "../LoginNavigator";
 import SelectPercentage from "../SelectPercentage";
 import TradingThead from "../TradingThead";
 import CompleteModal from '../../../modal/trade/TradeModal'
+import TradingFooter from "../TradingFooter";
 
 export default function SellingSectioin() {
     const dispatch = useAppDispatch();
@@ -353,22 +354,11 @@ export default function SellingSectioin() {
                         </table>
                     </div>
             }
-            <div className="trading-footer">
-                {
-                    user.email ?
-                        <button
-                            className="trading-submit sell"
-                            onClick={() => {
-                                if (bidSort === '지정가') {
-                                    designatedSubmit();
-                                } else {
-                                    marketSubmit();
-                                }
-                            }}>매도</button> :
-                        <LoginNavigator
-                            category="sell" />
-                }
-            </div>
+            <TradingFooter
+                bidSort={bidSort}
+                designatedSubmit={designatedSubmit}
+                marketSubmit={marketSubmit}
+                category="sell" />
         </>
     )
 }

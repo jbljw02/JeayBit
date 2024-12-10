@@ -9,7 +9,7 @@ type AuthFooterProps = {
 export default function AuthFooter({ label, navigateString }: AuthFooterProps) {
     const navigate = useNavigate();
     return (
-    <div className="auth-footer">
+        <div className="auth-footer">
             <span onClick={() => navigate(navigateString)}>{label}</span>
         </div>
     )

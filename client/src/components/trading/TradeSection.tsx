@@ -19,13 +19,13 @@ export const bidSortOptions = [
     { id: 'radio2', value: '시장가', label: '시장가' },
 ];
 
-const navItems = [
+export const tradeNavItems = [
     { label: '매수', color: '#22ab94' },
     { label: '매도', color: '#f23645' },
     { label: '거래내역', color: '#000000' },
 ];
 
-type SectionChange = '매수' | '매도' | '거래내역';
+export type SectionChange = '매수' | '매도' | '거래내역';
 
 export default function TradeSection() {
     const [sectionChange, setSectionChange] = useState<SectionChange>('매수');
@@ -34,7 +34,7 @@ export default function TradeSection() {
     return (
         <div className="trade-section">
             <NavBar
-                items={navItems}
+                items={tradeNavItems}
                 activeItem={sectionChange}
                 onItemClick={(label) => setSectionChange(label as SectionChange)}
                 size="large" />

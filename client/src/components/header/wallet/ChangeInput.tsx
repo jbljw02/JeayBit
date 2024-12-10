@@ -3,7 +3,7 @@ type ChangeInputProps = {
     market: string;
 };
 
-export function ChangeInput({  amount, market }: ChangeInputProps) {
+export function ChangeInput({ amount, market }: ChangeInputProps) {
     return (
         <div className="change-input">
             <div>전환량</div>

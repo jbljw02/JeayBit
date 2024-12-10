@@ -17,7 +17,7 @@ export default function Chart() {
                 (candlePerDate.length || candlePerMinute.length) && !chartSpinner ?
                     <ApexChart /> :
                     <LoadingSpinner
-                        containerHeight={'60%'}
+                        containerHeight={'100%'}
                         size={60} />
             }
         </div>

@@ -1,4 +1,3 @@
-import ListCategory from "./child/ListCategory";
 import ListSearch from "./child/ListSearch";
 import ListTbody from "./child/table/ListTbody";
 import ListThead from "./child/table/ListThead";
@@ -72,7 +71,7 @@ export default function CryptoList() {
                 items={navItems}
                 activeItem={listCategory}
                 onItemClick={(label) => dispatch(setListCategory(label as SectionChange))}
-                size="small" />
+                size="medium" />
             <ListThead />
             {renderContent()}
         </>
