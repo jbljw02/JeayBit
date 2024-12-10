@@ -11,7 +11,7 @@
   justify-content: center;
   align-items: center;
   height: 100vh;
-  margin-bottom: 80px;
+  margin-bottom: 70px;
 }
 
 .auth-form-container {
@@ -55,8 +55,5 @@
 @media (max-width: 767px) {
   .auth-form-container {
     width: 80vw;
-  }
-  .auth-section {
-    margin-bottom: 0px;
   }
 }

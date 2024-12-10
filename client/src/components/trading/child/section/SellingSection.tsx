@@ -7,22 +7,21 @@ import calculatePercentage from "../../../../utils/calculatePercentage";
 import adjustInputValue from "../../../../utils/format/adjustInputValue";
 import formatWithComas from "../../../../utils/format/formatWithComas";
 import limitDecimalPlace from "../../../../utils/format/limitDecimalPlace";
-import useTradeHistory from "../../../hooks/useTradeHistory";
 import PriceRange from "../../../input/PriceRange";
 import TradeInput from "../../../input/TradeInput";
 import TradeFailedModal from "../../../modal/trade/TradeFailedModal";
 import WaitingModal from "../../../modal/trade/WatingModal";
 import { bidSortOptions } from "../../TradeSection";
-import LoginNavigator from "../LoginNavigator";
 import SelectPercentage from "../SelectPercentage";
 import TradingThead from "../TradingThead";
 import CompleteModal from '../../../modal/trade/TradeModal'
 import TradingFooter from "../TradingFooter";
+import useAddTradeHistory from "../../../hooks/useAddTradeHistory";
 
 export default function SellingSectioin() {
     const dispatch = useAppDispatch();
 
-    const { addTradeHistory } = useTradeHistory();
+    const addTradeHistory = useAddTradeHistory();
 
     const selectedCrypto = useAppSelector(state => state.selectedCrypto);
     const user = useAppSelector(state => state.user);
