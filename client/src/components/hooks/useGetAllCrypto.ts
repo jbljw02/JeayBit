@@ -16,7 +16,9 @@ export default function useGetAllCrypto() {
     
           dispatch(setAllCrypto(response.data.all_crypto));
         } catch (error) {
-          dispatch(showNoticeModal('서버 연결이 불안정합니다. 잠시 후 다시 시도해주세요.'));
+            dispatch(showNoticeModal({
+                content: '서버 연결이 불안정합니다. 잠시 후 다시 시도해주세요.',
+            }));
         }
     };
 

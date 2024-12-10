@@ -20,7 +20,9 @@ export default function useGetBalance() {
             );
             dispatch(setUserBalance(response.data.user_balance));
         } catch (error) {
-            dispatch(showNoticeModal('잔고를 불러오는 데 실패했습니다. 잠시 후 다시 시도해주세요.'));
+            dispatch(showNoticeModal({
+                content: '잔고를 불러오는 데 실패했습니다. 잠시 후 다시 시도해주세요.',
+            }));
         }
     }
 

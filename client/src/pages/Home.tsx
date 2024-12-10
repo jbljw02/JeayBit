@@ -121,7 +121,9 @@ export default function Home() {
                 dispatch(setSelectedCrypto(response.data.all_crypto[0]));
                 dispatch(setCryptoRealTime(response.data.all_crypto[0]));
             } catch (error) {
-                dispatch(showNoticeModal('서버 연결이 불안정합니다. 잠시 후 다시 시도해주세요.'));
+                dispatch(showNoticeModal({
+                    content: '서버 연결이 불안정합니다. 잠시 후 다시 시도해주세요.',
+                }));
             }
         };
 
@@ -135,8 +137,7 @@ export default function Home() {
                 setIsModalOpen={() => dispatch(setWorkingSpinner(false))} />
             <NoticeModal
                 isModalOpen={noticeModal.isOpen}
-                setIsModalOpen={() => dispatch(hideNoticeModal())}
-                content={noticeModal.content} />
+                setIsModalOpen={() => dispatch(hideNoticeModal())} />
             <BrowserRouter>
                 <Routes>
                     <Route path="/" element={

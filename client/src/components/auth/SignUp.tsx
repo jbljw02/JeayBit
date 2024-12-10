@@ -12,10 +12,16 @@ import '../../styles/auth/authContainer.css'
 import Divider from "./child/Divider";
 import KakaoLoginButton from "./child/KakaoLoginButton";
 import HeaderNav from "../header/HeaderNav";
+import { useAppDispatch } from "../../redux/hooks";
+import { showNoticeModal } from "../../redux/features/modalSlice";
+import { useNavigate } from "react-router-dom";
 
 const API_URL = process.env.REACT_APP_API_URL;
 
 export default function SignUp() {
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+
   const [activeInput, setActiveInput] = useState<string>('');
 
   const [name, setName] = useState<string>('');
@@ -90,13 +96,19 @@ export default function SignUp() {
       setIsEmailDuplicate(false);
       setIsPasswordEmpty(false);
 
-      await axios.post(`${API_URL}/sign_up/`, data, {
+      await axios.post(`${API_URL}/signup/`, data, {
         withCredentials: true,
       });
 
       setInvalidSubmit(false);
       setIsSubmitted(false);
       setSignUpModal(true);
+
+      dispatch(showNoticeModal({
+        content: '회원가입이 완료되었습니다.',
+        buttonLabel: '로그인',
+        onClick: () => navigate('/login')
+      }))
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
         if (error.response.data.error === '이름, 비밀번호, 이메일 모두 존재하지 않음') {
@@ -126,10 +138,7 @@ export default function SignUp() {
 
   return (
     <div className="auth-container">
-      <LoadingBar color="#22ab94" ref={loadingBarRef} />
-      <SignUpModal
-        isModalOpen={signUpModal}
-        setIsModalOpen={setSignUpModal} />
+      <LoadingBar color="#29D" ref={loadingBarRef} />
       <HeaderNav />
       <div className="auth-section">
         <FaviconTitle

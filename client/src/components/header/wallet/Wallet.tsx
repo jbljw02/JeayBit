@@ -92,12 +92,16 @@ export default function Wallet() {
                     depositAmount: depositAmount,
                 });
                 dispatch(setSuccessTransfer(true));
-                dispatch(showNoticeModal('입금이 성공적으로 완료되었습니다.'));
+                dispatch(showNoticeModal({
+                    content: '입금이 성공적으로 완료되었습니다.',
+                }));
                 dispatch(setTransferCategory('deposit'));
             } catch (error) {
                 dispatch(setFailTransfer(true));
                 dispatch(setTransferCategory('deposit'));
-                dispatch(showNoticeModal('입금에 실패했습니다. 잠시 후 다시 시도해주세요.'));
+                dispatch(showNoticeModal({
+                    content: '입금에 실패했습니다. 잠시 후 다시 시도해주세요.',
+                }));
             }
         }
     };
@@ -111,12 +115,16 @@ export default function Wallet() {
                     withdrawAmount: withdrawAmount,
                 });
                 dispatch(setSuccessTransfer(true));
-                dispatch(showNoticeModal('출금이 성공적으로 완료되었습니다.'));
+                dispatch(showNoticeModal({
+                    content: '출금이 성공적으로 완료되었습니다.',
+                }));
                 dispatch(setTransferCategory('withdraw'));
             } catch (error) {
                 dispatch(setFailTransfer(true));
                 dispatch(setTransferCategory('withdraw'));
-                dispatch(showNoticeModal('출금에 실패했습니다. 잠시 후 다시 시도해주세요.'));
+                dispatch(showNoticeModal({
+                    content: '출금에 실패했습니다. 잠시 후 다시 시도해주세요.',
+                }));
             }
         }
     };
@@ -154,7 +162,9 @@ export default function Wallet() {
         }
 
         if (withdrawAmount > user.balance) {
-            dispatch(showNoticeModal('출금량이 잔고를 초과했습니다.'));
+            dispatch(showNoticeModal({
+                content: '출금량이 잔고를 초과했습니다.',
+            }));
             setWithdrawOverflow(true);
             return;
         }

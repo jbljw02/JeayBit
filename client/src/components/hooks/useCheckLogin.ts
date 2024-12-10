@@ -15,7 +15,9 @@ export default function useCheckLogin() {
 
             return response.data;
         } catch (error) {
-            dispatch(showNoticeModal('사용자 정보 확인에 실패했습니다. 잠시 후 다시 접속해주세요.'));
+            dispatch(showNoticeModal({
+                content: '사용자 정보 확인에 실패했습니다. 잠시 후 다시 접속해주세요.',
+            }));
         }
     }
 

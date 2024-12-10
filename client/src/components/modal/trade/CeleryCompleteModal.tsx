@@ -22,7 +22,7 @@ export default function CeleryCompleteModal({ isModalOpen, setIsModalOpen, celer
                     position: 'absolute',
                     left: '50%',
                     top: '48%',
-                    width: 460,
+                    width: 'fit-content',
                     height: 165,
                     transform: 'translate(-50%, -50%)',
                     zIndex: 1001
@@ -32,30 +32,32 @@ export default function CeleryCompleteModal({ isModalOpen, setIsModalOpen, celer
                 <div className={styles.title}>
                     안내
                 </div>
-                {
-                    <div className={styles.content}>
-                        화폐의
-                        {
-                            celeryData.tradeCategory === 'BUY' ?
-                                <b style={{ color: '#22ab94' }}> 매수 </b> :
-                                <b style={{ color: '#f23645' }}> 매도 </b>
-                        }
-                        거래가 체결되었습니다.
-                        <div className={styles.contentDetail}>
-                            <div>거래 화폐 : <b>{celeryData.name}</b></div>
-                            <div>
-                                거래 요청시간 : <b>{celeryData.tradeTime &&
-                                    formatDateString(celeryData.tradeTime)}</b>
+                <div className={styles.contentContainer}>
+                    {
+                        <div className={styles.content}>
+                            화폐의
+                            {
+                                celeryData.tradeCategory === 'BUY' ?
+                                    <b style={{ color: '#22ab94' }}> 매수 </b> :
+                                    <b style={{ color: '#f23645' }}> 매도 </b>
+                            }
+                            거래가 체결되었습니다.
+                            <div className={styles.contentDetail}>
+                                <div>거래 화폐 : <b>{celeryData.name}</b></div>
+                                <div>
+                                    거래 요청시간 : <b>{celeryData.tradeTime &&
+                                        formatDateString(celeryData.tradeTime)}</b>
+                                </div>
+                                <div>거래가 : <b>{formatWithComas(celeryData.price)} KRW</b></div>
                             </div>
-                            <div>거래가 : <b>{formatWithComas(celeryData.price)} KRW</b></div>
                         </div>
-                    </div>
-                }
-                <button
-                    className='cursor-pointer'
-                    onClick={() => setIsModalOpen(false)}>
-                    확인
-                </button>
+                    }
+                    <button
+                        className={styles.modalButton}
+                        onClick={() => setIsModalOpen(false)}>
+                        확인
+                    </button>
+                </div>
             </div>
         </Modal>
     )

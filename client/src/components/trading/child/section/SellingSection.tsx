@@ -173,7 +173,7 @@ export default function SellingSectioin() {
     const processSellTrade = async (isMarketValue: boolean, price: number) => {
         // 주문총액이 잔고의 잔액을 넘으면 주문을 넣을 수 없음
         if (sellQuantity > selectedCrypto.owned_quantity) {
-            dispatch(showNoticeModal('주문 수량이 보유 화폐량을 초과했습니다.'));
+            dispatch(showNoticeModal({ content: '주문 수량이 보유 화폐량을 초과했습니다.' }));
             return;
         }
 

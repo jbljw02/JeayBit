@@ -1,12 +1,18 @@
 import Modal from 'react-modal';
 import styles from '../../../styles/modal/modal.module.css'
 import { ModalProps } from '../type/ModalProps';
+import { useAppSelector } from '../../../redux/hooks';
 
-type NoticeProps = ModalProps & {
-    content: string,
-}
+export default function NoticeModal({ isModalOpen, setIsModalOpen }: ModalProps) {
+    const noticeModal = useAppSelector(state => state.noticeModal);
 
-export default function NoticeModal({ isModalOpen, setIsModalOpen, content }: NoticeProps) {
+    const closeEvent = () => {
+        setIsModalOpen(false);
+        if (noticeModal.onClick) {
+            noticeModal.onClick();
+        }
+    }
+
     return (
         <Modal
             isOpen={isModalOpen}
@@ -20,7 +26,7 @@ export default function NoticeModal({ isModalOpen, setIsModalOpen, content }: No
                     position: 'absolute',
                     left: '50%',
                     top: '48%',
-                    width: 460,
+                    width: 'fit-content',
                     height: 145,
                     transform: 'translate(-50%, -50%)',
                     zIndex: 1001
@@ -30,16 +36,16 @@ export default function NoticeModal({ isModalOpen, setIsModalOpen, content }: No
                 <div className={styles.title}>
                     안내
                 </div>
-                <div className={styles.content} style={{ whiteSpace: 'pre-line' }}>
-                    {content}
+                <div className={styles.contentContainer}>
+                    <div className={styles.content} style={{ whiteSpace: 'pre-line' }}>
+                        {noticeModal.content}
+                    </div>
+                    <button
+                        className={styles.modalButton}
+                        onClick={closeEvent}>
+                        {noticeModal.buttonLabel || '확인'}
+                    </button>
                 </div>
-                <button
-                    className='cursor-pointer'
-                    onClick={() => {
-                        setIsModalOpen(false)
-                    }}>
-                    확인
-                </button>
             </div>
         </Modal>
     )

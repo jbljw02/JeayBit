@@ -96,7 +96,9 @@ export default function useTradeHistory() {
       dispatch(setUserTradeHistory(signed));
       dispatch(setUserTradeHistory_unSigned(unSigned));
     } catch (error) {
-      dispatch(showNoticeModal('거래 내역을 불러오는 데 실패했습니다. 잠시 후 다시 시도해주세요.'));
+      dispatch(showNoticeModal({
+        content: '거래 내역을 불러오는 데 실패했습니다. 잠시 후 다시 시도해주세요.',
+      }));
     }
   }
 

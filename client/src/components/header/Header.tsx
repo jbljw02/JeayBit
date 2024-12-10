@@ -44,7 +44,11 @@ export default function Header() {
       dispatch(setUserTradeHistory([]));
       dispatch(setUserTradeHistory_unSigned([]));
     } catch (error) {
-      dispatch(showNoticeModal('로그아웃에 실패했습니다. 잠시 후 다시 시도해주세요.'));
+      dispatch(showNoticeModal({
+        content: '로그아웃에 실패했습니다. 잠시 후 다시 시도해주세요.',
+        buttonLabel: '다시 시도',
+        onClick: () => logout(),
+      }));
     } finally {
       if (loadingBarRef.current) {
         loadingBarRef.current.complete();
@@ -59,7 +63,7 @@ export default function Header() {
   return (
     <>
       <div className="header-container">
-        <LoadingBar color="#22ab94" ref={loadingBarRef} />
+        <LoadingBar color="#29D" ref={loadingBarRef} />
         <div className="title">
           <img src={favicon} className="title-img" alt="제목" />
           <span
