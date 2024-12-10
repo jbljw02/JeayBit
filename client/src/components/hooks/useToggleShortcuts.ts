@@ -3,11 +3,14 @@ import { setFavoriteCrypto } from "../../redux/features/userCryptoSlice";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import axios from "axios";
 import { Crypto } from "../../redux/features/cryptoListSlice";
+import { useNavigate } from "react-router-dom";
 
 const API_URL = process.env.REACT_APP_API_URL;
 
 export default function useToggleShortcuts() {
     const dispatch = useAppDispatch();
+    const navigate = useNavigate();
+
     const user = useAppSelector(state => state.user);
     const favoriteCrypto = useAppSelector(state => state.favoriteCrypto);
     const filteredData = useAppSelector(state => state.filteredData);
@@ -22,17 +25,21 @@ export default function useToggleShortcuts() {
                 });
                 return response.data.favorite_crypto
             } catch (error) {
-                dispatch(showNoticeModal('관심 화폐 추가에 실패했습니다.'));
+                dispatch(showNoticeModal({ content: '관심 화폐 추가에 실패했습니다.' }));
             }
         }
     };
 
 
-    const toggleShortcuts = (crypto: Crypto,  e: { stopPropagation: () => void; }) => {
+    const toggleShortcuts = (crypto: Crypto, e: { stopPropagation: () => void; }) => {
         e.stopPropagation();
 
         if (!user.email) {
-            dispatch(showNoticeModal('관심 화폐를 추가하기 위해선 로그인이 필요합니다.'));
+            dispatch(showNoticeModal({
+                content: '관심 화폐를 추가하기 위해선 로그인이 필요합니다.',
+                buttonLabel: '로그인',
+                onClick: () => navigate('/login'),
+            }));
             return;
         }
 

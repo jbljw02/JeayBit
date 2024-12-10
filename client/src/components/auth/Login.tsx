@@ -59,7 +59,7 @@ export default function Login() {
       setIsPasswordEmpty(false);
 
       const data = { email, password };
-      const response = await axios.post(`${API_URL}/logIn/`, data, {
+      const response = await axios.post(`${API_URL}/login/`, data, {
         withCredentials: true,
       });
 
@@ -96,7 +96,7 @@ export default function Login() {
 
   return (
     <div className="auth-container">
-      <LoadingBar color="#22ab94" ref={loadingBarRef} />
+      <LoadingBar color="#29D" ref={loadingBarRef} />
       <HeaderNav />
       <div className="auth-section">
         <FaviconTitle

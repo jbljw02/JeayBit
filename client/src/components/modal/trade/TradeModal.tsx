@@ -15,7 +15,7 @@ export default function TradeModal({ isModalOpen, setIsModalOpen, category }: Tr
                     position: 'absolute',
                     left: '50%',
                     top: '48%',
-                    width: 460,
+                    width: 'fit-content',
                     height: 145,
                     transform: 'translate(-50%, -50%)',
                     zIndex: 1001
@@ -25,20 +25,22 @@ export default function TradeModal({ isModalOpen, setIsModalOpen, category }: Tr
                 <div className={styles.title}>
                     안내
                 </div>
-                {
-                    category === 'buy' ?
-                        <div className={styles.content}>
-                            성공적으로 화폐를 매수했습니다.
-                        </div> :
-                        <div className={styles.content}>
-                            성공적으로 화폐를 매도했습니다.
-                        </div>
-                }
-                <button
-                    className='cursor-pointer'
-                    onClick={() => setIsModalOpen(false)}>
-                    확인
-                </button>
+                <div className={styles.contentContainer}>
+                    {
+                        category === 'buy' ?
+                            <div className={styles.content}>
+                                성공적으로 화폐를 매수했습니다.
+                            </div> :
+                            <div className={styles.content}>
+                                성공적으로 화폐를 매도했습니다.
+                            </div>
+                    }
+                    <button
+                        className={styles.modalButton}
+                        onClick={() => setIsModalOpen(false)}>
+                        확인
+                    </button>
+                </div>
             </div>
         </Modal>
     )

@@ -65,7 +65,7 @@ export default function TradeHistory() {
             dispatch(cancelUnSignedOrder(ids));
 
             dispatch(setWorkingSpinner(false));
-            dispatch(showNoticeModal('주문 취소가 완료되었습니다.'));
+            dispatch(showNoticeModal({ content: '주문 취소가 완료되었습니다.' }));
         }
     }
 
@@ -78,7 +78,7 @@ export default function TradeHistory() {
             });
             dispatch(setScheduledCancel([]));
         } catch (error) {
-            dispatch(showNoticeModal('주문 취소에 실패했습니다. 잠시 후 다시 시도해주세요.'));
+            dispatch(showNoticeModal({ content: '주문 취소에 실패했습니다. 잠시 후 다시 시도해주세요.' }));
         }
     }
 

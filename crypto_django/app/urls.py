@@ -12,7 +12,7 @@ from .views.home_views import home
 from .views.kakao_views import KakaoLoginView
 
 urlpatterns = [
-    path("sign_up/", sign_up),
+    path("signup/", sign_up),
     path("login/", LoginView.as_view()),
     path("logout/", LogoutView.as_view()),
     path("check_login/", CheckLoginView.as_view()),

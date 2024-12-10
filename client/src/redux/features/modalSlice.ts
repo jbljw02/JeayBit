@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-type TradeModalProps ={
+type TradeModalProps = {
     isComplete: boolean;
     isFailed: boolean;
     isWaiting: boolean;
@@ -15,11 +15,15 @@ const initialTradeModalState: TradeModalProps = {
 type NoticeModalProps = {
     isOpen: boolean;
     content: string;
+    buttonLabel?: string;
+    onClick?: () => void;
 }
 
 const initialNoticeModalState: NoticeModalProps = {
     isOpen: false,
     content: '',
+    buttonLabel: '확인',
+    onClick: () => { },
 }
 
 const noticeModalSlice = createSlice({
@@ -28,7 +32,9 @@ const noticeModalSlice = createSlice({
     reducers: {
         showNoticeModal: (state, action) => {
             state.isOpen = true;
-            state.content = action.payload;
+            state.content = action.payload.content;
+            state.buttonLabel = action.payload.buttonLabel;
+            state.onClick = action.payload.onClick;
         },
         hideNoticeModal: (state) => {
             state.isOpen = false;

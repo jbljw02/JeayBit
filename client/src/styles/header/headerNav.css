@@ -4,11 +4,5 @@
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    margin: 8px 20px 10px 20px;
-}
-
-@media (max-width: 767px) {
-    .header-nav {
-        display: none;
-    }
+    margin: 12px 20px 00px 20px;
 }

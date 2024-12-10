@@ -7,7 +7,6 @@ import calculatePercentage from "../../../../utils/calculatePercentage";
 import adjustInputValue from "../../../../utils/format/adjustInputValue";
 import formatWithComas from "../../../../utils/format/formatWithComas";
 import limitDecimalPlace from "../../../../utils/format/limitDecimalPlace";
-import useTradeHistory from "../../../hooks/useTradeHistory";
 import PriceRange from "../../../input/PriceRange";
 import TradeInput from "../../../input/TradeInput";
 import TradeFailedModal from "../../../modal/trade/TradeFailedModal";
@@ -18,11 +17,12 @@ import SelectPercentage from "../SelectPercentage";
 import TradingThead from "../TradingThead";
 import CompleteModal from '../../../modal/trade/TradeModal'
 import TradingFooter from "../TradingFooter";
+import useAddTradeHistory from "../../../hooks/useAddTradeHistory";
 
 export default function BuyingSection() {
     const dispatch = useAppDispatch();
 
-    const { addTradeHistory } = useTradeHistory();
+    const addTradeHistory = useAddTradeHistory();
 
     const selectedCrypto = useAppSelector(state => state.selectedCrypto);
     const user = useAppSelector(state => state.user);
@@ -158,7 +158,7 @@ export default function BuyingSection() {
     const tradeSubmit = async (isMarketValue: boolean, price: number) => {
         // 주문총액이 잔고의 잔액을 넘으면 주문을 넣을 수 없음
         if (buyTotal > user.balance) {
-            dispatch(showNoticeModal('주문 총액이 잔고 보유량을 초과했습니다.'));
+            dispatch(showNoticeModal({ content: '주문 총액이 잔고 보유량을 초과했습니다.' }));
             return;
         }
 
