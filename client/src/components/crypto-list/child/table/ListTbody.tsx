@@ -8,11 +8,12 @@ import { setAskingSpinner } from "../../../../redux/features/placeholderSlice";
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
 import useSelectAskingPrice from "../../../hooks/useSelectAskingPrice";
 import useSelectClosedPrice from "../../../hooks/useSelectClosedPrice";
-import { BREAKPOINTS } from "../../../../responsive/breakpoints";
 import { useNavigate } from "react-router-dom";
 import useToggleShortcuts from "../../../hooks/useToggleShortcuts";
 import ShortcutsButton from "../../../common/ShortcutsButton";
 import LoadingBar from "react-top-loading-bar";
+import checkCurrentScreen from "../../../../utils/responsive/checkCurrentScreen";
+import { BREAKPOINTS } from "../../../../responsive/breakpoints";
 
 type Differences = {
     name: string;
@@ -87,7 +88,7 @@ export default function ListTbody() {
 
     // 특정 화폐를 클릭했을 때
     const cryptoClick = async (value: Crypto) => {
-        if (value.market === selectedCrypto.market && window.innerWidth >= BREAKPOINTS.tabletPortrait) {
+        if (value.market === selectedCrypto.market && window.innerWidth >= BREAKPOINTS.mobile) {
             return;
         }
 
@@ -100,7 +101,7 @@ export default function ListTbody() {
 
         dispatch(setAskingSpinner(false));
 
-        if (window.innerWidth < BREAKPOINTS.tabletPortrait) {
+        if (checkCurrentScreen() === 'mobile') {
             navigate('/detail');
         }
     }
