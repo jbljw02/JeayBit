@@ -98,7 +98,7 @@ export default function ListTbody() {
 
         dispatch(setAskingSpinner(false));
 
-        if (checkCurrentScreen() === 'mobile') {
+        if (checkCurrentScreen() === 'mobile' || 'tablet') {
             navigate('/detail');
         }
     }

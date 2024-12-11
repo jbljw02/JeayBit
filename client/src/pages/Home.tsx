@@ -23,6 +23,7 @@ import useGetAllCryptoInterval from '../components/hooks/useGetAllCryptoInterval
 import useInitialWork from '../components/hooks/useInitialWork';
 import { useEffect } from 'react';
 import WorkingSpinner from '../components/modal/trade/WorkingSpinnerModal';
+import checkCurrentScreen from '../utils/responsive/checkCurrentScreen';
 
 export default function Home() {
     const dispatch = useAppDispatch();
@@ -72,7 +73,7 @@ export default function Home() {
                                 <Header />
                             </header>
                             {
-                                window.innerWidth <= BREAKPOINTS.mobile ? (
+                                checkCurrentScreen() === 'mobile' || 'tablet' ? (
                                     <div className='contents-container'>
                                         <aside className="crypto-list">
                                             <CryptoList />

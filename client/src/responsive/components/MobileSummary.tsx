@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { setCryptoRealTime } from "../../redux/features/selectedCryptoSlice";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import formatWithComas from "../../utils/format/formatWithComas";
+import checkCurrentScreen from "../../utils/responsive/checkCurrentScreen";
 
 type ChildParams = {
     title: string,
@@ -54,6 +55,23 @@ export default function MobileSummary() {
                     value={cryptoRealTime.low_price}
                     category="low" />
             </div>
+            {/* 모바일 환경에선 두번째 dl 숨김 */}
+            {
+                checkCurrentScreen() === 'tablet' &&
+                <div>
+                    <DetailContent
+                        title="거래대금"
+                        value={cryptoRealTime.trade_price}
+                        suffix="KRW" />
+                    <DetailContent
+                        title="종가"
+                        value={cryptoRealTime.price} />
+                    <DetailContent
+                        title="저가"
+                        value={cryptoRealTime.low_price}
+                        category="low" />
+                </div>
+            }
         </div>
     );
 }

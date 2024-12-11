@@ -36,7 +36,7 @@
     font-size: 36px;
 }
 
-.crypto-price > div {
+.crypto-price>div {
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -58,6 +58,7 @@
 .even {
     color: black;
 }
+
 .div-dl {
     display: flex;
     flex-direction: row;
@@ -178,5 +179,37 @@ dd span {
     .img-price_fall,
     .img-price_even {
         width: 8px;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+    .crypto-detail {
+        border: none;
+        padding-left: 25px;
+    }
+
+    .crypto-price {
+        font-size: 32px;
+        display: flex;
+        flex-direction: column;
+        margin-top: 5px;
+    }
+
+    .crypto-change_rate {
+        font-size: 18px;
+        margin-left: 0;
+    }
+
+    .crypto-change_price {
+        font-size: 20px;
+        margin-top: 0;
+    }
+
+    dl {
+        width: 100%;
+    }
+
+    dd {
+        padding-left: 30px;
     }
 }
