@@ -32,44 +32,6 @@
     cursor: pointer;
 }
 
-.trading-head-table,
-.trading-table {
-    display: block;
-    padding-left: 11px;
-    padding-right: 15px;
-    font-size: 15px;
-    border-spacing: 0 10px;
-}
-
-.trading-choice {
-    width: 100%;
-}
-
-.trading-choice td {
-    font-size: 13.5px;
-}
-
-.trading-choice td:last-child {
-    padding-left: 10px;
-}
-
-.trading-choice td:nth-child(1) {
-    padding-left: 0px;
-}
-
-.trading-choice td:nth-child(2) {
-    padding-left: 17px;
-}
-
-.order-sort {
-    padding-right: 55px;
-}
-
-.trading-choice td:nth-child(1) {
-    font-size: 14px;
-    font-weight: bold;
-}
-
 .buying-section {
     font-weight: bold;
     color: #22ab94;
@@ -82,98 +44,118 @@
     border-bottom: 3px solid #f23645;
 }
 
+.trading-contents {
+    height: 100%;
+    overflow: hidden;
+    padding: 4px 15px;
+}
+
+.trading-head-section {
+    width: 100%;
+}
+
+.trading-section {
+    display: block;
+    font-size: 15px;
+    border-spacing: 0 10px;
+    width: 100%;
+}
+
+.trading-row {
+    display: flex;
+    align-items: center;
+    padding: 10px 0;
+    flex: 1;
+    width: 100%;
+}
+
+.trading-title {
+    font-size: 14px;
+    font-weight: bold;
+    min-width: 110px;
+    white-space: nowrap;
+}
+
+.trading-row-contents {
+    display: flex;
+    align-items: center;
+    justify-content: end;
+    font-size: 16px;
+    font-weight: bold;
+    flex: 1;
+    width: 100%;
+}
+
+.trading-row-contents span {
+    font-size: 11.5px;
+    color: rgba(0, 0, 0, 0.3);
+    font-weight: bold;
+    padding-top: 1.5px;
+    padding-left: 2.5px;
+}
+
+.trade-input {
+    display: flex;
+    flex-direction: row;
+    border: 1px solid #c7c6c6;
+    border-radius: 2px;
+    padding: 6px 2px;
+    width: 100%;
+}
+
+.trade-input input {
+    border: none;
+    font-size: 13.5px;
+    text-align: end;
+    flex: 1;
+}
+
+.trade-input span {
+    padding: 1.5px 3px 0px 2px;
+}
+
+.select-percentage {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    width: 100%;
+    margin-top: -10px;
+}
+
+.select-percentage span {
+    cursor: pointer;
+    flex: 1;
+    text-align: center;
+    font-size: 13.5px;
+    font-weight: 500;
+    color: #727272;
+}
+
+.select-percentage span:last-child {
+    margin-right: 0px;
+}
+
+.select-percentage span:first-child {
+    margin-left: 0px;
+}
+
 .trading-history-section {
     font-weight: bold;
     color: #000000;
     border-bottom: 3px solid #000000;
 }
 
-.trading-contents {
-    height: calc(100% - 50px);
-    overflow: hidden;
-}
-
-.trading-head-table {
-    padding-top: 4px;
-}
-
-.trading-table tr,
-.trading-head-table tr {
-    width: 100%;
-}
-
-.trading-category {
-    color: #000000;
-    font-size: 14px;
-    font-weight: bold;
-}
-
-.trading-available-trade {
-    padding-right: 4px;
-    font-size: 16px;
-    font-weight: bold;
-    text-align: end;
-}
-
-.trading-available-trade span {
-    font-size: 11.5px;
-    color: rgba(0, 0, 0, 0.3);
-    font-weight: bold;
-    padding-left: 2.5px;
-}
-
-.td-input {
-    border: 1px solid #c7c6c6;
-    border-radius: 2px;
-    width: 30%;
-    height: 28px;
-    padding-left: 15px;
-    margin-left: 5px;
-}
-
-.trade-input {
-    display: flex;
-}
-
-.trade-input span {
-    font-size: 11.5px;
-    color: rgba(0, 0, 0, 0.3);
-    font-weight: bold;
-    padding-left: 2px;
-    padding-top: 4.3px;
-    padding-right: 3px;
-}
-
-.trade-input input {
-    border: none;
-    width: 80%;
-    height: 20px;
-    font-size: 13.5px;
-    padding-left: 9px;
-    text-align: end;
-}
-
-.count-percentage span {
-    margin-left: 23px;
-    font-size: 13.5px;
-    cursor: pointer;
-}
-
-.count-percentage span:nth-child(1) {
-    margin-left: 0px;
-}
-
-.buy-percentage {
+#buy-percentage {
     color: #22ab94;
     font-weight: bold;
 }
 
-.sell-percentage {
+#sell-percentage {
     color: #f23645;
     font-weight: bold;
 }
 
-.non-selected-percentage {
+#non-selected-percentage {
     color: #727272;
 }
 
@@ -231,7 +213,7 @@
         background-color: #f8f9fa;
         flex-shrink: 0;
     }
-    
+
     .trade-nav span {
         flex: 1;
         padding: 9px 0;

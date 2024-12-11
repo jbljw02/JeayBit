@@ -90,12 +90,12 @@ export default function TradeHistory() {
                     selectedValue={historySort}
                     onChange={setHistorySort}
                     label="체결구분" />
-                <div
+                <button
                     id="trading-history-cancel"
                     style={{ visibility: historySort === '미체결' ? 'visible' : 'hidden' }}
                     onClick={cancelSubmit}>
                     주문 취소
-                </div>
+                </button>
             </div>
             <table className="table-trading-history" id={`${user.email !== '' ? 'historyHead' : ''}`}>
                 <thead>

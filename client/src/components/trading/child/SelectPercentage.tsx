@@ -1,36 +1,38 @@
 type Params = {
     percentage: string,
     onClick: (percentage: string) => void,
+    category: 'buy' | 'sell',
 }
 
-export default function SelectPercentage({ percentage, onClick }: Params) {
+export default function SelectPercentage({ percentage, onClick, category }: Params) {
+    console.log(percentage);
     return (
-        <>
-            <span className={
+        <div className="select-percentage">
+            <span id={
                 percentage === '10%' ?
-                    'buy-percentage' :
+                    `${category}-percentage` :
                     'non-selected-percentage'
             } onClick={() => (onClick('10%'))}>10%</span>
-            <span className={
+            <span id={
                 percentage === '25%' ?
-                    'buy-percentage' :
+                    `${category}-percentage` :
                     'non-selected-percentage'
             } onClick={() => (onClick('25%'))}>25%</span>
-            <span className={
+            <span id={
                 percentage === '50%' ?
-                    'buy-percentage' :
+                    `${category}-percentage` :
                     'non-selected-percentage'
             } onClick={() => (onClick('50%'))}>50%</span>
-            <span className={
+            <span id={
                 percentage === '75%' ?
-                    'buy-percentage' :
+                    `${category}-percentage` :
                     'non-selected-percentage'
             } onClick={() => (onClick('75%'))}>75%</span>
-            <span className={
+            <span id={
                 percentage === '100%' ?
-                    'buy-percentage' :
+                    `${category}-percentage` :
                     'non-selected-percentage'
             } onClick={() => (onClick('100%'))}>100%</span>
-        </>
+        </div>
     )
 }

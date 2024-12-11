@@ -3,6 +3,7 @@
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
+    padding: 4px 13px 4px 15px;
 }
 
 .history-scroll-container {
@@ -19,11 +20,6 @@
     table-layout: fixed;
 }
 
-#historyHead {
-    border-bottom: 1px solid #E3E8EC;
-    flex-shrink: 0;
-}
-
 #historyBody {
     border-top: none;
 }
@@ -36,7 +32,7 @@
     background-color: rgba(0, 0, 0, 0.16);
     color: #FFFFFF;
     cursor: pointer;
-    margin-right: 12px;
+    white-space: nowrap;
 }
 
 .table-trading-history thead th {
