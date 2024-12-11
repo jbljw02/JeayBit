@@ -17,5 +17,10 @@ export default function adjustSize(size: number) {
         str_size = str_size.slice(0, -1);
     }
 
+    if (str_size.includes('.')) {
+        const [integer, decimal] = str_size.split('.');
+        str_size = `${integer}.${decimal.substring(0, 5)}`;
+    }
+
     return str_size;
 }
