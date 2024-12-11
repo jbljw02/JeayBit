@@ -107,7 +107,7 @@ export default function SignUp() {
       dispatch(showNoticeModal({
         content: '회원가입이 완료되었습니다.',
         buttonLabel: '로그인',
-        onClick: () => navigate('/login')
+        actionType: 'REDIRECT_LOGIN'
       }))
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {

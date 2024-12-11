@@ -11,7 +11,7 @@ export default function CryptoDetail() {
     const allCrypto = useAppSelector(state => state.allCrypto);
 
     const priceClassName = `crypto-price ${cryptoRealTime.change === 'RISE' ? 'rise' :
-            cryptoRealTime.change === 'FALL' ? 'fall' : 'even'
+        cryptoRealTime.change === 'FALL' ? 'fall' : 'even'
         }`;
 
     return (
@@ -23,14 +23,16 @@ export default function CryptoDetail() {
                             cryptoRealTime && cryptoRealTime.change && (
                                 <div className={priceClassName}>
                                     {formatWithComas(cryptoRealTime.price)}
-                                    <ChangeRate />
-                                    {
-                                        cryptoRealTime && cryptoRealTime.change_price !== undefined && cryptoRealTime.change && (
-                                            <ChangePrice
-                                                changePrice={cryptoRealTime.change_price}
-                                                change={cryptoRealTime.change} />
-                                        )
-                                    }
+                                    <div>
+                                        {
+                                            cryptoRealTime && cryptoRealTime.change_price !== undefined && cryptoRealTime.change && (
+                                                <ChangePrice
+                                                    changePrice={cryptoRealTime.change_price}
+                                                    change={cryptoRealTime.change} />
+                                            )
+                                        }
+                                        <ChangeRate />
+                                    </div>
                                 </div>
                             )
                         }

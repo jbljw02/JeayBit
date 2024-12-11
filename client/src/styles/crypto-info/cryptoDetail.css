@@ -5,7 +5,7 @@
     align-items: flex-start;
     overflow: hidden;
     height: 125px;
-    padding: 30px 25px 0px 25px;
+    padding: 30px 25px 0px 30px;
     border-bottom: 1px solid #E3E8EC;
     background-color: #fff;
 }
@@ -27,7 +27,6 @@
 }
 
 .crypto-change_price {
-    margin-top: 4px;
     font-size: 20px;
     font-weight: lighter;
 }
@@ -35,6 +34,17 @@
 .crypto-price {
     font-weight: bold;
     font-size: 36px;
+}
+
+.crypto-price > div {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-top: 4px;
+    margin-left: 2px;
+    white-space: nowrap;
+    gap: 3px;
+    margin-top: 5px;
 }
 
 .rise {
@@ -136,6 +146,7 @@ dd span {
 @media (max-width: 767px) {
     .crypto-detail {
         border: none;
+        padding-left: 25px;
     }
 
     .crypto-price {
@@ -143,15 +154,6 @@ dd span {
         display: flex;
         flex-direction: column;
         margin-top: 5px;
-    }
-
-    .crypto-price > div {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        margin-top: 4px;
-        white-space: nowrap;
-        gap: 6px;
     }
 
     .crypto-change_rate {

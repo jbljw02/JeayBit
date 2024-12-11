@@ -9,11 +9,9 @@ const API_URL = process.env.REACT_APP_API_URL;
 
 export default function useToggleShortcuts() {
     const dispatch = useAppDispatch();
-    const navigate = useNavigate();
 
     const user = useAppSelector(state => state.user);
     const favoriteCrypto = useAppSelector(state => state.favoriteCrypto);
-    const filteredData = useAppSelector(state => state.filteredData);
 
     // 로그인한 사용자에 대해 관심 화폐를 업데이트
     const addFavoriteCrypto = async (email: string, cryptoName: string) => {
@@ -38,7 +36,7 @@ export default function useToggleShortcuts() {
             dispatch(showNoticeModal({
                 content: '관심 화폐를 추가하기 위해선 로그인이 필요합니다.',
                 buttonLabel: '로그인',
-                onClick: () => navigate('/login'),
+                actionType: 'REDIRECT_LOGIN'
             }));
             return;
         }

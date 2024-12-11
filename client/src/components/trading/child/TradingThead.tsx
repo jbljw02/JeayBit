@@ -14,29 +14,27 @@ type Params = {
 }
 
 export default function TradingThead({ options, selectedValue, onChange, label }: Params) {
-    const conditionalStyle = label === '체결구분' ? { paddingRight: '10px' } : {};
-
+    const conditionalStyle = label === '체결구분' ? { marginRight: '-30px' } : {};
     return (
-        <table className="trading-head-table">
-            <tbody>
-                <tr
-                    className="trading-choice">
-                    <td
-                        className='order-sort'
-                        style={conditionalStyle}>{label}</td>
-                    {
-                        options.map(option => (
-                            <td key={option.id}>
-                                <RadioInput
-                                    id={option.id}
-                                    checked={selectedValue === option.value}
-                                    onChange={() => onChange(option.value)}
-                                    label={option.label} />
-                            </td>
-                        ))
-                    }
-                </tr>
-            </tbody>
-        </table>
+        <div className="trading-head-section">
+            <div className="trading-row">
+                <div
+                    className='trading-title'
+                    style={conditionalStyle}>
+                    {label}
+                </div>
+                {
+                    options.map(option => (
+                        <div key={option.id} className="radio-option">
+                            <RadioInput
+                                id={option.id}
+                                checked={selectedValue === option.value}
+                                onChange={() => onChange(option.value)}
+                                label={option.label} />
+                        </div>
+                    ))
+                }
+            </div>
+        </div>
     )
 }

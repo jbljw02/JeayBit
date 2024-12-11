@@ -16,14 +16,14 @@ type NoticeModalProps = {
     isOpen: boolean;
     content: string;
     buttonLabel?: string;
-    onClick?: () => void;
+    actionType?: string;
 }
 
 const initialNoticeModalState: NoticeModalProps = {
     isOpen: false,
     content: '',
     buttonLabel: '확인',
-    onClick: () => { },
+    actionType: '',
 }
 
 const noticeModalSlice = createSlice({
@@ -34,11 +34,13 @@ const noticeModalSlice = createSlice({
             state.isOpen = true;
             state.content = action.payload.content;
             state.buttonLabel = action.payload.buttonLabel;
-            state.onClick = action.payload.onClick;
+            state.actionType = action.payload.actionType;
         },
         hideNoticeModal: (state) => {
             state.isOpen = false;
             state.content = '';
+            state.buttonLabel = '확인';
+            state.actionType = '';
         }
     }
 })

@@ -14,9 +14,7 @@ type ChildParams = {
 function DetailContent({ title, value, suffix, category }: ChildParams) {
     return (
         <dl>
-            <dt>
-                {title}
-            </dt>
+            <dt>{title}</dt>
             <dd className={`${category === 'high' ? 'dd-high_price' : (
                 category === 'low' ? 'dd-low_price' :
                     ''

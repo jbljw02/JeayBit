@@ -8,8 +8,15 @@ export default function NoticeModal({ isModalOpen, setIsModalOpen }: ModalProps)
 
     const closeEvent = () => {
         setIsModalOpen(false);
-        if (noticeModal.onClick) {
-            noticeModal.onClick();
+
+        if (noticeModal.actionType === 'LOGOUT') {
+            window.location.href = '/';
+        }
+        else if (noticeModal.actionType === 'REDIRECT_LOGIN') {
+            window.location.href = '/login';
+        }
+        else if (noticeModal.actionType === 'WINDOW_CLOSE') {
+            window.close();
         }
     }
 

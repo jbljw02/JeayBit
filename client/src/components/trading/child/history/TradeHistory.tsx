@@ -22,39 +22,12 @@ export default function TradeHistory() {
     const userTradeHistory_unSigned = useAppSelector(state => state.userTradeHistory_unSigned);
 
     const tableRef = useRef<HTMLTableElement | null>(null);
-    const [scrollHeight, setScrollHeight] = useState<number>(0); // 초기값 설정
 
     const [historySort, setHistorySort] = useState<string>('체결');
     const historySortOptions = [
         { id: 'radio-signed', value: '체결', label: '체결' },
         { id: 'radio-unSigned', value: '미체결', label: '미체결' },
     ];
-
-    useEffect(() => {
-        if (tableRef.current) {
-            // MutationObserver를 통해 DOM이 변화할 때마다 높이 확인
-            const observer = new MutationObserver(() => {
-                if (tableRef.current) {
-                    const tableHeight = tableRef.current.clientHeight;
-                    setScrollHeight(tableHeight > 305 ? 305 : tableHeight);
-                }
-            });
-
-            // tableRef.current 요소의 자식 목록과 하위 트리를 관찰
-            observer.observe(tableRef.current, { childList: true, subtree: true });
-
-            return () => {
-                observer.disconnect();
-            };
-        }
-    }, []);
-
-    useEffect(() => {
-        if (tableRef.current) {
-            const tableHeight = tableRef.current.offsetHeight;
-            setScrollHeight(tableHeight > 305 ? 305 : tableHeight);
-        }
-    }, [historySort]);
 
     const cancelSubmit = async () => {
         let ids: string[] = scheduledCancel.map(item => item.id);
@@ -90,12 +63,12 @@ export default function TradeHistory() {
                     selectedValue={historySort}
                     onChange={setHistorySort}
                     label="체결구분" />
-                <div
+                <button
                     id="trading-history-cancel"
                     style={{ visibility: historySort === '미체결' ? 'visible' : 'hidden' }}
                     onClick={cancelSubmit}>
                     주문 취소
-                </div>
+                </button>
             </div>
             <table className="table-trading-history" id={`${user.email !== '' ? 'historyHead' : ''}`}>
                 <thead>
