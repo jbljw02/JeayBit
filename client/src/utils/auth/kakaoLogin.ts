@@ -6,7 +6,7 @@ const KAKAO_REDIRECT_URI = process.env.REACT_APP_KAKAO_REDIRECT_URI;
 const kakaoLogin = () => {
     const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${KAKAO_REST_API_KEY}&redirect_uri=${KAKAO_REDIRECT_URI}&response_type=code`;
 
-    if (checkCurrentScreen() === 'mobile') {
+    if (checkCurrentScreen() === 'mobile' || checkCurrentScreen() === 'tablet') {
         window.location.href = KAKAO_AUTH_URL;
     } else {
         window.open(KAKAO_AUTH_URL, '_blank', 'width=500,height=600');

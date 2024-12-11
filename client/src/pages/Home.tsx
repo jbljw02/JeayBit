@@ -73,7 +73,7 @@ export default function Home() {
                                 <Header />
                             </header>
                             {
-                                checkCurrentScreen() === 'mobile' || 'tablet' ? (
+                                checkCurrentScreen() === 'mobile' || checkCurrentScreen() === 'tablet' ? (
                                     <div className='contents-container'>
                                         <aside className="crypto-list">
                                             <CryptoList />
