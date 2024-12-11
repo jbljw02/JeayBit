@@ -21,6 +21,7 @@ export default function CryptoHeader() {
                         <CryptoIconWrapper />
                         <div className="shortcuts-btn-container">
                             <ShortcutsButton
+                                crypto={selectedCrypto}
                                 isFavorited={favoriteCrypto.find(fav => fav.name === selectedCrypto.name) ? true : false}
                                 iconWidth={22} />
                         </div>

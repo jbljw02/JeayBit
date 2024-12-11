@@ -89,10 +89,6 @@ export default function ListTbody() {
 
     // 특정 화폐를 클릭했을 때
     const cryptoClick = async (value: Crypto) => {
-        if (value.market === selectedCrypto.market && window.innerWidth >= BREAKPOINTS.mobile) {
-            return;
-        }
-
         dispatch(setAskingSpinner(true));
 
         dispatch(setSelectedCrypto(value));
@@ -167,6 +163,7 @@ export default function ListTbody() {
                                     <td>
                                         <span className="list-shortcuts-btn-container">
                                             <ShortcutsButton
+                                                crypto={item}
                                                 isFavorited={isFavorited ? true : false}
                                                 iconWidth={14} />
                                         </span>

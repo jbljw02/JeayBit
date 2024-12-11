@@ -2,20 +2,20 @@ import { ReactComponent as StarIcon } from '../../assets/images/star.svg';
 import '../../styles/common/shortcutsButton.css';
 import useToggleShortcuts from '../../components/hooks/useToggleShortcuts';
 import { useAppSelector } from '../../redux/hooks';
+import { Crypto } from '../../redux/features/cryptoListSlice';
 
 type ShortcutsButtonProps = {
+    crypto: Crypto;
     isFavorited: boolean;
     iconWidth: number;
 }
 
-export default function ShortcutsButton({ isFavorited, iconWidth }: ShortcutsButtonProps) {
+export default function ShortcutsButton({ crypto, isFavorited, iconWidth }: ShortcutsButtonProps) {
     const { toggleShortcuts } = useToggleShortcuts();
-    
-    const selectedCrypto = useAppSelector(state => state.selectedCrypto);
 
     return (
         <button
-            onClick={(e) => { toggleShortcuts(selectedCrypto, e) }}
+            onClick={(e) => { toggleShortcuts(crypto, e) }}
             className="shortcuts-btn">
             <StarIcon
                 width={iconWidth}
