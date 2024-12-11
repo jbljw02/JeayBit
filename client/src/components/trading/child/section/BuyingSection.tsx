@@ -219,7 +219,7 @@ export default function BuyingSection() {
                 setIsModalOpen={() => dispatch(setIsTradeWaiting(false))}
                 category="buy" />
             {
-                // 매수 - 지정가 영역
+                // 매도 - 지정가 영역
                 bidSort === '지정가' ?
                     <div className="trading-contents">
                         <TradingThead
@@ -283,7 +283,7 @@ export default function BuyingSection() {
                             </div>
                         </div>
                     </div > :
-                    // 매수 - 시장가 영역
+                    // 매도 - 시장가 영역
                     <div className="trading-contents">
                         <TradingThead
                             options={bidSortOptions}

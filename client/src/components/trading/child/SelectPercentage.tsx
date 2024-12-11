@@ -5,7 +5,6 @@ type Params = {
 }
 
 export default function SelectPercentage({ percentage, onClick, category }: Params) {
-    console.log(percentage);
     return (
         <div className="select-percentage">
             <span id={

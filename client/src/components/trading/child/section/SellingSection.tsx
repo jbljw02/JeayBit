@@ -26,6 +26,7 @@ export default function SellingSectioin() {
     const selectedCrypto = useAppSelector(state => state.selectedCrypto);
     const user = useAppSelector(state => state.user);
     const tradeModal = useAppSelector(state => state.tradeModal);
+    const ownedCrypto = useAppSelector(state => state.ownedCrypto);
 
     const [selectedPercentage, setSelectedPercentage] = useState<string>('');
     const [bidSort, setBidSort] = useState<string>('지정가');
@@ -247,14 +248,14 @@ export default function SellingSectioin() {
                                 <div className="trading-title">주문가능</div>
                                 <div className="trading-row-contents">
                                     {
-                                        selectedCrypto.is_owned ?
-                                            selectedCrypto.owned_quantity :
+                                        ownedCrypto.find(crypto => crypto.name === selectedCrypto.name)?.is_owned ?
+                                            ownedCrypto.find(crypto => crypto.name === selectedCrypto.name)?.owned_quantity :
                                             0
                                     }
                                     <span>
                                         {
                                             selectedCrypto.market &&
-                                                (selectedCrypto.market).slice(4)
+                                            (selectedCrypto.market).slice(4)
                                         }
                                     </span>
                                 </div>
@@ -319,14 +320,14 @@ export default function SellingSectioin() {
                                 <div className="trading-title">주문가능</div>
                                 <div className="trading-row-contents">
                                     {
-                                        selectedCrypto.is_owned ?
-                                            selectedCrypto.owned_quantity :
+                                        ownedCrypto.find(crypto => crypto.name === selectedCrypto.name)?.is_owned ?
+                                            ownedCrypto.find(crypto => crypto.name === selectedCrypto.name)?.owned_quantity :
                                             0
                                     }
                                     <span>
                                         {
                                             selectedCrypto.market &&
-                                                (selectedCrypto.market).slice(4)
+                                            (selectedCrypto.market).slice(4)
                                         }
                                     </span>
                                 </div>
