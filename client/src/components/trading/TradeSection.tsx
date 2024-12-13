@@ -6,6 +6,7 @@ import '../../styles/price-detail/trading/tradeSection.css'
 import { useAppSelector } from "../../redux/hooks";
 import PlaceholderDisplay from "../placeholder/PlaceholderDisplay";
 import NavBar from "../common/NavBar";
+import checkCurrentScreen from "../../utils/responsive/checkCurrentScreen";
 
 export type CeleryData = {
     name: string,
@@ -31,8 +32,11 @@ export default function TradeSection() {
     const [sectionChange, setSectionChange] = useState<SectionChange>('매수');
     const user = useAppSelector(state => state.user);
 
+
     return (
-        <div className="trade-section">
+        <div
+            style={{ flex: checkCurrentScreen().device === 'mobile' ? 1 : undefined }}
+            className="trade-section">
             <NavBar
                 items={tradeNavItems}
                 activeItem={sectionChange}
