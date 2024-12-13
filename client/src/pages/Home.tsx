@@ -1,5 +1,5 @@
 import CryptoList from '../components/crypto-list/CryptoList';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom';
 import SignUp from '../components/auth/SignUp';
 import Chart from '../components/chart/Chart';
 import CryptoDetail from '../components/crypto-info/CryptoDetail';
@@ -22,7 +22,6 @@ import useGetTradeHistory from '../components/hooks/useGetTradeHistory';
 import useGetAllCryptoInterval from '../components/hooks/useGetAllCryptoInterval';
 import useInitialWork from '../components/hooks/useInitialWork';
 import { useEffect } from 'react';
-import WorkingSpinner from '../components/modal/trade/WorkingSpinnerModal';
 import checkCurrentScreen from '../utils/responsive/checkCurrentScreen';
 
 export default function Home() {
@@ -99,7 +98,11 @@ export default function Home() {
                             }
                         </>
                     } />
-                    <Route path="/detail/*" element={<MobileDetail />} />
+                    <Route path="/detail/*" element={
+                        checkCurrentScreen().device === 'mobile' || checkCurrentScreen().device === 'tablet' 
+                        ? <MobileDetail /> 
+                        : <Navigate to="/" replace />
+                    } />
                     <Route path="/login" element={<Login />} />
                     <Route path="/signup" element={<SignUp />} />
                     <Route path="/oauth/callback/kakao" element={<KakaoCallback />} />

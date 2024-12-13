@@ -16,7 +16,7 @@ const navItems = [
     { label: '관심', color: '#000000' },
 ];
 
-export default function CryptoList({ isFloat }: { isFloat?: boolean }) {
+export default function CryptoList() {
     const dispatch = useAppDispatch();
     
     const user = useAppSelector(state => state.user);

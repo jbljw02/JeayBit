@@ -22,7 +22,7 @@ type Differences = {
     newValue: number;
 }
 
-export default function ListTbody({ isFloat }: { isFloat?: boolean }) {
+export default function ListTbody() {
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
 

@@ -30,7 +30,7 @@ export default function CryptoHeader() {
                                 {
                                     isListOpen && checkCurrentScreen().device === 'laptop' &&
                                     <div className="list-container">
-                                        <CryptoList isFloat={true} />
+                                        <CryptoList />
                                     </div>
                                 }
                             </>
