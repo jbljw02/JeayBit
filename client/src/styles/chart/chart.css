@@ -3,6 +3,7 @@
     flex: 1;
     width: 100%;
     height: 100%;
+    min-width: 0;
 }
 
 .chart-container {
@@ -12,6 +13,7 @@
     flex: 1;
     min-height: 0;
     overflow: hidden;
+    min-width: 0;
 }
 
 .trading-header {
@@ -150,4 +152,16 @@
 
 .apexchart-tooltip div:last-child {
     margin-bottom: 0px;
+}
+
+@media (min-width: 1024px) and (max-width: 1279px) {
+    #chart {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .chart-container {
+        width: 100%;
+        min-width: 0;
+    }
 }
