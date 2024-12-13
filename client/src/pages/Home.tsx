@@ -46,9 +46,29 @@ export default function Home() {
         // orientationchange 이벤트 리스너(화면 회전)
         window.addEventListener('orientationchange', setVH);
 
+        // 스크롤 이벤트 리스너 추가 (모바일 주소창 숨김/표시 감지)
+        let lastScrollPosition = window.scrollY;
+        const handleScroll = () => {
+            const currentScrollPosition = window.scrollY;
+            if (Math.abs(currentScrollPosition - lastScrollPosition) > 50) {
+                setVH();
+                lastScrollPosition = currentScrollPosition;
+            }
+        };
+        window.addEventListener('scroll', handleScroll);
+
+        // 페이지 로드 완료 시점에서도 높이 재계산
+        window.addEventListener('load', setVH);
+
+        // 모바일 브라우저에서 주소창이 표시/숨김될 때도 높이 재계산
+        window.addEventListener('visibilitychange', setVH);
+
         return () => {
             window.removeEventListener('resize', setVH);
             window.removeEventListener('orientationchange', setVH);
+            window.removeEventListener('scroll', handleScroll);
+            window.removeEventListener('load', setVH);
+            window.removeEventListener('visibilitychange', setVH);
         };
     }, []);
 
@@ -99,7 +119,7 @@ export default function Home() {
                         </>
                     } />
                     <Route path="/detail/*" element={
-                        checkCurrentScreen().device !== 'desktop'  ?
+                        checkCurrentScreen().device !== 'desktop' ?
                             <MobileDetail /> :
                             <Navigate to="/" replace />
                     } />
