@@ -22,6 +22,7 @@ a {
 .container {
   display: flex;
   flex-direction: column;
+  overflow: hidden;
   height: 100vh;
   width: 100vw;
   font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, 'Helvetica Neue', 'Segoe UI', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', sans-serif;
@@ -75,16 +76,6 @@ a {
   gap: 8px;
   border-radius: 4px;
   min-height: 0;
-}
-
-.trading-contents {
-  flex: 1;
-  overflow-y: auto;
-  min-height: 0;
-}
-
-.trading-footer {
-  flex-shrink: 0;
 }
 
 .crypto-list {
@@ -146,7 +137,6 @@ input:focus {
   .container {
     background-color: #f5f5f5;
     height: calc(var(--vh, 1vh) * 100);
-    overflow-y: auto;
   }
 
   .crypto-list {
