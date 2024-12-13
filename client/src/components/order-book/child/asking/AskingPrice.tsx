@@ -81,7 +81,7 @@ export default function AskingPrice() {
                         size={40} /> :
                     (
                         askingData.length ?
-                            <CustomScrollbars>
+                            <CustomScrollbars id="scrollbar-orderbook">
                                 <table className="orderbook-table tbody">
                                     <tbody>
                                         <AskingTable
