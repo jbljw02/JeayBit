@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import Chart from '../../components/chart/Chart';
-import MobileAskingPrice from './MobileAskingPrice';
-import MobileClosedPrice from './MobileClosedPrice';
-import MobileTradeSection from './MobileTradeSection';
 import MobileCryptoHeader from './MobileCryptoHeader';
 import '../../styles/responsive/mobile/mobileDetail.css';
 import NavBar from '../../components/common/NavBar';
 import CryptoDetail from '../../components/crypto-info/CryptoDetail';
+import AskingPrice from '../../components/order-book/child/asking/AskingPrice';
+import ClosedPrice from '../../components/order-book/child/closed/ClosedPrice';
+import TradeSection from '../../components/trading/TradeSection';
 
 export type TabType = '주문' | '차트' | '호가' | '체결';
 
@@ -25,11 +25,11 @@ export default function MobileDetail() {
             case '차트':
                 return <Chart />;
             case '호가':
-                return <MobileAskingPrice />;
+                return <AskingPrice />;
             case '체결':
-                return <MobileClosedPrice />;
+                return <ClosedPrice />;
             case '주문':
-                return <MobileTradeSection />;
+                return <TradeSection />;
             default:
                 return null;
         }

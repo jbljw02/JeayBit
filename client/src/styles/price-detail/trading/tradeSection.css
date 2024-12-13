@@ -2,6 +2,7 @@
     display: flex;
     flex-direction: column;
     width: 100%;
+    height: 433px;
     background-color: #fff;
     border-radius: 4px;
 }
@@ -189,6 +190,16 @@
 
 .trading-submit-non-login button:nth-child(2) {
     margin-left: 0px;
+}
+
+@media (min-width: 1024px) and (max-width: 1279px) {
+    .trade-section {
+        display: flex;
+        flex-direction: column;
+        min-height: 0;
+        flex: 1;
+        overflow: hidden;
+    }
 }
 
 @media (max-width: 1023px) {

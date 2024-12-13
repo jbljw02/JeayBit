@@ -73,7 +73,7 @@ export default function Home() {
                             </header>
                             {
                                 checkCurrentScreen().device === 'mobile' || checkCurrentScreen().device === 'tablet' ? (
-                                <div className='contents-container'>
+                                    <div className='contents-container'>
                                         <aside className="crypto-list">
                                             <CryptoList />
                                         </aside>
@@ -99,9 +99,9 @@ export default function Home() {
                         </>
                     } />
                     <Route path="/detail/*" element={
-                        checkCurrentScreen().device === 'mobile' || checkCurrentScreen().device === 'tablet' 
-                        ? <MobileDetail /> 
-                        : <Navigate to="/" replace />
+                        checkCurrentScreen().device !== 'desktop'  ?
+                            <MobileDetail /> :
+                            <Navigate to="/" replace />
                     } />
                     <Route path="/login" element={<Login />} />
                     <Route path="/signup" element={<SignUp />} />
