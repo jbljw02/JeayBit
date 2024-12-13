@@ -166,6 +166,7 @@
     justify-content: center;
     width: 100%;
     padding-bottom: 12px;
+    flex-shrink: 0;
 }
 
 .trading-footer button {
@@ -193,8 +194,10 @@
 }
 
 @media (min-width: 1024px) and (max-width: 1279px) {
-    .trade-section {
+    .trading-contents {
         flex: 1;
+        overflow-y: auto;
+        height: auto;
     }
 }
 
