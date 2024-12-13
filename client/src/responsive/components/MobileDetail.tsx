@@ -3,10 +3,10 @@ import Chart from '../../components/chart/Chart';
 import MobileAskingPrice from './MobileAskingPrice';
 import MobileClosedPrice from './MobileClosedPrice';
 import MobileTradeSection from './MobileTradeSection';
-import MobileCryptoDetail from './MobileCryptoDetail';
 import MobileCryptoHeader from './MobileCryptoHeader';
 import '../../styles/responsive/mobile/mobileDetail.css';
 import NavBar from '../../components/common/NavBar';
+import CryptoDetail from '../../components/crypto-info/CryptoDetail';
 
 export type TabType = '주문' | '차트' | '호가' | '체결';
 
@@ -39,7 +39,7 @@ export default function MobileDetail() {
         <div className="mobile-detail">
             <div className="mobile-detail-content">
                 <MobileCryptoHeader />
-                <MobileCryptoDetail />
+                <CryptoDetail />
                 <div className="mobile-content-wrapper">
                     <NavBar
                         items={navItems}

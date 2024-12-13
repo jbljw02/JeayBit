@@ -1,8 +1,9 @@
 import { useAppSelector } from "../../../redux/hooks";
 import { useAppDispatch } from "../../../redux/hooks";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { setCryptoRealTime } from "../../../redux/features/selectedCryptoSlice";
 import formatWithComas from "../../../utils/format/formatWithComas";
+import CustomScrollbars from "../../scrollbar/CustomScorllbars";
 
 type ChildParams = {
     title: string,
@@ -28,6 +29,7 @@ function DetailContent({ title, value, suffix, category }: ChildParams) {
 
 export default function Summary() {
     const dispatch = useAppDispatch();
+    const containerRef = useRef<HTMLDivElement>(null);
 
     const allCrypto = useAppSelector(state => state.allCrypto);
     const cryptoRealTime = useAppSelector(state => state.cryptoRealTime);
@@ -37,8 +39,44 @@ export default function Summary() {
         dispatch(setCryptoRealTime(targetCrypto));
     }, [allCrypto, cryptoRealTime.market, dispatch]);
 
+    useEffect(() => {
+        const container = containerRef.current;
+        if (!container) return;
+
+        // 스크롤 위치에 따른 그라데이션 효과를 처리
+        const gradationHandler = () => {
+            // 왼쪽으로 스크롤됐는지 확인(스크롤 위치가 0보다 크면 true)
+            const isScrolledLeft = container.scrollLeft > 0;
+            // 오른쪽으로 스크롤 가능한지 확인(현재 스크롤 위치가 최대 스크롤 가능 너비보다 작으면 true)
+            const isScrolledRight = container.scrollLeft < (container.scrollWidth - container.clientWidth);
+
+            // mask-image 속성을 사용하여 그라데이션 효과 적용
+            // - 왼쪽 스크롤 시 20px 위치에서 그라데이션 시작
+            // - 오른쪽 스크롤 가능 시 끝에서 20px 앞에서 그라데이션 시작
+            container.style.maskImage = `
+                linear-gradient(
+                    to right,
+                    transparent,
+                    black ${isScrolledLeft ? '20px' : '0px'},
+                    black ${isScrolledRight ? 'calc(100% - 20px)' : '100%'},
+                    transparent
+                )
+            `;
+
+            // Safari 
+            container.style.webkitMaskImage = container.style.maskImage;
+        };
+
+        container.addEventListener('scroll', gradationHandler);
+        gradationHandler(); // 초기 실행
+
+        return () => container.removeEventListener('scroll', gradationHandler);
+    }, []);
+
     return (
-        <div className="div-dl">
+        <div
+            className="summary-container"
+            ref={containerRef}>
             <div>
                 <DetailContent
                     title="거래량"

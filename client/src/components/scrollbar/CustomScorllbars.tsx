@@ -18,31 +18,21 @@ const CustomScrollbars: React.FC<CustomScrollbarsProps> = ({ children, hideScrol
       width: '5px', // 스크롤바의 너비 설정
       height: '30px', // 스크롤바의 높이 설정
       marginLeft: '1px',
-      opacity: hideScrollBar || !isHovered ? 0 : 1, // 파라미터와 호버 상태에 따라 스크롤바 숨기기
-      transition: 'opacity 0.3s ease', // 애니메이션 효과 추가
+      opacity: isHovered ? 1 : 0,
+      transition: 'opacity 0.3s ease',
     };
     return <div style={{ ...style, ...thumbStyle }} {...props} />;
   };
 
-  const handleScroll = () => {
-    setIsHovered(true);
-    setTimeout(() => {
-      setIsHovered(false);
-    }, 1000); // 스크롤 후 1초 동안 스크롤바 보이기
-  };
-
   return (
-    <div
+    <Scrollbars
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      onScroll={handleScroll}
-      style={{ height: '100%' }}>
-      <Scrollbars
-        renderThumbVertical={renderThumb}
-        {...props}>
-        {children}
-      </Scrollbars>
-    </div>
+      style={{ height: '100%' }}
+      renderThumbVertical={renderThumb}
+      {...props}>
+      {children}
+    </Scrollbars>
   );
 };
 
