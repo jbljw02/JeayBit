@@ -84,7 +84,7 @@ export default function Header() {
               </span>
               <span
                 onClick={() => {
-                  navigate("/signUp");
+                  navigate("/signup");
                 }}
                 className="signUp">
                 회원가입

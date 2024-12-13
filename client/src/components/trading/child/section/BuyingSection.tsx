@@ -284,11 +284,6 @@ export default function BuyingSection() {
                                     </div>
                                 </div>
                             </div>
-                            <TradingFooter
-                                bidSort={bidSort}
-                                designatedSubmit={designatedSubmit}
-                                marketSubmit={marketSubmit}
-                                category="buy" />
                         </div>
                     </CustomScrollbars> :
                     // 매도 - 시장가 영역
@@ -326,14 +321,14 @@ export default function BuyingSection() {
                                     </div>
                                 </div>
                             </div>
-                            <TradingFooter
-                                bidSort={bidSort}
-                                designatedSubmit={designatedSubmit}
-                                marketSubmit={marketSubmit}
-                                category="buy" />
                         </div>
                     </CustomScrollbars>
             }
+            <TradingFooter
+                bidSort={bidSort}
+                designatedSubmit={designatedSubmit}
+                marketSubmit={marketSubmit}
+                category="buy" />
         </>
     )
 }

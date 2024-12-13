@@ -199,6 +199,22 @@
     margin-left: 0px;
 }
 
+@media (min-width: 1024px) and (max-width: 1279px) {
+    .trade-section {
+        display: flex;
+        flex-direction: column;
+        min-height: 0;
+        flex: 1;
+        overflow: hidden;
+    }
+    
+    .trading-contents {
+        overflow-y: auto;
+        flex: 1;
+        height: auto;
+    }
+}
+
 @media (max-width: 1023px) {
     .trade-section {
         display: flex;
@@ -248,22 +264,6 @@
         color: #000000;
     }
 
-    .trading-contents {
-        flex: 1;
-        overflow-y: auto;
-        height: auto;
-    }
-}
-
-@media (min-width: 1024px) and (max-width: 1279px) {
-    .trade-section {
-        display: flex;
-        flex-direction: column;
-        min-height: 0;
-        flex: 1;
-        overflow: hidden;
-    }
-    
     .trading-contents {
         flex: 1;
         overflow-y: auto;
