@@ -13,11 +13,11 @@
 .crypto-detail-skeleton {
     justify-content: center;
     align-items: center;
-    width: 100%;
     height: 134px;
     padding: 4px 5px 17px 5px;
     border-bottom: 1px solid #E3E8EC;
     background-color: #fff;
+    overflow: hidden;
 }
 
 .crypto-change_rate {

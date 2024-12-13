@@ -43,10 +43,9 @@
     border: 1px solid #E3E8EC;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     width: 400px;
-    height: 600px;
     display: flex;
     flex-direction: column;
-    overflow: hidden;
+    overflow: auto;
 }
 
 .crypto-market {
