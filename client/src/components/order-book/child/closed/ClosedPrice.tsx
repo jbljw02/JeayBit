@@ -46,7 +46,7 @@ export default function ClosedPrice() {
                                         (
 
                                             askingData.length ?
-                                                <CustomScrollbars style={{ width: '100%', height: '100%' }}>
+                                                <CustomScrollbars id="scrollbar-orderbook">
                                                     <table className="orderbook-table">
                                                         <tbody>
                                                             {

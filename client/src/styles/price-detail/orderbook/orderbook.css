@@ -8,6 +8,8 @@
 }
 
 .orderbook-section {
+    display: flex;
+    flex-direction: column;
     flex: 1;
     overflow: hidden;
 }
@@ -16,6 +18,11 @@
     display: flex;
     flex-direction: column;
     height: 100%;
+}
+
+#scrollbar-orderbook {
+    overflow-y: auto;
+    flex: 1;
 }
 
 .orderbook-table {
@@ -73,6 +80,18 @@
     padding: 5px 0px;
     font-size: 13.5px;
     white-space: nowrap;
+}
+
+@media (min-width: 1024px) and (max-width: 1279px) {
+    .orderbook-section {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        flex: 1; 
+        min-height: 0;
+        border-radius: 4px;
+        overflow: hidden;
+    }
 }
 
 @media (max-width: 1023px) {

@@ -25,8 +25,13 @@
 
 .nav-user {
   font-size: 13px;
+  padding-right: 30px;
   user-select: none;
   padding-right: 32px;
+}
+
+.user-name u {
+  cursor: default;
 }
 
 .user-name u {
