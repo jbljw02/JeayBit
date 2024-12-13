@@ -7,12 +7,6 @@
     border-radius: 4px;
 }
 
-.trading-scroll-wrapper {
-    display: flex;
-    flex-direction: column;
-    min-height: 100%;
-}
-
 .trading-contents {
     flex: 1;
     padding: 0px 15px 0px 15px;
@@ -254,6 +248,22 @@
         color: #000000;
     }
 
+    .trading-contents {
+        flex: 1;
+        overflow-y: auto;
+        height: auto;
+    }
+}
+
+@media (min-width: 1024px) and (max-width: 1279px) {
+    .trade-section {
+        display: flex;
+        flex-direction: column;
+        min-height: 0;
+        flex: 1;
+        overflow: hidden;
+    }
+    
     .trading-contents {
         flex: 1;
         overflow-y: auto;
