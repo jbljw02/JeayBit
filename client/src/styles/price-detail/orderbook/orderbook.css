@@ -1,13 +1,15 @@
 .orderbook {
     display: flex;
     flex-direction: column;
+    width: 100%;
     height: 433px;
-    width: 390px;
     background-color: #fff;
     border-radius: 4px;
 }
 
 .orderbook-section {
+    display: flex;
+    flex-direction: column;
     flex: 1;
     overflow: hidden;
 }
@@ -16,6 +18,11 @@
     display: flex;
     flex-direction: column;
     height: 100%;
+}
+
+#scrollbar-orderbook {
+    overflow-y: auto;
+    flex: 1;
 }
 
 .orderbook-table {
@@ -75,7 +82,23 @@
     white-space: nowrap;
 }
 
-@media (max-width: 767px) {
+@media (min-width: 1024px) and (max-width: 1279px) {
+    .orderbook {
+        flex: 1;
+    }
+
+    .orderbook-section {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        flex: 1;
+        min-height: 0;
+        border-radius: 4px;
+        overflow: hidden;
+    }
+}
+
+@media (max-width: 1023px) {
     .orderbook-section {
         display: flex;
         flex-direction: column;

@@ -57,9 +57,9 @@ export default function ListThead() {
     return (
         <table className="list-table">
             <colgroup>
-                <col width="35%" />
-                <col width="21%" />
-                <col width="21%" />
+                <col width="33%" />
+                <col width="22%" />
+                <col width="22%" />
                 <col width="23%" />
             </colgroup>
             <thead className="list-thead no-drag">
@@ -67,79 +67,79 @@ export default function ListThead() {
                     {
                         listCategory !== '보유' ?
                             <>
-                                <th className="name">
-                                    <div onClick={() => sortClick(0)}>
+                                <th id="th-name">
+                                    <button onClick={() => sortClick(0)}>
                                         화폐명
                                         <img
                                             className="sort"
                                             src={sortImages[sortStates[0]]}
                                             alt="화폐명" />
-                                    </div>
+                                    </button>
                                 </th>
-                                <th className="price">
-                                    <div onClick={() => sortClick(1)}>
+                                <th id="th-price">
+                                    <button onClick={() => sortClick(1)}>
                                         현재가
                                         <img
                                             className="sort"
                                             src={sortImages[sortStates[1]]}
                                             alt="현재가" />
-                                    </div>
+                                    </button>
                                 </th>
-                                <th className="compare">
-                                    <div onClick={() => sortClick(2)}>
+                                <th id="th-compare">
+                                    <button onClick={() => sortClick(2)}>
                                         전일대비
                                         <img
                                             className="sort"
                                             src={sortImages[sortStates[2]]}
                                             alt="전일대비" />
-                                    </div>
+                                    </button>
                                 </th>
-                                <th className="volume">
-                                    <div onClick={() => sortClick(3)}>
+                                <th id="th-volume">
+                                    <button onClick={() => sortClick(3)}>
                                         거래대금
                                         <img
                                             className="sort"
                                             src={sortImages[sortStates[3]]}
                                             alt="거래대금" />
-                                    </div>
+                                    </button>
                                 </th>
                             </> :
                             <>
-                                <th className="name">
-                                    <div onClick={() => sortClick(0)}>
+                                <th id="th-name">
+                                    <button onClick={() => sortClick(0)}>
                                         화폐명
                                         <img
                                             className="sort"
                                             src={sortImages[sortStates[0]]}
                                             alt="화폐명" />
-                                    </div>
+                                    </button>
                                 </th>
-                                <th className="price">
-                                    <div onClick={() => sortClick(1)}>
+                                <th id="th-price">
+                                    <button onClick={() => sortClick(1)}>
                                         현재가
                                         <img
                                             className="sort"
                                             src={sortImages[sortStates[1]]}
                                             alt="현재가" />
-                                    </div>
+                                    </button>
                                 </th>
-                                <th className="compare">
-                                    <div onClick={() => sortClick(2)}>
+                                <th id="th-compare">
+                                    <button onClick={() => sortClick(2)}>
                                         전일대비
                                         <img
                                             className="sort"
                                             src={sortImages[sortStates[2]]}
                                             alt="전일대비" />
-                                    </div>
+                                    </button>
                                 </th>
-                                <th className="volume">
-                                    <div onClick={() => sortClick(2)}>
+                                <th id="th-volume">
+                                    <button onClick={() => sortClick(2)}>
                                         보유수량
                                         <img
                                             className="sort"
                                             src={sortImages[sortStates[2]]}
                                             alt="보유수량" />
-                                    </div>
+                                    </button>
                                 </th>
                             </>
                     }

@@ -7,6 +7,16 @@
     border-radius: 4px;
 }
 
+.trading-contents {
+    flex: 1;
+    padding: 0px 15px 0px 15px;
+}
+
+.trading-footer {
+    padding-bottom: 12px;
+    background-color: #fff;
+}
+
 .asking-section {
     border-bottom: 1px solid #E3E8EC;
 }
@@ -44,13 +54,8 @@
     border-bottom: 3px solid #f23645;
 }
 
-.trading-contents {
-    height: 100%;
-    overflow: hidden;
-    padding: 4px 15px;
-}
-
 .trading-head-section {
+    padding-top: 4px;
     width: 100%;
 }
 
@@ -166,6 +171,8 @@
     justify-content: center;
     width: 100%;
     padding-bottom: 12px;
+    flex-shrink: 0;
+    background-color: #fff;
 }
 
 .trading-footer button {
@@ -192,7 +199,23 @@
     margin-left: 0px;
 }
 
-@media (max-width: 767px) {
+@media (min-width: 1024px) and (max-width: 1279px) {
+    .trade-section {
+        display: flex;
+        flex-direction: column;
+        min-height: 0;
+        flex: 1;
+        overflow: hidden;
+    }
+    
+    .trading-contents {
+        overflow-y: auto;
+        flex: 1;
+        height: auto;
+    }
+}
+
+@media (max-width: 1023px) {
     .trade-section {
         display: flex;
         flex-direction: column;

@@ -14,15 +14,12 @@ export default function AskingPrice() {
     const totalAskSize = useAppSelector(state => state.totalAskSize);
     const totalBidSize = useAppSelector(state => state.totalBidSize);
     const selectedCrypto = useAppSelector(state => state.selectedCrypto);
-    const [askHide, setAskHide] = useState(false);
 
     const [prevData, setPrevData] = useState<AskingData[]>();
-
     const [differences_ask, setDifferences_ask] = useState<{
         new_ask_price: number,
         new_ask_size: number
     }[]>([]);
-
     const [differences_bid, setDifferences_bid] = useState<{
         new_bid_price: number,
         new_bid_size: number,
@@ -84,7 +81,7 @@ export default function AskingPrice() {
                         size={40} /> :
                     (
                         askingData.length ?
-                            <CustomScrollbars>
+                            <CustomScrollbars id="scrollbar-orderbook">
                                 <table className="orderbook-table tbody">
                                     <tbody>
                                         <AskingTable

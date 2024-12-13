@@ -104,7 +104,7 @@ export default function ApexChart() {
   const [chartOptions, setChartOptions] = useState<any>({
     chart: {
       type: 'candlestick' as const,
-      height: '100%',
+      height: 'auto',
       id: 'crypto-chart',
       zoom: {
         enabled: true,
@@ -193,12 +193,37 @@ export default function ApexChart() {
     },
   });
 
+  useEffect(() => {
+    // 차트 높이 업데이트
+    const updateChartHeight = () => {
+      const chartElement = document.querySelector('#crypto-chart');
+      if (chartElement) {
+        // 차트의 부모 요소를 가져와 높이를 계산
+        const containerHeight = chartElement.parentElement?.clientHeight;
+        if (containerHeight) {
+          // 차트 높이 업데이트 - 차트 하단 날짜 공간을 확보하기 위해 60px 빼기
+          const chart = ApexCharts.getChartByID('crypto-chart');
+          chart?.updateOptions({
+            chart: {
+              height: containerHeight - 60
+            }
+          });
+        }
+      }
+    };
+
+    // 화면의 크기가 변경될 때마다 확인
+    window.addEventListener('resize', updateChartHeight);
+    updateChartHeight();
+
+    return () => window.removeEventListener('resize', updateChartHeight);
+  }, [series]);
+
   return (
     <Chart
-      id="#chart"
+      id="crypto-chart"
       options={chartOptions}
       series={series}
-      type="candlestick"
-      height='90%' />
+      type="candlestick" />
   );
 }

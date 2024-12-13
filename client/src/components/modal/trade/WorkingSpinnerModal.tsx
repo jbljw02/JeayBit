@@ -8,7 +8,7 @@ import checkCurrentScreen from "../../../utils/responsive/checkCurrentScreen";
 // 화면의 크기에 따라 로더의 크기 지정
 const getLoaderSize = () => {
     const screen = checkCurrentScreen();
-    switch (screen) {
+    switch (screen.device) {
         case 'mobile':
             return 60;
         case 'tablet':
@@ -24,7 +24,7 @@ export default function WorkingSpinner({ isModalOpen, setIsModalOpen }: ModalPro
     useEffect(() => {
         const screenResize = () => {
             const screen = checkCurrentScreen();
-            switch (screen) {
+            switch (screen.device) {
                 case 'mobile':
                     return 60;
                 case 'tablet':

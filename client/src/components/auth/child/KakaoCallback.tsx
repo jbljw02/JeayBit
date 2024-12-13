@@ -35,31 +35,32 @@ export default function KakaoCallback() {
                         email: response.data.email
                     }));
 
+                    // 모바일: 직접 리다이렉션
+                    if (checkCurrentScreen().isMobile) {
+                        navigate('/');
+                    }
                     // 데스크톱: 팝업 창 처리
-                    if (window.opener && checkCurrentScreen() !== 'mobile') {
+                    else {
                         console.log('데스크톱 팝업 창 처리');
                         window.opener.location.href = '/';
                         window.close();
                     }
-                    // 모바일: 직접 리다이렉션
-                    else {
-                        console.log('모바일 리다이렉션');
-                        navigate('/');
-                    }
                 } catch (error) {
-                    if (window.opener && checkCurrentScreen() !== 'mobile') {
+                    // 모바일: 직접 리다이렉션
+                    if (checkCurrentScreen().isMobile) {
+                        navigate('/login');
+                        dispatch(showNoticeModal({
+                            content: '로그인에 실패했습니다. 잠시 후 다시 시도해주세요.',
+                            buttonLabel: '확인',
+                        }));
+                    }
+                    // 데스크톱: 팝업 창 처리
+                    else {
                         window.opener.location.href = '/login';
                         dispatch(showNoticeModal({
                             content: '로그인에 실패했습니다. 잠시 후 다시 시도해주세요.',
                             buttonLabel: '확인',
                             actionType: 'WINDOW_CLOSE'
-                        }));
-                    }
-                    else {
-                        navigate('/login');
-                        dispatch(showNoticeModal({
-                            content: '로그인에 실패했습니다. 잠시 후 다시 시도해주세요.',
-                            buttonLabel: '확인',
                         }));
                     }
                 } finally {

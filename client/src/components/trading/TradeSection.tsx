@@ -31,6 +31,7 @@ export default function TradeSection() {
     const [sectionChange, setSectionChange] = useState<SectionChange>('매수');
     const user = useAppSelector(state => state.user);
 
+
     return (
         <div className="trade-section">
             <NavBar

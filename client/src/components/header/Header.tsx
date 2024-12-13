@@ -84,7 +84,7 @@ export default function Header() {
               </span>
               <span
                 onClick={() => {
-                  navigate("/signUp");
+                  navigate("/signup");
                 }}
                 className="signUp">
                 회원가입
@@ -93,7 +93,7 @@ export default function Header() {
           ) :
             (
               <div className="nav-user">
-                <span className="user-name">
+                <span className="user-name no-drag">
                   <u>{user.name}</u>님
                 </span>
                 <span

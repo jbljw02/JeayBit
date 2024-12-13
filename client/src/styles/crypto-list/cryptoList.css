@@ -54,8 +54,8 @@
 
 #scrollbar-list-table {
     width: 100%;
-    max-height: calc(100vh - 180px);
     overflow-y: auto;
+    flex: 1;
 }
 
 .list-table {
@@ -66,28 +66,20 @@
 }
 
 .list-table th {
-    padding-top: 11px;
-    padding-bottom: 11px;
-    padding-right: 16px;
+    padding: 11px 16px 11px 0px;
     font-size: 12px;
     white-space: nowrap;
 }
 
-.name {
-    padding-left: 36.5px;
-    text-align: left;
-}
-
-.price,
-.compare,
-.volume {
-    text-align: right;
-}
-
-.list-table th div {
-    display: inline-block;
+.list-table th button {
     cursor: pointer;
     user-select: none;
+}
+
+#th-price,
+#th-compare,
+#th-volume {
+    text-align: right;
 }
 
 .sort {
@@ -96,17 +88,8 @@
     left: 3.5px;
 }
 
-
-.list-table tr td:nth-child(2) {
-    text-align: right;
-}
-
-.list-table tr td:nth-child(3) {
-    text-align: right;
-}
-
-.list-table tr td:nth-child(4) {
-    text-align: right;
+.text-rtl {
+    direction: rtl;
 }
 
 .list-table td {
@@ -117,18 +100,19 @@
     overflow: hidden;
 }
 
-.change-price-rise {
-    border-bottom: 1.5px solid #22ab94 !important;
-    font-weight: bold;
-}
-
-.change-price-fall {
-    border-bottom: 1.5px solid #f23645 !important;
-    font-weight: bold;
+#td-price,
+#td-compare,
+#td-volume {
+    text-align: right;
+    direction: rtl;
 }
 
 .list-table tbody tr {
     cursor: pointer;
+}
+
+.list-table tbody tr {
+    background-color: #ffffff;
 }
 
 .list-table tbody tr:nth-child(even) {
@@ -147,6 +131,10 @@
 .div-name {
     padding-left: 12px;
     display: inline-block;
+}
+
+.div-name div:nth-child(1) {
+    white-space: normal;
 }
 
 .div-name div:nth-child(2) {

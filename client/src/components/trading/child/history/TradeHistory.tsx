@@ -91,19 +91,19 @@ export default function TradeHistory() {
                     (historySort === '미체결' && !userTradeHistory_unSigned.length) ?
                     <PlaceholderDisplay content={`${historySort} 내역이 없습니다.`} /> :
                     (
-                        <div className="history-scroll-container">
-                            <CustomScrollbars style={{ width: '100%', height: '100%', borderBottom: '1px solid #E3E8EC' }}>
-                                <table className="table-trading-history" id="historyBody" ref={tableRef}>
-                                    <tbody>
-                                        {
-                                            historySort === '체결' ?
-                                                <SignedHistory /> :
-                                                <UnSignedHistory />
-                                        }
-                                    </tbody>
-                                </table>
-                            </CustomScrollbars>
-                        </div>
+                        <CustomScrollbars
+                            className="history-scroll-container"
+                            style={{ borderBottom: '1px solid #E3E8EC' }}>
+                            <table className="table-trading-history" id="historyBody" ref={tableRef}>
+                                <tbody>
+                                    {
+                                        historySort === '체결' ?
+                                            <SignedHistory /> :
+                                            <UnSignedHistory />
+                                    }
+                                </tbody>
+                            </table>
+                        </CustomScrollbars>
                     )
             }
         </>

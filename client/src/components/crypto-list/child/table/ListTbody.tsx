@@ -32,7 +32,6 @@ export default function ListTbody() {
     const filteredData = useAppSelector(state => state.filteredData);
     const listCategory = useAppSelector(state => state.listCategory);
     const allCrypto = useAppSelector(state => state.allCrypto);
-    const selectedCrypto = useAppSelector(state => state.selectedCrypto);
 
     // 화폐 가격을 업데이트 하기 전에 해당 state에 담음
     const [prevData, setPrevData] = useState<Record<string, number> | undefined>(undefined);
@@ -98,18 +97,18 @@ export default function ListTbody() {
 
         dispatch(setAskingSpinner(false));
 
-        if (checkCurrentScreen() === 'mobile') {
+        if (checkCurrentScreen().device === 'mobile' || checkCurrentScreen().device === 'tablet') {
             navigate('/detail');
         }
     }
 
     return (
-        <CustomScrollbars id="scrollbar-list-table">
+        <CustomScrollbars id={`scrollbar-list-table`}>
             <table className="list-table">
                 <colgroup>
-                    <col width="35%" />
-                    <col width="21%" />
-                    <col width="21%" />
+                    <col width="33%" />
+                    <col width="22%" />
+                    <col width="22%" />
                     <col width="23%" />
                 </colgroup>
                 <tbody>
@@ -160,7 +159,7 @@ export default function ListTbody() {
                                 <tr
                                     key={i}
                                     onClick={() => cryptoClick(item)}>
-                                    <td>
+                                    <td id="td-name">
                                         <span className="list-shortcuts-btn-container">
                                             <ShortcutsButton
                                                 crypto={item}
@@ -176,44 +175,44 @@ export default function ListTbody() {
                                     {
                                         // 가격
                                         item.change === "RISE" ? (
-                                            <td>
+                                            <td id="td-price">
                                                 <span className={`rise ${isChanged ? 'change-price' : ''}`}>
                                                     {cryptoPrice}
                                                 </span>
                                             </td>
                                         ) :
                                             item.change === "FALL" ? (
-                                                <td>
+                                                <td id="td-price">
                                                     <span className={`fall ${isChanged ? 'change-price' : ''}`}>
                                                         {cryptoPrice}
                                                     </span>
                                                 </td>
                                             ) :
                                                 (
-                                                    <td>
+                                                    <td id="td-price">
                                                         <span>{cryptoPrice}</span>
                                                     </td>
                                                 )}
                                     {
                                         // 변화율 및 변화량
                                         item.change === "RISE" ? (
-                                            <td>
+                                            <td id="td-compare">
                                                 <span className={`rise ${isChanged ? 'change-etc' : ''}`}>
-                                                    +{changeRate}% <br />
-                                                    +{changePrice}
+                                                    {changeRate}%+ <br />
+                                                    {changePrice}+
                                                 </span>
                                             </td>
                                         ) :
                                             item.change === "FALL" ? (
-                                                <td>
+                                                <td id="td-compare">
                                                     <span className={`fall ${isChanged ? 'change-etc' : ''}`}>
-                                                        -{changeRate}% <br />
-                                                        -{changePrice}
+                                                        {changeRate}%- <br />
+                                                        {changePrice}-
                                                     </span>
                                                 </td>
                                             ) :
                                                 (
-                                                    <td>
+                                                    <td id="td-compare">
                                                         <span>
                                                             {changeRate}% <br />
                                                             {changePrice}
@@ -221,7 +220,7 @@ export default function ListTbody() {
                                                     </td>
                                                 )}
                                     {/* 보유수량 혹은 거래대금 */}
-                                    <td>
+                                    <td id="td-volume">
                                         {
                                             listCategory === '보유' ?
                                                 <span>

@@ -1,7 +1,7 @@
 import SkeletonUI from "../../components/placeholder/SkeletonUI";
 import { useAppSelector } from "../../redux/hooks";
 import '../../styles/crypto-info/cryptoHeader.css'
-import CryptoIconWrapper from "../../components/crypto-info/child/\bCryptoIconWrapper";
+import CryptoIconWrapper from "../../components/crypto-info/child/CryptoIconWrapper";
 import ShortcutsButton from "../../components/common/ShortcutsButton";
 import BackButton from "../../components/common/BackButton";
 

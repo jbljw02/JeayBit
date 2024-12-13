@@ -17,6 +17,7 @@ import TradingThead from "../TradingThead";
 import CompleteModal from '../../../modal/trade/TradeModal'
 import TradingFooter from "../TradingFooter";
 import useAddTradeHistory from "../../../hooks/useAddTradeHistory";
+import CustomScrollbars from "../../../scrollbar/CustomScorllbars";
 
 export default function SellingSectioin() {
     const dispatch = useAppDispatch();
@@ -237,122 +238,126 @@ export default function SellingSectioin() {
             {
                 // 매수 - 지정가 영역
                 bidSort === '지정가' ?
-                    <div className="trading-contents">
-                        <TradingThead
-                            options={bidSortOptions}
-                            selectedValue={bidSort}
-                            onChange={setBidSort}
-                            label="주문구분" />
-                        <div className="trading-section">
-                            <div className="trading-row">
-                                <div className="trading-title">주문가능</div>
-                                <div className="trading-row-contents">
-                                    {
-                                        ownedCrypto.find(crypto => crypto.name === selectedCrypto.name)?.is_owned ?
-                                            ownedCrypto.find(crypto => crypto.name === selectedCrypto.name)?.owned_quantity :
-                                            0
-                                    }
-                                    <span>
+                    <CustomScrollbars>
+                        <div className="trading-contents">
+                            <TradingThead
+                                options={bidSortOptions}
+                                selectedValue={bidSort}
+                                onChange={setBidSort}
+                                label="주문구분" />
+                            <div className="trading-section">
+                                <div className="trading-row">
+                                    <div className="trading-title">주문가능</div>
+                                    <div className="trading-row-contents">
                                         {
-                                            selectedCrypto.market &&
-                                            (selectedCrypto.market).slice(4)
+                                            ownedCrypto.find(crypto => crypto.name === selectedCrypto.name)?.is_owned ?
+                                                ownedCrypto.find(crypto => crypto.name === selectedCrypto.name)?.owned_quantity :
+                                                0
                                         }
-                                    </span>
+                                        <span>
+                                            {
+                                                selectedCrypto.market &&
+                                                (selectedCrypto.market).slice(4)
+                                            }
+                                        </span>
+                                    </div>
+                                </div>
+                                <div className="trading-row">
+                                    <div className="trading-title">매도가격</div>
+                                    <div className="trading-row-contents">
+                                        <TradeInput
+                                            value={formatWithComas(sellingInputValue)}
+                                            onChange={(e) => sellingPriceChange(e.target.value)}
+                                            suffix="KRW" />
+                                    </div>
+                                </div>
+                                <div className="trading-row">
+                                    <div className="trading-title" />
+                                    <div className="trading-row-contents">
+                                        <PriceRange
+                                            rangeValue={sellingPrice}
+                                            onChange={handlePriceRange}
+                                            category="sell" />
+                                    </div>
+                                </div>
+                                <div className="trading-row">
+                                    <div className="trading-title">주문수량</div>
+                                    <div className="trading-row-contents">
+                                        <TradeInput
+                                            value={formatWithComas(quantityInputValue)}
+                                            onChange={(e) => orderQuantityChange(e.target.value)}
+                                            suffix={selectedCrypto.market &&
+                                                (selectedCrypto.market).slice(4)} />
+                                    </div>
+                                </div>
+                                <div className="trading-row">
+                                    <div className="trading-title" />
+                                    <div className="trading-row-contents">
+                                        <SelectPercentage
+                                            percentage={selectedPercentage}
+                                            onClick={selectPercentage}
+                                            category="sell" />
+                                    </div>
+                                </div>
+                                <div className="trading-row">
+                                    <div className="trading-title">주문총액</div>
+                                    <div className="trading-row-contents">
+                                        <TradeInput
+                                            value={formatWithComas(totalInputValue)}
+                                            onChange={(e) => totalValueChange(e.target.value)}
+                                            suffix="KRW" />
+                                    </div>
                                 </div>
                             </div>
-                            <div className="trading-row">
-                                <div className="trading-title">매도가격</div>
-                                <div className="trading-row-contents">
-                                    <TradeInput
-                                        value={formatWithComas(sellingInputValue)}
-                                        onChange={(e) => sellingPriceChange(e.target.value)}
-                                        suffix="KRW" />
-                                </div>
-                            </div>
-                            <div className="trading-row">
-                                <div className="trading-title" />
-                                <div className="trading-row-contents">
-                                    <PriceRange
-                                        rangeValue={sellingPrice}
-                                        onChange={handlePriceRange}
-                                        category="sell" />
-                                </div>
-                            </div>
-                            <div className="trading-row">
-                                <div className="trading-title">주문수량</div>
-                                <div className="trading-row-contents">
-                                    <TradeInput
-                                        value={formatWithComas(quantityInputValue)}
-                                        onChange={(e) => orderQuantityChange(e.target.value)}
-                                        suffix={selectedCrypto.market &&
-                                            (selectedCrypto.market).slice(4)} />
-                                </div>
-                            </div>
-                            <div className="trading-row">
-                                <div className="trading-title" />
-                                <div className="trading-row-contents">
-                                    <SelectPercentage
-                                        percentage={selectedPercentage}
-                                        onClick={selectPercentage}
-                                        category="sell" />
-                                </div>
-                            </div>
-                            <div className="trading-row">
-                                <div className="trading-title">주문총액</div>
-                                <div className="trading-row-contents">
-                                    <TradeInput
-                                        value={formatWithComas(totalInputValue)}
-                                        onChange={(e) => totalValueChange(e.target.value)}
-                                        suffix="KRW" />
-                                </div>
-                            </div>
-                        </div>
-                    </div > :
+                        </div >
+                    </CustomScrollbars> :
                     // 매수 - 시장가 영역
-                    <div className="trading-contents">
-                        <TradingThead
-                            options={bidSortOptions}
-                            selectedValue={bidSort}
-                            onChange={setBidSort}
-                            label="주문구분" />
-                        <div className="trading-section">
-                            <div className="trading-row">
-                                <div className="trading-title">주문가능</div>
-                                <div className="trading-row-contents">
-                                    {
-                                        ownedCrypto.find(crypto => crypto.name === selectedCrypto.name)?.is_owned ?
-                                            ownedCrypto.find(crypto => crypto.name === selectedCrypto.name)?.owned_quantity :
-                                            0
-                                    }
-                                    <span>
+                    <CustomScrollbars>
+                        <div className="trading-contents">
+                            <TradingThead
+                                options={bidSortOptions}
+                                selectedValue={bidSort}
+                                onChange={setBidSort}
+                                label="주문구분" />
+                            <div className="trading-section">
+                                <div className="trading-row">
+                                    <div className="trading-title">주문가능</div>
+                                    <div className="trading-row-contents">
                                         {
-                                            selectedCrypto.market &&
-                                            (selectedCrypto.market).slice(4)
+                                            ownedCrypto.find(crypto => crypto.name === selectedCrypto.name)?.is_owned ?
+                                                ownedCrypto.find(crypto => crypto.name === selectedCrypto.name)?.owned_quantity :
+                                                0
                                         }
-                                    </span>
+                                        <span>
+                                            {
+                                                selectedCrypto.market &&
+                                                (selectedCrypto.market).slice(4)
+                                            }
+                                        </span>
+                                    </div>
                                 </div>
-                            </div>
-                            <div className="trading-row">
-                                <div className="trading-title">주문수량</div>
-                                <div className="trading-row-contents">
-                                    <TradeInput
-                                        value={formatWithComas(quantityInputValue)}
-                                        onChange={(e) => orderQuantityChange(e.target.value)}
-                                        suffix={selectedCrypto.market &&
-                                            (selectedCrypto.market).slice(4)} />
+                                <div className="trading-row">
+                                    <div className="trading-title">주문수량</div>
+                                    <div className="trading-row-contents">
+                                        <TradeInput
+                                            value={formatWithComas(quantityInputValue)}
+                                            onChange={(e) => orderQuantityChange(e.target.value)}
+                                            suffix={selectedCrypto.market &&
+                                                (selectedCrypto.market).slice(4)} />
+                                    </div>
                                 </div>
-                            </div>
-                            <div className="trading-row">
-                                <div className="trading-title" />
-                                <div className="trading-row-contents">
-                                    <SelectPercentage
-                                        percentage={selectedPercentage}
-                                        onClick={selectPercentage}
-                                        category="sell" />
+                                <div className="trading-row">
+                                    <div className="trading-title" />
+                                    <div className="trading-row-contents">
+                                        <SelectPercentage
+                                            percentage={selectedPercentage}
+                                            onClick={selectPercentage}
+                                            category="sell" />
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </CustomScrollbars>
             }
             <TradingFooter
                 bidSort={bidSort}

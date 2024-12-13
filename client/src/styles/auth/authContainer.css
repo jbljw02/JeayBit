@@ -1,7 +1,7 @@
 .auth-container {
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  height: 100%;
   background-color: #fff;
 }
 
@@ -10,8 +10,8 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 100vh;
-  margin-bottom: 70px;
+  height: 100%;
+  padding-bottom: 70px;
 }
 
 .auth-form-container {
@@ -52,7 +52,7 @@
   border-radius: 7px;
 }
 
-@media (max-width: 767px) {
+@media (max-width: 1023px) {
   .auth-form-container {
     width: 80vw;
   }
