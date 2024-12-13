@@ -2,7 +2,6 @@
     display: flex;
     flex-direction: column;
     width: 100%;
-    height: 433px;
     background-color: #fff;
     border-radius: 4px;
 }
@@ -46,11 +45,11 @@
 
 .trading-contents {
     height: 100%;
-    overflow: hidden;
-    padding: 4px 15px;
+    padding: 0px 15px 0px 15px;
 }
 
 .trading-head-section {
+    padding-top: 4px;
     width: 100%;
 }
 

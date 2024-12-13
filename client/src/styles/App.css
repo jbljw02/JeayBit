@@ -75,6 +75,14 @@ a {
   border-radius: 4px;
 }
 
+.price-detail > * {
+  flex: 1;
+  height: 50%;
+  min-height: 0;
+  background-color: #fff;
+  border-radius: 4px;
+}
+
 .crypto-list {
   display: flex;
   flex-direction: column;

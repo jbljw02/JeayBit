@@ -1,7 +1,6 @@
 .orderbook {
     display: flex;
     flex-direction: column;
-    height: 433px;
     width: 100%;
     background-color: #fff;
     border-radius: 4px;
