@@ -194,10 +194,8 @@
 }
 
 @media (min-width: 1024px) and (max-width: 1279px) {
-    .trading-contents {
+    .trade-section {
         flex: 1;
-        overflow-y: auto;
-        height: auto;
     }
 }
 
