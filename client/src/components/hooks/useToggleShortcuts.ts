@@ -3,7 +3,6 @@ import { setFavoriteCrypto } from "../../redux/features/userCryptoSlice";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import axios from "axios";
 import { Crypto } from "../../redux/features/cryptoListSlice";
-import { useNavigate } from "react-router-dom";
 
 const API_URL = process.env.REACT_APP_API_URL;
 
@@ -21,13 +20,13 @@ export default function useToggleShortcuts() {
                     email: email,
                     crypto_name: cryptoName,
                 });
-                return response.data.favorite_crypto
+                
+                return response.data.favorite_crypto;
             } catch (error) {
                 dispatch(showNoticeModal({ content: '관심 화폐 추가에 실패했습니다.' }));
             }
         }
     };
-
 
     const toggleShortcuts = (crypto: Crypto, e: { stopPropagation: () => void; }) => {
         e.stopPropagation();
@@ -44,6 +43,7 @@ export default function useToggleShortcuts() {
         const updatedFavoriteCrypto = favoriteCrypto.some(item => item.name === crypto.name)
             ? favoriteCrypto.filter(item => item.name !== crypto.name)
             : [...favoriteCrypto, crypto];
+            
         dispatch(setFavoriteCrypto(updatedFavoriteCrypto));
         addFavoriteCrypto(user.email, crypto.name);
     }

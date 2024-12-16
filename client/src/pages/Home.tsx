@@ -12,7 +12,6 @@ import KakaoCallback from '../components/auth/child/KakaoCallback';
 import { hideNoticeModal, showNoticeModal } from '../redux/features/modalSlice';
 import Login from '../components/auth/Login';
 import Header from '../components/header/Header';
-import { BREAKPOINTS } from '../responsive/breakpoints';
 import MobileDetail from '../responsive/components/MobileDetail';
 import TradeSection from '../components/trading/TradeSection';
 import '../styles/price-detail/trading/tradeSection.css';
