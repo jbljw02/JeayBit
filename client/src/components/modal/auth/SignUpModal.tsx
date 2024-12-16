@@ -1,7 +1,7 @@
 import Modal from 'react-modal';
 import styles from '../../styles/modal/modal.module.css'
 import { useNavigate } from 'react-router-dom';
-import { ModalProps } from './type/ModalProps';
+import { ModalProps } from '../type/ModalProps';
 
 export default function SignUpModal({ isModalOpen, setIsModalOpen }: ModalProps) {
     const navigate = useNavigate();

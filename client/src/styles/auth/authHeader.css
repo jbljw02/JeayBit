@@ -1,4 +1,4 @@
-.favicon-title {
+.auth-header-title {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -7,18 +7,23 @@
     gap: 5px;
 }
 
-.favicon-title-img {
-    padding: 15px;
-    width: 70px;
-}
-
-.favicon-title-name {
+.auth-header-name {
     font-size: 30px;
     margin-bottom: 4px;
     font-weight: 600;
 }
 
-.favicon-subtitle-name {
+.auth-header-subtitle {
     font-size: 15px;
     color: #212121;
+}
+
+@media (max-width: 767px) {
+    .auth-header-name {
+        font-size: 26px;
+    }
+
+    .auth-header-subtitle {
+        font-size: 14px;
+    }
 }

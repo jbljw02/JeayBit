@@ -1,26 +1,28 @@
 import { useRef, useState } from "react";
 import axios from "axios";
-import FaviconTitle from "./child/FaviconTitle";
+import FaviconTitle from "./child/AuthHeader";
 import InputWarning from "../input/InputWarning";
 import FormInput from "../input/FormInput";
 import formValueChange from "../../utils/formValueChange";
-import SignUpModal from "../modal/SignUpModal";
 import LoadingBar, { LoadingBarRef } from 'react-top-loading-bar';
 import AuthButton from "./child/AuthButton";
-import AuthFooter from "./child/AuthFooter";
 import '../../styles/auth/authContainer.css'
 import Divider from "./child/Divider";
 import KakaoLoginButton from "./child/KakaoLoginButton";
 import HeaderNav from "../header/HeaderNav";
 import { useAppDispatch } from "../../redux/hooks";
 import { showNoticeModal } from "../../redux/features/modalSlice";
-import { useNavigate } from "react-router-dom";
+import PICheckbox from "./child/PICheckbox";
+import AuthNavigateLabel from "./child/AuthNavigateLabel";
 
 const API_URL = process.env.REACT_APP_API_URL;
+const emailPattern = /^[A-Za-z0-9_\.\-]+@[A-Za-z0-9\-]+\.[A-Za-z]{2,}$/;
+const passwordPattern = /^(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
 
 export default function SignUp() {
   const dispatch = useAppDispatch();
-  const navigate = useNavigate();
+
+  const loadingBarRef = useRef<LoadingBarRef>(null);
 
   const [activeInput, setActiveInput] = useState<string>('');
 
@@ -41,10 +43,8 @@ export default function SignUp() {
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
   const [signUpModal, setSignUpModal] = useState<boolean>(false);
 
-  const loadingBarRef = useRef<LoadingBarRef>(null);
-
-  const emailPattern = /^[A-Za-z0-9_\.\-]+@[A-Za-z0-9\-]+\.[A-Za-z]{2,}$/;
-  const passwordPattern = /^(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
+  const [isAgreeForPersonalInfo, setIsAgreeForPersonalInfo] = useState<boolean>(false);
+  const [isVibrate, setIsVibrate] = useState<boolean>(false);
 
   const submitSignUp = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -61,25 +61,59 @@ export default function SignUp() {
       if (!name) {
         setIsNameEmpty(true);
       }
-      return;
     }
 
+    // 이메일 유효성 검사
     if (email.match(emailPattern)) {
       setEmailInvalid(false);
     }
     else {
       setEmailInvalid(true);
-      return;
     }
 
+    // 비밀번호 유효성 검사
     if (password.match(passwordPattern)) {
       setPasswordInvalid(false);
     }
     else {
       setPasswordInvalid(true);
-      return;
     }
 
+    // 개인정보 처리방침 동의 여부
+    if (isAgreeForPersonalInfo) {
+      setIsAgreeForPersonalInfo(true);
+    }
+    else {
+      setIsAgreeForPersonalInfo(false);
+
+      // 개인정보 처리방침에 동의하지 않았을 경우 진동 효과
+      setIsVibrate(true);
+      setTimeout(() => {
+        setIsVibrate(false);
+      }, 1000);
+    }
+
+    /*
+      1. 공란이 없어야 함
+      2. 이메일이 정규식을 통과
+      3. 비밀번호가 정규식을 통과
+      4. 개인정보 처리방침 동의 여부
+    */
+    if (name &&
+      !isNameEmpty &&
+      email &&
+      !emailInvalid &&
+      !isEmailDuplicate &&
+      !isEmailEmpty &&
+      password &&
+      !passwordInvalid &&
+      !isPasswordEmpty &&
+      isAgreeForPersonalInfo) {
+      signUp();
+    }
+  }
+
+  const signUp = async () => {
     const data = {
       username: name,
       email: email,
@@ -211,14 +245,21 @@ export default function SignUp() {
               isEmpty={isPasswordEmpty}
               label="비밀번호를 입력해주세요"
               isSubmitted={isSubmitted} />
-            <AuthButton
-              label="회원가입" />
+            <AuthButton label="회원가입" />
           </form>
           <Divider />
           <KakaoLoginButton />
-          <AuthFooter
-            label="이미 계정이 있으신가요?"
-            navigateString="/logIn" />
+          <div className="auth-footer">
+            <PICheckbox
+              isAgreeForPersonalInfo={isAgreeForPersonalInfo}
+              setIsAgreeForPersonalInfo={setIsAgreeForPersonalInfo}
+              isVibrate={isVibrate}
+              isSubmitted={isSubmitted} />
+            <AuthNavigateLabel
+              label="이미 계정이 있으신가요?"
+              navigateString="/login"
+              destinationLabel="로그인" />
+          </div>
         </div>
       </div>
     </div>
