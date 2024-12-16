@@ -25,35 +25,115 @@
   gap: 17px;
 }
 
-.form-auth input:nth-child(1) {
+.form-auth input {
   border: none;
   width: 80%;
   height: 45px;
   font-size: 15px;
 }
 
-.form-auth input:nth-child(2) {
-  border: none;
-  width: 80%;
-  height: 43px;
-  font-size: 15px;
-}
-
-.auth-submit {
+.auth-footer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
   width: 100%;
-  height: 50px;
-  line-height: 50px;
-  font-size: 17px;
-  font-weight: 400;
-  color: #ffffff;
-  text-align: center;
-  background-color: #202630;
-  cursor: pointer;
-  border-radius: 7px;
+  margin-top: 35px;
+  font-size: 14px;
+  flex-wrap: wrap;
 }
 
-@media (max-width: 1023px) {
+.auth-footer:has(.personal-info-container) {
+  justify-content: space-between;
+}
+
+.personal-info-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+}
+
+.personal-info-container button {
+  text-decoration: underline;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.auth-navigate {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  font-weight: 500;
+}
+
+.auth-navigate-destination {
+  cursor: pointer;
+  color: #202630;
+  font-weight: 600;
+  text-decoration: underline;
+  white-space: nowrap;
+}
+
+@keyframes vibrate {
+  0% {
+    transform: translateX(0);
+  }
+
+  25% {
+    transform: translateX(-1.5px);
+  }
+
+  50% {
+    transform: translateX(1.5px);
+  }
+
+  75% {
+    transform: translateX(-1.5px);
+  }
+
+  100% {
+    transform: translateX(1.5px);
+  }
+}
+
+.vibrate {
+  animation: vibrate 0.3s infinite;
+}
+
+@media (max-width: 767px) {
   .auth-form-container {
     width: 80vw;
+  }
+
+  .auth-section {
+    padding-bottom: 0px;
+  }
+
+  .form-auth input {
+    font-size: 14px;
+    height: 42px;
+  }
+
+  .auth-footer {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .auth-footer:has(.personal-info-container) {
+    justify-content: center;
+  }
+
+  .personal-info-container {
+    text-align: center;
+    width: 100%;
+  }
+
+  .auth-navigate {
+    width: 100%;
+    justify-content: center;
   }
 }

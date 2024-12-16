@@ -1,0 +1,97 @@
+.pi-notice-container {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem 1rem 0.5rem 1rem;
+    gap: 1rem;
+    height: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+.pi-notice-close-btn {
+    position: absolute;
+    top: 1.5rem;
+    right: 1.5rem;
+    cursor: pointer;
+    z-index: 1;
+}
+
+.pi-notice-close-icon:hover {
+    color: #6B7280;
+}
+
+.pi-notice-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.pi-notice-title {
+    font-size: 1.6rem;
+    font-weight: 700;
+}
+
+.pi-notice-section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.pi-notice-subtitle {
+    font-size: 1.125rem;
+    font-weight: 700;
+    margin-top: 0.75rem;
+}
+
+.pi-notice-content {
+    font-size: 0.9375rem;
+    line-height: 1.5;
+}
+
+.pi-notice-button-group {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 1.25rem;
+    margin-top: 2rem;
+    width: 100%;
+}
+
+@media screen and (max-width: 767px) {
+    /* Modal style overrides */
+    .ReactModal__Content {
+        width: 100% !important;
+        height: 100% !important;
+        padding: 20px 20px 10px 20px !important;
+        border-radius: 0 !important;
+        left: 0 !important;
+        top: 0 !important;
+        transform: none !important;
+        max-width: 100vw !important;
+        box-sizing: border-box !important;
+    }
+
+    .pi-notice-close-btn {
+        top: 1.25rem;
+        right: 1.25rem;
+    }
+
+    .pi-notice-title {
+        font-size: 1.25rem;
+    }
+
+    .pi-notice-subtitle {
+        font-size: 1rem;
+    }
+
+    .pi-notice-content {
+        font-size: 0.875rem;
+    }
+
+    .pi-notice-button-group {
+        margin-top: auto;
+        padding-top: 2.5rem;
+        padding-bottom: 1rem;
+    }
+}

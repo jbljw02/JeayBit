@@ -4,16 +4,16 @@ import axios from "axios";
 import { useAppDispatch } from "../../redux/hooks";
 import FormInput from "../input/FormInput";
 import InputWarning from "../input/InputWarning";
-import FaviconTitle from "./child/FaviconTitle";
+import FaviconTitle from "./child/AuthHeader";
 import formValueChange from "../../utils/formValueChange";
 import '../../styles/auth/authContainer.css'
 import { setUserInfo } from "../../redux/features/userSlice";
 import LoadingBar, { LoadingBarRef } from 'react-top-loading-bar';
 import AuthButton from "./child/AuthButton";
-import AuthFooter from "./child/AuthFooter";
 import Divider from "./child/Divider";
 import KakaoLoginButton from "./child/KakaoLoginButton";
 import HeaderNav from "../header/HeaderNav";
+import AuthNavigateLabel from "./child/AuthNavigateLabel";
 
 const API_URL = process.env.REACT_APP_API_URL;
 
@@ -140,14 +140,16 @@ export default function Login() {
               isEmpty={invalidSubmit}
               label="이메일 혹은 비밀번호가 일치하지 않습니다"
               isSubmitted={isSubmitted} />
-            <AuthButton
-              label="로그인" />
+            <AuthButton label="로그인" />
           </form>
           <Divider />
           <KakaoLoginButton />
-          <AuthFooter
-            label="아직 계정이 없으신가요?"
-            navigateString="/signUp" />
+          <div className="auth-footer">
+            <AuthNavigateLabel
+              label="계정이 없으신가요?"
+              navigateString="/signup"
+              destinationLabel="회원가입" />
+          </div>
         </div>
       </div>
     </div>
