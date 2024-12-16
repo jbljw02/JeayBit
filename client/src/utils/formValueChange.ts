@@ -3,8 +3,10 @@ export default function formValueChange(
     isSubmitted: boolean,
     setValue: React.Dispatch<React.SetStateAction<string>>,
     setEmpty: React.Dispatch<React.SetStateAction<boolean>>,
+    pattern?: RegExp,
     setInvalid?: React.Dispatch<React.SetStateAction<boolean>>,
-    pattern?: RegExp) {
+    setIsEmailDuplicate?: React.Dispatch<React.SetStateAction<boolean>>,
+   ) {
     setValue(value);
 
     if (isSubmitted) {
@@ -21,6 +23,11 @@ export default function formValueChange(
             } else {
                 setInvalid(true);
             }
+
+        }
+
+        if(setIsEmailDuplicate) {
+            setIsEmailDuplicate(false);
         }
     }
 };
