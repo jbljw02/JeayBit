@@ -127,7 +127,6 @@ export default function SignUp() {
     try {
       setIsNameEmpty(false);
       setIsEmailEmpty(false);
-      setIsEmailDuplicate(false);
       setIsPasswordEmpty(false);
 
       await axios.post(`${API_URL}/signup/`, data, {
@@ -206,8 +205,9 @@ export default function SignUp() {
                 isSubmitted,
                 setEmail,
                 setIsEmailEmpty,
+                emailPattern,
                 setEmailInvalid,
-                emailPattern)}
+                setIsEmailDuplicate)}
               onClick={() => setActiveInput('email')}
               invalidSubmit={isEmailDuplicate}
               isSubmitted={isSubmitted}
@@ -229,8 +229,8 @@ export default function SignUp() {
                 isSubmitted,
                 setPassword,
                 setIsPasswordEmpty,
-                setPasswordInvalid,
-                passwordPattern)}
+                passwordPattern,
+                setPasswordInvalid)}
               onClick={() => setActiveInput('password')}
               isPasswordVisible={visiblePassword}
               onPasswordClick={() => setVisiblePassword(!visiblePassword)}
