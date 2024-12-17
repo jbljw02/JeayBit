@@ -9,12 +9,8 @@ import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
 import useSelectAskingPrice from "../../../hooks/useSelectAskingPrice";
 import useSelectClosedPrice from "../../../hooks/useSelectClosedPrice";
 import { useNavigate } from "react-router-dom";
-import useToggleShortcuts from "../../../hooks/useToggleShortcuts";
 import ShortcutsButton from "../../../common/ShortcutsButton";
-import LoadingBar from "react-top-loading-bar";
 import checkCurrentScreen from "../../../../utils/responsive/checkCurrentScreen";
-import { BREAKPOINTS } from "../../../../responsive/breakpoints";
-import WorkingSpinner from "../../../modal/trade/WorkingSpinnerModal";
 
 type Differences = {
     name: string;
@@ -40,14 +36,7 @@ export default function ListTbody() {
 
     const favoriteCrypto = useAppSelector(state => state.favoriteCrypto);
     const ownedCrypto = useAppSelector(state => state.ownedCrypto);
-
-    useEffect(() => {
-        const isFavorites = allCrypto.filter(item => item.is_favorited);
-        const isOwnes = allCrypto.filter(item => item.is_owned && item.owned_quantity > 0.00);
-        dispatch(setFavoriteCrypto(isFavorites));
-        dispatch(setOwnedCrypto(isOwnes));
-    }, []);
-
+    
     // 화폐 가격의 변화를 감지하고 업데이트
     useEffect(() => {
         if (filteredData.length) {
@@ -103,7 +92,7 @@ export default function ListTbody() {
     }
 
     return (
-        <CustomScrollbars id={`scrollbar-list-table`}>
+        <CustomScrollbars id='scrollbar-list-table'>
             <table className="list-table">
                 <colgroup>
                     <col width="33%" />
