@@ -3,7 +3,6 @@ import { useAppDispatch } from "../../../redux/hooks";
 import { useEffect, useRef } from "react";
 import { setCryptoRealTime } from "../../../redux/features/selectedCryptoSlice";
 import formatWithComas from "../../../utils/format/formatWithComas";
-import CustomScrollbars from "../../scrollbar/CustomScorllbars";
 
 type ChildParams = {
     title: string,

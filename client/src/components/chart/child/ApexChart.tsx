@@ -111,6 +111,15 @@ export default function ApexChart() {
       },
       toolbar: {
         show: true,
+        tools: {
+          download: true,
+          selection: true,
+          zoom: true,
+          zoomin: true,
+          zoomout: true,
+          pan: true,
+          reset: true
+        }
       },
       events: {
         zoomed: (chartContext: any, { xaxis, yaxis }: any) => {
