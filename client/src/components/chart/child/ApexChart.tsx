@@ -4,6 +4,7 @@ import moment from 'moment-timezone';
 import { useAppSelector } from '../../../redux/hooks';
 import formatWithComas from '../../../utils/format/formatWithComas';
 import { Market } from '../../../redux/features/chartSlice';
+import { ApexOptions } from 'apexcharts';
 
 type Axis = {
   min: number,
@@ -17,66 +18,154 @@ export default function ApexChart() {
   const chartSortDate = useAppSelector(state => state.chartSortDate);
 
   const [format, setFormat] = useState<string>(chartSortTime ? chartSortTime : chartSortDate);
-  const formatRef = useRef(format);
-
-  const [savedChartState, setSavedChartState] = useState<{ xaxis: any, yaxis: any } | null>(null);
-
+  const [savedChartState, setSavedChartState] = useState<{ xaxis: Axis, yaxis: any } | null>(null);
   const [series, setSeries] = useState<{ data: { x: Date; y: number[] }[] }[]>([
     { data: [] },
   ]);
 
-  useEffect(() => {
-    formatRef.current = format;
-  }, [format]);
-
-  const saveChartState = (state: { xaxis: Axis, yaxis: Axis }) => {
-    setSavedChartState(state);
+  const saveChartState = (state: { xaxis: Axis, yaxis?: any }) => {
+    const newState = {
+      xaxis: state.xaxis,
+      yaxis: state.yaxis ? state.yaxis : savedChartState?.yaxis
+    };
+    setSavedChartState(newState);
   };
 
-  useEffect(() => {
-    let data: { x: Date; y: number[] }[] = [];
-    if (chartSortTime) {
-      setFormat(chartSortTime);
-      data = candlePerMinute.map((candle: Market) => ({
-        x: moment.tz(candle.candle_date_time_kst, 'Asia/Seoul').toDate(),
-        y: [
-          candle.opening_price,
-          candle.high_price,
-          candle.low_price,
-          candle.trade_price,
-        ],
-      }));
-    }
-    else if (chartSortDate) {
-      setFormat(chartSortDate);
-      data = candlePerDate.map((candle: Market) => ({
-        x: moment.tz(candle.candle_date_time_kst, 'Asia/Seoul').toDate(),
-        y: [
-          candle.opening_price,
-          candle.high_price,
-          candle.low_price,
-          candle.trade_price,
-        ],
-      }));
-    }
-    setSeries([{ data }]);
-  }, [candlePerDate, candlePerMinute, chartSortTime, chartSortDate]);
-
-  // 차트가 리렌더링 되더라도 확대 및 축소 상태를 보존
-  useEffect(() => {
-    if (savedChartState) {
-      const chart = ApexCharts.getChartByID('crypto-chart');
-      if (chart) {
-        chart.zoomX(savedChartState.xaxis.min, savedChartState.xaxis.max);
-        chart.updateOptions({
-          yaxis: {
-            min: savedChartState.yaxis.min,
-            max: savedChartState.yaxis.max
+  const [chartOptions, setChartOptions] = useState<ApexOptions>({
+    chart: {
+      type: 'candlestick',
+      height: 'auto',
+      id: 'crypto-chart',
+      zoom: {
+        enabled: true,
+      },
+      animations: {
+        enabled: true,
+        speed: 800,
+        animateGradually: {
+          enabled: true,
+          delay: 150
+        },
+        dynamicAnimation: {
+          enabled: true,
+          speed: 350
+        }
+      },
+      toolbar: {
+        show: true,
+        tools: {
+          download: true,
+          selection: true,
+          zoom: true,
+          zoomin: true,
+          zoomout: true,
+          pan: true,
+          reset: true
+        }
+      },
+      events: {
+        zoomed: (chartContext: ApexCharts, { xaxis, yaxis }: any) => {
+          if (xaxis) {
+            saveChartState({
+              xaxis: {
+                min: xaxis.min,
+                max: xaxis.max,
+              },
+              yaxis: yaxis,
+            });
           }
-        });
+        },
+        scrolled: (chartContext: ApexCharts, { xaxis, yaxis }: any) => {
+          if (xaxis) {
+            saveChartState({
+              xaxis: {
+                min: xaxis.min,
+                max: xaxis.max,
+              },
+              yaxis: yaxis,
+            });
+          }
+        },
+        beforeResetZoom: () => {
+          setSavedChartState(null);
+          const chart = ApexCharts.getChartByID('crypto-chart');
+          if (chart) {
+            chart.updateOptions({
+              xaxis: {
+                min: undefined,
+                max: undefined
+              },
+              yaxis: {
+                min: undefined,
+                max: undefined
+              }
+            }, false, true);
+          }
+        }
       }
-    }
-  }, [series]);
+    },
+    xaxis: {
+      type: 'datetime',
+      tickAmount: 6,
+      labels: {
+        formatter: function (value: string) {
+          const label = xLabelFormat(Number(value), format);
+          return label;
+        },
+      },
+    },
+    yaxis: {
+      labels: {
+        formatter: function (value: number) {
+          return formatWithComas(value);
+        },
+      },
+      tooltip: {
+        enabled: true,
+      },
+      crosshairs: {
+        show: true,
+        position: 'back',
+        stroke: {
+          color: '#b6b6b6',
+          width: 1,
+          dashArray: 4,
+        },
+      },
+    },
+    tooltip: {
+      enabled: true,
+      shared: true,
+      followCursor: true,
+      intersect: false,
+      fixed: {
+        enabled: true,
+        position: 'topRight',
+        offsetX: -12,
+        offsetY: 44,
+      },
+      custom: function ({ seriesIndex, dataPointIndex, w }: { seriesIndex: number, dataPointIndex: number, w: any }) {
+        if (seriesIndex === -1 || dataPointIndex === -1) return;
+        const o = w.globals.seriesCandleO[seriesIndex][dataPointIndex];
+        const h = w.globals.seriesCandleH[seriesIndex][dataPointIndex];
+        const l = w.globals.seriesCandleL[seriesIndex][dataPointIndex];
+        const c = w.globals.seriesCandleC[seriesIndex][dataPointIndex];
+
+        return `
+          <div class="apexchart-tooltip">
+            <div class="open-close">
+              <div>시가: <b>${formatWithComas(o)}</b></div>
+              <div>고가: <b style="color: #22ab94;">${formatWithComas(h)}</b></div>
+              </div>
+              <div class="high-low">
+              <div>종가: <b>${formatWithComas(c)}</b></div>
+              <div>저가: <b style="color: #f23645;">${formatWithComas(l)}</b></div>
+            </div>
+          </div>
+        `;
+      },
+    },
+  });
 
   // X 레이블과 툴팁의 값을 포맷
   const xLabelFormat = (dateTime: number, format: string) => {
@@ -101,106 +190,50 @@ export default function ApexChart() {
     }
   };
 
-  const [chartOptions, setChartOptions] = useState<any>({
-    chart: {
-      type: 'candlestick' as const,
-      height: 'auto',
-      id: 'crypto-chart',
-      zoom: {
-        enabled: true,
-      },
-      toolbar: {
-        show: true,
-        tools: {
-          download: true,
-          selection: true,
-          zoom: true,
-          zoomin: true,
-          zoomout: true,
-          pan: true,
-          reset: true
-        }
-      },
-      events: {
-        zoomed: (chartContext: any, { xaxis, yaxis }: any) => {
-          saveChartState({
-            xaxis: {
-              min: xaxis.min,
-              max: xaxis.max,
-            },
-            yaxis: {
-              min: yaxis.min,
-              max: yaxis.max,
-            }
-          });
-        },
-        scrolled: (chartContext: any, { xaxis, yaxis }: any) => {
-          saveChartState({
-            xaxis: {
-              min: xaxis.min,
-              max: xaxis.max,
-            },
-            yaxis: {
-              min: yaxis.min,
-              max: yaxis.max,
-            }
-          });
-        }
-      }
-    },
-    xaxis: {
-      type: 'datetime' as const,
-      tickAmount: 6,
-      labels: {
-        formatter: function (value: number) {
-          const label = xLabelFormat(value, formatRef.current);
-          return label;
-        },
-      },
-    },
-    yaxis: {
-      labels: {
-        formatter: function (value: number) {
-          return formatWithComas(value);
-        },
-      },
-      tooltip: {
-        enabled: true,
-      }
-    },
-    tooltip: {
-      enabled: true,
-      shared: true,
-      followCursor: true,
-      intersect: false,
-      fixed: {
-        enabled: true,
-        position: 'topRight',
-        offsetX: -12,
-        offsetY: 44,
-      },
-      custom: function ({ seriesIndex, dataPointIndex, w }: { seriesIndex: number, dataPointIndex: number, w: any }) {
-        if (seriesIndex === -1 || dataPointIndex === -1) return;
-        const o = w.globals.seriesCandleO[seriesIndex][dataPointIndex];
-        const h = w.globals.seriesCandleH[seriesIndex][dataPointIndex];
-        const l = w.globals.seriesCandleL[seriesIndex][dataPointIndex];
-        const c = w.globals.seriesCandleC[seriesIndex][dataPointIndex];
+  useEffect(() => {
+    // 캔들 데이터의 값을 차트에 적용시키기 위해 포맷
+    const formatCandleData = (candle: Market) => ({
+      x: moment.tz(candle.candle_date_time_kst, 'Asia/Seoul').toDate(),
+      y: [
+        candle.opening_price,
+        candle.high_price,
+        candle.low_price,
+        candle.trade_price,
+      ],
+    });
 
-        return `
-          <div class="apexchart-tooltip">
-            <div class="open-close">
-              <div>시가: <b>${formatWithComas(o)}</b></div>
-              <div>종가: <b>${formatWithComas(c)}</b></div>
-            </div>
-            <div class="high-low">
-              <div>고가: <b>${formatWithComas(h)}</b></div>
-              <div>저가: <b>${formatWithComas(l)}</b></div>
-            </div>
-          </div>
-        `;
-      },
-    },
-  });
+    let data: { x: Date; y: number[] }[] = [];
+
+    // 차트의 값을 구분 시간/일자에 따라서 할당 
+    if (chartSortTime) {
+      setFormat(chartSortTime);
+      data = candlePerMinute.map(formatCandleData);
+    }
+    else if (chartSortDate) {
+      setFormat(chartSortDate);
+      data = candlePerDate.map(formatCandleData);
+    }
+
+    // 차트 객체 가져오기
+    const chart = ApexCharts.getChartByID('crypto-chart');
+    if (chart) {
+      // 새로운 데이터로 series 업데이트
+      chart.updateSeries([{ data }], false);
+
+      // 저장된 차트의 상태가 있다면 복원
+      if (savedChartState) {
+        chart.updateOptions({
+          xaxis: {
+            min: savedChartState.xaxis.min,
+            max: savedChartState.xaxis.max,
+          },
+        }, false, false);
+      }
+    }
+    else {
+      setSeries([{ data }]);
+    }
+  }, [candlePerDate, candlePerMinute, chartSortTime, chartSortDate]);
 
   useEffect(() => {
     // 차트 높이 업데이트
