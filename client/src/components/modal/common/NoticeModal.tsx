@@ -2,6 +2,7 @@ import Modal from 'react-modal';
 import styles from '../../../styles/modal/modal.module.css'
 import { ModalProps } from '../type/ModalProps';
 import { useAppSelector } from '../../../redux/hooks';
+import { useEffect } from 'react';
 
 export default function NoticeModal({ isModalOpen, setIsModalOpen }: ModalProps) {
     const noticeModal = useAppSelector(state => state.noticeModal);
@@ -19,6 +20,21 @@ export default function NoticeModal({ isModalOpen, setIsModalOpen }: ModalProps)
             window.close();
         }
     }
+
+    const enterCloseEvent = (event: KeyboardEvent) => {
+        if (event.key === 'Enter') {
+            setIsModalOpen(false);
+        }
+    };
+
+    useEffect(() => {
+        if (isModalOpen) {
+            document.addEventListener('keydown', enterCloseEvent);
+        }
+        return () => {
+            document.removeEventListener('keydown', enterCloseEvent); 
+        };
+    }, [isModalOpen]);
 
     return (
         <Modal
