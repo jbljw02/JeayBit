@@ -6,15 +6,18 @@ type TransferInputProps = {
     onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
     limitReached: boolean;
     amountEmpty: boolean;
+    overflow?: boolean;
 };
 
 export default function TransferInput({ label,
     amount,
     onChange,
     limitReached,
-    amountEmpty, }: TransferInputProps) {
+    amountEmpty,
+    overflow }: TransferInputProps) {
     return (
-        <div className={`transfer-input ${limitReached || amountEmpty ? "warning-border" : ""}`}>
+        <div className={`transfer-input 
+        ${limitReached || amountEmpty || overflow ? "warning-border" : ""}`}>
             <div>{label}</div>
             <div className="transfer-input-div">
                 <input

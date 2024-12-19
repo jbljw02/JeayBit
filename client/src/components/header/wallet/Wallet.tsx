@@ -162,9 +162,6 @@ export default function Wallet() {
         }
 
         if (withdrawAmount > user.balance) {
-            dispatch(showNoticeModal({
-                content: '출금량이 잔고를 초과했습니다.',
-            }));
             setWithdrawOverflow(true);
             return;
         }
@@ -234,7 +231,8 @@ export default function Wallet() {
                                         handleBalanceChange(e, setWithdrawAmount, setWithdrawChangeAmount, setWithdrawLimit, setWithdrawEmpty, withdrawSubmitted, selectedCrypto.price)
                                     }
                                     limitReached={withdrawLimit}
-                                    amountEmpty={withdrawEmpty} />
+                                    amountEmpty={withdrawEmpty}
+                                    overflow={withdrawOverflow} />
                                 <TransferWarning
                                     isWarning={withdrawLimit}
                                     label="출금은 1회당 1,000원 이상 10,000,000원 이하만 가능합니다" />
@@ -242,6 +240,10 @@ export default function Wallet() {
                                     isWarning={withdrawEmpty}
                                     isSubmitted={withdrawSubmitted}
                                     label="입금액을 입력해주세요" />
+                                <TransferWarning
+                                    isWarning={withdrawOverflow}
+                                    isSubmitted={withdrawSubmitted}
+                                    label="출금량이 잔고를 초과했습니다" />
                                 <ChangeInput
                                     amount={withdrawChangeAmount}
                                     market={selectedCrypto.market.slice(4)} />
