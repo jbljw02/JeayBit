@@ -97,7 +97,24 @@ export default function ApexChart() {
               },
               yaxis: {
                 min: undefined,
-                max: undefined
+                max: undefined,
+                labels: {
+                  formatter: function (value: number) {
+                    return formatWithComas(value);
+                  },
+                },
+                tooltip: {
+                  enabled: true,
+                },
+                crosshairs: {
+                  show: true,
+                  position: 'back',
+                  stroke: {
+                    color: '#b6b6b6',
+                    width: 1,
+                    dashArray: 4,
+                  }
+                },
               }
             }, false, true);
           }
@@ -113,6 +130,13 @@ export default function ApexChart() {
           return label;
         },
       },
+      tooltip: {
+        enabled: true,
+        offsetY: 5,
+        formatter: function (value: string) {
+          return moment(Number(value)).format('MM/DD HH:mm');
+        },
+      }
     },
     yaxis: {
       labels: {
@@ -130,7 +154,7 @@ export default function ApexChart() {
           color: '#b6b6b6',
           width: 1,
           dashArray: 4,
-        },
+        }
       },
     },
     tooltip: {
@@ -167,7 +191,7 @@ export default function ApexChart() {
     },
   });
 
-  // X 레이블과 툴팁의 값을 포맷
+  // X 레이과 툴팁의 값을 포맷
   const xLabelFormat = (dateTime: number, format: string) => {
     const dateObj = moment.tz(dateTime, 'Asia/Seoul');
 
@@ -214,7 +238,7 @@ export default function ApexChart() {
       data = candlePerDate.map(formatCandleData);
     }
 
-    // 차트 객체 가져오기
+    // 차트 객체 가오기
     const chart = ApexCharts.getChartByID('crypto-chart');
     if (chart) {
       // 새로운 데이터로 series 업데이트

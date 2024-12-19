@@ -148,3 +148,37 @@
 .apexchart-tooltip div:last-child {
     margin-bottom: 0px;
 }
+
+/* crosshair 툴팁 스타일 */
+.apexcharts-xcrosshairs,
+.apexcharts-ycrosshairs {
+    stroke-width: 1px;
+    stroke: #b6b6b6;
+    stroke-dasharray: 4;
+}
+
+.apexcharts-xaxistooltip,
+.apexcharts-yaxistooltip {
+    background: #202630 !important;
+    color: #ffffff !important;
+    border: none !important;
+    border-radius: 3px !important;
+    font-size: 12px !important;
+    padding: 6px 8px !important;
+    font-weight: 500;
+}
+
+/* y축 툴팁 위치 좌측 끝으로 고정 */
+.apexcharts-yaxistooltip {
+    transform: none !important;
+    left: 0 !important;
+    margin-left: 15px !important;
+}
+
+/* 툴팁의 꼬리를 없앰 */
+.apexcharts-xaxistooltip:before,
+.apexcharts-xaxistooltip:after,
+.apexcharts-yaxistooltip:before,
+.apexcharts-yaxistooltip:after {
+    display: none !important;
+}
