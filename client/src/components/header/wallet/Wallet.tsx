@@ -47,7 +47,7 @@ export default function Wallet() {
     const selectedCrypto = useAppSelector(state => state.selectedCrypto);
 
     // 입금 및 출금량의 변화를 감지하고 한계량을 지정
-    const handleBalanceChange = (
+    const balanceChange = (
         event: { target: { value: string } },
         setAmount: React.Dispatch<React.SetStateAction<number | undefined>>,
         setChangeAmount: React.Dispatch<React.SetStateAction<number>>,
@@ -74,11 +74,18 @@ export default function Wallet() {
         }
 
         if (isSubmitted) {
+            // 입금량이 비어있는 경우
             if (value) {
                 setIsEmpty(false);
-            }
-            else {
+            } else {
                 setIsEmpty(true);
+            }
+
+            // 출금량이 잔고를 초과하는 경우
+            if (Number(value) > user.balance) {
+                setWithdrawOverflow(true);
+            } else {
+                setWithdrawOverflow(false);
             }
         }
     };
@@ -200,7 +207,7 @@ export default function Wallet() {
                                 label="입금금액"
                                 amount={depositAmount}
                                 onChange={(e) =>
-                                    handleBalanceChange(e, setDepositAmount, setDepositChangeAmount, setDepositLimit, setDepositEmpty, depositSubmitted, selectedCrypto.price)
+                                    balanceChange(e, setDepositAmount, setDepositChangeAmount, setDepositLimit, setDepositEmpty, depositSubmitted, selectedCrypto.price)
                                 }
                                 limitReached={depositLimit}
                                 amountEmpty={depositEmpty} />
@@ -228,7 +235,7 @@ export default function Wallet() {
                                     label="출금금액"
                                     amount={withdrawAmount}
                                     onChange={(e) =>
-                                        handleBalanceChange(e, setWithdrawAmount, setWithdrawChangeAmount, setWithdrawLimit, setWithdrawEmpty, withdrawSubmitted, selectedCrypto.price)
+                                        balanceChange(e, setWithdrawAmount, setWithdrawChangeAmount, setWithdrawLimit, setWithdrawEmpty, withdrawSubmitted, selectedCrypto.price)
                                     }
                                     limitReached={withdrawLimit}
                                     amountEmpty={withdrawEmpty}
