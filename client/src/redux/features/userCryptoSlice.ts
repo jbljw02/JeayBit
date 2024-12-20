@@ -38,6 +38,9 @@ const ownedCryptoSlice = createSlice({
                 targetCrypto.is_owned = action.payload.is_owned;
                 targetCrypto.owned_quantity = action.payload.owned_quantity;
             }
+            else {
+                state.push(action.payload);
+            }
         }
     }
 })
