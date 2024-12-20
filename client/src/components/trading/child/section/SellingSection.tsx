@@ -24,6 +24,7 @@ export default function SellingSectioin() {
     const selectedCrypto = useAppSelector(state => state.selectedCrypto);
     const user = useAppSelector(state => state.user);
     const ownedCrypto = useAppSelector(state => state.ownedCrypto);
+    const allCrypto = useAppSelector(state => state.allCrypto);
 
     const [selectedPercentage, setSelectedPercentage] = useState<string>('');
     const [bidSort, setBidSort] = useState<string>('지정가');
@@ -41,8 +42,14 @@ export default function SellingSectioin() {
     // 현재 시간을 저장하는 state
     const [time, setTime] = useState(new Date());
 
+    // 현재 선택된 화폐의 보유 정보를 실시간으로 관리
     const targetOwnedCrypto = useMemo(() => {
-        return ownedCrypto.find(crypto => crypto.name === selectedCrypto.name) || null;
+        return ownedCrypto.find(crypto => crypto.name === selectedCrypto.name) || 
+        {
+            ...selectedCrypto,
+            is_owned: false,
+            owned_quantity: 0,
+        };
     }, [ownedCrypto, selectedCrypto]);
 
     const resetValue = () => {
@@ -178,6 +185,10 @@ export default function SellingSectioin() {
         // 주문총액이 잔고의 잔액을 넘으면 주문을 넣을 수 없음
         if (sellQuantity > targetOwnedCrypto!.owned_quantity) {
             dispatch(showNoticeModal({ content: '주문 수량이 보유 화폐량을 초과했습니다.' }));
+            return;
+        }
+        if(targetOwnedCrypto!.is_owned === false || targetOwnedCrypto!.owned_quantity === 0) {
+            dispatch(showNoticeModal({ content: '해당 화폐를 보유하고 있지 않습니다.' }));
             return;
         }
 
