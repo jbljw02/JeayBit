@@ -36,15 +36,15 @@ export default function useAddTradeHistory() {
         isMarketValue: isMarketValue,
       });
 
-      const addedCrypto: Crypto = {
-        ...selectedCrypto,
-        is_owned: response.data.owned_crypto.is_owned,
-        owned_quantity: response.data.owned_crypto.owned_quantity,
-      }
-
       // 거래가 즉시 체결 됐을 경우
       // 거래 내역, 보유 화폐 정보, 잔고량 업데이트
       if (response.data.is_signed) {
+        const addedCrypto: Crypto = {
+          ...selectedCrypto,
+          is_owned: response.data.owned_crypto.is_owned,
+          owned_quantity: response.data.owned_crypto.owned_quantity,
+        }
+
         dispatch(addUserTradeHistory(response.data.trade_history));
         dispatch(adjustOwnedCrypto(addedCrypto));
         dispatch(setUserBalance(response.data.balance));
