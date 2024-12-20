@@ -105,10 +105,9 @@ def add_user_trade_history(request):
                     user, crypto, trade_amount, buy_total
                 )
                 
-                print('status_code', status_code)
-                
                 # 사용자의 현재 보유 화폐 정보 조회
                 user_crypto = UserCrypto.objects.get(user=user, crypto=crypto, is_owned=True)
+                print('user_crypto', user_crypto)
                 owned_crypto_data = {
                     "name": crypto.name,
                     "is_owned": user_crypto.is_owned,
@@ -129,9 +128,11 @@ def add_user_trade_history(request):
                 response_data, status_code = sell_process(
                     user, crypto, trade_amount, sell_total
                 )
-
+                
                 # 사용자의 현재 보유 화폐 정보 조회
-                user_crypto = UserCrypto.objects.get(user=user, crypto=crypto, is_owned=True)
+                user_crypto = UserCrypto.objects.get(user=user, crypto=crypto)
+                print('user_crypto', user_crypto)
+
                 owned_crypto_data = {
                     "name": crypto.name,
                     "is_owned": user_crypto.is_owned,

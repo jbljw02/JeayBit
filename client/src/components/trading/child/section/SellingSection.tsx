@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { showNoticeModal, setIsTradeComplete, setIsTradeWaiting, setIsTradeFailed } from "../../../../redux/features/modalSlice";
+import { useState, useEffect, useMemo } from "react";
+import { showNoticeModal } from "../../../../redux/features/modalSlice";
 import { setWorkingSpinner } from "../../../../redux/features/placeholderSlice";
 import { setSellingPrice } from "../../../../redux/features/tradeSlice";
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
@@ -9,12 +9,9 @@ import formatWithComas from "../../../../utils/format/formatWithComas";
 import limitDecimalPlace from "../../../../utils/format/limitDecimalPlace";
 import PriceRange from "../../../input/PriceRange";
 import TradeInput from "../../../input/TradeInput";
-import TradeFailedModal from "../../../modal/trade/TradeFailedModal";
-import WaitingModal from "../../../modal/trade/WatingModal";
 import { bidSortOptions } from "../../TradeSection";
 import SelectPercentage from "../SelectPercentage";
 import TradingThead from "../TradingThead";
-import CompleteModal from '../../../modal/trade/TradeModal'
 import TradingFooter from "../TradingFooter";
 import useAddTradeHistory from "../../../hooks/useAddTradeHistory";
 import CustomScrollbars from "../../../scrollbar/CustomScorllbars";
@@ -26,7 +23,6 @@ export default function SellingSectioin() {
 
     const selectedCrypto = useAppSelector(state => state.selectedCrypto);
     const user = useAppSelector(state => state.user);
-    const tradeModal = useAppSelector(state => state.tradeModal);
     const ownedCrypto = useAppSelector(state => state.ownedCrypto);
 
     const [selectedPercentage, setSelectedPercentage] = useState<string>('');
@@ -44,6 +40,10 @@ export default function SellingSectioin() {
 
     // 현재 시간을 저장하는 state
     const [time, setTime] = useState(new Date());
+
+    const targetOwnedCrypto = useMemo(() => {
+        return ownedCrypto.find(crypto => crypto.name === selectedCrypto.name) || null;
+    }, [ownedCrypto, selectedCrypto]);
 
     const resetValue = () => {
         setSellQuantity(0);
@@ -73,11 +73,14 @@ export default function SellingSectioin() {
         setSelectedPercentage(percentage);
 
         // 선택된 화폐의 보유 수량
-        const availableQuantity = selectedCrypto.owned_quantity;
+        const availableQuantity = targetOwnedCrypto?.is_owned ?
+            targetOwnedCrypto.owned_quantity :
+            0
 
         // 매수가격이 0이면 주문수량/주문총액은 의미가 없고, 보유 화폐량이 undefined이면 연산이 불가능
         if (sellingInputValue !== '0' && availableQuantity) {
             const percentageValue = calculatePercentage(percentage);
+
 
             if (percentageValue === 0) return; // 유효하지 않은 퍼센트 값에 대해 함수 종료
 
@@ -173,7 +176,7 @@ export default function SellingSectioin() {
 
     const processSellTrade = async (isMarketValue: boolean, price: number) => {
         // 주문총액이 잔고의 잔액을 넘으면 주문을 넣을 수 없음
-        if (sellQuantity > selectedCrypto.owned_quantity) {
+        if (sellQuantity > targetOwnedCrypto!.owned_quantity) {
             dispatch(showNoticeModal({ content: '주문 수량이 보유 화폐량을 초과했습니다.' }));
             return;
         }
@@ -198,16 +201,23 @@ export default function SellingSectioin() {
         // 거래가 즉시 체결 됐을 경우
         if (addTradeResCode === 200) {
             resetValue();
-            dispatch(setIsTradeComplete(true));
+            dispatch(showNoticeModal({
+                content: '성공적으로 화폐를 매도했습니다.',
+            }));
         }
         // 거래가 대기 중일 경우
         else if (addTradeResCode === 202 && !isMarketValue) {
             resetValue();
-            dispatch(setIsTradeWaiting(true));
+            dispatch(showNoticeModal({
+                content: '매도 요청이 완료되었습니다. \n' +
+                    '요청하신 가격과 일치하는 매수 요청이 발생하면 거래가 완료됩니다.',
+            }));
         }
         // 거래 실패 시
         else {
-            dispatch(setIsTradeFailed(true));
+            dispatch(showNoticeModal({
+                content: '화폐 매도에 실패했습니다.',
+            }));
         }
     };
 
@@ -223,18 +233,6 @@ export default function SellingSectioin() {
 
     return (
         <>
-            <CompleteModal
-                isModalOpen={tradeModal.isComplete}
-                setIsModalOpen={() => dispatch(setIsTradeComplete(false))}
-                category="sell" />
-            <TradeFailedModal
-                isModalOpen={tradeModal.isFailed}
-                setIsModalOpen={() => dispatch(setIsTradeFailed(false))}
-                category="sell" />
-            <WaitingModal
-                isModalOpen={tradeModal.isWaiting}
-                setIsModalOpen={() => dispatch(setIsTradeWaiting(false))}
-                category="sell" />
             {
                 // 매수 - 지정가 영역
                 bidSort === '지정가' ?
@@ -250,9 +248,9 @@ export default function SellingSectioin() {
                                     <div className="trading-title">주문가능</div>
                                     <div className="trading-row-contents">
                                         {
-                                            ownedCrypto.find(crypto => crypto.name === selectedCrypto.name)?.is_owned ?
-                                                ownedCrypto.find(crypto => crypto.name === selectedCrypto.name)?.owned_quantity :
-                                                0
+                                            targetOwnedCrypto?.is_owned ?
+                                                targetOwnedCrypto.owned_quantity
+                                                : 0
                                         }
                                         <span>
                                             {
@@ -324,9 +322,9 @@ export default function SellingSectioin() {
                                     <div className="trading-title">주문가능</div>
                                     <div className="trading-row-contents">
                                         {
-                                            ownedCrypto.find(crypto => crypto.name === selectedCrypto.name)?.is_owned ?
-                                                ownedCrypto.find(crypto => crypto.name === selectedCrypto.name)?.owned_quantity :
-                                                0
+                                            targetOwnedCrypto?.is_owned ?
+                                                targetOwnedCrypto.owned_quantity
+                                                : 0
                                         }
                                         <span>
                                             {

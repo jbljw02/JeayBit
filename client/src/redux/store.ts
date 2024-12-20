@@ -47,7 +47,6 @@ const combinedReducer = combineReducers({
   askingSpinner: placeholderReducers.askingSpinner,
   chartSpinner: placeholderReducers.chartSpinner,
   workingSpinner: placeholderReducers.workingSpinner,
-  tradeModal: modalReducers.tradeModal,
 });
 
 export type RootState = ReturnType<typeof combinedReducer>;

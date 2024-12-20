@@ -23,6 +23,8 @@ export default function NoticeModal({ isModalOpen, setIsModalOpen }: ModalProps)
 
     const enterCloseEvent = (event: KeyboardEvent) => {
         if (event.key === 'Enter') {
+            event.preventDefault();
+            event.stopPropagation();
             setIsModalOpen(false);
         }
     };

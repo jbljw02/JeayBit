@@ -45,28 +45,10 @@ const noticeModalSlice = createSlice({
     }
 })
 
-const tradeModalSlice = createSlice({
-    name: 'tradeModal',
-    initialState: initialTradeModalState,
-    reducers: {
-        setIsTradeComplete: (state, action) => {
-            state.isComplete = action.payload;
-        },
-        setIsTradeFailed: (state, action) => {
-            state.isFailed = action.payload;
-        },
-        setIsTradeWaiting: (state, action) => {
-            state.isWaiting = action.payload;
-        }
-    }
-})
-
 export const { showNoticeModal, hideNoticeModal } = noticeModalSlice.actions;
-export const { setIsTradeComplete, setIsTradeFailed, setIsTradeWaiting } = tradeModalSlice.actions;
 
 const reducers = {
     noticeModal: noticeModalSlice.reducer,
-    tradeModal: tradeModalSlice.reducer,
 }
 
 export default reducers;

@@ -36,7 +36,6 @@ export default function ListTbody() {
 
     const favoriteCrypto = useAppSelector(state => state.favoriteCrypto);
     const ownedCrypto = useAppSelector(state => state.ownedCrypto);
-    console.log('ownedCrypto: ', ownedCrypto);
     
     // 화폐 가격의 변화를 감지하고 업데이트
     useEffect(() => {

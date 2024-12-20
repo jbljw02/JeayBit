@@ -1,14 +1,13 @@
 import axios from "axios";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { addUserTradeHistory, addUserTradeHistory_unSigned } from "../../redux/features/tradeSlice";
-import { addOwnedCrypto } from "../../redux/features/userCryptoSlice";
+import { adjustOwnedCrypto } from "../../redux/features/userCryptoSlice";
 import { setUserBalance } from "../../redux/features/userSlice";
 
 const API_URL = process.env.REACT_APP_API_URL;
 
 export default function useAddTradeHistory() {
   const dispatch = useAppDispatch();
-  const user = useAppSelector(state => state.user);
 
   // 거래 내역에 저장될 정보를 전송(화폐 매수와 함께)
   const addTradeHistory = async (email: string,
@@ -39,7 +38,7 @@ export default function useAddTradeHistory() {
       // 거래 내역, 보유 화폐 정보, 잔고량 업데이트
       if (response.data.is_signed) {
         dispatch(addUserTradeHistory(response.data.trade_history));
-        dispatch(addOwnedCrypto(response.data.owned_crypto));
+        dispatch(adjustOwnedCrypto(response.data.owned_crypto));
         dispatch(setUserBalance(response.data.balance));
       }
       // 거래가 대기 중일 경우 거래 내역만 업데이트
@@ -49,7 +48,6 @@ export default function useAddTradeHistory() {
 
       return response.status;
     } catch (error) {
-      console.log(error);
       if (axios.isAxiosError(error)) {
         return error.response ? error.response.status : 500;
       }

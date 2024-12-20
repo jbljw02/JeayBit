@@ -41,7 +41,6 @@ export default function KakaoCallback() {
                     }
                     // 데스크톱: 팝업 창 처리
                     else {
-                        console.log('데스크톱 팝업 창 처리');
                         window.opener.location.href = '/';
                         window.close();
                     }
