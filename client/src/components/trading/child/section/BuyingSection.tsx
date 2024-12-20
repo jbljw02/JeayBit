@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { showNoticeModal, setIsTradeComplete, setIsTradeWaiting, setIsTradeFailed } from "../../../../redux/features/modalSlice";
+import { showNoticeModal } from "../../../../redux/features/modalSlice";
 import { setWorkingSpinner } from "../../../../redux/features/placeholderSlice";
 import { setBuyingPrice } from "../../../../redux/features/tradeSlice";
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
@@ -9,12 +9,9 @@ import formatWithComas from "../../../../utils/format/formatWithComas";
 import limitDecimalPlace from "../../../../utils/format/limitDecimalPlace";
 import PriceRange from "../../../input/PriceRange";
 import TradeInput from "../../../input/TradeInput";
-import TradeFailedModal from "../../../modal/trade/TradeFailedModal";
-import WaitingModal from "../../../modal/trade/WatingModal";
 import { bidSortOptions } from "../../TradeSection";
 import SelectPercentage from "../SelectPercentage";
 import TradingThead from "../TradingThead";
-import CompleteModal from '../../../modal/trade/TradeModal'
 import TradingFooter from "../TradingFooter";
 import useAddTradeHistory from "../../../hooks/useAddTradeHistory";
 import CustomScrollbars from "../../../scrollbar/CustomScorllbars";
@@ -27,7 +24,6 @@ export default function BuyingSection() {
     const selectedCrypto = useAppSelector(state => state.selectedCrypto);
     const user = useAppSelector(state => state.user);
     const buyingPrice = useAppSelector(state => state.buyingPrice);
-    const tradeModal = useAppSelector(state => state.tradeModal);
 
     const [selectedPercentage, setSelectedPercentage] = useState<string>('');
     const [bidSort, setBidSort] = useState<string>('지정가');
@@ -182,16 +178,23 @@ export default function BuyingSection() {
         // 거래가 즉시 체결 됐을 경우
         if (statusCode === 200) {
             resetValue();
-            dispatch(setIsTradeComplete(true));
+            dispatch(showNoticeModal({
+                content: '성공적으로 화폐를 매수했습니다.',
+            }));
         }
         // 거래가 대기 중일 경우
         else if (statusCode === 202 && !isMarketValue) {
             resetValue();
-            dispatch(setIsTradeWaiting(true));
+            dispatch(showNoticeModal({
+                content: '매수 요청이 완료되었습니다. \n' +
+                    '요청하신 가격과 일치하는 매도 요청이 발생하면 거래가 완료됩니다.',
+            }));
         }
         // 거래 실패 시
         else {
-            dispatch(setIsTradeFailed(true));
+            dispatch(showNoticeModal({
+                content: '화폐 매수에 실패했습니다.',
+            }));
         }
     }
 
@@ -207,18 +210,6 @@ export default function BuyingSection() {
 
     return (
         <>
-            <CompleteModal
-                isModalOpen={tradeModal.isComplete}
-                setIsModalOpen={() => dispatch(setIsTradeComplete(false))}
-                category="buy" />
-            <TradeFailedModal
-                isModalOpen={tradeModal.isFailed}
-                setIsModalOpen={() => dispatch(setIsTradeFailed(false))}
-                category="buy" />
-            <WaitingModal
-                isModalOpen={tradeModal.isWaiting}
-                setIsModalOpen={() => dispatch(setIsTradeWaiting(false))}
-                category="buy" />
             {
                 // 매도 - 지정가 영역
                 bidSort === '지정가' ?
