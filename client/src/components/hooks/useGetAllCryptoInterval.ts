@@ -40,6 +40,8 @@ export default function useGetAllCryptoInterval() {
 
     const initialFetch = async () => {
         const allCrypto: Crypto[] = await getAllCrypto();
+        selectClosedPrice(selectedCrypto.market || 'KRW-BTC');
+        selectAskingPrice(selectedCrypto.market || 'KRW-BTC');
         const isFavorites = allCrypto.filter(item => item.is_favorited);
         const isOwnes = allCrypto.filter(item => item.is_owned && item.owned_quantity > 0.00);
         

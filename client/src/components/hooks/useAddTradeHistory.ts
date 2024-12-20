@@ -3,11 +3,13 @@ import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { addUserTradeHistory, addUserTradeHistory_unSigned } from "../../redux/features/tradeSlice";
 import { adjustOwnedCrypto } from "../../redux/features/userCryptoSlice";
 import { setUserBalance } from "../../redux/features/userSlice";
+import { Crypto } from "../../redux/features/cryptoListSlice";
 
 const API_URL = process.env.REACT_APP_API_URL;
 
 export default function useAddTradeHistory() {
   const dispatch = useAppDispatch();
+  const selectedCrypto = useAppSelector(state => state.selectedCrypto);
 
   // 거래 내역에 저장될 정보를 전송(화폐 매수와 함께)
   const addTradeHistory = async (email: string,
@@ -34,11 +36,17 @@ export default function useAddTradeHistory() {
         isMarketValue: isMarketValue,
       });
 
+      const addedCrypto: Crypto = {
+        ...selectedCrypto,
+        is_owned: response.data.owned_crypto.is_owned,
+        owned_quantity: response.data.owned_crypto.owned_quantity,
+      }
+
       // 거래가 즉시 체결 됐을 경우
       // 거래 내역, 보유 화폐 정보, 잔고량 업데이트
       if (response.data.is_signed) {
         dispatch(addUserTradeHistory(response.data.trade_history));
-        dispatch(adjustOwnedCrypto(response.data.owned_crypto));
+        dispatch(adjustOwnedCrypto(addedCrypto));
         dispatch(setUserBalance(response.data.balance));
       }
       // 거래가 대기 중일 경우 거래 내역만 업데이트
