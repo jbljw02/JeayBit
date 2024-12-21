@@ -29,7 +29,7 @@
 ## 2. 프로젝트 구조도
 ![구조도](https://github.com/user-attachments/assets/4f84c6d6-bb38-47c7-ae59-cacb7fa50c98)
 
-## 3. 프로젝트 구조도
+## 3. 프로젝트 흐름도
 
 ### 1) 화폐 정보 불러오기
 ![흐름도 - 화폐 정보 불러오기](https://github.com/user-attachments/assets/8c03c37c-0542-4c43-bc98-4ec9531477fa)
