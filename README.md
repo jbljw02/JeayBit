@@ -1,7 +1,7 @@
 # 암호화폐 가상 거래 서비스 'JeayBit'
-> JeayBit은 진입장벽이 낮고 경량화된 암호화폐 가상 거래 프로그램입니다. <br>
-> 기존의 응답시간이 길고 복잡한 암호화폐 거래소들과는 달리, 필수적인 기능들만을 채택하여 개발된 트레이딩 뷰입니다. <br>
-> 화폐 거래는 실제 거래가 아닌 임의의 가상 환경에서 진행됩니다. <br>
+> JeayBit은 기존 암호화폐 거래소들의 높은 진입장벽과 복잡성 문제를 해결하기 위해 개발된 경량화 가상 거래 프로그램입니다. <br >
+> 필수적인 트레이딩 기능만을 제공하여 초보자도 쉽게 접근할 수 있으며, 실제 자산 위험 없이 거래 경험을 쌓을 수 있는 가상 환경을 제공합니다. <br>
+> 또한 직관적인 인터페이스와 빠른 응답 속도를 바탕으로 누구나 쉽게 암호화폐 거래를 배울 수 있도록 돕습니다. <br>
 - 배포 URL: https://jeaybit.com
 
 <br>
@@ -40,7 +40,38 @@
 
 <br>
 
-## 3. 화면 구성 및 주요 기능
+## 4. 반응형 디자인
+
+### 1) PC
+|PC|
+|:---:|
+|<img width="1710" alt="PC" src="https://github.com/user-attachments/assets/14ef180b-c687-4ede-8e5f-816fe355e32c" />|
+
+### 2) 태블릿
+|태블릿 (1)|
+|:---:|
+|<img width="1180" alt="태블릿 - 가로" src="https://github.com/user-attachments/assets/847b8319-5313-4c35-a827-e2a41e409572" />|
+
+|태블릿 (2)|
+|:---:|
+|<img width="750" alt="태블릿 - 세로" src="https://github.com/user-attachments/assets/f5ce1151-a267-4f50-a218-acbf3c6965c9" />|
+
+|태블릿 (3)|
+|:---:|
+|![태블릿 상세](https://github.com/user-attachments/assets/c1be8188-0300-44ac-b09f-66e3d4028e36)|
+
+### 3) 휴대폰
+|휴대폰 (1)|
+|:---:|
+|<img width="400" alt="휴대폰 - 세로" src="https://github.com/user-attachments/assets/0726756d-bd67-4e8b-9d5c-6c9fb7458405" />|
+
+|휴대폰 (2)|
+|:---:|
+|<img width="400" alt="휴대폰 - 상세" src="https://github.com/user-attachments/assets/d054c0c5-e568-4122-8eeb-22d007ef4a2a" />|
+
+<br>
+
+## 5. 화면 구성 및 주요 기능
 
 ### 1) 회원가입
 - 유효성 검사(이메일과 비밀번호의 형식)를 통과해야 회원가입이 가능합니다. <br>
