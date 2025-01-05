@@ -11,30 +11,23 @@ export default function CryptoDetail() {
     const allCrypto = useAppSelector(state => state.allCrypto);
 
     const priceClassName = `crypto-price ${cryptoRealTime.change === 'RISE' ? 'rise' :
-        cryptoRealTime.change === 'FALL' ? 'fall' : 'even'
-        }`;
+        cryptoRealTime.change === 'FALL' ? 'fall' : 'even'}`;
 
     return (
         <>
             {
-                allCrypto.length ?
+                cryptoRealTime.price ?
                     <div className="crypto-detail">
                         {
-                            cryptoRealTime && cryptoRealTime.change && (
-                                <div className={priceClassName}>
-                                    {formatWithComas(cryptoRealTime.price)}
-                                    <div>
-                                        {
-                                            cryptoRealTime && cryptoRealTime.change_price !== undefined && cryptoRealTime.change && (
-                                                <ChangePrice
-                                                    changePrice={cryptoRealTime.change_price}
-                                                    change={cryptoRealTime.change} />
-                                            )
-                                        }
-                                        <ChangeRate />
-                                    </div>
+                            <div className={priceClassName}>
+                                {formatWithComas(cryptoRealTime.price)}
+                                <div>
+                                    <ChangePrice
+                                        changePrice={cryptoRealTime.change_price}
+                                        change={cryptoRealTime.change} />
+                                    <ChangeRate />
                                 </div>
-                            )
+                            </div>
                         }
                         <Summary />
                     </div> :

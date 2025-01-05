@@ -42,41 +42,29 @@ export default function CryptoHeader() {
     }, [isListOpen]);
 
     return (
-        <>
+        <div className="crypto-header">
+            <CryptoIconWrapper />
             {
-                allCrypto.length ? (
-                    <div className="crypto-header">
-                        <CryptoIconWrapper />
-                        {
-                            checkCurrentScreen().device === 'laptop' &&
-                            <>
-                                <button
-                                    onClick={() => setIsListOpen(!isListOpen)}
-                                    className="list-icon-wrapper">
-                                    <ListIcon
-                                        width={23}
-                                        height={23} />
-                                </button>
-                                {
-                                    isListOpen && checkCurrentScreen().device === 'laptop' &&
-                                    <div
-                                        ref={listContainerRef}
-                                        className="list-container"
-                                        style={{ height: `${listHeight}px` }}>
-                                        <CryptoList />
-                                    </div>
-                                }
-                            </>
-                        }
-                    </div>
-                ) :
-                    <div className="crypto-header-skeleton">
-                        <SkeletonUI
-                            containerHeight="100%"
-                            elementsHeight={35}
-                            counts={1} />
-                    </div>
+                checkCurrentScreen().device === 'laptop' &&
+                <>
+                    <button
+                        onClick={() => setIsListOpen(!isListOpen)}
+                        className="list-icon-wrapper">
+                        <ListIcon
+                            width={23}
+                            height={23} />
+                    </button>
+                    {
+                        isListOpen && checkCurrentScreen().device === 'laptop' &&
+                        <div
+                            ref={listContainerRef}
+                            className="list-container"
+                            style={{ height: `${listHeight}px` }}>
+                            <CryptoList />
+                        </div>
+                    }
+                </>
             }
-        </>
+        </div>
     );
 }

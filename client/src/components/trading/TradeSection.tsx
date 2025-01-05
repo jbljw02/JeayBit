@@ -6,6 +6,7 @@ import '../../styles/price-detail/trading/tradeSection.css'
 import { useAppSelector } from "../../redux/hooks";
 import PlaceholderDisplay from "../placeholder/PlaceholderDisplay";
 import NavBar from "../common/NavBar";
+import CeleryCompleteModal from "../modal/trade/CeleryCompleteModal";
 
 export type CeleryData = {
     name: string,
@@ -30,7 +31,6 @@ export type SectionChange = '매수' | '매도' | '거래내역';
 export default function TradeSection() {
     const [sectionChange, setSectionChange] = useState<SectionChange>('매수');
     const user = useAppSelector(state => state.user);
-
 
     return (
         <div className="trade-section">

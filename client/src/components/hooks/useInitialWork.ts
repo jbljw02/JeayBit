@@ -24,21 +24,23 @@ export default function useInitialWork() {
         }
     }
 
-     // 초기 데이터를 비트코인으로 설정
-     const getInitialData = async () => {
+    // 초기 데이터를 비트코인으로 설정
+    const getInitialData = async () => {
         try {
             const response = await axios.post(`${API_URL}/get_all_crypto/`, {}, {
                 withCredentials: true,
             });
-            dispatch(setSelectedCrypto(response.data.all_crypto[0]));
-            dispatch(setCryptoRealTime(response.data.all_crypto[0]));
+
+            Promise.all([
+                dispatch(setSelectedCrypto(response.data.all_crypto[0])),
+                dispatch(setCryptoRealTime(response.data.all_crypto[0]))
+            ]);
         } catch (error) {
             dispatch(showNoticeModal({
                 content: '서버 연결이 불안정합니다. 잠시 후 다시 시도해주세요.',
             }));
         }
     };
-
 
     // 마운트 초기에 사용자의 로그인 여부를 체크
     // 초기 데이터를 요청하여 selectedCrypto의 초기값을 비트코인으로 설정
