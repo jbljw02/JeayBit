@@ -14,7 +14,6 @@ import Login from '../components/auth/Login';
 import Header from '../components/header/Header';
 import MobileDetail from '../responsive/components/MobileDetail';
 import TradeSection from '../components/trading/TradeSection';
-import '../styles/price-detail/trading/tradeSection.css';
 import '../styles/App.css';
 import OrderBook from '../components/order-book/OrderBook';
 import useGetTradeHistory from '../components/hooks/useGetTradeHistory';
@@ -98,7 +97,7 @@ export default function Home() {
                         </>
                     } />
                     <Route path="/detail/*" element={
-                        checkCurrentScreen().device !== 'desktop'  ?
+                        checkCurrentScreen().device !== 'desktop' ?
                             <MobileDetail /> :
                             <Navigate to="/" replace />
                     } />

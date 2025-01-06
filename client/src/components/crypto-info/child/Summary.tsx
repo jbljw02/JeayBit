@@ -73,35 +73,40 @@ export default function Summary() {
     }, []);
 
     return (
-        <div
-            className="summary-container"
-            ref={containerRef}>
-            <div>
-                <DetailContent
-                    title="거래량"
-                    value={cryptoRealTime.trade_volume}
-                    suffix={cryptoRealTime.market.slice(4)} />
-                <DetailContent
-                    title="시가"
-                    value={cryptoRealTime.open_price} />
-                <DetailContent
-                    title="고가"
-                    value={cryptoRealTime.high_price}
-                    category="high" />
-            </div>
-            <div>
-                <DetailContent
-                    title="거래대금"
-                    value={cryptoRealTime.trade_price}
-                    suffix="KRW" />
-                <DetailContent
-                    title="종가"
-                    value={cryptoRealTime.price} />
-                <DetailContent
-                    title="저가"
-                    value={cryptoRealTime.low_price}
-                    category="low" />
-            </div>
-        </div>
+        <>
+            {
+                cryptoRealTime.price &&
+                <div
+                    className="summary-container"
+                    ref={containerRef}>
+                    <div>
+                        <DetailContent
+                            title="거래량"
+                            value={cryptoRealTime.trade_volume}
+                            suffix={cryptoRealTime.market.slice(4)} />
+                        <DetailContent
+                            title="시가"
+                            value={cryptoRealTime.open_price} />
+                        <DetailContent
+                            title="고가"
+                            value={cryptoRealTime.high_price}
+                            category="high" />
+                    </div>
+                    <div>
+                        <DetailContent
+                            title="거래대금"
+                            value={cryptoRealTime.trade_price}
+                            suffix="KRW" />
+                        <DetailContent
+                            title="종가"
+                            value={cryptoRealTime.price} />
+                        <DetailContent
+                            title="저가"
+                            value={cryptoRealTime.low_price}
+                            category="low" />
+                    </div>
+                </div>
+            }
+        </>
     );
 }

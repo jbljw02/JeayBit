@@ -44,7 +44,7 @@ export default function useGetAllCryptoInterval() {
         selectAskingPrice(selectedCrypto.market || 'KRW-BTC');
         const isFavorites = allCrypto.filter(item => item.is_favorited);
         const isOwnes = allCrypto.filter(item => item.is_owned && item.owned_quantity > 0.00);
-        
+
         dispatch(setFavoriteCrypto(isFavorites));
         dispatch(setOwnedCrypto(isOwnes));
         dispatch(setAllCrypto(allCrypto));

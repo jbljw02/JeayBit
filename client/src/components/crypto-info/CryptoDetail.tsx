@@ -8,33 +8,28 @@ import SkeletonUI from "../placeholder/SkeletonUI";
 
 export default function CryptoDetail() {
     const cryptoRealTime = useAppSelector(state => state.cryptoRealTime);
-    const allCrypto = useAppSelector(state => state.allCrypto);
 
-    const priceClassName = `crypto-price ${cryptoRealTime.change === 'RISE' ? 'rise' :
+    const priceClassName = `crypto-price-container ${cryptoRealTime.change === 'RISE' ? 'rise' :
         cryptoRealTime.change === 'FALL' ? 'fall' : 'even'
         }`;
 
     return (
         <>
             {
-                allCrypto.length ?
+                cryptoRealTime.price ?
                     <div className="crypto-detail">
                         {
-                            cryptoRealTime && cryptoRealTime.change && (
-                                <div className={priceClassName}>
+                            <div className={priceClassName}>
+                                <div className="crypto-price">
                                     {formatWithComas(cryptoRealTime.price)}
-                                    <div>
-                                        {
-                                            cryptoRealTime && cryptoRealTime.change_price !== undefined && cryptoRealTime.change && (
-                                                <ChangePrice
-                                                    changePrice={cryptoRealTime.change_price}
-                                                    change={cryptoRealTime.change} />
-                                            )
-                                        }
-                                        <ChangeRate />
-                                    </div>
                                 </div>
-                            )
+                                <div className="crypto-change">
+                                    <ChangePrice
+                                        changePrice={cryptoRealTime.change_price}
+                                        change={cryptoRealTime.change} />
+                                    <ChangeRate />
+                                </div>
+                            </div>
                         }
                         <Summary />
                     </div> :

@@ -1,6 +1,5 @@
 import { useAppSelector } from "../../redux/hooks";
 import '../../styles/crypto-info/cryptoHeader.css'
-import SkeletonUI from "../placeholder/SkeletonUI";
 import { ReactComponent as ListIcon } from "../../assets/images/list.svg";
 import CryptoIconWrapper from "./child/CryptoIconWrapper";
 import { useState, useEffect, useRef } from "react";
@@ -42,41 +41,29 @@ export default function CryptoHeader() {
     }, [isListOpen]);
 
     return (
-        <>
+        <div className="crypto-header">
+            <CryptoIconWrapper />
             {
-                allCrypto.length ? (
-                    <div className="crypto-header">
-                        <CryptoIconWrapper />
-                        {
-                            checkCurrentScreen().device === 'laptop' &&
-                            <>
-                                <button
-                                    onClick={() => setIsListOpen(!isListOpen)}
-                                    className="list-icon-wrapper">
-                                    <ListIcon
-                                        width={23}
-                                        height={23} />
-                                </button>
-                                {
-                                    isListOpen && checkCurrentScreen().device === 'laptop' &&
-                                    <div
-                                        ref={listContainerRef}
-                                        className="list-container"
-                                        style={{ height: `${listHeight}px` }}>
-                                        <CryptoList />
-                                    </div>
-                                }
-                            </>
-                        }
-                    </div>
-                ) :
-                    <div className="crypto-header-skeleton">
-                        <SkeletonUI
-                            containerHeight="100%"
-                            elementsHeight={35}
-                            counts={1} />
-                    </div>
+                checkCurrentScreen().device === 'laptop' &&
+                <>
+                    <button
+                        onClick={() => setIsListOpen(!isListOpen)}
+                        className="list-icon-wrapper">
+                        <ListIcon
+                            width={23}
+                            height={23} />
+                    </button>
+                    {
+                        isListOpen && checkCurrentScreen().device === 'laptop' &&
+                        <div
+                            ref={listContainerRef}
+                            className="list-container"
+                            style={{ height: `${listHeight}px` }}>
+                            <CryptoList />
+                        </div>
+                    }
+                </>
             }
-        </>
+        </div>
     );
 }

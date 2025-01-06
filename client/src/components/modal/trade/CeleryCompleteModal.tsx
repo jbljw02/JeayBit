@@ -43,12 +43,12 @@ export default function CeleryCompleteModal({ isModalOpen, setIsModalOpen, celer
                             }
                             거래가 체결되었습니다.
                             <div className={styles.contentDetail}>
-                                <div>거래 화폐 : <b>{celeryData.name}</b></div>
+                                <div>거래 화폐: <b>{celeryData.name}</b></div>
                                 <div>
-                                    거래 요청시간 : <b>{celeryData.tradeTime &&
+                                    거래 요청시간: <b>{celeryData.tradeTime &&
                                         formatDateString(celeryData.tradeTime)}</b>
                                 </div>
-                                <div>거래가 : <b>{formatWithComas(celeryData.price)} KRW</b></div>
+                                <div>거래가: <b>{formatWithComas(celeryData.price)} KRW</b></div>
                             </div>
                         </div>
                     }
