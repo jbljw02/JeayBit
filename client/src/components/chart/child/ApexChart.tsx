@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Chart from 'react-apexcharts';
 import moment from 'moment-timezone';
 import { useAppSelector } from '../../../redux/hooks';

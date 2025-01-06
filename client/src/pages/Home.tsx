@@ -9,7 +9,7 @@ import WorkingSpinnerModal from '../components/modal/trade/WorkingSpinnerModal';
 import { setWorkingSpinner } from '../redux/features/placeholderSlice';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import KakaoCallback from '../components/auth/child/KakaoCallback';
-import { hideNoticeModal, showNoticeModal } from '../redux/features/modalSlice';
+import { hideNoticeModal} from '../redux/features/modalSlice';
 import Login from '../components/auth/Login';
 import Header from '../components/header/Header';
 import MobileDetail from '../responsive/components/MobileDetail';

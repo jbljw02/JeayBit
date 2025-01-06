@@ -7,7 +7,6 @@ import SkeletonUI from "../placeholder/SkeletonUI";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import NavBar from "../common/NavBar";
 import { setListCategory } from "../../redux/features/cryptoListSlice";
-import { useEffect } from "react";
 
 type SectionChange = '원화' | '보유' | '관심';
 

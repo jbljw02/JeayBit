@@ -31,6 +31,7 @@ export default function PINoticeModal({ isModalOpen, setIsModalOpen, setIsAgree 
 
     return (
         <Modal
+            className='pi-notice-modal'
             isOpen={isModalOpen}
             style={modalStyle}>
             <div className="pi-notice-container">
