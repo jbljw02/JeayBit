@@ -59,7 +59,7 @@ export default function useGetAllCryptoInterval() {
         // 초기 마운트시 즉시 실행
         const fetchCryptoData = () => {
             getAllCrypto();
-            
+
             // 호가 및 체결 내역 요청
             // 이미 내역을 불러오는 중이 아닐 때만 요청
             if (!askingSpinner) {

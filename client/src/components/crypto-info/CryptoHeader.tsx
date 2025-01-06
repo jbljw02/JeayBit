@@ -1,6 +1,5 @@
 import { useAppSelector } from "../../redux/hooks";
 import '../../styles/crypto-info/cryptoHeader.css'
-import SkeletonUI from "../placeholder/SkeletonUI";
 import { ReactComponent as ListIcon } from "../../assets/images/list.svg";
 import CryptoIconWrapper from "./child/CryptoIconWrapper";
 import { useState, useEffect, useRef } from "react";

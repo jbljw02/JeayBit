@@ -8,10 +8,10 @@ import SkeletonUI from "../placeholder/SkeletonUI";
 
 export default function CryptoDetail() {
     const cryptoRealTime = useAppSelector(state => state.cryptoRealTime);
-    const allCrypto = useAppSelector(state => state.allCrypto);
 
-    const priceClassName = `crypto-price ${cryptoRealTime.change === 'RISE' ? 'rise' :
-        cryptoRealTime.change === 'FALL' ? 'fall' : 'even'}`;
+    const priceClassName = `crypto-price-container ${cryptoRealTime.change === 'RISE' ? 'rise' :
+        cryptoRealTime.change === 'FALL' ? 'fall' : 'even'
+        }`;
 
     return (
         <>
@@ -20,8 +20,10 @@ export default function CryptoDetail() {
                     <div className="crypto-detail">
                         {
                             <div className={priceClassName}>
-                                {formatWithComas(cryptoRealTime.price)}
-                                <div>
+                                <div className="crypto-price">
+                                    {formatWithComas(cryptoRealTime.price)}
+                                </div>
+                                <div className="crypto-change">
                                     <ChangePrice
                                         changePrice={cryptoRealTime.change_price}
                                         change={cryptoRealTime.change} />
