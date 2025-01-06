@@ -34,7 +34,7 @@ export default function NoticeModal({ isModalOpen, setIsModalOpen }: ModalProps)
             document.addEventListener('keydown', enterCloseEvent);
         }
         return () => {
-            document.removeEventListener('keydown', enterCloseEvent); 
+            document.removeEventListener('keydown', enterCloseEvent);
         };
     }, [isModalOpen]);
 
@@ -54,7 +54,7 @@ export default function NoticeModal({ isModalOpen, setIsModalOpen }: ModalProps)
                     width: 'fit-content',
                     height: 145,
                     transform: 'translate(-50%, -50%)',
-                    zIndex: 1001
+                    zIndex: 1001,
                 }
             }}>
             <div className={styles.container}>

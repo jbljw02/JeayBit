@@ -59,8 +59,7 @@
 }
 
 @media screen and (max-width: 767px) {
-    /* Modal style overrides */
-    .ReactModal__Content {
+    .pi-notice-modal {
         width: 100% !important;
         height: 100% !important;
         padding: 20px 20px 10px 20px !important;
@@ -70,6 +69,7 @@
         transform: none !important;
         max-width: 100vw !important;
         box-sizing: border-box !important;
+        background-color: #fff !important;
     }
 
     .pi-notice-close-btn {
