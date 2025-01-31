@@ -1,8 +1,7 @@
 import axios from "axios";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import formatDateString from "../../utils/date/formatDateString";
-import { addUserTradeHistory, addUserTradeHistory_unSigned, setUserTradeHistory, setUserTradeHistory_unSigned } from "../../redux/features/tradeSlice";
-import { setUserBalance } from "../../redux/features/userSlice";
+import { setUserTradeHistory, setUserTradeHistory_unSigned } from "../../redux/features/tradeSlice";
 import { showNoticeModal } from "../../redux/features/modalSlice";
 import { useEffect } from "react";
 

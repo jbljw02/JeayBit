@@ -1,7 +1,6 @@
 import { ReactComponent as StarIcon } from '../../assets/images/star.svg';
 import '../../styles/common/shortcutsButton.css';
 import useToggleShortcuts from '../../components/hooks/useToggleShortcuts';
-import { useAppSelector } from '../../redux/hooks';
 import { Crypto } from '../../redux/features/cryptoListSlice';
 
 type ShortcutsButtonProps = {
