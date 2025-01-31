@@ -1,4 +1,3 @@
-import { useAppSelector } from "../../redux/hooks";
 import '../../styles/crypto-info/cryptoHeader.css'
 import { ReactComponent as ListIcon } from "../../assets/images/list.svg";
 import CryptoIconWrapper from "./child/CryptoIconWrapper";
@@ -7,9 +6,9 @@ import CryptoList from "../crypto-list/CryptoList";
 import checkCurrentScreen from "../../utils/responsive/checkCurrentScreen";
 
 export default function CryptoHeader() {
-    const allCrypto = useAppSelector(state => state.allCrypto);
     const [isListOpen, setIsListOpen] = useState(false);
     const [listHeight, setListHeight] = useState(0);
+    
     const listContainerRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {

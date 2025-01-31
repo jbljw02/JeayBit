@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import formatWithComas from "../../../../utils/format/formatWithComas";
 import CustomScrollbars from "../../../scrollbar/CustomScorllbars";
-import { setFavoriteCrypto, setOwnedCrypto } from "../../../../redux/features/userCryptoSlice";
 import { setCryptoRealTime, setSelectedCrypto } from "../../../../redux/features/selectedCryptoSlice";
 import { Crypto } from "../../../../redux/features/cryptoListSlice";
 import { setAskingSpinner } from "../../../../redux/features/placeholderSlice";

@@ -6,7 +6,6 @@ import '../../styles/price-detail/trading/tradeSection.css'
 import { useAppSelector } from "../../redux/hooks";
 import PlaceholderDisplay from "../placeholder/PlaceholderDisplay";
 import NavBar from "../common/NavBar";
-import CeleryCompleteModal from "../modal/trade/CeleryCompleteModal";
 
 export type CeleryData = {
     name: string,
