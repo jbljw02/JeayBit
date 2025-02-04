@@ -13,4 +13,4 @@ const kakaoLogin = () => {
     }
 }
 
-export default kakaoLogin;
+export default kakaoLogin
