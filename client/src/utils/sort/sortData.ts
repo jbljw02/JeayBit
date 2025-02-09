@@ -27,9 +27,9 @@ export const sortByPrice = (data: Crypto[], sortOrder: number): Crypto[] => {
 
 // 변화율에 따라 정렬
 export const sortByChangeRate = (data: Crypto[], order: number) => {
-    let rise_crypto = [...data].filter(item => item.change_rate > 0);
-    let even_crypto = [...data].filter(item => item.change_rate === 0);
-    let fall_crypto = [...data].filter(item => item.change_rate < 0);
+    let rise_crypto = [...data].filter(item => item.change === 'RISE');
+    let even_crypto = [...data].filter(item => item.change === 'EVEN');
+    let fall_crypto = [...data].filter(item => item.change === 'FALL');
 
     if (order === 1) {
         rise_crypto.sort((a, b) => b.change_rate - a.change_rate);
