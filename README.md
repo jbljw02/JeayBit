@@ -92,7 +92,7 @@
 
 |카카오 로그인|
 |:---:|
-|![카카오 로그인](https://github.com/user-attachments/assets/14ce0fa5-12e3-4231-9c1b-c0c29e080cb6)|
+|![카카오 로그인](https://github.com/user-attachments/assets/51be6a49-0da5-4d76-b543-d72f7ac95add)|
 
 ### 3) 화폐 리스트, 호가/체결내역, 차트
 - 화폐의 시세는 주기적으로 갱신됩니다.
