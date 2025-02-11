@@ -35,13 +35,17 @@ export const sortByChangeRate = (data: Crypto[], order: number) => {
         rise_crypto.sort((a, b) => b.change_rate - a.change_rate);
         even_crypto.sort((a, b) => b.change_rate - a.change_rate);
         fall_crypto.sort((a, b) => a.change_rate - b.change_rate);
+
+        return [...rise_crypto, ...even_crypto, ...fall_crypto];
     } else if (order === 2) {
         fall_crypto.sort((a, b) => b.change_rate - a.change_rate);
         even_crypto.sort((a, b) => b.change_rate - a.change_rate);
         rise_crypto.sort((a, b) => a.change_rate - b.change_rate);
+
+        return [...fall_crypto, ...even_crypto, ...rise_crypto];
     }
 
-    return [...rise_crypto, ...even_crypto, ...fall_crypto];
+    return data;
 };
 
 // 거래대금에 따라 정렬
