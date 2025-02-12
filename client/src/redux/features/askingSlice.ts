@@ -1,19 +1,19 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 export type AskingData = {
-    ask_price: number,
-    ask_size: number,
-    bid_price: number,
-    bid_size: number,
+    askPrice: number,
+    askSize: number,
+    bidPrice: number,
+    bidSize: number,
     timestamp: number,
 }
 
 export type ClosedData = {
-    trade_date_utc: string,
-    trade_time_utc: string,
-    trade_price: number,
-    trade_volume: number,
-    ask_bid: string,
+    tradeDateUtc: string,
+    tradeTimeUtc: string,
+    tradePrice: number,
+    tradeVolume: number,
+    askBid: string,
     timestamp: number,
 }
 

@@ -3,15 +3,15 @@ import formatDateString from "../../utils/date/formatDateString";
 
 export type UserTradeHistory = {
     id: string,
-    crypto_market: string,
-    crypto_name: string,
-    crypto_price: number,
-    trade_amount: string,
-    trade_category: string,
-    trade_price: string,
-    trade_time: any,
+    cryptoMarket: string,
+    cryptoName: string,
+    cryptoPrice: number,
+    tradeAmount: string,
+    tradeCategory: string,
+    tradePrice: string,
+    tradeTime: any,
     user: string,
-    is_signed: boolean,
+    isSigned: boolean,
 }
 
 export type ScheduleCancel = {
@@ -43,15 +43,15 @@ const sellingPriceSlice = createSlice({
     }
 })
 
-const userTradeHistorySlice = createSlice({
-    name: 'userTradeHisotry',
+const tradeHistorySlice = createSlice({
+    name: 'tradeHistory',
     initialState: initialUserTradeHistory,
     reducers: {
-        setUserTradeHistory: (state, action) => {
+        setTradeHistory: (state, action) => {
             return action.payload
         },
-        addUserTradeHistory: (state, action) => {
-            const date = new Date(action.payload.trade_time);
+        addTradeHistory: (state, action) => {
+            const date = new Date(action.payload.tradeTime);
             const formattedDate = formatDateString(date);
 
             return [...state, { ...action.payload, trade_time: formattedDate }];
@@ -59,14 +59,14 @@ const userTradeHistorySlice = createSlice({
     }
 })
 
-const userTradeHistory_unSignedSlice = createSlice({
-    name: 'userTradeHistory_unSigned',
+const unSignedTradeHistorySlice = createSlice({
+    name: 'unSignedTradeHistory',
     initialState: initialUserTradeHistory_unSigned,
     reducers: {
-        setUserTradeHistory_unSigned: (state, action) => {
+        setUnSignedTradeHistory: (state, action) => {
             return action.payload;
         },
-        addUserTradeHistory_unSigned: (state, action) => {
+        addUnSignedTradeHistory: (state, action) => {
             const date = new Date(action.payload.trade_time);
             const formattedDate = formatDateString(date);
 
@@ -90,15 +90,15 @@ export const scheduledCancelSlice = createSlice({
 
 export const { setBuyingPrice } = buyingPriceSlice.actions;
 export const { setSellingPrice } = sellingPriceSlice.actions;
-export const { setUserTradeHistory, addUserTradeHistory } = userTradeHistorySlice.actions;
-export const { setUserTradeHistory_unSigned, addUserTradeHistory_unSigned, cancelUnSignedOrder } = userTradeHistory_unSignedSlice.actions;
+export const { setTradeHistory, addTradeHistory } = tradeHistorySlice.actions;
+export const { setUnSignedTradeHistory, addUnSignedTradeHistory, cancelUnSignedOrder } = unSignedTradeHistorySlice.actions;
 export const { setScheduledCancel } = scheduledCancelSlice.actions;
 
 const reducers = {
     buyingPrice: buyingPriceSlice.reducer,
     sellingPrice: sellingPriceSlice.reducer,
-    userTradeHistory: userTradeHistorySlice.reducer,
-    userTradeHistory_unSigned: userTradeHistory_unSignedSlice.reducer,
+    tradeHistory: tradeHistorySlice.reducer,
+    unSignedTradeHistory: unSignedTradeHistorySlice.reducer,
     scheduledCancel: scheduledCancelSlice.reducer,
 
 }

@@ -29,9 +29,10 @@ export default function useGetAllCryptoInterval() {
                 withCredentials: true,
             });
 
-            dispatch(setAllCrypto(response.data.all_crypto));
-            return response.data.all_crypto;
+            dispatch(setAllCrypto(response.data.allCrypto));
+            return response.data.allCrypto;
         } catch (error) {
+            console.error('error', error);
             dispatch(showNoticeModal({
                 content: '서버 연결이 불안정합니다. 잠시 후 다시 시도해주세요.',
             }));
@@ -42,8 +43,8 @@ export default function useGetAllCryptoInterval() {
         const allCrypto: Crypto[] = await getAllCrypto();
         selectClosedPrice(selectedCrypto.market || 'KRW-BTC');
         selectAskingPrice(selectedCrypto.market || 'KRW-BTC');
-        const isFavorites = allCrypto.filter(item => item.is_favorited);
-        const isOwnes = allCrypto.filter(item => item.is_owned && item.owned_quantity > 0.00);
+        const isFavorites = allCrypto.filter(item => item.isFavorited);
+        const isOwnes = allCrypto.filter(item => item.isOwned && item.ownedQuantity > 0.00);
 
         dispatch(setFavoriteCrypto(isFavorites));
         dispatch(setOwnedCrypto(isOwnes));

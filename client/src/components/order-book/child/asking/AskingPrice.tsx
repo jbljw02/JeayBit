@@ -7,6 +7,16 @@ import { useAppSelector } from "../../../../redux/hooks";
 import SkeletonUI from "../../../placeholder/SkeletonUI";
 import LoadingSpinner from "../../../placeholder/LoadingSpinner";
 
+type askDiffProps = {
+    newAskPrice: number,
+    newAskSize: number,
+}
+
+type bidDiffProps = {
+    newBidPrice: number,
+    newBidSize: number,
+}
+
 // bid = 매수, ask = 매도
 export default function AskingPrice() {
     const askingSpinner = useAppSelector(state => state.askingSpinner);
@@ -16,14 +26,8 @@ export default function AskingPrice() {
     const selectedCrypto = useAppSelector(state => state.selectedCrypto);
 
     const [prevData, setPrevData] = useState<AskingData[]>();
-    const [differences_ask, setDifferences_ask] = useState<{
-        new_ask_price: number,
-        new_ask_size: number
-    }[]>([]);
-    const [differences_bid, setDifferences_bid] = useState<{
-        new_bid_price: number,
-        new_bid_size: number,
-    }[]>([]);
+    const [differences_ask, setDifferences_ask] = useState<askDiffProps[]>([]);
+    const [differences_bid, setDifferences_bid] = useState<bidDiffProps[]>([]);
 
     // 호가 수량의 변화를 감지하고 이전 값과 비교하여 변화가 생긴 값을 상태에 업데이트
     useEffect(() => {
@@ -31,28 +35,22 @@ export default function AskingPrice() {
         // 그러므로 이 useEffect() 안에서 prevData는 아직 이전의 값을 가지고 있음.
         setPrevData(askingData);
 
-        let newDifferences_ask: {
-            new_ask_price: number,
-            new_ask_size: number,
-        }[] = [];
-        let newDifferences_bid: {
-            new_bid_price: number,
-            new_bid_size: number,
-        }[] = [];
+        let askingNewDifferences: askDiffProps[] = [];
+        let bidNewDifferences: bidDiffProps[] = [];
 
         if (prevData) {
             prevData.forEach((value, index) => {
-                if (value.ask_size !== askingData[index].ask_size) {
-                    newDifferences_ask.push({ new_ask_price: askingData[index].ask_price, new_ask_size: askingData[index].ask_size });
+                if (value.askSize !== askingData[index].askSize) {
+                    askingNewDifferences.push({ newAskPrice: askingData[index].askPrice, newAskSize: askingData[index].askSize });
                 }
-                if (value.bid_size !== askingData[index].bid_size) {
-                    newDifferences_bid.push({ new_bid_price: askingData[index].bid_price, new_bid_size: askingData[index].bid_size });
+                if (value.bidSize !== askingData[index].bidSize) {
+                    bidNewDifferences.push({ newBidPrice: askingData[index].bidPrice, newBidSize: askingData[index].bidSize });
                 }
             })
         }
 
-        setDifferences_ask(newDifferences_ask);
-        setDifferences_bid(newDifferences_bid);
+        setDifferences_ask(askingNewDifferences);
+        setDifferences_bid(bidNewDifferences);
     }, [askingData, prevData]);
 
     return (

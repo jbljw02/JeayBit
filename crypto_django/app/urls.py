@@ -1,7 +1,7 @@
 from django.urls import path
 from django.contrib import admin
 
-from .views.crypto_views import GetAllCryptoView, asking_price, closed_price
+from .views.crypto_views import asking_price, closed_price, GetAllCryptoView
 from .views.auth_views import sign_up, LoginView, LogoutView, CheckLoginView
 from .views.trade_views import add_user_trade_history, cancel_order, get_user_tradeHistory
 from .views.candle_views import candle_per_minute, candle_per_date, candle_per_week, candle_per_month

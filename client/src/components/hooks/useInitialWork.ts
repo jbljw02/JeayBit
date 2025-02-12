@@ -32,8 +32,8 @@ export default function useInitialWork() {
             });
 
             Promise.all([
-                dispatch(setSelectedCrypto(response.data.all_crypto[0])),
-                dispatch(setCryptoRealTime(response.data.all_crypto[0]))
+                dispatch(setSelectedCrypto(response.data.allCrypto[0])),
+                dispatch(setCryptoRealTime(response.data.allCrypto[0]))
             ]);
         } catch (error) {
             dispatch(showNoticeModal({
@@ -49,7 +49,7 @@ export default function useInitialWork() {
 
         (async () => {
             const response = await checkLogin();
-            if (response && response.is_logged_in) {
+            if (response && response.isLoggedIn) {
                 dispatch(setUserInfo({
                     name: response.name,
                     email: response.email,

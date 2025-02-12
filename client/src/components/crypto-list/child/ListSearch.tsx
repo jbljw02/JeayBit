@@ -27,7 +27,7 @@ export default function ListSearch() {
             dataToFilter = allCrypto;
         } 
         else if (listCategory === '관심') {
-            const isFavorites = allCrypto.filter(item => item.is_favorited);
+            const isFavorites = allCrypto.filter(item => item.isFavorited);
             dataToFilter = isFavorites;
             // 관심 화폐의 무결성 유지
             if (dataToFilter !== favoriteCrypto) {
@@ -35,7 +35,7 @@ export default function ListSearch() {
             }
         } 
         else if (listCategory === '보유') {
-            const isOwnes = allCrypto.filter(item => item.is_owned && item.owned_quantity > 0.00);
+            const isOwnes = allCrypto.filter(item => item.isOwned && item.ownedQuantity > 0.00);
             dataToFilter = isOwnes;
         }
 

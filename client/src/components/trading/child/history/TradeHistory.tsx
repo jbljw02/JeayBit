@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState } from "react";
 import { showNoticeModal } from "../../../../redux/features/modalSlice";
 import { setWorkingSpinner } from "../../../../redux/features/placeholderSlice";
 import { cancelUnSignedOrder, setScheduledCancel } from "../../../../redux/features/tradeSlice";
@@ -18,8 +18,8 @@ export default function TradeHistory() {
 
     const user = useAppSelector(state => state.user);
     const scheduledCancel = useAppSelector(state => state.scheduledCancel);
-    const userTradeHistory = useAppSelector(state => state.userTradeHistory);
-    const userTradeHistory_unSigned = useAppSelector(state => state.userTradeHistory_unSigned);
+    const tradeHistory = useAppSelector(state => state.tradeHistory);
+    const unSignedTradeHistory = useAppSelector(state => state.unSignedTradeHistory);
 
     const tableRef = useRef<HTMLTableElement | null>(null);
 
@@ -87,8 +87,8 @@ export default function TradeHistory() {
                 </thead>
             </table>
             {
-                (historySort === '체결' && !userTradeHistory.length) ||
-                    (historySort === '미체결' && !userTradeHistory_unSigned.length) ?
+                (historySort === '체결' && !tradeHistory.length) ||
+                    (historySort === '미체결' && !unSignedTradeHistory.length) ?
                     <PlaceholderDisplay content={`${historySort} 내역이 없습니다.`} /> :
                     (
                         <CustomScrollbars

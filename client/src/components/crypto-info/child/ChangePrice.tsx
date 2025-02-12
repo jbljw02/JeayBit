@@ -1,5 +1,5 @@
-import price_rise from '../../../assets/images/price-up.png'
-import price_fall from '../../../assets/images/price-down.png'
+import priceRiseImg from '../../../assets/images/price-up.png'
+import priceFallImg from '../../../assets/images/price-down.png'
 import formatWithComas from '../../../utils/format/formatWithComas'
 
 type Params = {
@@ -16,9 +16,9 @@ export default function ChangePrice({ changePrice, change }: Params) {
                 : 'even'
             )}`;
     const changeImg = change === 'RISE' ?
-        price_rise : (
+        priceRiseImg : (
             change === 'FALL' ?
-                price_fall :
+                priceFallImg :
                 null
         )
     const altText = change === 'RISE' ?

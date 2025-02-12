@@ -121,7 +121,7 @@ export default function ListTbody() {
 
                                 if (ownedInfo) {
                                     // 화폐의 보유량 설정
-                                    let ownedQuantity = String(ownedInfo.owned_quantity);
+                                    let ownedQuantity = String(ownedInfo.ownedQuantity);
                                     let ownedMarket = (item.market).slice(4);
 
                                     // 전체 문자열의 길이가 12자리를 넘어갈 경우 12자리가 될 때까지 마지막 인덱스 제거
@@ -140,8 +140,8 @@ export default function ListTbody() {
                             }
 
                             const cryptoPrice = formatWithComas(item.price); // 화폐 가격
-                            const changeRate = (item.change_rate * 100).toFixed(2); // 화폐 변화율
-                            const changePrice = formatWithComas(item.change_price); // 화폐 변화량
+                            const changeRate = (item.changeRate * 100).toFixed(2); // 화폐 변화율
+                            const changePrice = formatWithComas(item.changePrice); // 화폐 변화량
 
                             return (
                                 <tr
@@ -217,7 +217,7 @@ export default function ListTbody() {
                                                 </span> :
                                                 <span>
                                                     {
-                                                        Number(String(Math.floor(item.trade_price)).slice(0, -6))
+                                                        Number(String(Math.floor(item.tradePrice)).slice(0, -6))
                                                             .toLocaleString()
                                                     }
                                                     백만

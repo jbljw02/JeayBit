@@ -6,7 +6,7 @@ import formatWithComas from "../../../../utils/format/formatWithComas";
 export default function UnSignedHistory() {
     const dispatch = useAppDispatch();
 
-    const userTradeHistory_unSigned = useAppSelector(state => state.userTradeHistory_unSigned);
+    const unSignedTradeHistory = useAppSelector(state => state.unSignedTradeHistory);
     const scheduledCancel = useAppSelector(state => state.scheduledCancel);
 
     const clickUnSigned = (id: string, i: number) => {
@@ -21,12 +21,14 @@ export default function UnSignedHistory() {
         }
     }
 
+    console.log('unSignedTradeHistory', unSignedTradeHistory);
+
     return (
         <>
             {
-                userTradeHistory_unSigned && Array.isArray(userTradeHistory_unSigned) ? (
-                    userTradeHistory_unSigned.map((item, i) => {
-                        const isLastItem = i === userTradeHistory_unSigned.length - 1;
+                unSignedTradeHistory && Array.isArray(unSignedTradeHistory) ? (
+                    unSignedTradeHistory.map((item, i) => {
+                        const isLastItem = i === unSignedTradeHistory.length - 1;
                         const isClicked = scheduledCancel.some(cancelItem => cancelItem.index === i);
                         return (
                             <tr
@@ -35,21 +37,21 @@ export default function UnSignedHistory() {
                                 id={isLastItem ? 'last-row' : ''}
                                 onClick={() => clickUnSigned(item.id, i)}>
                                 <td>
-                                    {item.trade_time.slice(0, 10)}
+                                    {item.tradeTime.slice(0, 10)}
                                     <br />
-                                    {item.trade_time.slice(10)}
+                                    {item.tradeTime.slice(10)}
                                 </td>
                                 <td>
-                                    <span className="trading-history-market">{item.crypto_market}</span> <br />
-                                    <span className={`trading-history-category ${item.trade_category === 'BUY' ? 'rise' : 'fall'}`}>
-                                        {item.trade_category ? (item.trade_category === 'BUY' ? '매수' : '매도') : ''}
+                                    <span className="trading-history-market">{item.cryptoMarket}</span> <br />
+                                    <span className={`trading-history-category ${item.tradeCategory === 'BUY' ? 'rise' : 'fall'}`}>
+                                        {item.tradeCategory ? (item.tradeCategory === 'BUY' ? '매수' : '매도') : ''}
                                     </span>
                                 </td>
                                 <td>
-                                    {formatWithComas(item.crypto_price)} <br />
-                                    {formatWithComas(item.trade_price)}
+                                    {formatWithComas(item.cryptoPrice)} <br />
+                                    {formatWithComas(item.tradePrice)}
                                 </td>
-                                <td>{formatWithComas(formatTradeAmount(item.trade_amount))}</td>
+                                <td>{formatWithComas(formatTradeAmount(item.tradeAmount))}</td>
                             </tr>
                         );
                     })

@@ -52,14 +52,14 @@ export default function ClosedPrice() {
                                                             {
                                                                 closedData.map((item, i) => {
                                                                     const trade_time = convertToDate(item.timestamp);
-                                                                    const str_trade_volume = adjustSize(item.trade_volume);
+                                                                    const str_trade_volume = adjustSize(item.tradeVolume);
 
                                                                     return (
                                                                         <tr key={i}>
                                                                             <td>{trade_time}</td>
-                                                                            <td>{(item.trade_price).toLocaleString()}</td>
+                                                                            <td>{(item.tradePrice).toLocaleString()}</td>
                                                                             {
-                                                                                item.ask_bid === 'BID' ?
+                                                                                item.askBid === 'BID' ?
                                                                                     <td className="rise">{str_trade_volume}</td> :
                                                                                     <td className="fall">{str_trade_volume}</td>
                                                                             }

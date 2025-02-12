@@ -217,12 +217,12 @@ export default function ApexChart() {
   useEffect(() => {
     // 캔들 데이터의 값을 차트에 적용시키기 위해 포맷
     const formatCandleData = (candle: Market) => ({
-      x: moment.tz(candle.candle_date_time_kst, 'Asia/Seoul').toDate(),
+      x: moment.tz(candle.candleDateTimeKst, 'Asia/Seoul').toDate(),
       y: [
-        candle.opening_price,
-        candle.high_price,
-        candle.low_price,
-        candle.trade_price,
+        candle.openingPrice,
+        candle.highPrice,
+        candle.lowPrice,
+        candle.tradePrice,
       ],
     });
 

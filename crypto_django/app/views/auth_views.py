@@ -7,6 +7,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from app.models import CustomUser
 import logging
+from app.utils.camel_case_converter import convert_dict_to_camel_case
 
 logger = logging.getLogger(__name__)
 
@@ -89,23 +90,19 @@ class CheckLoginView(View):
         try:
             is_logged_in = request.user.is_authenticated
             if is_logged_in:
-                return JsonResponse(
-                    {
-                        "is_logged_in": is_logged_in,
-                        "name": request.user.username,
-                        "email": request.user.email,
-                    },
-                    status=200,
-                )
+                data = {
+                    "is_logged_in": is_logged_in,
+                    "name": request.user.username,
+                    "email": request.user.email,
+                }
+                return JsonResponse(convert_dict_to_camel_case(data), status=200)
             if not is_logged_in:
-                return JsonResponse(
-                    {
-                        "is_logged_in": is_logged_in,
-                        "name": "",
-                        "email": "",
-                    },
-                    status=200,
-                )
+                data = {
+                    "is_logged_in": is_logged_in,
+                    "name": "",
+                    "email": "",
+                }
+                return JsonResponse(convert_dict_to_camel_case(data), status=200)
         except Exception as e:
             logger.error(f"로그인 체크 에러: {str(e)}")
             return JsonResponse({"error": "로그인 체크 에러"}, status=500)

@@ -24,7 +24,6 @@ export default function SellingSectioin() {
     const selectedCrypto = useAppSelector(state => state.selectedCrypto);
     const user = useAppSelector(state => state.user);
     const ownedCrypto = useAppSelector(state => state.ownedCrypto);
-    const allCrypto = useAppSelector(state => state.allCrypto);
 
     const [selectedPercentage, setSelectedPercentage] = useState<string>('');
     const [bidSort, setBidSort] = useState<string>('지정가');
@@ -47,8 +46,8 @@ export default function SellingSectioin() {
         return ownedCrypto.find(crypto => crypto.name === selectedCrypto.name) || 
         {
             ...selectedCrypto,
-            is_owned: false,
-            owned_quantity: 0,
+            isOwned: false,
+            ownedQuantity: 0,
         };
     }, [ownedCrypto, selectedCrypto]);
 
@@ -80,8 +79,8 @@ export default function SellingSectioin() {
         setSelectedPercentage(percentage);
 
         // 선택된 화폐의 보유 수량
-        const availableQuantity = targetOwnedCrypto?.is_owned ?
-            targetOwnedCrypto.owned_quantity :
+        const availableQuantity = targetOwnedCrypto?.isOwned ?
+            targetOwnedCrypto.ownedQuantity :
             0
 
         // 매수가격이 0이면 주문수량/주문총액은 의미가 없고, 보유 화폐량이 undefined이면 연산이 불가능
@@ -183,11 +182,11 @@ export default function SellingSectioin() {
 
     const processSellTrade = async (isMarketValue: boolean, price: number) => {
         // 주문총액이 잔고의 잔액을 넘으면 주문을 넣을 수 없음
-        if (sellQuantity > targetOwnedCrypto!.owned_quantity) {
+        if (sellQuantity > targetOwnedCrypto!.ownedQuantity) {
             dispatch(showNoticeModal({ content: '주문 수량이 보유 화폐량을 초과했습니다.' }));
             return;
         }
-        if(targetOwnedCrypto!.is_owned === false || targetOwnedCrypto!.owned_quantity === 0) {
+        if (targetOwnedCrypto!.isOwned === false || targetOwnedCrypto!.ownedQuantity === 0) {
             dispatch(showNoticeModal({ content: '해당 화폐를 보유하고 있지 않습니다.' }));
             return;
         }
@@ -259,8 +258,8 @@ export default function SellingSectioin() {
                                     <div className="trading-title">주문가능</div>
                                     <div className="trading-row-contents">
                                         {
-                                            targetOwnedCrypto?.is_owned ?
-                                                targetOwnedCrypto.owned_quantity
+                                            targetOwnedCrypto?.isOwned ?
+                                                targetOwnedCrypto.ownedQuantity
                                                 : 0
                                         }
                                         <span>
@@ -333,8 +332,8 @@ export default function SellingSectioin() {
                                     <div className="trading-title">주문가능</div>
                                     <div className="trading-row-contents">
                                         {
-                                            targetOwnedCrypto?.is_owned ?
-                                                targetOwnedCrypto.owned_quantity
+                                            targetOwnedCrypto?.isOwned ?
+                                                targetOwnedCrypto.ownedQuantity
                                                 : 0
                                         }
                                         <span>
