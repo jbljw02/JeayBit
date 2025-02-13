@@ -1,4 +1,6 @@
 from requests import get
+
+from app.utils.camel_case_converter import convert_dict_to_camel_case
 from ..models import Crypto, UserCrypto
 import json
 from django.http import JsonResponse
@@ -10,10 +12,8 @@ import requests
 from asgiref.sync import sync_to_async
 import aiohttp
 import logging
-from django.db.models import Prefetch
 
 logger = logging.getLogger(__name__)
-
 
 def crypto_api():
     try:
@@ -192,7 +192,9 @@ class GetAllCryptoView(View):
             "all_crypto": all_crypto,
         }
 
-        return JsonResponse(data, status=200)
+        # 응답 전에 카멜 케이스로 변환
+        camel_case_data = convert_dict_to_camel_case(data)
+        return JsonResponse(camel_case_data, status=200)
 
 
 # 호가내역

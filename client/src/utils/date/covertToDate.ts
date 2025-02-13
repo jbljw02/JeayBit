@@ -2,14 +2,14 @@
 export default function convertToDate(timestamp: number) {
     const date = new Date(timestamp);
 
-    let trade_time = new Intl.DateTimeFormat('ko-KR', {
+    let tradeTime = new Intl.DateTimeFormat('ko-KR', {
         month: '2-digit',
         day: '2-digit',
         hour: '2-digit',
         minute: '2-digit',
         hour12: false, // 24시간 형식
     }).format(date);
-    trade_time = trade_time.replace(". ", "/").replace(".", "").replace("오전 ", "").replace("오후 ", "")
+    tradeTime = tradeTime.replace(". ", "/").replace(".", "").replace("오전 ", "").replace("오후 ", "")
 
-    return trade_time;
+    return tradeTime;
 }

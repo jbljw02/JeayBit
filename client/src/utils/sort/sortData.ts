@@ -32,25 +32,29 @@ export const sortByChangeRate = (data: Crypto[], order: number) => {
     let fall_crypto = [...data].filter(item => item.change === 'FALL');
 
     if (order === 1) {
-        rise_crypto.sort((a, b) => b.change_rate - a.change_rate);
-        even_crypto.sort((a, b) => b.change_rate - a.change_rate);
-        fall_crypto.sort((a, b) => a.change_rate - b.change_rate);
+        rise_crypto.sort((a, b) => b.changeRate - a.changeRate);
+        even_crypto.sort((a, b) => b.changeRate - a.changeRate);
+        fall_crypto.sort((a, b) => a.changeRate - b.changeRate);
+
+        return [...rise_crypto, ...even_crypto, ...fall_crypto];
     } else if (order === 2) {
-        fall_crypto.sort((a, b) => b.change_rate - a.change_rate);
-        even_crypto.sort((a, b) => b.change_rate - a.change_rate);
-        rise_crypto.sort((a, b) => a.change_rate - b.change_rate);
+        fall_crypto.sort((a, b) => b.changeRate - a.changeRate);
+        even_crypto.sort((a, b) => b.changeRate - a.changeRate);
+        rise_crypto.sort((a, b) => a.changeRate - b.changeRate);
+
+        return [...fall_crypto, ...even_crypto, ...rise_crypto];
     }
 
-    return [...rise_crypto, ...even_crypto, ...fall_crypto];
+    return data;
 };
 
 // 거래대금에 따라 정렬
 export const sortByTradeVolume = (data: Crypto[], order: number) => {
     return [...data].sort((a, b) => {
         if (order === 1) {
-            return b.trade_price - a.trade_price;
+            return b.tradePrice - a.tradePrice;
         } else if (order === 2) {
-            return a.trade_price - b.trade_price;
+            return a.tradePrice - b.tradePrice;
         }
         return 0;
     });

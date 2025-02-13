@@ -11,7 +11,7 @@ export default function useSelectClosedPrice() {
     // 선택된 화폐에 대한 체결내역 호출
     const selectClosedPrice = async (market: string) => {
         try {
-            const response = await axios.get(`${API_URL}/closed_price/?market=${market}`);
+            const response = await axios.get(`${API_URL}/closed-price/?market=${market}`);
             dispatch(setClosedData(response.data));
         } catch (error) {
             dispatch(showNoticeModal({

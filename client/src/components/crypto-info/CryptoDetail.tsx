@@ -25,7 +25,7 @@ export default function CryptoDetail() {
                                 </div>
                                 <div className="crypto-change">
                                     <ChangePrice
-                                        changePrice={cryptoRealTime.change_price}
+                                        changePrice={cryptoRealTime.changePrice}
                                         change={cryptoRealTime.change} />
                                     <ChangeRate />
                                 </div>

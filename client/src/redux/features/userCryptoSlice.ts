@@ -2,14 +2,14 @@ import { createSlice } from "@reduxjs/toolkit";
 import { Crypto } from "./cryptoListSlice";
 
 export type FavoriteCrypto = {
-    crypto_name: string,
+    cryptoName: string,
     isFavorited: boolean
 }
 
 export type OwnedCrypto = {
     name: string,
-    is_owned: boolean,
-    owned_quantity: number,
+    isOwned: boolean,
+    ownedQuantity: number,
 }
 
 const initialFavoriteCrypto: Crypto[] = [];
@@ -40,8 +40,8 @@ const ownedCryptoSlice = createSlice({
                 if (action.payload.is_owned === false) {
                     return state.filter(crypto => crypto.name !== action.payload.name);
                 }
-                targetCrypto.is_owned = action.payload.is_owned;
-                targetCrypto.owned_quantity = action.payload.owned_quantity;
+                targetCrypto.isOwned = action.payload.isOwned;
+                targetCrypto.ownedQuantity = action.payload.ownedQuantity;
             }
             // 보유중이지 않은 화폐일 경우 추가 
             else {

@@ -6,7 +6,7 @@ import Wallet from "./wallet/Wallet";
 import '../../styles/header/header.css'
 import LoadingBar, { LoadingBarRef } from 'react-top-loading-bar';
 import { showNoticeModal } from "../../redux/features/modalSlice";
-import { setUserTradeHistory, setUserTradeHistory_unSigned } from "../../redux/features/tradeSlice";
+import { setTradeHistory, setUnSignedTradeHistory } from "../../redux/features/tradeSlice";
 import { setUser } from "../../redux/features/userSlice";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import useGetBalance from "../hooks/useGetBalance";
@@ -41,8 +41,8 @@ export default function Header() {
         balance: 0
       }));
 
-      dispatch(setUserTradeHistory([]));
-      dispatch(setUserTradeHistory_unSigned([]));
+      dispatch(setTradeHistory([]));
+      dispatch(setUnSignedTradeHistory([]));
     } catch (error) {
       dispatch(showNoticeModal({
         content: '로그아웃에 실패했습니다. 잠시 후 다시 시도해주세요.',

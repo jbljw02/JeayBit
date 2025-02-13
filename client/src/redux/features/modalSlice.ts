@@ -1,17 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-type TradeModalProps = {
-    isComplete: boolean;
-    isFailed: boolean;
-    isWaiting: boolean;
-}
-
-const initialTradeModalState: TradeModalProps = {
-    isComplete: false,
-    isFailed: false,
-    isWaiting: false,
-}
-
 type NoticeModalProps = {
     isOpen: boolean;
     content: string;

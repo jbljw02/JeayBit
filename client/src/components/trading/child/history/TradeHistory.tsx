@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState } from "react";
 import { showNoticeModal } from "../../../../redux/features/modalSlice";
 import { setWorkingSpinner } from "../../../../redux/features/placeholderSlice";
 import { cancelUnSignedOrder, setScheduledCancel } from "../../../../redux/features/tradeSlice";
@@ -18,8 +18,8 @@ export default function TradeHistory() {
 
     const user = useAppSelector(state => state.user);
     const scheduledCancel = useAppSelector(state => state.scheduledCancel);
-    const userTradeHistory = useAppSelector(state => state.userTradeHistory);
-    const userTradeHistory_unSigned = useAppSelector(state => state.userTradeHistory_unSigned);
+    const tradeHistory = useAppSelector(state => state.tradeHistory);
+    const unSignedTradeHistory = useAppSelector(state => state.unSignedTradeHistory);
 
     const tableRef = useRef<HTMLTableElement | null>(null);
 
@@ -45,7 +45,7 @@ export default function TradeHistory() {
     // 주문을 취소할 화폐를 서버로 전송
     const cancelOrder = async (email: string, ids: string[]) => {
         try {
-            await axios.post(`${API_URL}/cancel_order/`, {
+            await axios.post(`${API_URL}/cancel-order/`, {
                 ids: ids,
                 email: email,
             });
@@ -87,8 +87,8 @@ export default function TradeHistory() {
                 </thead>
             </table>
             {
-                (historySort === '체결' && !userTradeHistory.length) ||
-                    (historySort === '미체결' && !userTradeHistory_unSigned.length) ?
+                (historySort === '체결' && !tradeHistory.length) ||
+                    (historySort === '미체결' && !unSignedTradeHistory.length) ?
                     <PlaceholderDisplay content={`${historySort} 내역이 없습니다.`} /> :
                     (
                         <CustomScrollbars

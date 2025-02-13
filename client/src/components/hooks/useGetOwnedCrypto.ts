@@ -25,15 +25,15 @@ export default function useGetOwnedCrypto() {
             const targetCrypto = resOwnedCrypto.find(item => item.name === selectedCrypto.name);
             const updatedCrypto = {
                 ...selectedCrypto,
-                is_owned: targetCrypto?.is_owned,
-                owned_quantity: targetCrypto?.owned_quantity,
+                isOwned: targetCrypto?.isOwned,
+                ownedQuantity: targetCrypto?.ownedQuantity,
             };
 
             const updatedOwnedCrypto = allCrypto
                 .filter(crypto => resOwnedCrypto.some(own => crypto.name === own.name))
                 .map(crypto => {
                     const matched = resOwnedCrypto.find(own => crypto.name === own.name);
-                    return matched ? { ...crypto, is_owned: true, owned_quantity: matched.owned_quantity } : crypto;
+                    return matched ? { ...crypto, isOwned: true, ownedQuantity: matched.ownedQuantity } : crypto;
                 });
 
             dispatch(setOwnedCrypto(updatedOwnedCrypto));

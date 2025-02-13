@@ -3,16 +3,14 @@ import './index.css';
 import App from './components/App';
 import { Provider } from 'react-redux';
 import store from './redux/store';
+import axios from './api/axios';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 
 root.render(
-  // React.StrictMode는 초기 마운트를 2번 하게 함
-  // <React.StrictMode>
-    <Provider store={store}>
-      <App />
-    </Provider>
-  // </React.StrictMode>
+  <Provider store={store}>
+    <App />
+  </Provider>
 );

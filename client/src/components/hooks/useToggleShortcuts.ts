@@ -16,7 +16,7 @@ export default function useToggleShortcuts() {
     const addFavoriteCrypto = async (email: string, cryptoName: string) => {
         if (user.email) {
             try {
-                const response = await axios.post(`${API_URL}/add_favoriteCrypto_to_user/`, {
+                const response = await axios.post(`${API_URL}/add-favorite-crypto-to-user/`, {
                     email: email,
                     crypto_name: cryptoName,
                 });

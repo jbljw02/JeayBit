@@ -10,9 +10,9 @@ export default function useSelectAskingPrice() {
     // 선택된 화폐에 대한 호가내역 호출
     const selectAskingPrice = async (market: string) => {
         try {
-            const response = await axios.get(`${API_URL}/asking_price/?market=${market}`);
+            const response = await axios.get(`${API_URL}/asking-price/?market=${market}`);
 
-            const orderbookUnits = response.data[0].orderbook_units;
+            const orderbookUnits = response.data[0].orderbookUnits;
             const timestamp = response.data[0].timestamp;
 
             const askingData = orderbookUnits.map((item: AskingData) => (
@@ -22,8 +22,8 @@ export default function useSelectAskingPrice() {
                 }));
 
             dispatch(setAskingData(askingData));
-            dispatch(setTotalAskSize(response.data[0].total_ask_size));
-            dispatch(setTotalBidSize(response.data[0].total_bid_size));
+            dispatch(setTotalAskSize(response.data[0].totalAskSize));
+            dispatch(setTotalBidSize(response.data[0].totalBidSize));
         } catch (error) {
             dispatch(showNoticeModal({
                 content: '호가 데이터를 불러오는데 실패했습니다. 잠시 후 다시 시도해주세요.',

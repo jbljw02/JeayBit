@@ -2,12 +2,12 @@ import { createSlice } from "@reduxjs/toolkit";
 
 export type Market = {
     market: string;
-    candle_date_time_utc: string;
-    candle_date_time_kst: string;
-    opening_price: number;
-    high_price: number;
-    low_price: number;
-    trade_price: number;
+    candleDateTimeUtc: string;
+    candleDateTimeKst: string;
+    openingPrice: number;
+    highPrice: number;
+    lowPrice: number;
+    tradePrice: number;
     timestamp: number;
 };
 

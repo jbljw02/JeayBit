@@ -5,10 +5,10 @@ import { AskingData } from "../../../../redux/features/askingSlice";
 
 type Params = {
     differences: {
-        new_ask_price?: number,
-        new_ask_size?: number,
-        new_bid_price?: number,
-        new_bid_size?: number,
+        newAskPrice?: number,
+        newAskSize?: number,
+        newBidPrice?: number,
+        newBidSize?: number,
     }[],
     size: number,
     category: string,
@@ -20,9 +20,9 @@ export default function AskingTable({ differences, size, category }: Params) {
     // 이전 호가와 현재 호가를 비교한 값을 이용 - 변경된 호가가 현재 state를 순회하면서 일치하는 값에 대해서 스타일 지정
     const isChange = (item: AskingData) => {
         if (category === 'bid') {
-            return differences.some((value) => value.new_bid_size === item.bid_size);
+            return differences.some((value) => value.newBidSize === item.bidSize);
         }
-        return differences.some((value) => value.new_ask_size === item.ask_size);
+        return differences.some((value) => value.newAskSize === item.askSize);
     }
 
     const getStyleClass = (isChange: boolean) => {
@@ -34,16 +34,16 @@ export default function AskingTable({ differences, size, category }: Params) {
 
     const getPercentage = (item: AskingData) => {
         if (category === 'bid') {
-            return (item.bid_size / size) * 100;
+            return (item.bidSize / size) * 100;
         }
-        return (item.ask_size / size) * 100;
+        return (item.askSize / size) * 100;
     }
 
     const getStrSize = (item: AskingData) => {
         if (category === 'bid') {
-            return adjustSize(item.bid_size);
+            return adjustSize(item.bidSize);
         }
-        return adjustSize(item.ask_size);
+        return adjustSize(item.askSize);
     }
 
     return (
@@ -60,8 +60,8 @@ export default function AskingTable({ differences, size, category }: Params) {
                             <td>{trade_time}</td>
                             {
                                 category === 'bid' ?
-                                    <td>{(item.bid_price).toLocaleString()}</td> :
-                                    <td>{(item.ask_price).toLocaleString()}</td>
+                                    <td>{(item.bidPrice).toLocaleString()}</td> :
+                                    <td>{(item.askPrice).toLocaleString()}</td>
                             }
                             <td
                                 style={{

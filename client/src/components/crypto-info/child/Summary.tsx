@@ -82,27 +82,27 @@ export default function Summary() {
                     <div>
                         <DetailContent
                             title="거래량"
-                            value={cryptoRealTime.trade_volume}
+                            value={cryptoRealTime.tradeVolume}
                             suffix={cryptoRealTime.market.slice(4)} />
                         <DetailContent
                             title="시가"
-                            value={cryptoRealTime.open_price} />
+                            value={cryptoRealTime.openPrice} />
                         <DetailContent
                             title="고가"
-                            value={cryptoRealTime.high_price}
+                            value={cryptoRealTime.highPrice}
                             category="high" />
                     </div>
                     <div>
                         <DetailContent
                             title="거래대금"
-                            value={cryptoRealTime.trade_price}
+                            value={cryptoRealTime.tradePrice}
                             suffix="KRW" />
                         <DetailContent
                             title="종가"
                             value={cryptoRealTime.price} />
                         <DetailContent
                             title="저가"
-                            value={cryptoRealTime.low_price}
+                            value={cryptoRealTime.lowPrice}
                             category="low" />
                     </div>
                 </div>
