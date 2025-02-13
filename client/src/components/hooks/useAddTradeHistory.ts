@@ -23,15 +23,15 @@ export default function useAddTradeHistory() {
     market: string,
     isMarketValue: boolean) => {
     try {
-      const response = await axios.post(`${API_URL}/add_user_tradeHistory/`, {
+      const response = await axios.post(`${API_URL}/add-user-trade-history/`, {
         email: email,
-        crypto_name: cryptoName,
-        trade_category: tradeCategory,
-        trade_time: tradeTime,
-        crypto_market: cryptoMarket,
-        crypto_price: cryptoPrice,
-        trade_price: tradePrice,
-        trade_amount: tradeAmount,
+        cryptoName: cryptoName,
+        tradeCategory: tradeCategory,
+        tradeTime: tradeTime,
+        cryptoMarket: cryptoMarket,
+        cryptoPrice: cryptoPrice,
+        tradePrice: tradePrice,
+        tradeAmount: tradeAmount,
         market: market,
         isMarketValue: isMarketValue,
       });

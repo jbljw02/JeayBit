@@ -15,7 +15,7 @@ export default function useGetBalance() {
     const getBalance = async (email: string) => {
         try {
             const response = await axios.post(
-                `${API_URL}/get_user_balance/`,
+                `${API_URL}/get-user-balance/`,
                 { email: email }
             );
             dispatch(setUserBalance(response.data.userBalance));

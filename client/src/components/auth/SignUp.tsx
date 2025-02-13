@@ -129,7 +129,7 @@ export default function SignUp() {
       setIsEmailEmpty(false);
       setIsPasswordEmpty(false);
 
-      await axios.post(`${API_URL}/signup/`, data, {
+      await axios.post(`${API_URL}/sign-up/`, data, {
         withCredentials: true,
       });
 

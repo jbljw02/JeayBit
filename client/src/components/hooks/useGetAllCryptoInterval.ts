@@ -25,7 +25,7 @@ export default function useGetAllCryptoInterval() {
 
     const getAllCrypto = async () => {
         try {
-            const response = await axios.post(`${API_URL}/get_all_crypto/`, {}, {
+            const response = await axios.post(`${API_URL}/get-all-crypto/`, {}, {
                 withCredentials: true,
             });
 

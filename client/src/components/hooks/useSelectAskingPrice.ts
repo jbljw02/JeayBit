@@ -10,7 +10,7 @@ export default function useSelectAskingPrice() {
     // 선택된 화폐에 대한 호가내역 호출
     const selectAskingPrice = async (market: string) => {
         try {
-            const response = await axios.get(`${API_URL}/asking_price/?market=${market}`);
+            const response = await axios.get(`${API_URL}/asking-price/?market=${market}`);
 
             const orderbookUnits = response.data[0].orderbookUnits;
             const timestamp = response.data[0].timestamp;

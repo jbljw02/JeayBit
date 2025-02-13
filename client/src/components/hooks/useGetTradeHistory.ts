@@ -24,7 +24,7 @@ export default function useTradeHistory() {
   // 서버로부터 거래 내역을 받아옴
   const getTradeHistory = async (email: string) => {
     try {
-      const response = await axios.post(`${API_URL}/get_user_tradeHistory/`, {
+      const response = await axios.post(`${API_URL}/get-user-trade-history/`, {
         email: email,
       });
 

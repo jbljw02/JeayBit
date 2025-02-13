@@ -94,10 +94,11 @@ export default function Wallet() {
     const addBalanceToUser = async (email: string, depositAmount: number) => {
         if (user.email && user.name) {
             try {
-                await axios.post(`${API_URL}/add_balance_to_user/`, {
+                await axios.post(`${API_URL}/add-balance-to-user/`, {
                     email: email,
                     depositAmount: depositAmount,
                 });
+
                 dispatch(setSuccessTransfer(true));
                 dispatch(showNoticeModal({
                     content: '입금이 성공적으로 완료되었습니다.',
@@ -117,7 +118,7 @@ export default function Wallet() {
     const minusBalanceFromUser = async (email: string, withdrawAmount: number) => {
         if (user.email && user.name) {
             try {
-                await axios.post(`${API_URL}/minus_balance_from_user/`, {
+                await axios.post(`${API_URL}/minus-balance-from-user/`, {
                     email: email,
                     withdrawAmount: withdrawAmount,
                 });
