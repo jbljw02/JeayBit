@@ -1,230 +1,222 @@
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
-from app.models import Crypto, CustomUser, TradeHistory
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
-from requests import get
-from decimal import Decimal
-from app.utils.buy_process import buy_process
 from app.utils.check_price_match import check_price_match
+from app.utils.buy_process import buy_process
 from app.utils.sell_process import sell_process
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from app.models import Crypto, TradeHistory, UserCrypto, CustomUser
+from decimal import Decimal, ROUND_DOWN
 import math
 import logging
-from app.models import CustomUser, UserCrypto
+import requests
+from crypto_app.authmiddleware import CsrfExemptSessionAuthentication
 
 logger = logging.getLogger(__name__)
 
-# 사용자, 화폐별 거래내역을 추가 및 매수/매도 처리
-@api_view(["POST"])
-def add_user_trade_history(request):
-    data = request.data
 
-    email = data.get("email")
-    crypto_name = data.get("crypto_name")
-    trade_category = data.get("trade_category")
-    trade_time = data.get("trade_time")
-    crypto_market = data.get("crypto_market")
-    crypto_price = data.get("crypto_price")
-    trade_price = data.get("trade_price")
-    trade_amount = data.get("trade_amount")
-    market = data.get("market")
-    isMarketValue = data.get("isMarketValue")
+class TradeHistoryView(APIView):
+    authentication_classes = (CsrfExemptSessionAuthentication,)
 
-    if not email:
-        return Response({"error": "요청에 이메일이 포함되어야 합니다"}, status=400)
-    if not crypto_name:
-        return Response({"error": "요청에 화폐명이 포함되어야 합니다"}, status=400)
-    if not trade_category:
-        return Response(
-            {"error": "요청에 거래가 '매수'인지 '매도'인지 포함되어야 합니다"},
-            status=400,
-        )
-    if not trade_time:
-        return Response({"error": "요청에 현재 시간이 포함되어야 합니다"}, status=400)
-    if not crypto_market:
-        return Response({"error": "요청에 화폐 마켓이 포함되어야 합니다."}, status=400)
-    if not crypto_price:
-        return Response({"error": "요청에 화폐 가격이 포함되어야 합니다."}, status=400)
-    if not trade_price:
-        return Response({"error": "요청에 거래 가격이 포함되어야 합니다."}, status=400)
-    if not trade_amount:
-        return Response({"error": "요청에 거래 수량이 포함되어야 합니다."}, status=400)
+    # 거래 내역 조회
+    def get(self, request):
+        try:
+            trade_histories = TradeHistory.objects.filter(
+                user=request.user
+            ).select_related("crypto")
 
-    url = f"https://api.upbit.com/v1/orderbook?markets={market}"
-    response = get(url)
-    json_data = response.json()
+            data = [
+                {
+                    "id": history.id,
+                    "trade_category": history.trade_category,
+                    "trade_time": history.trade_time,
+                    "user": request.user.email,
+                    "crypto_name": history.crypto.name,
+                    "crypto_market": history.crypto_market,
+                    "crypto_price": history.crypto_price,
+                    "trade_price": history.trade_price,
+                    "trade_amount": str(history.trade_amount),
+                    "is_signed": history.is_signed,
+                }
+                for history in trade_histories
+            ]
 
-    # 호가 데이터를 가져옴
-    orderbook_units = json_data[0]["orderbook_units"]
+            return Response(data, status=status.HTTP_200_OK)
 
-    matched = False
-    if isMarketValue:
-        matched = True
-    else:
-        matched = check_price_match(trade_category, crypto_price, orderbook_units)
+        except Exception as e:
+            logger.error(f"거래 내역 조회 실패: {str(e)}")
+            return Response(
+                {"error": "거래 내역 조회 중 오류 발생"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
 
-    # 체결이 된다면 True, 되지 않는다면 False
-    is_signed = matched
-
-    try:
-        user = CustomUser.objects.get(email=email)
-        crypto = Crypto.objects.get(name=crypto_name)
-
-        trade_history = TradeHistory.objects.create(
-            user=user,
-            crypto=crypto,
-            trade_category="BUY" if trade_category == "매수" else "SELL",
-            trade_time=trade_time,
-            crypto_market=crypto_market,
-            crypto_price=float(crypto_price),
-            trade_price=math.floor(float(trade_price)),
-            trade_amount=Decimal(trade_amount),
-            is_signed=is_signed,
-        )
-        
-        # TradeHistory 객체를 딕셔너리로 변환
-        trade_history_data = {
-            "id": trade_history.id,
-            "trade_category": trade_history.trade_category,
-            "trade_time": trade_history.trade_time,
-            "crypto_market": trade_history.crypto_market,
-            "crypto_price": trade_history.crypto_price,
-            "trade_price": trade_history.trade_price,
-            "trade_amount": str(trade_history.trade_amount),
-            "is_signed": trade_history.is_signed,
-        }
-
-        user = CustomUser.objects.get(email=email)
-
-        # 가격이 매치될 경우 즉시 매수 및 매도 처리
-        if is_signed:
-            if trade_category == "매수":
-                buy_total = Decimal(trade_price)
-
-                response_data, status_code = buy_process(
-                    user, crypto, trade_amount, buy_total
+    # 거래 생성
+    def post(self, request):
+        try:
+            if not request.user.is_authenticated:
+                return Response(
+                    {"error": "로그인이 필요"},
+                    status=status.HTTP_401_UNAUTHORIZED,
                 )
-                
-                # 사용자의 현재 보유 화폐 정보 조회
-                user_crypto = UserCrypto.objects.get(user=user, crypto=crypto, is_owned=True)
-                print('user_crypto', user_crypto)
-                owned_crypto_data = {
-                    "name": crypto.name,
-                    "is_owned": user_crypto.is_owned,
-                    "owned_quantity": float(user_crypto.owned_quantity)
-                }
 
-                response = {
-                    "is_signed": is_signed,
-                    "trade_history": trade_history_data,
-                    "owned_crypto": owned_crypto_data,
-                    "balance": user.balance,
-                }
-                
-                return Response(response, status=status_code)
-            elif trade_category == "매도":
-                sell_total = Decimal(trade_price)
+            # 필수 필드 검증
+            required_fields = [
+                "crypto_name",
+                "trade_category",
+                "trade_time",
+                "crypto_market",
+                "crypto_price",
+                "trade_price",
+                "trade_amount",
+                "market",
+                "is_market_value",
+            ]
 
-                response_data, status_code = sell_process(
-                    user, crypto, trade_amount, sell_total
+            if not all(field in request.data for field in required_fields):
+                return Response(
+                    {"error": f"필수 필드가 누락"},
+                    status=status.HTTP_400_BAD_REQUEST,
                 )
-                
-                # 사용자의 현재 보유 화폐 정보 조회
-                user_crypto = UserCrypto.objects.get(user=user, crypto=crypto)
-                print('user_crypto', user_crypto)
 
-                owned_crypto_data = {
-                    "name": crypto.name,
-                    "is_owned": user_crypto.is_owned,
-                    "owned_quantity": float(user_crypto.owned_quantity),
-                }
-                
-                response = {
-                    "is_signed": is_signed,
-                    "trade_history": trade_history_data,
-                    "owned_crypto": owned_crypto_data,
-                    "balance": user.balance,
-                }
+            # 가격 매칭 확인
+            matched = request.data["is_market_value"] or check_price_match(
+                request.data["trade_category"],
+                request.data["crypto_price"],
+                self._get_orderbook_units(request.data["market"]),
+            )
 
-                return Response(response, status=status_code)
-        # 일치하지 않을 경우 대기
-        else:
-            response = {
-                "is_signed": is_signed,
-                "trade_history": trade_history_data,
-                "balance": user.balance,
-            }
-            return Response(response, status=202)
+            # 'ALL' 요청 처리
+            trade_amount = request.data["trade_amount"]
+            if trade_amount == "ALL" and request.data["trade_category"] == "매도":
+                # DB에서 최신 보유 수량 조회
+                crypto = Crypto.objects.get(name=request.data["crypto_name"])
+                user_crypto = UserCrypto.objects.get(
+                    user=request.user, 
+                    crypto=crypto
+                )
+                trade_amount = user_crypto.owned_quantity
 
-    except CustomUser.DoesNotExist:
-        return Response(
-            {"error": "해당 이메일의 사용자가 존재하지 않습니다"}, status=500
+            # 거래 내역 생성
+            crypto = Crypto.objects.get(name=request.data["crypto_name"])
+            trade_history = TradeHistory.objects.create(
+                user=request.user,
+                crypto=crypto,
+                trade_category=(
+                    "BUY" if request.data["trade_category"] == "매수" else "SELL"
+                ),
+                trade_time=request.data["trade_time"],
+                crypto_market=request.data["crypto_market"],
+                crypto_price=float(request.data["crypto_price"]),
+                trade_price=math.floor(float(request.data["trade_price"])),
+                trade_amount=Decimal(str(trade_amount)),
+                is_signed=matched,
+            )
+            
+            # 거래 처리 및 응답 데이터 구성
+            response_data = self._process_trade(
+                trade_history, request.user, crypto, matched
+            )
+
+            return Response(
+                response_data,
+                status=status.HTTP_200_OK if matched else status.HTTP_202_ACCEPTED,
+            )
+
+        except Crypto.DoesNotExist:
+            return Response(
+                {"error": "존재하지 않는 화폐"},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+        except Exception as e:
+            logger.error(f"거래 생성 실패: {str(e)}")
+            return Response(
+                {"error": "거래 처리 중 오류가 발생"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
+
+    # 주문 취소
+    def delete(self, request):
+        try:
+            ids = request.query_params.getlist("ids[]")
+            if not ids:
+                return Response(
+                    {"error": "취소할 주문 ID 필요"},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+
+            result = TradeHistory.objects.filter(
+                user=request.user,
+                id__in=ids,
+                is_signed=False,  # 미체결 주문만 취소 가능
+            ).delete()
+
+            if result[0] == 0:
+                return Response(
+                    {"error": "취소할 주문을 찾을 수 없음"},
+                    status=status.HTTP_404_NOT_FOUND,
+                )
+
+            return Response(
+                {"message": "주문 취소 완료"},
+                status=status.HTTP_200_OK,
+            )
+
+        except Exception as e:
+            logger.error(f"주문 취소 실패: {str(e)}")
+            return Response(
+                {"error": "주문 취소 중 오류 발생"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
+
+    # 호가 조회
+    def _get_orderbook_units(self, market):
+        response = requests.get(
+            f"https://api.upbit.com/v1/orderbook?markets={market}",
+            headers={"accept": "application/json"},
         )
-    except Crypto.DoesNotExist:
-        return Response(
-            {"error": "해당 화폐명을 가진 화폐가 존재하지 않습니다"}, status=500
-        )
-    except Exception as e:
-        logger.error(f"거래내역 추가 실패: {e}")
-        return Response({"error": "거래내역 추가 실패"}, status=500)
+        return response.json()[0]["orderbook_units"]
 
-
-# 거래내역을 클라이언트로 전송
-@api_view(["POST"])
-def get_user_tradeHistory(request):
-    try:
-        email = request.data.get("email")
-        user = CustomUser.objects.get(email=email)
-    except CustomUser.DoesNotExist:
-        return Response({"error": "요청에 이메일이 포함되어야 합니다"}, status=400)
-
-    try:
-        trade_historys = TradeHistory.objects.filter(user=user)
-
-        data = [
-            {
+    # 거래 처리 및 응답 데이터 구성
+    def _process_trade(self, trade_history, user, crypto, is_signed):
+        response_data = {
+            "is_signed": is_signed,
+            "trade_history": {
                 "id": trade_history.id,
                 "trade_category": trade_history.trade_category,
                 "trade_time": trade_history.trade_time,
-                "user": user.email,
-                "crypto_name": trade_history.crypto.name,
                 "crypto_market": trade_history.crypto_market,
                 "crypto_price": trade_history.crypto_price,
                 "trade_price": trade_history.trade_price,
                 "trade_amount": trade_history.trade_amount,
                 "is_signed": trade_history.is_signed,
-            }
-            for trade_history in trade_historys
-        ]
+            },
+        }
 
-        return Response(data, status=200)
-    except Exception as e:
-        logger.error(f"거래내역 받아오기 실패: {e}")
-        return Response({"error:": "거래내역 받아오기 실패"}, status=500)
+        if is_signed:
+            if trade_history.trade_category == "BUY":
+                buy_process(
+                    user,
+                    crypto,
+                    trade_history.trade_amount,
+                    Decimal(trade_history.trade_price),
+                )
+            else:
+                sell_process(
+                    user,
+                    crypto,
+                    trade_history.trade_amount,
+                    Decimal(trade_history.trade_price),
+                )
 
+            user_crypto = UserCrypto.objects.get(user=user, crypto=crypto)
+            response_data.update(
+                {
+                    "owned_crypto": {
+                        "name": crypto.name,
+                        "is_owned": user_crypto.is_owned,
+                        "owned_quantity": float(user_crypto.owned_quantity),
+                    },
+                    "balance": user.balance,
+                }
+            )
 
-@api_view(["POST"])
-def cancel_order(request):
-    data = request.data
-    ids = data.get("ids")
-    email = data.get("email")
-
-    if not email:
-        return Response({"error": "요청에 이메일이 포함되어야 합니다"}, status=400)
-    if not ids:
-        return Response(
-            {"error": "취소할 주문의 id가 요청에 포함되어야 합니다"}, status=400
-        )
-
-    try:
-        user = CustomUser.objects.get(email=email)
-
-        # ids 배열과 튜플의 id 필드 사이 일치하는 부분이 있으면 삭제
-        trade_history = TradeHistory.objects.filter(user=user, id__in=ids).delete()
-
-        return Response({"cancel_order": "주문 취소 성공"}, status=200)
-    except CustomUser.DoesNotExist:
-        return Response({"error": "해당 이메일의 사용자가 존재하지 않습니다"}, status=500)
-    except Exception as e:
-        logger.error(f"주문 취소 실패: {e}")
-        return Response({"error": "주문 취소 실패"}, status=500)
+        return response_data

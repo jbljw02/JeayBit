@@ -30,10 +30,9 @@ export default function Header() {
     }
 
     try {
-      await axios.post(`${API_URL}/logout/`, {},
-        {
-          withCredentials: true,
-        });
+      await axios.delete(`${API_URL}/api/auth/`, {
+        withCredentials: true,
+      });
 
       dispatch(setUser({
         name: '',

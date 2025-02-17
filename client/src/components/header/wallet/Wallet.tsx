@@ -91,12 +91,13 @@ export default function Wallet() {
     };
 
     // 입금량을 서버로 전송
-    const addBalanceToUser = async (email: string, depositAmount: number) => {
+    const depositBalance = async (depositAmount: number) => {
         if (user.email && user.name) {
             try {
-                await axios.post(`${API_URL}/add-balance-to-user/`, {
-                    email: email,
-                    depositAmount: depositAmount,
+                await axios.post(`${API_URL}/api/user/balance/deposit/`, {
+                    amount: depositAmount,
+                }, {
+                    withCredentials: true,
                 });
 
                 dispatch(setSuccessTransfer(true));
@@ -115,12 +116,14 @@ export default function Wallet() {
     };
 
     // 출금량을 서버로 전송
-    const minusBalanceFromUser = async (email: string, withdrawAmount: number) => {
+    const withdrawBalance = async (amount: number) => {
         if (user.email && user.name) {
             try {
-                await axios.post(`${API_URL}/minus-balance-from-user/`, {
-                    email: email,
-                    withdrawAmount: withdrawAmount,
+                await axios.delete(`${API_URL}/api/user/balance/withdraw/`, {
+                    data: {
+                        amount: amount,
+                    },
+                    withCredentials: true,
                 });
                 dispatch(setSuccessTransfer(true));
                 dispatch(showNoticeModal({
@@ -149,7 +152,7 @@ export default function Wallet() {
         if (depositAmount && !depositLimit) {
             dispatch(setWorkingSpinner(true));
 
-            await addBalanceToUser(user.email, depositAmount);
+            await depositBalance(depositAmount);
             dispatch(depositUserBalance(depositAmount));
 
             dispatch(setWorkingSpinner(false));
@@ -177,7 +180,7 @@ export default function Wallet() {
         if (withdrawAmount && !withdrawOverflow && !withdrawLimit) {
             dispatch(setWorkingSpinner(true));
 
-            await minusBalanceFromUser(user.email, withdrawAmount);
+            await withdrawBalance(withdrawAmount);
             dispatch(withdrawUserBalance(withdrawAmount));
 
             dispatch(setWorkingSpinner(false));

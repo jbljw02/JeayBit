@@ -22,10 +22,10 @@ export default function useTradeHistory() {
   const user = useAppSelector(state => state.user);
 
   // 서버로부터 거래 내역을 받아옴
-  const getTradeHistory = async (email: string) => {
+  const getTradeHistory = async () => {
     try {
-      const response = await axios.post(`${API_URL}/get-user-trade-history/`, {
-        email: email,
+      const response = await axios.get(`${API_URL}/api/user/trade/`, {
+        withCredentials: true,
       });
 
       // 서버로부터 받아온 체결 내역과 미체결 내역을 담을 임시 배열
@@ -59,7 +59,7 @@ export default function useTradeHistory() {
 
   useEffect(() => {
     if (user.email) {
-      getTradeHistory(user.email);
+      getTradeHistory();
     }
   }, [user.email]);
 

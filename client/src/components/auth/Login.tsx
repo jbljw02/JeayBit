@@ -57,7 +57,7 @@ export default function Login() {
       setIsPasswordEmpty(false);
 
       const data = { email, password };
-      const response = await axios.post(`${API_URL}/login/`, data, {
+      const response = await axios.post(`${API_URL}/api/auth/`, data, {
         withCredentials: true,
       });
 
