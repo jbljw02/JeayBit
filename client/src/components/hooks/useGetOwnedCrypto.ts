@@ -15,8 +15,8 @@ export default function useGetOwnedCrypto() {
     // 사용자가 소유하고 있는 화폐의 정보를 받아옴
     const getOwnedCrypto = async (email: string) => {
         try {
-            const response = await axios.post(`${API_URL}/get_user_ownedCrypto/`, {
-                email: email,
+            const response = await axios.get(`${API_URL}/api/user/crypto/owned/`, {
+                withCredentials: true,
             });
 
             const resOwnedCrypto: OwnedCrypto[] = response.data;

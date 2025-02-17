@@ -8,7 +8,7 @@ def buy_process(user, crypto, crypto_quantity, buy_total):
             crypto=crypto,
             defaults={"owned_quantity": Decimal(0), "is_owned": False},
         )
-        
+
         buy_total = Decimal(buy_total)
 
         # 잔고량보다 주문 총액이 큰 경우

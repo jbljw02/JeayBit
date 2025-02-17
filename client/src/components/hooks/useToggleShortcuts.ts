@@ -13,14 +13,17 @@ export default function useToggleShortcuts() {
     const favoriteCrypto = useAppSelector(state => state.favoriteCrypto);
 
     // 로그인한 사용자에 대해 관심 화폐를 업데이트
-    const addFavoriteCrypto = async (email: string, cryptoName: string) => {
+    const addFavoriteCrypto = async (cryptoName: string) => {
         if (user.email) {
             try {
-                const response = await axios.post(`${API_URL}/add-favorite-crypto-to-user/`, {
-                    email: email,
-                    crypto_name: cryptoName,
-                });
-                
+                const response = await axios.post(`${API_URL}/api/user/favorite/`, {
+                    cryptoName: cryptoName,
+                },
+                    {
+                        withCredentials: true,
+                    }
+                );
+
                 return response.data.favorite_crypto;
             } catch (error) {
                 dispatch(showNoticeModal({ content: '관심 화폐 추가에 실패했습니다.' }));
@@ -43,9 +46,9 @@ export default function useToggleShortcuts() {
         const updatedFavoriteCrypto = favoriteCrypto.some(item => item.name === crypto.name)
             ? favoriteCrypto.filter(item => item.name !== crypto.name)
             : [...favoriteCrypto, crypto];
-            
+
         dispatch(setFavoriteCrypto(updatedFavoriteCrypto));
-        addFavoriteCrypto(user.email, crypto.name);
+        addFavoriteCrypto(crypto.name);
     }
 
     return { toggleShortcuts, addFavoriteCrypto };

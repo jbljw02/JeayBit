@@ -19,11 +19,11 @@ export default function useAddTradeHistory() {
     cryptoMarket: string,
     cryptoPrice: number,
     tradePrice: number,
-    tradeAmount: number,
+    tradeAmount: number | 'ALL',
     market: string,
     isMarketValue: boolean) => {
     try {
-      const response = await axios.post(`${API_URL}/add-user-trade-history/`, {
+      const response = await axios.post(`${API_URL}/api/user/trade/`, {
         email: email,
         cryptoName: cryptoName,
         tradeCategory: tradeCategory,
@@ -34,6 +34,8 @@ export default function useAddTradeHistory() {
         tradeAmount: tradeAmount,
         market: market,
         isMarketValue: isMarketValue,
+      }, {
+        withCredentials: true,
       });
 
       // 거래가 즉시 체결 됐을 경우

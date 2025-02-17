@@ -12,7 +12,7 @@ export default function useInitialWork() {
 
     const checkLogin = async () => {
         try {
-            const response = await axios.post(`${API_URL}/check-login/`, {}, {
+            const response = await axios.get(`${API_URL}/api/auth/`, {
                 withCredentials: true
             });
 
@@ -27,7 +27,7 @@ export default function useInitialWork() {
     // 초기 데이터를 비트코인으로 설정
     const getInitialData = async () => {
         try {
-            const response = await axios.post(`${API_URL}/get-all-crypto/`, {}, {
+            const response = await axios.get(`${API_URL}/api/crypto/`, {
                 withCredentials: true,
             });
 

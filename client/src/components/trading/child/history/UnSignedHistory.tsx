@@ -21,8 +21,6 @@ export default function UnSignedHistory() {
         }
     }
 
-    console.log('unSignedTradeHistory', unSignedTradeHistory);
-
     return (
         <>
             {

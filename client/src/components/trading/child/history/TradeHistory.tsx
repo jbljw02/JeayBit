@@ -34,7 +34,7 @@ export default function TradeHistory() {
         if (ids.length > 0) {
             dispatch(setWorkingSpinner(true));
 
-            await cancelOrder(user.email, ids);
+            await cancelOrder(ids);
             dispatch(cancelUnSignedOrder(ids));
 
             dispatch(setWorkingSpinner(false));
@@ -43,11 +43,13 @@ export default function TradeHistory() {
     }
 
     // 주문을 취소할 화폐를 서버로 전송
-    const cancelOrder = async (email: string, ids: string[]) => {
+    const cancelOrder = async (ids: string[]) => {
         try {
-            await axios.post(`${API_URL}/cancel-order/`, {
-                ids: ids,
-                email: email,
+            await axios.delete(`${API_URL}/api/user/trade/`, {
+                params: {
+                    ids: ids,
+                },
+                withCredentials: true,
             });
             dispatch(setScheduledCancel([]));
         } catch (error) {

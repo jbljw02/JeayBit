@@ -12,8 +12,11 @@ import requests
 from asgiref.sync import sync_to_async
 import aiohttp
 import logging
+from rest_framework.views import APIView
+from rest_framework import status
 
 logger = logging.getLogger(__name__)
+
 
 def crypto_api():
     try:
@@ -25,7 +28,10 @@ def crypto_api():
         name = []
 
         for crypto in json.loads(response.text):
-            if crypto["market"].startswith("KRW") and crypto.get("market_warning", "NONE") == "NONE":
+            if (
+                crypto["market"].startswith("KRW")
+                and crypto.get("market_warning", "NONE") == "NONE"
+            ):
                 name.append(crypto["korean_name"])
                 market.append(crypto["market"])
 
@@ -102,8 +108,9 @@ def update_crypto():
             Crypto.objects.create(name=name[i], price=cur_price[i])
 
 
-class GetAllCryptoView(View):
-    async def post(self, request):
+# 모든 암호화폐 정보 조회
+class CryptoListView(View):
+    async def get(self, request):
         try:
             # 비동기적으로 로그인 여부 확인
             is_logged_in = await sync_to_async(lambda: request.user.is_authenticated)()
@@ -112,43 +119,52 @@ class GetAllCryptoView(View):
             url1 = "https://api.upbit.com/v1/market/all?isDetails=true"
             url2_template = "https://api.upbit.com/v1/ticker?markets={}"
 
+            # 비동기 HTTP 요청 수행
             async with aiohttp.ClientSession() as session:
+                # 마켓 정보 조회
                 async with session.get(url1, headers=headers) as response1:
+                    if response1.status != 200:
+                        return JsonResponse(
+                            {"error": "업비트 마켓 정보 조회 실패"},
+                            status=status.HTTP_502_BAD_GATEWAY,
+                        )
                     market_data = await response1.json()
 
-                market = [
-                    crypto["market"]
-                    for crypto in market_data
-                    if crypto["market"].startswith("KRW")
-                    and crypto.get("market_warning", "NONE") == "NONE"
-                ]
-                name = [
-                    crypto["korean_name"]
-                    for crypto in market_data
-                    if crypto["market"].startswith("KRW")
-                    and crypto.get("market_warning", "NONE") == "NONE"
-                ]
+                # KRW 마켓만 필터링
+                market = []
+                name = []
+                for crypto in market_data:
+                    if (
+                        crypto["market"].startswith("KRW")
+                        and crypto.get("market_warning", "NONE") == "NONE"
+                    ):
+                        market.append(crypto["market"])
+                        name.append(crypto["korean_name"])
 
+                # 현재가 정보 조회
                 market_str = "%2C%20".join(market)
                 url2 = url2_template.format(market_str)
                 async with session.get(url2, headers=headers) as response2:
+                    if response2.status != 200:
+                        return JsonResponse(
+                            {"error": "업비트 API 현재가 조회 실패"},
+                            status=status.HTTP_502_BAD_GATEWAY,
+                        )
                     data = await response2.json()
 
-            all_crypto = []
-
-            # 로그인된 경우 UserCrypto 데이터를 미리 가져오기
+            # 사용자 암호화폐 정보 조회(로그인된 경우)
+            user_crypto_dict = {}
             if is_logged_in:
                 user_cryptos = await sync_to_async(list)(
                     UserCrypto.objects.filter(user=request.user, crypto__name__in=name)
                 )
                 user_crypto_dict = {uc.crypto.name: uc for uc in user_cryptos}
-            else:
-                user_crypto_dict = {}
 
+            # 응답 데이터 구성
+            all_crypto = []
             for i in range(len(data)):
                 trade_price = data[i].get("trade_price")
                 change_price = data[i].get("change_price")
-
                 crypto_obj = {
                     "name": name[i],
                     "market": market[i],
@@ -171,81 +187,101 @@ class GetAllCryptoView(View):
                     "low_price": data[i]["low_price"],
                 }
 
+                # 로그인된 사용자의 추가 정보
                 if is_logged_in:
                     user_crypto_info = user_crypto_dict.get(name[i])
-                    if user_crypto_info:
-                        crypto_obj["is_favorited"] = user_crypto_info.is_favorited
-                        crypto_obj["is_owned"] = user_crypto_info.is_owned
-                        crypto_obj["owned_quantity"] = user_crypto_info.owned_quantity
-                    else:
-                        crypto_obj["is_favorited"] = False
-                        crypto_obj["is_owned"] = False
-                        crypto_obj["owned_quantity"] = 0.00
+                    crypto_obj.update(
+                        {
+                            "is_favorited": (
+                                user_crypto_info.is_favorited
+                                if user_crypto_info
+                                else False
+                            ),
+                            "is_owned": (
+                                user_crypto_info.is_owned if user_crypto_info else False
+                            ),
+                            "owned_quantity": (
+                                user_crypto_info.owned_quantity
+                                if user_crypto_info
+                                else 0.00
+                            ),
+                        }
+                    )
 
                 all_crypto.append(crypto_obj)
+
+            response_data = {
+                "is_logged_in": is_logged_in,
+                "all_crypto": all_crypto,
+            }
+
+            # 비동기 뷰: JsonResponse
+            return JsonResponse(
+                convert_dict_to_camel_case(response_data), status=status.HTTP_200_OK
+            )
         except Exception as e:
             logger.error(f"암호화폐 데이터 가져오기 에러: {e}")
-            return JsonResponse({"error": "암호화폐 데이터 가져오기 에러"}, status=500)
-
-        data = {
-            "is_logged_in": is_logged_in,
-            "all_crypto": all_crypto,
-        }
-
-        # 응답 전에 카멜 케이스로 변환
-        camel_case_data = convert_dict_to_camel_case(data)
-        return JsonResponse(camel_case_data, status=200)
+            return JsonResponse(
+                {"error": "암호화폐 데이터 가져오기 에러"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
 
 
-# 호가내역
 @api_view(["GET"])
-def asking_price(request):
+def get_orderbook(request):
+    """호가내역 조회
+    GET /api/v1/markets/{market}/orderbook/
+    """
     try:
         market = request.query_params.get("market")
         if not market:
             logger.error("market 파라미터 누락")
-            return Response({"error": "market 파라미터 존재 X"}, status=400)
+            return Response(
+                {"error": "market 파라미터가 필요합니다"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
 
         url = f"https://api.upbit.com/v1/orderbook?markets={market}"
+        response = requests.get(url, headers={"accept": "application/json"})
 
-        response = requests.get(url)
-
-        # 업비트 api로부터 데이터 수신 실패
         if response.status_code != 200:
-            return Response({"error": "업비트 API로부터 수신 실패"}, status=500)
+            logger.error(f"Upbit API 호출 실패: status={response.status_code}")
+            return Response(
+                {"error": "업비트 API 호출 실패"}, status=status.HTTP_502_BAD_GATEWAY
+            )
 
-        data = response.json()
-
-        return Response(data, status=200)
+        return Response(response.json(), status=status.HTTP_200_OK)
 
     except Exception as e:
-        logger.error(f"호가내역 받아오기 실패: {e}")
+        logger.error(f"호가내역 조회 실패: {str(e)}")
         return Response(
-            {"error": "호가내역 받아오기 실패", "details": str(e)}, status=500
+            {"error": "호가내역 조회 중 오류가 발생"},
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR,
         )
 
 
-# 체결내역
 @api_view(["GET"])
-def closed_price(request):
+def get_tradebook(request):
+    """체결내역 조회
+    GET /api/v1/markets/{market}/trades/
+    """
     try:
         market = request.query_params.get("market")
-        if not market:
-            logger.error("market 파라미터 누락")
-            return Response({"error": "market 파라미터 존재 X"}, status=400)
 
         url = f"https://api.upbit.com/v1/trades/ticks?market={market}&count=50"
+        response = requests.get(url, headers={"accept": "application/json"})
 
-        response = get(url)
-
-        # 업비트 api로부터 데이터 수신 실패
         if response.status_code != 200:
-            return Response({"error": "업비트 API로부터 수신 실패"}, status=500)
+            logger.error(f"Upbit API 호출 실패: status={response.status_code}")
+            return Response(
+                {"error": "업비트 API 호출 실패"}, status=status.HTTP_502_BAD_GATEWAY
+            )
 
-        data = response.json()
-
-        return Response(data, status=200)
+        return Response(response.json(), status=status.HTTP_200_OK)
 
     except Exception as e:
-        logger.error(f"체결내역 받아오기 실패: {e}")
-        return Response({"error: 체결내역 받아오기 실패"}, status=500)
+        logger.error(f"체결내역 조회 실패: {str(e)}")
+        return Response(
+            {"error": "체결내역 조회 중 오류 발생"},
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+        )

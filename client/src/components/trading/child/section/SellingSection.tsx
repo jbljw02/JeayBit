@@ -43,7 +43,7 @@ export default function SellingSectioin() {
 
     // 현재 선택된 화폐의 보유 정보를 실시간으로 관리
     const targetOwnedCrypto = useMemo(() => {
-        return ownedCrypto.find(crypto => crypto.name === selectedCrypto.name) || 
+        return ownedCrypto.find(crypto => crypto.name === selectedCrypto.name) ||
         {
             ...selectedCrypto,
             isOwned: false,
@@ -201,7 +201,7 @@ export default function SellingSectioin() {
             selectedCrypto.market,
             price,
             sellTotal,
-            sellQuantity,
+            selectedPercentage === '100%' ? 'ALL' : sellQuantity,
             selectedCrypto.market,
             isMarketValue
         );

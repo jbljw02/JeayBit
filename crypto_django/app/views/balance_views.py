@@ -1,82 +1,100 @@
-from app.models import CustomUser
-from rest_framework.decorators import api_view
+from rest_framework import status
+from rest_framework.views import APIView
 from rest_framework.response import Response
 import logging
+from crypto_app.authmiddleware import CsrfExemptSessionAuthentication
 
 logger = logging.getLogger(__name__)
 
-# 사용자의 balance 컬럼에 입금량을 추가
-@api_view(["POST"])
-def add_balance_to_user(request):
-    try:
-        email = request.data.get("email")
-        deposit_amount = request.data.get("deposit_amount")
 
-        if email is None:
-            logger.warning("입금 시도: 이메일 누락")
-            return Response({"error": "이메일이 존재하지 않습니다"}, status=400)
-        if deposit_amount is None:
-            logger.warning(f"입금 시도: 입금액 누락 (이메일: {email})")
-            return Response({"error": "입금량이 누락되었습니다"}, status=400)
+class UserBalanceView(APIView):
+    authentication_classes = (CsrfExemptSessionAuthentication,)
 
+    # 잔고 조회
+    def get(self, request):
         try:
-            user = CustomUser.objects.get(email=email)
-            if user.balance is None:
-                user.balance = deposit_amount
-            else:
-                user.balance += deposit_amount
+            if not request.user.is_authenticated:
+                return Response(
+                    {"error": "로그인이 필요"},
+                    status=status.HTTP_401_UNAUTHORIZED,
+                )
+
+            data = {"balance": request.user.balance}
+            return Response(data, status=status.HTTP_200_OK)
+
+        except Exception as e:
+            logger.error(f"잔액 조회 중 오류 발생: {str(e)}")
+            return Response(
+                {"error": "잔고 조회 중 오류 발생"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
+
+    # 입금
+    def post(self, request):
+        try:
+            if not request.user.is_authenticated:
+                return Response(
+                    {"error": "로그인이 필요"},
+                    status=status.HTTP_401_UNAUTHORIZED,
+                )
+
+            deposit_amount = request.data.get("amount")
+            if deposit_amount is None:
+                return Response(
+                    {"error": "입금액 누락"},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+
+            user = request.user
+            user.balance = user.balance or 0
+            user.balance += deposit_amount
             user.save()
-            return Response({"add_balance_to_user": "입금량 추가 완료"}, status=200)
-        except CustomUser.DoesNotExist:
-            logger.error(f"입금 실패: 존재하지 않는 사용자 {email}")
-            return Response({"error": "해당 이메일의 사용자가 존재하지 않습니다"}, status=400)
-    except Exception as e:
-        logger.error(f"입금 처리 중 오류 발생: {str(e)}")
-        return Response({"error": "입금 처리 중 오류가 발생했습니다"}, status=500)
 
+            return Response(
+                {"balance": user.balance},
+                status=status.HTTP_200_OK,
+            )
 
-# 클라이언트로부터 받은 출금량만큼 잔고 줄이기
-@api_view(["POST"])
-def minus_balance_from_user(request):
-    try:
-        email = request.data.get("email")
-        withdraw_amount = request.data.get("withdraw_amount")
+        except Exception as e:
+            logger.error(f"입금 처리 중 오류 발생: {str(e)}")
+            return Response(
+                {"error": "입금 처리 중 오류 발생"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
 
-        if email is None:
-            logger.warning("출금 시도: 이메일 누락")
-            return Response({"error": "이메일이 존재하지 않습니다"})
-        if withdraw_amount is None:
-            logger.warning(f"출금 시도: 출금액 누락 (이메일: {email})")
-            return Response({"error": "출금량이 누락되었습니다"})
-
+    # 출금
+    def delete(self, request):
         try:
-            user = CustomUser.objects.get(email=email)
-            if user.balance - withdraw_amount < 0:
-                logger.warning(f"출금 실패: 잔액 부족 (이메일: {email}, 요청액: {withdraw_amount}, 잔액: {user.balance})")
-                return Response({"error": "출금량이 잔고보다 많습니다"})
-            else:
-                user.balance -= withdraw_amount
-                user.save()
-                return Response({"minus_balance_from_user": "잔고 업데이트 완료"})
-        except CustomUser.DoesNotExist:
-            logger.error(f"출금 실패: 존재하지 않는 사용자 {email}")
-            return Response({"error": "해당 이메일의 사용자가 존재하지 않습니다"})
-    except Exception as e:
-        logger.error(f"출금 처리 중 오류 발생: {str(e)}")
-        return Response({"error": "출금 처리 중 오류가 발생했습니다"}, status=500)
+            if not request.user.is_authenticated:
+                return Response(
+                    {"error": "로그인이 필요"},
+                    status=status.HTTP_401_UNAUTHORIZED,
+                )
 
+            withdraw_amount = request.data.get("amount")
+            if withdraw_amount is None:
+                return Response(
+                    {"error": "출금액 누락"},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
 
-# 클라이언트에게 잔고량을 제공
-@api_view(["POST"])
-def get_user_balance(request):
-    try:
-        email = request.data.get("email")
-        user = CustomUser.objects.get(email=email)
-        data = {"user_balance": user.balance}
-        return Response(data, status=200)
-    except CustomUser.DoesNotExist:
-        logger.error(f"잔액 조회 실패: 존재하지 않는 사용자 {email}")
-        return Response({"error": "해당 사용자가 존재하지 않습니다"}, status=400)
-    except Exception as e:
-        logger.error(f"잔액 조회 중 오류 발생: {str(e)}")
-        return Response({"error": "잔고량 불러오기 실패"}, status=500)
+            user = request.user
+            if user.balance < withdraw_amount:
+                return Response(
+                    {"error": "잔액이 부족"}, status=status.HTTP_400_BAD_REQUEST
+                )
+
+            user.balance -= withdraw_amount
+            user.save()
+
+            return Response(
+                {"balance": user.balance},
+                status=status.HTTP_200_OK,
+            )
+
+        except Exception as e:
+            logger.error(f"출금 처리 중 오류 발생: {str(e)}")
+            return Response(
+                {"error": "출금 처리 중 오류 발생"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
