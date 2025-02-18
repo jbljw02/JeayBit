@@ -3,7 +3,7 @@ import axios from "axios";
 import FaviconTitle from "./child/AuthHeader";
 import InputWarning from "../input/InputWarning";
 import FormInput from "../input/FormInput";
-import formValueChange from "../../utils/formValueChange";
+import formValueChange from "../../utils/form/formValueChange";
 import LoadingBar, { LoadingBarRef } from 'react-top-loading-bar';
 import AuthButton from "./child/AuthButton";
 import '../../styles/auth/authContainer.css'

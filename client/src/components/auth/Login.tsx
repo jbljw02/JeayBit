@@ -5,7 +5,7 @@ import { useAppDispatch } from "../../redux/hooks";
 import FormInput from "../input/FormInput";
 import InputWarning from "../input/InputWarning";
 import FaviconTitle from "./child/AuthHeader";
-import formValueChange from "../../utils/formValueChange";
+import formValueChange from "../../utils/form/formValueChange";
 import '../../styles/auth/authContainer.css'
 import { setUserInfo } from "../../redux/features/userSlice";
 import LoadingBar, { LoadingBarRef } from 'react-top-loading-bar';

@@ -1,4 +1,4 @@
-import convertToDate from "../../../../utils/date/covertToDate";
+import convertToDate from "../../../../utils/format/covertToDate";
 import adjustSize from "../../../../utils/format/adjustSize";
 import { useAppSelector } from "../../../../redux/hooks";
 import { AskingData } from "../../../../redux/features/askingSlice";

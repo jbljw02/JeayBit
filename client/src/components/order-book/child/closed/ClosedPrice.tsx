@@ -1,6 +1,6 @@
 import { useAppSelector } from "../../../../redux/hooks";
 import adjustSize from "../../../../utils/format/adjustSize";
-import convertToDate from "../../../../utils/date/covertToDate";
+import convertToDate from "../../../../utils/format/covertToDate";
 import '../../../../styles/price-detail/orderbook/orderbook.css'
 import CustomScrollbars from "../../../scrollbar/CustomScorllbars";
 import { useState } from "react";
