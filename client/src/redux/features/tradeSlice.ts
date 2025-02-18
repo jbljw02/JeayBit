@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import formatDateString from "../../utils/date/formatDateString";
+import formatDateString from "../../utils/format/formatDateString";
 
 export type UserTradeHistory = {
     id: string,

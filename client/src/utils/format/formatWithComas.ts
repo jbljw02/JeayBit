@@ -1,7 +1,7 @@
 // 천의 자리마다 콤마를 찍음
 export default function formatWithComas(value: string | number, dump?: boolean) {
     if (typeof value === 'number') {
-        // 1000 이하의 숫자는 소숫점 유지(5번째 자리까지 살림)
+        // 1000 미만의 숫자는 소숫점 유지(5번째 자리까지 살림)
         if (value < 1000) {
             const strValue = String(value);
             if (strValue.includes('.')) {
