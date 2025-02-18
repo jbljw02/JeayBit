@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">93.33% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/13</span>
+                <span class='fraction'>14/15</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">83.33% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/4</span>
+                <span class='fraction'>5/6</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/1</span>
+                <span class='fraction'>1/1</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">92.3% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/11</span>
+                <span class='fraction'>12/13</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line low'></div>
+    <div class='status-line high'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -88,56 +88,71 @@
 <a name='L23'></a><a href='#L23'>23</a>
 <a name='L24'></a><a href='#L24'>24</a>
 <a name='L25'></a><a href='#L25'>25</a>
-<a name='L26'></a><a href='#L26'>26</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L26'></a><a href='#L26'>26</a>
+<a name='L27'></a><a href='#L27'>27</a>
+<a name='L28'></a><a href='#L28'>28</a>
+<a name='L29'></a><a href='#L29'>29</a>
+<a name='L30'></a><a href='#L30'>30</a>
+<a name='L31'></a><a href='#L31'>31</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">12x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">12x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">12x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">10x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">8x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">12x</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">// 호가 및 체결내역을 출력하기 전에, 자릿수를 조정
-<span class="cstat-no" title="statement not covered" >export default function <span class="fstat-no" title="function not covered" >a</span>djustSize(</span>size: number) {
-    let str_size;
+export default function adjustSize(size: number) {
+    let stringSize = String(size);
 &nbsp;
-    // 14자리 이상의 정수인 경우, 14자리로 줄이고 문자열로 반환
-<span class="cstat-no" title="statement not covered" >    if (size &gt; 9999999999999) {</span>
-<span class="cstat-no" title="statement not covered" >        str_size = String(Math.floor(size));</span>
+    // 정수부분의 자릿수 확인
+    const integerLength = Math.floor(size).toString().length;
+&nbsp;
+    // 14자리 초과의 정수인 경우, 14자리로 줄이고 문자열로 반환
+    if (integerLength &gt; 14) {
+        stringSize = String(Math.floor(size)).substring(0, 14);
     }
-    // 소수점을 포함하여 14자리를 넘어갈 수 있는 경우를 처리
+    // 14자리 이하인 경우를 처리
     else {
-<span class="cstat-no" title="statement not covered" >        str_size = String(size);</span>
-<span class="cstat-no" title="statement not covered" >        str_size = str_size.substring(0, 14);</span>
+        // 문자열의 끝이 '.'로 끝난다면 .을 제거
+        <span class="missing-if-branch" title="if path not taken" >I</span>if (stringSize.endsWith('.')) {
+<span class="cstat-no" title="statement not covered" >            stringSize = stringSize.slice(0, -1);</span>
+        }
+&nbsp;
+        // 전체 자릿수가 14자리를 초과하는 경우
+        if (stringSize.length &gt; 14) {
+            stringSize = stringSize.substring(0, 14);
+        }
+        // 소수점이 있고 전체 자릿수가 14자리 이하인 경우에만 소수점 5자리 제한 적용
+        else if (stringSize.includes('.')) {
+            const [integer, decimal] = stringSize.split('.');
+            stringSize = `${integer}.${decimal.substring(0, 5)}`;
+        }
     }
 &nbsp;
-    // 문자열의 끝이 '.'로 끝난다면 .을 제거
-<span class="cstat-no" title="statement not covered" >    <span class="missing-if-branch" title="if path not taken" >I</span>if (str_size.endsWith('.')) {</span>
-<span class="cstat-no" title="statement not covered" >        str_size = str_size.slice(0, -1);</span>
-    }
-&nbsp;
-<span class="cstat-no" title="statement not covered" >    <span class="missing-if-branch" title="if path not taken" >I</span>if (str_size.includes('.')) {</span>
-        const [integer<span class="cstat-no" title="statement not covered" >, d</span>ecimal<span class="cstat-no" title="statement not covered" >] = <span class="cstat-no" title="statement not covered" >s</span>tr_size.split('.');</span>
-<span class="cstat-no" title="statement not covered" >        str_size = `${integer}.${decimal.substring(0, 5)}`;</span>
-    }
-&nbsp;
-<span class="cstat-no" title="statement not covered" >    return str_size;</span>
+    return stringSize;
 }</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
@@ -145,7 +160,7 @@
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-02-18T05:43:57.687Z
+                at 2025-02-18T11:07:28.048Z
             </div>
         <script src="../../prettify.js"></script>
         <script>

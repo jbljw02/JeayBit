@@ -1,9 +1,9 @@
-import { useAppDispatch } from "../../redux/hooks";
+import { useAppDispatch } from "../redux/hooks";
 import axios from "axios";
-import { showNoticeModal } from "../../redux/features/modalSlice";
+import { showNoticeModal } from "../redux/features/modalSlice";
 import { useEffect } from "react";
-import { setSelectedCrypto, setCryptoRealTime } from "../../redux/features/selectedCryptoSlice";
-import { setUserInfo } from "../../redux/features/userSlice";
+import { setSelectedCrypto, setCryptoRealTime } from "../redux/features/selectedCryptoSlice";
+import { setUserInfo } from "../redux/features/userSlice";
 
 const API_URL = process.env.REACT_APP_API_URL;
 

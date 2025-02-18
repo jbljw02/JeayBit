@@ -1,8 +1,8 @@
 import axios from "axios";
-import { setSelectedCrypto } from "../../redux/features/selectedCryptoSlice";
-import { OwnedCrypto, setOwnedCrypto } from "../../redux/features/userCryptoSlice";
-import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import { showNoticeModal } from "../../redux/features/modalSlice";
+import { setSelectedCrypto } from "../redux/features/selectedCryptoSlice";
+import { OwnedCrypto, setOwnedCrypto } from "../redux/features/userCryptoSlice";
+import { useAppDispatch, useAppSelector } from "../redux/hooks";
+import { showNoticeModal } from "../redux/features/modalSlice";
 
 const API_URL = process.env.REACT_APP_API_URL;
 
@@ -11,7 +11,7 @@ export default function useGetOwnedCrypto() {
 
     const selectedCrypto = useAppSelector(state => state.selectedCrypto);
     const allCrypto = useAppSelector(state => state.allCrypto);
-  
+
     // 사용자가 소유하고 있는 화폐의 정보를 받아옴
     const getOwnedCrypto = async (email: string) => {
         try {

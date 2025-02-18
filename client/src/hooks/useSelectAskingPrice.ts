@@ -1,7 +1,7 @@
 import axios from "axios";
-import { AskingData, setAskingData, setTotalAskSize, setTotalBidSize } from "../../redux/features/askingSlice";
-import { useAppDispatch } from "../../redux/hooks";
-import { showNoticeModal } from "../../redux/features/modalSlice";
+import { AskingData, setAskingData, setTotalAskSize, setTotalBidSize } from "../redux/features/askingSlice";
+import { useAppDispatch } from "../redux/hooks";
+import { showNoticeModal } from "../redux/features/modalSlice";
 
 const API_URL = process.env.REACT_APP_API_URL;
 

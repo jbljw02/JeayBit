@@ -1,11 +1,11 @@
-import { useState, useEffect } from 'react';
-import useAddTradeHistory from './useAddTradeHistory';
-import { showNoticeModal } from '../../redux/features/modalSlice';
-import { setWorkingSpinner } from '../../redux/features/placeholderSlice';
-import { useAppDispatch, useAppSelector } from '../../redux/hooks';
-import calculatePercentage from '../../utils/form/calculatePercentage';
-import adjustInputValue from '../../utils/format/adjustInputValue';
-import limitDecimalPlace from '../../utils/format/limitDecimalPlace';
+import { useState, useEffect } from "react";
+import { showNoticeModal } from "../redux/features/modalSlice";
+import { setWorkingSpinner } from "../redux/features/placeholderSlice";
+import { useAppDispatch, useAppSelector } from "../redux/hooks";
+import calculatePercentage from "../utils/form/calculatePercentage";
+import adjustInputValue from "../utils/format/adjustInputValue";
+import limitDecimalPlace from "../utils/format/limitDecimalPlace";
+import useAddTradeHistory from "./useAddTradeHistory";
 
 interface UseTradeSectionProps {
     tradeType: 'buy' | 'sell';

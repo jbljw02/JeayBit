@@ -1,7 +1,7 @@
 import axios from "axios";
-import { useAppDispatch } from "../../redux/hooks";
-import { setClosedData } from "../../redux/features/askingSlice";
-import { showNoticeModal } from "../../redux/features/modalSlice";
+import { useAppDispatch } from "../redux/hooks";
+import { setClosedData } from "../redux/features/askingSlice";
+import { showNoticeModal } from "../redux/features/modalSlice";
 
 const API_URL = process.env.REACT_APP_API_URL;
 

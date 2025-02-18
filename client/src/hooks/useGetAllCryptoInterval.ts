@@ -1,12 +1,12 @@
 import axios from "axios";
-import { Crypto, setAllCrypto } from "../../redux/features/cryptoListSlice";
-import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import { showNoticeModal } from "../../redux/features/modalSlice";
+import { Crypto, setAllCrypto } from "../redux/features/cryptoListSlice";
+import { useAppDispatch, useAppSelector } from "../redux/hooks";
+import { showNoticeModal } from "../redux/features/modalSlice";
 import { useEffect } from "react";
 import useRequestCandle from "./useRequestCandle";
 import useSelectAskingPrice from "./useSelectAskingPrice";
 import useSelectClosedPrice from "./useSelectClosedPrice";
-import { setFavoriteCrypto, setOwnedCrypto } from "../../redux/features/userCryptoSlice";
+import { setFavoriteCrypto, setOwnedCrypto } from "../redux/features/userCryptoSlice";
 
 const API_URL = process.env.REACT_APP_API_URL;
 

@@ -1,8 +1,8 @@
-import { showNoticeModal } from "../../redux/features/modalSlice";
-import { setFavoriteCrypto } from "../../redux/features/userCryptoSlice";
-import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import { showNoticeModal } from "../redux/features/modalSlice";
+import { setFavoriteCrypto } from "../redux/features/userCryptoSlice";
+import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import axios from "axios";
-import { Crypto } from "../../redux/features/cryptoListSlice";
+import { Crypto } from "../redux/features/cryptoListSlice";
 
 const API_URL = process.env.REACT_APP_API_URL;
 

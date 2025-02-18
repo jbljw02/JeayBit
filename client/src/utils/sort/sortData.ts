@@ -27,22 +27,22 @@ export const sortByPrice = (data: Crypto[], sortOrder: number): Crypto[] => {
 
 // 변화율에 따라 정렬
 export const sortByChangeRate = (data: Crypto[], order: number) => {
-    let rise_crypto = [...data].filter(item => item.change === 'RISE');
-    let even_crypto = [...data].filter(item => item.change === 'EVEN');
-    let fall_crypto = [...data].filter(item => item.change === 'FALL');
+    let riseCrypto = [...data].filter(item => item.change === 'RISE');
+    let evenCrypto = [...data].filter(item => item.change === 'EVEN');
+    let fallCrypto = [...data].filter(item => item.change === 'FALL');
 
     if (order === 1) {
-        rise_crypto.sort((a, b) => b.changeRate - a.changeRate);
-        even_crypto.sort((a, b) => b.changeRate - a.changeRate);
-        fall_crypto.sort((a, b) => a.changeRate - b.changeRate);
+        riseCrypto.sort((a, b) => b.changeRate - a.changeRate);
+        evenCrypto.sort((a, b) => b.changeRate - a.changeRate);
+        fallCrypto.sort((a, b) => a.changeRate - b.changeRate);
 
-        return [...rise_crypto, ...even_crypto, ...fall_crypto];
+        return [...riseCrypto, ...evenCrypto, ...fallCrypto];
     } else if (order === 2) {
-        fall_crypto.sort((a, b) => b.changeRate - a.changeRate);
-        even_crypto.sort((a, b) => b.changeRate - a.changeRate);
-        rise_crypto.sort((a, b) => a.changeRate - b.changeRate);
+        fallCrypto.sort((a, b) => b.changeRate - a.changeRate);
+        evenCrypto.sort((a, b) => b.changeRate - a.changeRate);
+        riseCrypto.sort((a, b) => a.changeRate - b.changeRate);
 
-        return [...fall_crypto, ...even_crypto, ...rise_crypto];
+        return [...fallCrypto, ...evenCrypto, ...riseCrypto];
     }
 
     return data;

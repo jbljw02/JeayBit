@@ -8,7 +8,7 @@ import SelectPercentage from "../SelectPercentage";
 import TradingThead from "../TradingThead";
 import TradingFooter from "../TradingFooter";
 import CustomScrollbars from "../../../scrollbar/CustomScorllbars";
-import { useTradeSection } from "../../../hooks/useTradeSection";
+import { useTradeSection } from "../../../../hooks/useTradeSection";
 import { useMemo } from "react";
 
 export default function SellingSection() {

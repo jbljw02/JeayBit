@@ -1,7 +1,7 @@
 import axios from "axios";
-import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import { setUserBalance } from "../../redux/features/userSlice";
-import { showNoticeModal } from "../../redux/features/modalSlice";
+import { useAppDispatch, useAppSelector } from "../redux/hooks";
+import { setUserBalance } from "../redux/features/userSlice";
+import { showNoticeModal } from "../redux/features/modalSlice";
 import { useEffect } from "react";
 
 const API_URL = process.env.REACT_APP_API_URL;

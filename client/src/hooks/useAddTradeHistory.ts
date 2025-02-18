@@ -1,9 +1,9 @@
 import axios from "axios";
-import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import { addTradeHistory, addUnSignedTradeHistory } from "../../redux/features/tradeSlice";
-import { adjustOwnedCrypto } from "../../redux/features/userCryptoSlice";
-import { setUserBalance } from "../../redux/features/userSlice";
-import { Crypto } from "../../redux/features/cryptoListSlice";
+import { useAppDispatch, useAppSelector } from "../redux/hooks";
+import { addTradeHistory, addUnSignedTradeHistory } from "../redux/features/tradeSlice";
+import { adjustOwnedCrypto } from "../redux/features/userCryptoSlice";
+import { setUserBalance } from "../redux/features/userSlice";
+import { Crypto } from "../redux/features/cryptoListSlice";
 
 const API_URL = process.env.REACT_APP_API_URL;
 

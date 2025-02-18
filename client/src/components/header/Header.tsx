@@ -9,8 +9,8 @@ import { showNoticeModal } from "../../redux/features/modalSlice";
 import { setTradeHistory, setUnSignedTradeHistory } from "../../redux/features/tradeSlice";
 import { setUser } from "../../redux/features/userSlice";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import useGetBalance from "../hooks/useGetBalance";
-import { useClickOutside } from "../hooks/useClickOutside";
+import useGetBalance from "../../hooks/useGetBalance";
+import { useClickOutside } from "../../hooks/useClickOutside";
 
 const API_URL = process.env.REACT_APP_API_URL;
 

@@ -5,8 +5,8 @@ import { setCryptoRealTime, setSelectedCrypto } from "../../../../redux/features
 import { Crypto } from "../../../../redux/features/cryptoListSlice";
 import { setAskingSpinner } from "../../../../redux/features/placeholderSlice";
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
-import useSelectAskingPrice from "../../../hooks/useSelectAskingPrice";
-import useSelectClosedPrice from "../../../hooks/useSelectClosedPrice";
+import useSelectAskingPrice from "../../../../hooks/useSelectAskingPrice";
+import useSelectClosedPrice from "../../../../hooks/useSelectClosedPrice";
 import { useNavigate } from "react-router-dom";
 import ShortcutsButton from "../../../common/ShortcutsButton";
 import checkCurrentScreen from "../../../../utils/responsive/checkCurrentScreen";
