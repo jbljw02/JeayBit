@@ -6,7 +6,7 @@ import { showNoticeModal } from '../../../redux/features/ui/modalSlice';
 import { setTradeHistory, setUnSignedTradeHistory } from '../../../redux/features/trade/tradeSlice';
 
 jest.mock('axios');
-jest.mock('../../redux/hooks', () => ({
+jest.mock('../../../redux/hooks', () => ({
     useAppDispatch: jest.fn(),
     useAppSelector: jest.fn()
 }));

@@ -6,7 +6,7 @@ import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import useAddTradeHistory from "../useAddTradeHistory";
 import useTradeSection from "../useTradeSection";
 
-jest.mock('../../redux/hooks', () => ({
+jest.mock('../../../redux/hooks', () => ({
     useAppDispatch: jest.fn(),
     useAppSelector: jest.fn()
 }));

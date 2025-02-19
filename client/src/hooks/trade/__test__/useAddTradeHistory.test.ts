@@ -9,7 +9,7 @@ import { addTradeHistory, addUnSignedTradeHistory } from "../../../redux/feature
 jest.mock('axios');
 const mockedAxios = axios as jest.Mocked<typeof axios>;
 
-jest.mock('../../redux/hooks', () => ({
+jest.mock('../../../redux/hooks', () => ({
     useAppDispatch: jest.fn(),
     useAppSelector: jest.fn()
 }));
