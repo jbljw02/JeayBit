@@ -1,10 +1,10 @@
 import { renderHook } from "@testing-library/react";
 import axios from "axios";
-import { addTradeHistory, addUnSignedTradeHistory } from "../../redux/features/tradeSlice";
-import { adjustOwnedCrypto } from "../../redux/features/userCryptoSlice";
-import { setUserBalance } from "../../redux/features/userSlice";
+import { adjustOwnedCrypto } from "../../redux/features/crypto/userCryptoSlice";
+import { setUserBalance } from "../../redux/features/user/userSlice";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import useAddTradeHistory from "../useAddTradeHistory";
+import { addTradeHistory, addUnSignedTradeHistory } from "../../redux/features/trade/tradeSlice";
+import useAddTradeHistory from "../trade/useAddTradeHistory";
 
 jest.mock('axios');
 const mockedAxios = axios as jest.Mocked<typeof axios>;

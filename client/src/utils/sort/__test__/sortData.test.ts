@@ -1,5 +1,5 @@
 import { sortData, sortByName, sortByPrice, sortByChangeRate, sortByTradeVolume } from '../sortData';
-import { Crypto } from '../../../redux/features/cryptoListSlice';
+import { Crypto } from '../../../types/crypto.type';
 
 describe('정렬 함수 테스트', () => {
     const mockData: Crypto[] = [

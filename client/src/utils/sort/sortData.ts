@@ -1,4 +1,4 @@
-import { Crypto } from "../../redux/features/cryptoListSlice";
+import { Crypto } from "../../types/crypto.type";
 
 // 화폐명에 따라 정렬
 export const sortByName = (data: Crypto[], order: number) => {

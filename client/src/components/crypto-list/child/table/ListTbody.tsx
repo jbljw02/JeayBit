@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
 import formatWithComas from "../../../../utils/format/formatWithComas";
 import CustomScrollbars from "../../../scrollbar/CustomScorllbars";
-import { setCryptoRealTime, setSelectedCrypto } from "../../../../redux/features/selectedCryptoSlice";
-import { Crypto } from "../../../../redux/features/cryptoListSlice";
-import { setAskingSpinner } from "../../../../redux/features/placeholderSlice";
+import { setCryptoRealTime, setSelectedCrypto } from "../../../../redux/features/crypto/selectedCryptoSlice";
+import { Crypto } from "../../../../types/crypto.type";
+import { setAskingSpinner } from "../../../../redux/features/ui/placeholderSlice";
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
-import useSelectAskingPrice from "../../../../hooks/useSelectAskingPrice";
-import useSelectClosedPrice from "../../../../hooks/useSelectClosedPrice";
+import useSelectAskingPrice from "../../../../hooks/crypto/useSelectAskingPrice";
+import useSelectClosedPrice from "../../../../hooks/crypto/useSelectClosedPrice";
 import { useNavigate } from "react-router-dom";
 import ShortcutsButton from "../../../common/ShortcutsButton";
 import checkCurrentScreen from "../../../../utils/responsive/checkCurrentScreen";

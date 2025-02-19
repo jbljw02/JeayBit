@@ -1,4 +1,4 @@
-import { setBuyingPrice } from "../../../../redux/features/tradeSlice";
+import { setBuyingPrice } from "../../../../redux/features/trade/tradeSlice";
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
 import formatWithComas from "../../../../utils/format/formatWithComas";
 import PriceRange from "../../../input/PriceRange";
@@ -8,7 +8,7 @@ import SelectPercentage from "../SelectPercentage";
 import TradingThead from "../TradingThead";
 import TradingFooter from "../TradingFooter";
 import CustomScrollbars from "../../../scrollbar/CustomScorllbars";
-import { useTradeSection } from "../../../../hooks/useTradeSection";
+import useTradeSection from "../../../../hooks/trade/useTradeSection";
 
 export default function BuyingSection() {
     const dispatch = useAppDispatch();

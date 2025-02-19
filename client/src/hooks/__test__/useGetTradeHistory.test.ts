@@ -1,9 +1,9 @@
 import { renderHook } from '@testing-library/react';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
-import useGetTradeHistory from '../useGetTradeHistory';
 import axios from 'axios';
-import { setTradeHistory, setUnSignedTradeHistory } from '../../redux/features/tradeSlice';
-import { showNoticeModal } from '../../redux/features/modalSlice';
+import { showNoticeModal } from '../../redux/features/ui/modalSlice';
+import { setTradeHistory, setUnSignedTradeHistory } from '../../redux/features/trade/tradeSlice';
+import useGetTradeHistory from '../trade/useGetTradeHistory';
 
 jest.mock('axios');
 jest.mock('../../redux/hooks', () => ({
@@ -19,7 +19,7 @@ describe('useGetTradeHistory', () => {
     beforeEach(() => {
         jest.clearAllMocks();
         (useAppDispatch as unknown as jest.Mock).mockReturnValue(mockDispatch);
-        (useAppSelector as unknown as jest.Mock).mockImplementation((selector) => 
+        (useAppSelector as unknown as jest.Mock).mockImplementation((selector) =>
             selector({ user: mockUser })
         );
     });
@@ -97,7 +97,7 @@ describe('useGetTradeHistory', () => {
 
     it('유저 이메일이 없으면 API를 호출하지 않아야 함', () => {
         // 유저 이메일이 없는 상태로 설정
-        (useAppSelector as unknown as jest.Mock).mockImplementation((selector) => 
+        (useAppSelector as unknown as jest.Mock).mockImplementation((selector) =>
             selector({ user: { email: '' } })
         );
 

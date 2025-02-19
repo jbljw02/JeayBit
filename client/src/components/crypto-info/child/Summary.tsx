@@ -1,7 +1,7 @@
 import { useAppSelector } from "../../../redux/hooks";
 import { useAppDispatch } from "../../../redux/hooks";
 import { useEffect, useRef } from "react";
-import { setCryptoRealTime } from "../../../redux/features/selectedCryptoSlice";
+import { setCryptoRealTime } from "../../../redux/features/crypto/selectedCryptoSlice";
 import formatWithComas from "../../../utils/format/formatWithComas";
 
 type ChildParams = {

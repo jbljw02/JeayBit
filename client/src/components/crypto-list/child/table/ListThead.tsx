@@ -3,7 +3,7 @@ import { sortByChangeRate, sortByName, sortByPrice, sortByTradeVolume } from "..
 import img_sort from "../../../../assets/images/sort.png";
 import img_sort_up from "../../../../assets/images/sort-up.png";
 import img_sort_down from "../../../../assets/images/sort-down.png";
-import { setSortStates, setFilteredData, setSortedData } from "../../../../redux/features/cryptoListSlice";
+import { setSortStates, setFilteredData, setSortedData } from "../../../../redux/features/crypto/cryptoListSlice";
 
 export default function ListThead() {
     const dispatch = useAppDispatch();

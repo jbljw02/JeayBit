@@ -1,10 +1,10 @@
 import { renderHook } from "@testing-library/react";
 import { act } from "react-dom/test-utils";
-import { showNoticeModal } from "../../redux/features/modalSlice";
-import { setWorkingSpinner } from "../../redux/features/placeholderSlice";
+import { showNoticeModal } from "../../redux/features/ui/modalSlice";
+import { setWorkingSpinner } from "../../redux/features/ui/placeholderSlice";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import useAddTradeHistory from "../useAddTradeHistory";
-import { useTradeSection } from "../useTradeSection";
+import useAddTradeHistory from "../trade/useAddTradeHistory";
+import useTradeSection from "../trade/useTradeSection";
 
 jest.mock('../../redux/hooks', () => ({
     useAppDispatch: jest.fn(),

@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import AskingTable from "./AskingTable";
 import '../../../../styles/price-detail/orderbook/orderbook.css'
 import CustomScrollbars from "../../../scrollbar/CustomScorllbars";
-import { AskingData } from "../../../../redux/features/askingSlice";
+import { AskingData } from "../../../../types/crypto.type";
 import { useAppSelector } from "../../../../redux/hooks";
 import SkeletonUI from "../../../placeholder/SkeletonUI";
 import LoadingSpinner from "../../../placeholder/LoadingSpinner";

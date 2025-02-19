@@ -3,7 +3,7 @@ import Chart from 'react-apexcharts';
 import moment from 'moment-timezone';
 import { useAppSelector } from '../../../redux/hooks';
 import formatWithComas from '../../../utils/format/formatWithComas';
-import { Market } from '../../../redux/features/chartSlice';
+import { Market } from '../../../types/chart.type';
 import { ApexOptions } from 'apexcharts';
 
 type Axis = {

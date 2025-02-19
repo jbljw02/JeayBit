@@ -11,7 +11,7 @@ import Divider from "./child/Divider";
 import KakaoLoginButton from "./child/KakaoLoginButton";
 import HeaderNav from "../header/HeaderNav";
 import { useAppDispatch } from "../../redux/hooks";
-import { showNoticeModal } from "../../redux/features/modalSlice";
+import { showNoticeModal } from "../../redux/features/ui/modalSlice";
 import PICheckbox from "./child/PICheckbox";
 import AuthNavigateLabel from "./child/AuthNavigateLabel";
 

@@ -7,7 +7,7 @@ import InputWarning from "../input/InputWarning";
 import FaviconTitle from "./child/AuthHeader";
 import formValueChange from "../../utils/form/formValueChange";
 import '../../styles/auth/authContainer.css'
-import { setUserInfo } from "../../redux/features/userSlice";
+import { setUserInfo } from "../../redux/features/user/userSlice";
 import LoadingBar, { LoadingBarRef } from 'react-top-loading-bar';
 import AuthButton from "./child/AuthButton";
 import Divider from "./child/Divider";

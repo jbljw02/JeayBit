@@ -1,8 +1,8 @@
 import axios from "axios";
 import { useRef, useState } from "react";
-import { showNoticeModal } from "../../../../redux/features/modalSlice";
-import { setWorkingSpinner } from "../../../../redux/features/placeholderSlice";
-import { cancelUnSignedOrder, setScheduledCancel } from "../../../../redux/features/tradeSlice";
+import { showNoticeModal } from "../../../../redux/features/ui/modalSlice";
+import { setWorkingSpinner } from "../../../../redux/features/ui/placeholderSlice";
+import { cancelUnSignedOrder, setScheduledCancel } from "../../../../redux/features/trade/tradeSlice";
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
 import PlaceholderDisplay from "../../../placeholder/PlaceholderDisplay";
 import CustomScrollbars from "../../../scrollbar/CustomScorllbars";

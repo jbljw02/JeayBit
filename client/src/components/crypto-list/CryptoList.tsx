@@ -6,7 +6,7 @@ import PlaceholderDisplay from "../placeholder/PlaceholderDisplay";
 import SkeletonUI from "../placeholder/SkeletonUI";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import NavBar from "../common/NavBar";
-import { setListCategory } from "../../redux/features/cryptoListSlice";
+import { setListCategory } from "../../redux/features/crypto/cryptoListSlice";
 
 type SectionChange = '원화' | '보유' | '관심';
 
@@ -18,7 +18,7 @@ const navItems = [
 
 export default function CryptoList() {
     const dispatch = useAppDispatch();
-    
+
     const user = useAppSelector(state => state.user);
     const listCategory = useAppSelector(state => state.listCategory);
     const favoriteCrypto = useAppSelector(state => state.favoriteCrypto);

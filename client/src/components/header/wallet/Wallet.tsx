@@ -4,14 +4,15 @@ import TransferInput from "./TransferInput";
 import { ChangeInput } from "./ChangeInput";
 import TransferWarning from "./TransferWarning";
 import '../../../styles/header/wallet/wallet.css'
-import { showNoticeModal } from "../../../redux/features/modalSlice";
-import { setWorkingSpinner } from "../../../redux/features/placeholderSlice";
-import { depositUserBalance, withdrawUserBalance } from "../../../redux/features/userSlice";
-import { setSuccessTransfer, setTransferCategory, setFailTransfer, setBalanceUpdate, setTransferSort, TransferSort } from "../../../redux/features/walletSlice";
+import { showNoticeModal } from "../../../redux/features/ui/modalSlice";
+import { setWorkingSpinner } from "../../../redux/features/ui/placeholderSlice";
+import { depositUserBalance, withdrawUserBalance } from "../../../redux/features/user/userSlice";
+import { setSuccessTransfer, setTransferCategory, setFailTransfer, setBalanceUpdate, setTransferSort } from "../../../redux/features/user/walletSlice";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import NavBar from "../../common/NavBar";
 import BalanceSection from "./BalanceSection";
 import CommonButton from "../../common/CommonButton";
+import { TransferSort } from "../../../types/user.type";
 
 const API_URL = process.env.REACT_APP_API_URL;
 

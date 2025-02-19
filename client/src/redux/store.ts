@@ -1,14 +1,14 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit'
-import userReducers from './features/userSlice';
-import askingReducers from './features/askingSlice';
-import chartReducers from './features/chartSlice';
-import cryptoListReducers from './features/cryptoListSlice';
-import selectedCryptoReducers from './features/selectedCryptoSlice';
-import tradeReducers from './features/tradeSlice';
-import userCryptoReducers from './features/userCryptoSlice';
-import walletReducers from './features/walletSlice';
-import modalReducers from './features/modalSlice';
-import placeholderReducers from './features/placeholderSlice';
+import userReducers from './features/user/userSlice';
+import askingReducers from './features/crypto/askingSlice';
+import chartReducers from './features/chart/chartSlice';
+import cryptoListReducers from './features/crypto/cryptoListSlice';
+import selectedCryptoReducers from './features/crypto/selectedCryptoSlice';
+import tradeReducers from './features/trade/tradeSlice';
+import userCryptoReducers from './features/crypto/userCryptoSlice';
+import walletReducers from './features/user/walletSlice';
+import modalReducers from './features/ui/modalSlice';
+import placeholderReducers from './features/ui/placeholderSlice';
 
 const combinedReducer = combineReducers({
   closedData: askingReducers.closedData,

@@ -1,8 +1,8 @@
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import { useEffect, useState, useRef } from "react";
-import { setChartSortDate, setChartSortTime } from "../../../redux/features/chartSlice";
-import { setChartSpinner } from "../../../redux/features/placeholderSlice";
-import useRequestCandle from "../../../hooks/useRequestCandle";
+import { setChartSortDate, setChartSortTime } from "../../../redux/features/chart/chartSlice";
+import { setChartSpinner } from "../../../redux/features/ui/placeholderSlice";
+import useRequestCandle from "../../../hooks/chart/useRequestCandle";
 
 export default function ChartHeader() {
     const dispatch = useAppDispatch();
