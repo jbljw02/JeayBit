@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import { useAppSelector } from "../../../redux/hooks";
 import { useAppDispatch } from "../../../redux/hooks";
 import { sortData } from "../../../utils/sort/sortData";
-import { Crypto, setFilteredData } from "../../../redux/features/cryptoListSlice";
+import { Crypto } from "../../../types/crypto.type";
+import { setFilteredData } from "../../../redux/features/crypto/cryptoListSlice";
 
 export default function ListSearch() {
     const dispatch = useAppDispatch();
@@ -25,7 +26,7 @@ export default function ListSearch() {
         let dataToFilter: Crypto[] = [];
         if (listCategory === '원화') {
             dataToFilter = allCrypto;
-        } 
+        }
         else if (listCategory === '관심') {
             const isFavorites = allCrypto.filter(item => item.isFavorited);
             dataToFilter = isFavorites;
@@ -33,7 +34,7 @@ export default function ListSearch() {
             if (dataToFilter !== favoriteCrypto) {
                 dataToFilter = favoriteCrypto;
             }
-        } 
+        }
         else if (listCategory === '보유') {
             const isOwnes = allCrypto.filter(item => item.isOwned && item.ownedQuantity > 0.00);
             dataToFilter = isOwnes;

@@ -1,4 +1,4 @@
-import { QUERIES } from "../../responsive/breakpoints";
+import { QUERIES } from "../../components/responsive/breakpoints";
 
 interface ScreenInfo {
     device: 'mobile' | 'tablet' | 'laptop' | 'desktop';

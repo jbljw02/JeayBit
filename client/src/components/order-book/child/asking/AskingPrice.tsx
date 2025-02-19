@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import AskingTable from "./AskingTable";
 import '../../../../styles/price-detail/orderbook/orderbook.css'
 import CustomScrollbars from "../../../scrollbar/CustomScorllbars";
-import { AskingData } from "../../../../redux/features/askingSlice";
+import { AskingData } from "../../../../types/crypto.type";
 import { useAppSelector } from "../../../../redux/hooks";
 import SkeletonUI from "../../../placeholder/SkeletonUI";
 import LoadingSpinner from "../../../placeholder/LoadingSpinner";
@@ -55,7 +55,7 @@ export default function AskingPrice() {
 
     return (
         <div className="orderbook-section">
-            <table className="orderbook-table thead">
+            <table className="orderbook-table thead" aria-label="호가 내역">
                 <thead>
                     <tr>
                         <th>등록시간</th>
@@ -80,7 +80,7 @@ export default function AskingPrice() {
                     (
                         askingData.length ?
                             <CustomScrollbars id="scrollbar-orderbook">
-                                <table className="orderbook-table tbody">
+                                <table className="orderbook-table tbody" aria-label="호가 내역">
                                     <tbody>
                                         <AskingTable
                                             differences={differences_bid}

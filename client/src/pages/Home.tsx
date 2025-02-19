@@ -6,21 +6,21 @@ import CryptoDetail from '../components/crypto-info/CryptoDetail';
 import NoticeModal from '../components/modal/common/NoticeModal';
 import CryptoHeader from '../components/crypto-info/CryptoHeader';
 import WorkingSpinnerModal from '../components/modal/trade/WorkingSpinnerModal';
-import { setWorkingSpinner } from '../redux/features/placeholderSlice';
+import { setWorkingSpinner } from '../redux/features/ui/placeholderSlice';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import KakaoCallback from '../components/auth/child/KakaoCallback';
-import { hideNoticeModal } from '../redux/features/modalSlice';
+import { hideNoticeModal } from '../redux/features/ui/modalSlice';
 import Login from '../components/auth/Login';
 import Header from '../components/header/Header';
-import MobileDetail from '../responsive/components/MobileDetail';
 import TradeSection from '../components/trading/TradeSection';
 import '../styles/App.css';
 import OrderBook from '../components/order-book/OrderBook';
-import useGetTradeHistory from '../hooks/useGetTradeHistory';
-import useGetAllCryptoInterval from '../hooks/useGetAllCryptoInterval';
-import useInitialWork from '../hooks/useInitialWork';
+import useGetTradeHistory from '../hooks/trade/useGetTradeHistory';
+import useGetAllCryptoInterval from '../hooks/crypto/useGetAllCryptoInterval';
+import useInitialWork from '../hooks/crypto/useInitialWork';
 import { useEffect } from 'react';
 import checkCurrentScreen from '../utils/responsive/checkCurrentScreen';
+import MobileDetail from '../components/responsive/components/MobileDetail';
 
 export default function Home() {
     const dispatch = useAppDispatch();

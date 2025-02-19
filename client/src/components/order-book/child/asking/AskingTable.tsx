@@ -1,7 +1,7 @@
 import convertToDate from "../../../../utils/format/covertToDate";
 import adjustSize from "../../../../utils/format/adjustSize";
 import { useAppSelector } from "../../../../redux/hooks";
-import { AskingData } from "../../../../redux/features/askingSlice";
+import { AskingData } from "../../../../types/crypto.type";
 
 type Params = {
     differences: {

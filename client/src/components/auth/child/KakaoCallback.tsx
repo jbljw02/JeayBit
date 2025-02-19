@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { setUserInfo } from '../../../redux/features/userSlice';
+import { setUserInfo } from '../../../redux/features/user/userSlice';
 import { useAppDispatch } from '../../../redux/hooks';
 import { useNavigate } from 'react-router-dom';
-import { showNoticeModal } from '../../../redux/features/modalSlice';
+import { showNoticeModal } from '../../../redux/features/ui/modalSlice';
 import WorkingSpinner from '../../modal/trade/WorkingSpinnerModal';
 
 const API_URL = process.env.REACT_APP_API_URL;

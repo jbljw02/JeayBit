@@ -5,12 +5,12 @@ import { useNavigate } from "react-router-dom";
 import Wallet from "./wallet/Wallet";
 import '../../styles/header/header.css'
 import LoadingBar, { LoadingBarRef } from 'react-top-loading-bar';
-import { showNoticeModal } from "../../redux/features/modalSlice";
-import { setTradeHistory, setUnSignedTradeHistory } from "../../redux/features/tradeSlice";
-import { setUser } from "../../redux/features/userSlice";
+import { showNoticeModal } from "../../redux/features/ui/modalSlice";
+import { setTradeHistory, setUnSignedTradeHistory } from "../../redux/features/trade/tradeSlice";
+import { setUser } from "../../redux/features/user/userSlice";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import useGetBalance from "../../hooks/useGetBalance";
-import { useClickOutside } from "../../hooks/useClickOutside";
+import useGetBalance from "../../hooks/user/useGetBalance";
+import { useClickOutside } from "../../hooks/common/useClickOutside";
 
 const API_URL = process.env.REACT_APP_API_URL;
 
@@ -61,7 +61,7 @@ export default function Header() {
 
   return (
     <>
-      <div className="header-container">
+      <header className="header-container">
         <LoadingBar color="#29D" ref={loadingBarRef} />
         <div className="title">
           <img src={favicon} className="title-img" alt="제목" />
@@ -114,7 +114,7 @@ export default function Header() {
                 </span>
               </div>
             )}
-      </div>
+      </header>
     </>
   );
 };

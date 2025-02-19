@@ -1,5 +1,5 @@
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
-import { setSellingPrice } from "../../../../redux/features/tradeSlice";
+import { setSellingPrice } from "../../../../redux/features/trade/tradeSlice";
 import formatWithComas from "../../../../utils/format/formatWithComas";
 import PriceRange from "../../../input/PriceRange";
 import TradeInput from "../../../input/TradeInput";
@@ -8,7 +8,7 @@ import SelectPercentage from "../SelectPercentage";
 import TradingThead from "../TradingThead";
 import TradingFooter from "../TradingFooter";
 import CustomScrollbars from "../../../scrollbar/CustomScorllbars";
-import { useTradeSection } from "../../../../hooks/useTradeSection";
+import useTradeSection from "../../../../hooks/trade/useTradeSection";
 import { useMemo } from "react";
 
 export default function SellingSection() {

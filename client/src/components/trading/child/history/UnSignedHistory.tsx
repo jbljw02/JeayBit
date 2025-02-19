@@ -1,4 +1,4 @@
-import { setScheduledCancel } from "../../../../redux/features/tradeSlice";
+import { setScheduledCancel } from "../../../../redux/features/trade/tradeSlice";
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
 import formatTradeAmount from "../../../../utils/format/formatTradeAmount";
 import formatWithComas from "../../../../utils/format/formatWithComas";
