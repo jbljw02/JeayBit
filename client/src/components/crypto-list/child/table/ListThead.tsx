@@ -55,7 +55,7 @@ export default function ListThead() {
     };
 
     return (
-        <table className="list-table">
+        <table className="list-table" aria-label="화폐 목록">
             <colgroup>
                 <col width="33%" />
                 <col width="22%" />

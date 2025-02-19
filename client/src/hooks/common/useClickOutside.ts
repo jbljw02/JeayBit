@@ -7,7 +7,7 @@ export function useClickOutside(
     excludedRef?: RefObject<HTMLElement>
 ) {
     useEffect(() => {
-        const handleClickOutside = (event: MouseEvent) => {
+        const handleClickOutside = (event: MouseEvent | TouchEvent) => {
             // ref 바깥을 클릭했고 excludedRef를 클릭한 것이 아닐 때
             if (ref.current &&
                 !ref.current.contains(event.target as Node) &&
@@ -17,9 +17,11 @@ export function useClickOutside(
         };
 
         document.addEventListener('mousedown', handleClickOutside);
+        document.addEventListener('touchstart', handleClickOutside);
 
         return () => {
             document.removeEventListener('mousedown', handleClickOutside);
+            document.removeEventListener('touchstart', handleClickOutside);
         };
     }, [ref, callback, excludedRef]);
 }

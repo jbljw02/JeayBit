@@ -61,7 +61,7 @@ export default function Header() {
 
   return (
     <>
-      <div className="header-container">
+      <header className="header-container">
         <LoadingBar color="#29D" ref={loadingBarRef} />
         <div className="title">
           <img src={favicon} className="title-img" alt="제목" />
@@ -114,7 +114,7 @@ export default function Header() {
                 </span>
               </div>
             )}
-      </div>
+      </header>
     </>
   );
 };

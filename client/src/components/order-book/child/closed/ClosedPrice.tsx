@@ -20,7 +20,7 @@ export default function ClosedPrice() {
                 {
                     !closeHide ?
                         <>
-                            <table className="orderbook-table">
+                            <table className="orderbook-table" aria-label="체결 내역">
                                 <thead>
                                     <tr>
                                         <th>체결시간</th>
@@ -47,7 +47,7 @@ export default function ClosedPrice() {
 
                                             askingData.length ?
                                                 <CustomScrollbars id="scrollbar-orderbook">
-                                                    <table className="orderbook-table">
+                                                    <table className="orderbook-table" aria-label="체결 내역">
                                                         <tbody>
                                                             {
                                                                 closedData.map((item, i) => {
