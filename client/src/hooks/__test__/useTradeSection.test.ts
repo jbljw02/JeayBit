@@ -17,7 +17,6 @@ jest.mock('../useAddTradeHistory', () => ({
 }));
 
 describe('useTradeSection', () => {
-    // 테스트에 사용할 mock 함수와 초기 상태 정의
     const mockDispatch = jest.fn();
     const mockAddTradeHistory = jest.fn();
     const mockInitialState = {

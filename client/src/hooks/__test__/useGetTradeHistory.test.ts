@@ -5,7 +5,6 @@ import axios from 'axios';
 import { setTradeHistory, setUnSignedTradeHistory } from '../../redux/features/tradeSlice';
 import { showNoticeModal } from '../../redux/features/modalSlice';
 
-// axios와 hooks를 모의(mock)화
 jest.mock('axios');
 jest.mock('../../redux/hooks', () => ({
     useAppDispatch: jest.fn(),
