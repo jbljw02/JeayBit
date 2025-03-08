@@ -27,7 +27,7 @@
 <br>
 
 ## 2. 프로젝트 구조도
-![구조도](https://github.com/user-attachments/assets/4f84c6d6-bb38-47c7-ae59-cacb7fa50c98)
+![구조도](https://github.com/user-attachments/assets/890424f0-dfb7-4562-a30c-c07894ca9430)
 
 ## 3. 프로젝트 흐름도
 
@@ -36,7 +36,7 @@
 
 ### 2) 매수 및 매도
 ![흐름도 - 매수 및 매도 (1)](https://github.com/user-attachments/assets/0ff1beef-5995-4b22-b8bc-2e5ef81ae65f)
-![흐름도 - 매수 및 매도 (2)](https://github.com/user-attachments/assets/2329310d-6699-4389-ae2e-5ac3dfb8d106)
+![흐름도 - 매수 및 매도 (2)](https://github.com/user-attachments/assets/db6a87ce-42b1-4325-8a57-12eac43c0731)
 
 <br>
 
