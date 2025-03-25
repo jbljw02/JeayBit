@@ -27,20 +27,51 @@
 <br>
 
 ## 2. 프로젝트 구조도
-![구조도](https://github.com/user-attachments/assets/4f84c6d6-bb38-47c7-ae59-cacb7fa50c98)
+![구조도](https://github.com/user-attachments/assets/890424f0-dfb7-4562-a30c-c07894ca9430)
 
-## 3. 프로젝트 구조도
+## 3. 프로젝트 흐름도
 
 ### 1) 화폐 정보 불러오기
 ![흐름도 - 화폐 정보 불러오기](https://github.com/user-attachments/assets/8c03c37c-0542-4c43-bc98-4ec9531477fa)
 
 ### 2) 매수 및 매도
 ![흐름도 - 매수 및 매도 (1)](https://github.com/user-attachments/assets/0ff1beef-5995-4b22-b8bc-2e5ef81ae65f)
-![흐름도 - 매수 및 매도 (2)](https://github.com/user-attachments/assets/2329310d-6699-4389-ae2e-5ac3dfb8d106)
+![흐름도 - 매수 및 매도 (2)](https://github.com/user-attachments/assets/db6a87ce-42b1-4325-8a57-12eac43c0731)
 
 <br>
 
-## 3. 화면 구성 및 주요 기능
+## 4. 반응형 디자인
+
+### 1) PC
+|PC|
+|:---:|
+|<img width="1710" alt="PC" src="https://github.com/user-attachments/assets/14ef180b-c687-4ede-8e5f-816fe355e32c" />|
+
+### 2) 태블릿
+|태블릿 (1)|
+|:---:|
+|<img width="1180" alt="태블릿 - 가로" src="https://github.com/user-attachments/assets/847b8319-5313-4c35-a827-e2a41e409572" />|
+
+|태블릿 (2)|
+|:---:|
+|<img width="750" alt="태블릿 - 세로" src="https://github.com/user-attachments/assets/f5ce1151-a267-4f50-a218-acbf3c6965c9" />|
+
+|태블릿 (3)|
+|:---:|
+|![태블릿 상세](https://github.com/user-attachments/assets/c1be8188-0300-44ac-b09f-66e3d4028e36)|
+
+### 3) 휴대폰
+|휴대폰 (1)|
+|:---:|
+|<img width="400" alt="휴대폰 - 세로" src="https://github.com/user-attachments/assets/0726756d-bd67-4e8b-9d5c-6c9fb7458405" />|
+
+|휴대폰 (2)|
+|:---:|
+|<img width="400" alt="휴대폰 - 상세" src="https://github.com/user-attachments/assets/d054c0c5-e568-4122-8eeb-22d007ef4a2a" />|
+
+<br>
+
+## 5. 화면 구성 및 주요 기능
 
 ### 1) 회원가입
 - 유효성 검사(이메일과 비밀번호의 형식)를 통과해야 회원가입이 가능합니다. <br>
@@ -61,7 +92,7 @@
 
 |카카오 로그인|
 |:---:|
-|![카카오 로그인](https://github.com/user-attachments/assets/14ce0fa5-12e3-4231-9c1b-c0c29e080cb6)|
+|![카카오 로그인](https://github.com/user-attachments/assets/51be6a49-0da5-4d76-b543-d72f7ac95add)|
 
 ### 3) 화폐 리스트, 호가/체결내역, 차트
 - 화폐의 시세는 주기적으로 갱신됩니다.
