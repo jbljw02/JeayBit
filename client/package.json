@@ -4,7 +4,7 @@
   "private": true,
   "proxy": "https://jeaybit.onrender.com",
   "dependencies": {
-    "@reduxjs/toolkit": "^2.2.7",
+    "@reduxjs/toolkit": "^2.6.1",
     "@types/node": "^16.18.32",
     "@types/react-responsive": "^8.0.8",
     "apexcharts": "^3.42.0",
@@ -21,7 +21,7 @@
     "react-dom": "^18.2.0",
     "react-loading-skeleton": "^3.4.0",
     "react-modal": "^3.16.1",
-    "react-redux": "^9.1.2",
+    "react-redux": "^9.2.0",
     "react-responsive": "^10.0.0",
     "react-router-dom": "^6.16.0",
     "react-scripts": "5.0.1",
