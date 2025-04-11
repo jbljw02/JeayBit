@@ -14,21 +14,12 @@ import Divider from "./child/Divider";
 import KakaoLoginButton from "./child/KakaoLoginButton";
 import HeaderNav from "../header/HeaderNav";
 import AuthNavigateLabel from "./child/AuthNavigateLabel";
-import { useMarketPrice, useMarkets } from "../../hooks/useWebSocket";
 
 const API_URL = process.env.REACT_APP_API_URL;
 
 export default function Login() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-
-  useMarkets();
-
-  const btcPrice = useMarketPrice('KRW-BTC');
-    
-  // 가격이 변경될 때마다 콘솔에 출력
-  useEffect(() => {
-  }, [btcPrice]);
 
   const [activeInput, setActiveInput] = useState<string>('');
   const [visiblePassword, setVisiblePassword] = useState<boolean>(false);
