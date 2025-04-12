@@ -14,6 +14,7 @@ import Divider from "./child/Divider";
 import KakaoLoginButton from "./child/KakaoLoginButton";
 import HeaderNav from "../header/HeaderNav";
 import AuthNavigateLabel from "./child/AuthNavigateLabel";
+import { useMarkets, useMarketTrade } from "../../hooks/useWebSocket";
 
 const API_URL = process.env.REACT_APP_API_URL;
 
