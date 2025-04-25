@@ -81,9 +81,9 @@ export default function useGetAllCryptoInterval() {
         };
 
         // 3초마다 반복 실행
-        const interval = setInterval(fetchCryptoData, 3000);
+        // const interval = setInterval(fetchCryptoData, 3000);
 
-        return () => clearInterval(interval);
+        // return () => clearInterval(interval);
     }, [selectedCrypto, chartSortTime, chartSortDate, askingSpinner, chartSpinner]);
 
     return getAllCrypto;
