@@ -89,7 +89,7 @@ export interface MarketPrice {
     changePrice: number,
     tradePrice: number,
     tradeVolume: number,
-    openPrice: number,
+    openingPrice: number,
     highPrice: number,
     lowPrice: number,
 }

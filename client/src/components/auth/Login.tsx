@@ -14,13 +14,21 @@ import Divider from "./child/Divider";
 import KakaoLoginButton from "./child/KakaoLoginButton";
 import HeaderNav from "../header/HeaderNav";
 import AuthNavigateLabel from "./child/AuthNavigateLabel";
-import { useMarkets, useMarketTrade } from "../../hooks/useWebSocket";
+import { useMarketPrice } from "../../hooks/ws/useMarket";
+import { useTradeDetail } from "../../hooks/ws/useTradeDetail";
+import { useOrderbook } from "../../hooks/ws/useOrderbook";
+import { useCandle } from "../../hooks/ws/useCandle";
 
 const API_URL = process.env.REACT_APP_API_URL;
 
 export default function Login() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+
+  const price = useMarketPrice('KRW-BTC');
+  const trade = useTradeDetail('KRW-XRP');
+  const orderbook = useOrderbook('KRW-ETH');
+  const candle = useCandle('KRW-ETC');
 
   const [activeInput, setActiveInput] = useState<string>('');
   const [visiblePassword, setVisiblePassword] = useState<boolean>(false);

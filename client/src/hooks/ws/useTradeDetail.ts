@@ -1,41 +1,33 @@
 import { useState, useEffect } from 'react';
 import { TradeDetail } from '../../types/crypto.type';
-import { initializeWebSocket } from '../../services/ws/baseWebSocket';
+import { subscribe, unsubscribe } from '../../services/ws/baseWebSocket';
 
-// 체결내역 업데이트 구독자 관리
-const tradeSubscribers = new Set<(trade: TradeDetail) => void>();
-
-const tradeDetailUpdate = (data: any) => {
-    if (data.type !== "trade") return;
-
-    const tradeData: TradeDetail = {
-        tradePrice: data.tradePrice,
-        tradeVolume: data.tradeVolume,
-        askBid: data.askBid,
-        timestamp: data.timestamp,
-    };
-
-    tradeSubscribers.forEach(callback => callback(tradeData));
-};
+// 체결내역 데이터에 API 응답 형식 추가
+interface TradeDetailData extends TradeDetail {
+    type: string;
+    code: string;
+}
 
 // 특정 마켓의 체결내역을 구독
-export const useTradeDetail = (selectedMarket: string) => {
+export const useTradeDetail = (selectedMarket: string = 'KRW-BTC') => {
     const [trade, setTrade] = useState<TradeDetail | null>(null);
-
+    
     useEffect(() => {
-        const messageConfig = {
-            type: "trade",
-            codes: [selectedMarket]
+        const tradeDetailUpdate = (data: TradeDetailData) => {
+            if (data.code !== selectedMarket) return;
+
+            setTrade({
+                tradePrice: data.tradePrice,
+                tradeVolume: data.tradeVolume,
+                askBid: data.askBid,
+                timestamp: data.timestamp,
+            });
         };
 
-        // 체결내역 업데이트 구독
-        tradeSubscribers.add(setTrade);
-
-        // 마켓 변경 시 웹소켓 구독 정보 업데이트
-        initializeWebSocket([messageConfig], tradeDetailUpdate);
+        subscribe("trade", tradeDetailUpdate, selectedMarket);
 
         return () => {
-            tradeSubscribers.delete(setTrade);
+            unsubscribe("trade", tradeDetailUpdate, selectedMarket);
         };
     }, [selectedMarket]);
 
